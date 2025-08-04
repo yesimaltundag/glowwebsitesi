@@ -161,15 +161,19 @@
                 ></iframe>
               </div>
             </div>
-            <div class="contact-item">
+            <!--<div class="contact-item">
               <i>📞</i>
               <h3>Telefon</h3>
               <p>0 (212) 123 45 67<br />+90 532 123 45 67</p>
-            </div>
+            </div>-->
             <div class="contact-item">
               <i>✉️</i>
               <h3>E-posta</h3>
               <p>info@glowtech.com<br />destek@glowtech.com</p>
+              <i>📞</i>
+
+              <h3>Telefon</h3>
+              <p>0 (212) 123 45 67<br />+90 532 123 45 67</p>
             </div>
             <div class="contact-item">
               <i>🕒</i>
@@ -185,16 +189,22 @@
     <ng-include src="'components/footer.html'"></ng-include>
 
     <!-- Scroll to Top Button -->
-    <button id="scrollTopBtn" title="Yukarı Çık" ng-click="scrollToTop()">↑</button>
-    
+    <button id="scrollTopBtn" title="Yukarı Çık" ng-click="scrollToTop()">
+      ↑
+    </button>
+
     <script>
-      angular.module('GirisApp').controller('IletisimController', function($scope) {
-        $scope.kullanici = JSON.parse(localStorage.getItem('girisYapan') || 'null');
-        
-        $scope.scrollToTop = function () {
-          window.scrollTo({ top: 0, behavior: "smooth" });
-        };
-      });
+      angular
+        .module("GirisApp")
+        .controller("IletisimController", function ($scope) {
+          $scope.kullanici = JSON.parse(
+            localStorage.getItem("girisYapan") || "null"
+          );
+
+          $scope.scrollToTop = function () {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          };
+        });
     </script>
   </body>
 </html>

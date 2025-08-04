@@ -69,7 +69,9 @@
       }
 
       .sehir-card {
-        background: linear-gradient(135deg, #f8e0e1 0%, #e2d9d0 100%);
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
         border-radius: 16px;
         padding: 25px;
         box-shadow: 0 6px 20px rgba(180, 138, 120, 0.1);
@@ -77,11 +79,27 @@
         cursor: pointer;
         position: relative;
         overflow: hidden;
+        min-height: 400px;
+        display: flex;
+        align-items: flex-end;
       }
 
       .sehir-card:hover {
         transform: translateY(-8px);
         box-shadow: 0 12px 30px rgba(180, 138, 120, 0.2);
+      }
+
+      .sehir-overlay {
+        background: linear-gradient(
+          to top,
+          rgba(124, 92, 74, 0.95) 0%,
+          rgba(124, 92, 74, 0.8) 50%,
+          rgba(124, 92, 74, 0.3) 100%
+        );
+        border-radius: 12px;
+        padding: 20px;
+        width: 100%;
+        backdrop-filter: blur(5px);
       }
 
       .sehir-card::before {
@@ -95,7 +113,7 @@
       }
 
       .sehir-baslik {
-        color: #7c5c4a;
+        color: white;
         font-size: 1.4rem;
         font-weight: 700;
         margin-bottom: 8px;
@@ -105,14 +123,14 @@
       }
 
       .sehir-ulke {
-        color: #b48a78;
+        color: #e2d9d0;
         font-size: 0.95rem;
         font-weight: 500;
         margin-bottom: 15px;
       }
 
       .sehir-aciklama {
-        color: #7c5c4a;
+        color: white;
         font-size: 0.95rem;
         line-height: 1.6;
         margin-bottom: 20px;
@@ -126,12 +144,13 @@
       }
 
       .ozellik-tag {
-        background: rgba(180, 138, 120, 0.2);
-        color: #7c5c4a;
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
         padding: 4px 12px;
         border-radius: 20px;
         font-size: 0.8rem;
         font-weight: 500;
+        backdrop-filter: blur(5px);
       }
 
       .detay-btn {
@@ -204,21 +223,26 @@
             class="sehir-card"
             ng-repeat="sehir in amerikaSehirleri"
             ng-click="sehirDetayGit(sehir)"
+            ng-style="{'background-image': 'url(' + sehir.foto + ')'}"
           >
-            <h3 class="sehir-baslik">
-              <span class="sehir-icon">{{sehir.icon}}</span>
-              {{sehir.ad}}
-            </h3>
-            <p class="sehir-ulke">{{sehir.ulke}}</p>
-            <p class="sehir-aciklama">{{sehir.kisaAciklama}}</p>
+            <div class="sehir-overlay">
+              <h3 class="sehir-baslik">
+                <span class="sehir-icon">{{sehir.icon}}</span>
+                {{sehir.ad}}
+              </h3>
+              <p class="sehir-ulke">{{sehir.ulke}}</p>
+              <p class="sehir-aciklama">{{sehir.kisaAciklama}}</p>
 
-            <div class="sehir-ozellikler">
-              <span class="ozellik-tag" ng-repeat="ozellik in sehir.ozellikler"
-                >{{ozellik}}</span
-              >
+              <div class="sehir-ozellikler">
+                <span
+                  class="ozellik-tag"
+                  ng-repeat="ozellik in sehir.ozellikler"
+                  >{{ozellik}}</span
+                >
+              </div>
+
+              <button class="detay-btn">Detayları Gör</button>
             </div>
-
-            <button class="detay-btn">Detayları Gör</button>
           </div>
         </div>
       </div>
@@ -240,6 +264,7 @@
               ad: "New York",
               ulke: "ABD",
               icon: "🗽",
+              foto: "https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?w=800&h=600&fit=crop",
               kisaAciklama:
                 "Dünyanın finansal başkenti. Times Square, Central Park ve Özgürlük Heykeli ile dünyanın en dinamik şehri.",
               ozellikler: ["Finans", "Kültür", "Alışveriş", "Sanat"],
@@ -275,6 +300,7 @@
               ad: "Los Angeles",
               ulke: "ABD",
               icon: "🎬",
+              foto: "https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=800&h=600&fit=crop",
               kisaAciklama:
                 "Hollywood'un merkezi, güneşli iklimi ve plajları ile eğlence dünyasının başkenti.",
               ozellikler: ["Hollywood", "Plajlar", "Eğlence", "Teknoloji"],
@@ -310,6 +336,7 @@
               ad: "Chicago",
               ulke: "ABD",
               icon: "🏙️",
+              foto: "https://content.r9cdn.net/rimg/dimg/77/c5/ecbd6c26-city-12514-1632c25b47a.jpg?width=1366&height=768&xhint=1828&yhint=1404&crop=true",
               kisaAciklama:
                 "Gökdelenlerin doğduğu şehir. Deep dish pizza, blues müziği ve güzel mimarisi ile Orta Batı'nın incisi.",
               ozellikler: ["Mimari", "Müzik", "Gastronomi", "Spor"],
@@ -345,6 +372,7 @@
               ad: "Miami",
               ulke: "ABD",
               icon: "🏖️",
+              foto: "https://images.unsplash.com/photo-1535498730771-e735b998cd64?w=800&h=600&fit=crop",
               kisaAciklama:
                 "Tropikal iklim, Art Deco mimarisi ve Latin kültürü ile Florida'nın en canlı şehri.",
               ozellikler: ["Plajlar", "Gece Hayatı", "Latin Kültürü", "Lüks"],
@@ -380,6 +408,7 @@
               ad: "San Francisco",
               ulke: "ABD",
               icon: "🌉",
+              foto: "https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=800&h=600&fit=crop",
               kisaAciklama:
                 "Golden Gate Köprüsü, Alcatraz ve teknoloji vadisi ile Kaliforniya'nın en kültürel şehri.",
               ozellikler: ["Teknoloji", "Kültür", "Mimari", "Gastronomi"],
@@ -415,6 +444,7 @@
               ad: "Las Vegas",
               ulke: "ABD",
               icon: "🎰",
+              foto: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/17/01/00/2b/the-strip.jpg?w=900&h=500&s=1",
               kisaAciklama:
                 "Eğlencenin başkenti. Casino'lar, gösteriler ve gece hayatı ile dünyanın en canlı şehri.",
               ozellikler: ["Eğlence", "Casino", "Gösteriler", "Gece Hayatı"],
@@ -450,6 +480,7 @@
               ad: "Washington DC",
               ulke: "ABD",
               icon: "🏛️",
+              foto: "https://etichotels.com/journal/wp-content/uploads/2023/12/48-Hours-In-Washington_D.C.-ETIC-Hotels.jpg",
               kisaAciklama:
                 "Amerika'nın başkenti. Beyaz Saray, Capitol ve müzeleri ile siyasetin ve tarihin merkezi.",
               ozellikler: ["Siyaset", "Tarih", "Müzeler", "Mimari"],
@@ -485,6 +516,7 @@
               ad: "Boston",
               ulke: "ABD",
               icon: "🎓",
+              foto: "https://images.ctfassets.net/szez98lehkfm/1XqeoQ6D14BNVAFKJEAivK/3d2860ee7f59ef8adddacac20b159800/MyIC_Inline_37766",
               kisaAciklama:
                 "Amerikan Devrimi'nin beşiği. Harvard, MIT ve tarihi Freedom Trail ile eğitimin ve tarihin şehri.",
               ozellikler: ["Eğitim", "Tarih", "Kültür", "Spor"],
@@ -520,6 +552,7 @@
               ad: "New Orleans",
               ulke: "ABD",
               icon: "🎷",
+              foto: "https://ik.imgkit.net/3vlqs5axxjf/external/ik-seo/http://images.ntmllc.com/v4/destination/United-States/New-Orleans/112099_SCN_New-Orleans_iStock1047897858_ZA2A81/New-Orleans-Scenery.jpg?tr=w-656%2Ch-390%2Cfo-auto",
               kisaAciklama:
                 "Jazz'ın doğduğu şehir. Mardi Gras, Cajun mutfağı ve French Quarter ile Louisiana'nın ruhu.",
               ozellikler: ["Jazz", "Mardi Gras", "Gastronomi", "Kültür"],
@@ -555,6 +588,7 @@
               ad: "Seattle",
               ulke: "ABD",
               icon: "☕",
+              foto: "https://cms.inspirato.com/ImageGen.ashx?image=%2Fmedia%2F7195464%2FSeattle_Dest_42-52432475.jpg&width=1081.5",
               kisaAciklama:
                 "Starbucks'ın doğduğu şehir. Space Needle, Pike Place Market ve teknoloji şirketleri ile Pasifik Kuzeybatı'nın incisi.",
               ozellikler: ["Teknoloji", "Kahve", "Doğa", "Kültür"],

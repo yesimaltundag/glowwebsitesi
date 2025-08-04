@@ -554,14 +554,17 @@
             ng-src="{{ film.poster_url }}"
             ng-alt="{{ film.film_adi }}"
             class="film-poster"
-            onerror="this.src='assets/images/default-poster.jpg'"
+            onerror="this.src='assets/images/logo.jpg'"
           />
           <div class="film-info">
             <h1 class="film-title">{{ film.film_adi }}</h1>
             <div class="film-meta">
               <span class="meta-item">{{ film.yil }}</span>
               <span class="meta-item">{{ film.sure }}</span>
-              <span class="imdb-rating"> ⭐ IMDb: {{ film.imdb_puani }} </span>
+              <span class="imdb-rating">
+                <span class="yildiz imdb-yildiz"></span> IMDb: {{
+                film.imdb_puani }}
+              </span>
             </div>
             <p class="film-description">{{ film.ozet }}</p>
           </div>
@@ -628,8 +631,7 @@
                   ng-class="{ 'secili': yeniYorum.puan >= i }"
                   class="puan-yildiz"
                   style="cursor: pointer"
-                  >⭐</span
-                >
+                ></span>
               </div>
               <div class="puan-text">{{ yeniYorum.puan || 0 }}/10</div>
             </div>

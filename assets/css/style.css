@@ -192,7 +192,7 @@ select:focus {
   box-shadow: 0 0 0 3px rgba(180, 138, 120, 0.1);
 }
 
-button {
+button:not(.auth-btn):not(.geri-btn) {
   background: linear-gradient(135deg, #e2d9d0, #d1c6b1, #f8e0e1, #c0b2b0);
   color: #7c5c4a;
   border: none;
@@ -202,13 +202,39 @@ button {
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  width: 100%;
+  width: 50%;
 }
 
-button:hover {
+button:not(.auth-btn):not(.geri-btn):hover {
   background: linear-gradient(135deg, #f8e0e1, #d1c6b1, #e2d9d0, #c0b2b0);
   transform: translateY(-2px);
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+/* ===== GERI BUTTON STYLES ===== */
+.geri-btn {
+  background: linear-gradient(135deg, #e2d9d0, #b48a78);
+  color: #7c5c4a;
+  border: none;
+  border-radius: 50%;
+  width: 45px;
+  height: 45px;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s;
+  position: absolute;
+  top: 20px;
+  left: 20px;
+}
+
+.geri-btn:hover {
+  background: linear-gradient(135deg, #b48a78, #e2d9d0);
+  color: #fff;
+  transform: scale(1.1);
 }
 
 /* ===== CARD STYLES ===== */
@@ -294,6 +320,64 @@ tr:nth-child(even) {
 
 tr:hover {
   background: rgba(226, 217, 208, 0.3);
+}
+
+/* ===== TABLE INPUT STYLES ===== */
+.table-input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 14px;
+  background: rgba(255, 255, 255, 0.9);
+  transition: all 0.3s ease;
+  font-family: inherit;
+}
+
+.table-input:focus {
+  outline: none;
+  border-color: #7c5c4a;
+  box-shadow: 0 0 0 2px rgba(124, 92, 74, 0.2);
+  background: #ffffff;
+}
+
+.table-input:hover {
+  border-color: #b48a78;
+}
+
+.form-select {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 14px;
+  background: rgba(255, 255, 255, 0.9);
+  transition: all 0.3s ease;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.form-select:focus {
+  outline: none;
+  border-color: #7c5c4a;
+  box-shadow: 0 0 0 2px rgba(124, 92, 74, 0.2);
+  background: #ffffff;
+}
+
+.form-select:hover {
+  border-color: #b48a78;
+}
+
+/* ===== PASSWORD INPUT STYLES ===== */
+.table-input[type="password"] {
+  font-family: "Courier New", monospace;
+  letter-spacing: 2px;
+}
+
+.table-input[type="password"]::placeholder {
+  font-family: inherit;
+  letter-spacing: normal;
+  color: #999;
 }
 
 /* ===== FOOTER STYLES ===== */
@@ -645,17 +729,105 @@ tr:hover {
 }
 
 .yildiz {
-  font-size: 1rem;
+  width: 20px;
+  height: 20px;
   cursor: default;
-  transition: color 0.2s ease;
+  transition: all 0.2s ease;
+  position: relative;
+  display: inline-block;
+  margin: 0 2px;
+}
+
+.yildiz::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: currentColor;
+  clip-path: polygon(
+    50% 0%,
+    61% 35%,
+    98% 35%,
+    68% 57%,
+    79% 91%,
+    50% 70%,
+    21% 91%,
+    32% 57%,
+    2% 35%,
+    39% 35%
+  );
 }
 
 .yildiz.sari {
-  color: #ffd700;
+  color: #007bff;
+}
+
+.yildiz.sari::before {
+  filter: drop-shadow(0 0 3px rgba(0, 123, 255, 0.5));
 }
 
 .yildiz.beyaz {
   color: #e0e0e0;
+}
+
+.yildiz.beyaz::before {
+  filter: drop-shadow(0 0 3px rgba(0, 0, 0, 0.3));
+}
+
+.yildiz.imdb-yildiz {
+  width: 16px;
+  height: 16px;
+  margin: 0 5px 0 0;
+}
+
+.yildiz.imdb-yildiz::before {
+  background: #f5c518;
+  filter: drop-shadow(0 0 2px rgba(245, 197, 24, 0.5));
+}
+
+.puan-yildiz {
+  width: 25px;
+  height: 25px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  display: inline-block;
+  margin: 0 2px;
+}
+
+.puan-yildiz::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #e0e0e0;
+  clip-path: polygon(
+    50% 0%,
+    61% 35%,
+    98% 35%,
+    68% 57%,
+    79% 91%,
+    50% 70%,
+    21% 91%,
+    32% 57%,
+    2% 35%,
+    39% 35%
+  );
+  transition: all 0.2s ease;
+}
+
+.puan-yildiz.secili::before {
+  background: #007bff;
+  filter: drop-shadow(0 0 3px rgba(0, 123, 255, 0.5));
+}
+
+.puan-yildiz:hover::before {
+  background: #007bff;
+  transform: scale(1.1);
 }
 
 .yorum-tarih {

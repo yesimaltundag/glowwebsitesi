@@ -4,35 +4,28 @@ angular
   .config(function ($qProvider) {
     $qProvider.errorOnUnhandledRejections(false);
   })
-  .filter("yildizSistemi", function () {
+  .filter("yildizSistemi", function ($sce) {
     return function (puan) {
       if (!puan || puan < 0 || puan > 10) return "";
 
       var yildizlar = "";
       var tamYildiz = Math.floor(puan);
-      var yarimYildiz = puan % 1 >= 0.5;
 
       // Sarı yıldızlar (verilen puan kadar)
       for (var i = 0; i < tamYildiz; i++) {
-        yildizlar += '<span class="yildiz sarı">⭐</span>';
-      }
-
-      // Yarım yıldız (eğer varsa)
-      if (yarimYildiz) {
-        yildizlar += '<span class="yildiz sarı">⭐</span>';
-        tamYildiz++;
+        yildizlar += '<span class="yildiz sari"></span>';
       }
 
       // Beyaz yıldızlar (kalan)
       for (var i = tamYildiz; i < 10; i++) {
-        yildizlar += '<span class="yildiz beyaz">⭐</span>';
+        yildizlar += '<span class="yildiz beyaz"></span>';
       }
 
-      return (
+      return $sce.trustAsHtml(
         yildizlar +
-        ' <span style="margin-left: 5px; font-size: 0.9rem;">(' +
-        puan +
-        "/10)</span>"
+          ' <span style="margin-left: 5px; font-size: 0.9rem;">(' +
+          puan +
+          "/10)</span>"
       );
     };
   })
@@ -133,7 +126,7 @@ angular
       }
 
       $http
-        .post("api.php", {
+        .post("api.php?kayit=1", {
           username: $scope.username,
           adsoyad: $scope.adsoyad,
           sifre: $scope.sifre,
@@ -1738,30 +1731,52 @@ angular
 
     // Filtreleme fonksiyonu
     $scope.filtrele = function () {
+      // Input değerini manuel olarak al
+      var searchInput = document.querySelector(".search-box");
+      if (searchInput) {
+        $scope.aramaMetni = searchInput.value;
+      }
+
+      // Puan değerini manuel olarak al
+      var puanSelect = document.querySelector('select[ng-model="seciliPuan"]');
+      if (puanSelect) {
+        $scope.seciliPuan = puanSelect.value;
+      }
+
+      // Tür değerini manuel olarak al
+      var turSelect = document.querySelector('select[ng-model="seciliTur"]');
+      if (turSelect) {
+        $scope.seciliTur = turSelect.value;
+      }
+
       var filtered = $scope.yorumlar;
 
       // Tür filtresi
-      if ($scope.seciliTur) {
+      if ($scope.seciliTur && $scope.seciliTur !== "") {
         filtered = filtered.filter(function (yorum) {
           return yorum.tur === $scope.seciliTur;
         });
       }
 
       // Puan filtresi
-      if ($scope.seciliPuan) {
+      if ($scope.seciliPuan && $scope.seciliPuan !== "") {
+        var seciliPuanNum = parseInt($scope.seciliPuan);
         filtered = filtered.filter(function (yorum) {
-          return yorum.puan == $scope.seciliPuan;
+          var yorumPuan = parseInt(yorum.puan) || 0;
+          return yorumPuan === seciliPuanNum;
         });
       }
 
       // Arama filtresi
-      if ($scope.aramaMetni) {
-        var searchTerm = $scope.aramaMetni.toLowerCase();
+      if ($scope.aramaMetni && $scope.aramaMetni.trim() !== "") {
+        var searchTerm = $scope.aramaMetni.toLowerCase().trim();
         filtered = filtered.filter(function (yorum) {
           return (
-            yorum.kullanici_adi.toLowerCase().includes(searchTerm) ||
-            yorum.icerik_adi.toLowerCase().includes(searchTerm) ||
-            yorum.yorum.toLowerCase().includes(searchTerm)
+            (yorum.kullanici_adi &&
+              yorum.kullanici_adi.toLowerCase().includes(searchTerm)) ||
+            (yorum.icerik_adi &&
+              yorum.icerik_adi.toLowerCase().includes(searchTerm)) ||
+            (yorum.yorum && yorum.yorum.toLowerCase().includes(searchTerm))
           );
         });
       }

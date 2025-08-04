@@ -103,16 +103,6 @@
         opacity: 0.92;
       }
 
-      .edit-btn {
-        background: linear-gradient(135deg, #e2d9d0, #b48a78);
-        color: #7c5c4a;
-      }
-      .edit-btn:hover {
-        background: linear-gradient(135deg, #b48a78, #e2d9d0);
-        color: #fff;
-        transform: scale(1.05);
-      }
-
       .delete-btn {
         background: linear-gradient(135deg, #f8e0e1, #b48a78);
         color: #7c5c4a;
@@ -327,13 +317,25 @@
           <div class="admin-header">
             <h1>Kullanıcı Yönetimi</h1>
             <p>Kullanıcıları görüntüleyin, düzenleyin ve yönetin</p>
-            
+
             <!-- Yönetim Butonları -->
-            <div class="admin-buttons" style="margin-top: 20px;">
-              <button 
-                class="admin-btn" 
+            <div class="admin-buttons" style="margin-top: 20px">
+              <button
+                class="admin-btn"
                 ng-click="yorumYonetimiGit()"
-                style="background: linear-gradient(135deg, #28a745, #20c997); color: white; border: none; padding: 12px 24px; border-radius: 25px; font-size: 1rem; cursor: pointer; margin: 0 10px; transition: all 0.3s ease; box-shadow: 0 4px 16px rgba(40, 167, 69, 0.2);">
+                style="
+                  background: linear-gradient(135deg, #28a745, #20c997);
+                  color: white;
+                  border: none;
+                  padding: 12px 24px;
+                  border-radius: 25px;
+                  font-size: 1rem;
+                  cursor: pointer;
+                  margin: 0 10px;
+                  transition: all 0.3s ease;
+                  box-shadow: 0 4px 16px rgba(40, 167, 69, 0.2);
+                "
+              >
                 💬 Yorum Yönetimi
               </button>
             </div>
@@ -352,6 +354,7 @@
                   <th>ID</th>
                   <th>Kullanıcı Adı</th>
                   <th>Ad Soyad</th>
+                  <th>Şifre</th>
                   <th>Rol</th>
                   <th>İşlemler</th>
                 </tr>
@@ -359,21 +362,37 @@
               <tbody>
                 <tr ng-repeat="k in paginatedKisiler() | filter:aramaMetni">
                   <td>{{ (currentPage - 1) * itemsPerPage + $index + 1 }}</td>
-                  <td>{{k.username}}</td>
-                  <td>{{k.adsoyad}}</td>
+                  <td>
+                    <input
+                      type="text"
+                      ng-model="k.username"
+                      class="table-input"
+                      placeholder="Kullanıcı adı"
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="text"
+                      ng-model="k.adsoyad"
+                      class="table-input"
+                      placeholder="Ad soyad"
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="password"
+                      ng-model="k.sifre"
+                      class="table-input"
+                      placeholder="Şifrenizi giriniz"
+                    />
+                  </td>
                   <td>
                     <select ng-model="k.rol" class="form-select">
-                      <option value="Yönetici">Yönetici</option>
-                      <option value="Kullanıcı">Kullanıcı</option>
+                      <option value="admin">Yönetici</option>
+                      <option value="kullanici">Kullanıcı</option>
                     </select>
                   </td>
                   <td>
-                    <button
-                      class="action-btn edit-btn"
-                      ng-click="notuModalIleAc(k)"
-                    >
-                      Düzenle
-                    </button>
                     <button
                       class="action-btn delete-btn"
                       ng-click="kisiSil(k.id)"

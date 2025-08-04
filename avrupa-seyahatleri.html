@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="tr" ng-app="GirisApp">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Avrupa Seyahatleri - GLOW</title>
+    <link rel="stylesheet" href="assets/css/style.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="assets/js/app.js"></script>
+    <style>
+      .avrupa-container {
+        max-width: 1200px;
+        margin: 40px auto;
+        padding: 32px;
+        background: rgba(255, 255, 255, 0.92);
+        border-radius: 18px;
+        box-shadow: 0 8px 32px rgba(124, 92, 74, 0.1);
+        backdrop-filter: blur(10px);
+      }
+
+      .page-header {
+        text-align: center;
+        margin-bottom: 40px;
+      }
+
+      .page-title {
+        color: #7c5c4a;
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+      }
+
+      .page-subtitle {
+        color: #b48a78;
+        font-size: 1.1rem;
+        font-weight: 500;
+      }
+
+      .geri-btn {
+        background: linear-gradient(135deg, #e2d9d0, #b48a78);
+        color: #7c5c4a;
+        border: none;
+        border-radius: 50%;
+        width: 45px;
+        height: 45px;
+        font-size: 18px;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s;
+        position: absolute;
+        top: 20px;
+        left: 20px;
+      }
+
+      .geri-btn:hover {
+        background: linear-gradient(135deg, #b48a78, #e2d9d0);
+        color: #fff;
+        transform: scale(1.1);
+      }
+
+      .sehirler-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 30px;
+        margin-top: 40px;
+      }
+
+      .sehir-card {
+        background: linear-gradient(135deg, #f8e0e1 0%, #e2d9d0 100%);
+        border-radius: 16px;
+        padding: 25px;
+        box-shadow: 0 6px 20px rgba(180, 138, 120, 0.1);
+        transition: all 0.3s ease;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .sehir-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 12px 30px rgba(180, 138, 120, 0.2);
+      }
+
+      .sehir-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #b48a78, #e2d9d0, #f8e0e1);
+      }
+
+      .sehir-baslik {
+        color: #7c5c4a;
+        font-size: 1.4rem;
+        font-weight: 700;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .sehir-ulke {
+        color: #b48a78;
+        font-size: 0.95rem;
+        font-weight: 500;
+        margin-bottom: 15px;
+      }
+
+      .sehir-aciklama {
+        color: #7c5c4a;
+        font-size: 0.95rem;
+        line-height: 1.6;
+        margin-bottom: 20px;
+      }
+
+      .sehir-ozellikler {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 20px;
+      }
+
+      .ozellik-tag {
+        background: rgba(180, 138, 120, 0.2);
+        color: #7c5c4a;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 500;
+      }
+
+      .detay-btn {
+        background: linear-gradient(135deg, #b48a78, #e2d9d0);
+        color: white;
+        border: none;
+        border-radius: 25px;
+        padding: 10px 20px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        width: 100%;
+      }
+
+      .detay-btn:hover {
+        background: linear-gradient(135deg, #e2d9d0, #b48a78);
+        transform: scale(1.02);
+      }
+
+      .sehir-icon {
+        font-size: 1.2rem;
+      }
+
+      @media (max-width: 768px) {
+        .avrupa-container {
+          margin: 20px;
+          padding: 20px;
+        }
+
+        .page-title {
+          font-size: 2rem;
+        }
+
+        .sehirler-grid {
+          grid-template-columns: 1fr;
+          gap: 20px;
+        }
+
+        .geri-btn {
+          top: 15px;
+          left: 15px;
+          width: 40px;
+          height: 40px;
+          font-size: 16px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <ng-include src="'components/header.html'"></ng-include>
+
+    <main class="main-content">
+      <div class="avrupa-container" ng-controller="AvrupaSeyahatController">
+        <button
+          class="geri-btn"
+          onclick="window.history.back()"
+          title="Geri Dön"
+        >
+          ←
+        </button>
+
+        <div class="page-header">
+          <h1 class="page-title">🌍 Avrupa Seyahatleri</h1>
+          <p class="page-subtitle">Avrupa'nın En Ünlü 10 Şehri</p>
+        </div>
+
+        <div class="sehirler-grid">
+          <div
+            class="sehir-card"
+            ng-repeat="sehir in avrupaSehirleri"
+            ng-click="sehirDetayGit(sehir)"
+          >
+            <h3 class="sehir-baslik">
+              <span class="sehir-icon">{{sehir.icon}}</span>
+              {{sehir.ad}}
+            </h3>
+            <p class="sehir-ulke">{{sehir.ulke}}</p>
+            <p class="sehir-aciklama">{{sehir.kisaAciklama}}</p>
+
+            <div class="sehir-ozellikler">
+              <span class="ozellik-tag" ng-repeat="ozellik in sehir.ozellikler"
+                >{{ozellik}}</span
+              >
+            </div>
+
+            <button class="detay-btn">Detayları Gör</button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <ng-include src="'components/footer.html'"></ng-include>
+
+    <script>
+      angular
+        .module("GirisApp")
+        .controller("AvrupaSeyahatController", function ($scope) {
+          $scope.kullanici = JSON.parse(
+            localStorage.getItem("girisYapan") || "null"
+          );
+
+          $scope.avrupaSehirleri = [
+            {
+              id: 1,
+              ad: "Paris",
+              ulke: "Fransa",
+              icon: "🗼",
+              kisaAciklama:
+                "Aşkın, sanatın ve modanın başkenti. Eyfel Kulesi, Louvre Müzesi ve Notre-Dame Katedrali ile dünyanın en romantik şehri.",
+              ozellikler: ["Sanat", "Moda", "Tarih", "Gastronomi"],
+              tarih:
+                "M.Ö. 3. yüzyılda kurulan Paris, Orta Çağ'da önemli bir ticaret merkezi haline geldi. Fransız Devrimi ile dünya tarihini değiştiren şehir, günümüzde kültür ve sanatın merkezi.",
+              gorulecekYerler: [
+                "Eyfel Kulesi - Şehrin simgesi",
+                "Louvre Müzesi - Mona Lisa ve sanat hazineleri",
+                "Notre-Dame Katedrali - Gotik mimarinin şaheseri",
+                "Arc de Triomphe - Zafer takı",
+                "Champs-Élysées - Lüks alışveriş caddesi",
+                "Versailles Sarayı - Krallık ihtişamı",
+                "Montmartre - Sanatçılar tepesi",
+                "Seine Nehri - Romantik tekne turları",
+              ],
+              etkinlikler: [
+                "Paris Fashion Week - Moda haftası",
+                "Fransız Açık Tenis Turnuvası",
+                "Bastille Günü kutlamaları",
+                "Paris Jazz Festivali",
+                "Nuit Blanche - Beyaz gece sanat festivali",
+              ],
+              restoranlar: [
+                "Le Jules Verne - Eyfel Kulesi'nde lüks",
+                "L'Arpège - 3 Michelin yıldızlı",
+                "Le Comptoir du Relais - Geleneksel Fransız",
+                "Septime - Modern Fransız mutfağı",
+                "L'Ami Louis - Klasik bistro",
+              ],
+            },
+            {
+              id: 2,
+              ad: "Roma",
+              ulke: "İtalya",
+              icon: "🏛️",
+              kisaAciklama:
+                "Antik Roma İmparatorluğu'nun kalbi. Colosseum, Vatikan ve tarihi sokaklarıyla binlerce yıllık tarihi yaşatan şehir.",
+              ozellikler: ["Tarih", "Sanat", "Mimari", "Din"],
+              tarih:
+                "M.Ö. 753 yılında kurulan Roma, antik dünyanın en güçlü imparatorluğunun başkenti oldu. Katolik dünyasının merkezi Vatikan ile birlikte tarihi ve dini önemini koruyor.",
+              gorulecekYerler: [
+                "Colosseum - Antik gladyatör arenası",
+                "Vatikan Müzeleri - Sistine Şapeli",
+                "Trevi Çeşmesi - Dilek çeşmesi",
+                "Pantheon - Antik tapınak",
+                "Roma Forumu - Antik şehir merkezi",
+                "Villa Borghese - Büyük park",
+                "Trastevere - Geleneksel mahalle",
+                "Piazza Navona - Barok meydan",
+              ],
+              etkinlikler: [
+                "Roma Film Festivali",
+                "Estate Romana - Yaz festivali",
+                "Papa'nın Paskalya ayini",
+                "Roma Opera Festivali",
+                "Notte Bianca - Beyaz gece",
+              ],
+              restoranlar: [
+                "La Pergola - 3 Michelin yıldızlı",
+                "Roscioli - Geleneksel İtalyan",
+                "Armando al Pantheon - Klasik Roma",
+                "Da Enzo al 29 - Trastevere'de otantik",
+                "Il Pagliaccio - Modern İtalyan",
+              ],
+            },
+            {
+              id: 3,
+              ad: "Barcelona",
+              ulke: "İspanya",
+              icon: "🏰",
+              kisaAciklama:
+                "Gaudi'nin mimari şaheserleri, canlı kültürü ve Akdeniz iklimi ile İspanya'nın en dinamik şehri.",
+              ozellikler: ["Mimari", "Sanat", "Deniz", "Kültür"],
+              tarih:
+                "M.Ö. 1. yüzyılda Romalılar tarafından kurulan Barcelona, Orta Çağ'da önemli bir ticaret merkezi oldu. Gaudi'nin eserleri ile modern mimarinin öncüsü haline geldi.",
+              gorulecekYerler: [
+                "Sagrada Familia - Gaudi'nin şaheseri",
+                "Park Güell - Renkli park",
+                "Casa Batlló - Ejderha evi",
+                "La Rambla - Canlı caddesi",
+                "Barri Gòtic - Gotik mahalle",
+                "Montjuïc - Tepedeki kale",
+                "Barceloneta - Sahil mahallesi",
+                "Parc de la Ciutadella - Şehir parkı",
+              ],
+              etkinlikler: [
+                "Sonar Festivali - Elektronik müzik",
+                "La Mercè Festivali - Şehir festivali",
+                "Barcelona Fashion Week",
+                "Primavera Sound - Müzik festivali",
+                "Festa Major de Gràcia - Mahalle festivali",
+              ],
+              restoranlar: [
+                "El Celler de Can Roca - 3 Michelin yıldızlı",
+                "Tickets - Tapas restoranı",
+                "Disfrutar - Modern Katalan",
+                "Cal Pep - Geleneksel tapas",
+                "Quimet & Quimet - Şarap barı",
+              ],
+            },
+            {
+              id: 4,
+              ad: "Amsterdam",
+              ulke: "Hollanda",
+              icon: "🌷",
+              kisaAciklama:
+                "Kanalları, bisiklet kültürü ve özgürlükçü atmosferi ile Avrupa'nın en yaşanabilir şehirlerinden biri.",
+              ozellikler: ["Kanallar", "Bisiklet", "Sanat", "Özgürlük"],
+              tarih:
+                "12. yüzyılda balıkçı köyü olarak kurulan Amsterdam, 17. yüzyılda Altın Çağ'ını yaşadı. Ticaret ve sanatın merkezi haline geldi.",
+              gorulecekYerler: [
+                "Rijksmuseum - Hollanda sanatı",
+                "Van Gogh Müzesi - Sanatçının eserleri",
+                "Anne Frank Evi - Tarihi müze",
+                "Dam Meydanı - Şehir merkezi",
+                "Jordaan - Sanatçı mahallesi",
+                "Vondelpark - Büyük park",
+                "Red Light District - Tarihi bölge",
+                "Canal Ring - UNESCO mirası kanallar",
+              ],
+              etkinlikler: [
+                "King's Day - Kral günü kutlamaları",
+                "Amsterdam Dance Event",
+                "Tulip Festivali - Lale festivali",
+                "Grachtenfestival - Kanal festivali",
+                "Museum Night - Müze gecesi",
+              ],
+              restoranlar: [
+                "Restaurant Ciel Bleu - 2 Michelin yıldızlı",
+                "De Kas - Çiftlik restoranı",
+                "Restaurant Floreyn - Modern Hollanda",
+                "Moeders - Geleneksel Hollanda",
+                "Ciel Bleu - Lüks restoran",
+              ],
+            },
+            {
+              id: 5,
+              ad: "Prag",
+              ulke: "Çek Cumhuriyeti",
+              icon: "🏰",
+              kisaAciklama:
+                "Orta Çağ mimarisi, büyülü atmosferi ve biraları ile Avrupa'nın en güzel şehirlerinden biri.",
+              ozellikler: ["Mimari", "Tarih", "Bira", "Müzik"],
+              tarih:
+                "9. yüzyılda kurulan Prag, Bohemya Krallığı'nın başkenti oldu. Habsburg İmparatorluğu döneminde önemli bir kültür merkezi haline geldi.",
+              gorulecekYerler: [
+                "Prag Kalesi - Büyük kale kompleksi",
+                "Charles Köprüsü - Tarihi köprü",
+                "Old Town Square - Eski şehir meydanı",
+                "Astronomical Clock - Saat kulesi",
+                "St. Vitus Cathedral - Gotik katedral",
+                "Jewish Quarter - Yahudi mahallesi",
+                "Petřín Hill - Tepedeki park",
+                "Wenceslas Square - Modern meydan",
+              ],
+              etkinlikler: [
+                "Prag Spring Festivali - Klasik müzik",
+                "Prague Fringe Festival",
+                "Prague Food Festival",
+                "Christmas Markets - Noel pazarları",
+                "Prague Beer Festival",
+              ],
+              restoranlar: [
+                "La Degustation - Modern Çek",
+                "Field - 1 Michelin yıldızlı",
+                "U Modré Kachničky - Geleneksel Çek",
+                "Lokál - Bira restoranı",
+                "Sansho - Asya-Çek füzyon",
+              ],
+            },
+            {
+              id: 6,
+              ad: "Viyana",
+              ulke: "Avusturya",
+              icon: "🎭",
+              kisaAciklama:
+                "Müziğin, sanatın ve imparatorluk ihtişamının şehri. Mozart, Beethoven ve Habsburg hanedanının izleri.",
+              ozellikler: ["Müzik", "Sanat", "Tarih", "Kahve"],
+              tarih:
+                "Roma döneminde kurulan Viyana, Habsburg İmparatorluğu'nun başkenti oldu. Mozart, Beethoven gibi bestecilerin yaşadığı şehir.",
+              gorulecekYerler: [
+                "Schönbrunn Palace - İmparatorluk sarayı",
+                "St. Stephen's Cathedral - Gotik katedral",
+                "Belvedere Palace - Barok saray",
+                "Hofburg Palace - İmparatorluk sarayı",
+                "Vienna State Opera - Opera binası",
+                "Prater - Eğlence parkı",
+                "Ringstrasse - Tarihi cadde",
+                "Museum Quarter - Müze bölgesi",
+              ],
+              etkinlikler: [
+                "Vienna Opera Ball - Opera balosu",
+                "Vienna Festival - Sanat festivali",
+                "Christmas Markets - Noel pazarları",
+                "Vienna Jazz Festival",
+                "Donauinselfest - Müzik festivali",
+              ],
+              restoranlar: [
+                "Steirereck - 2 Michelin yıldızlı",
+                "Silvio Nickol - 1 Michelin yıldızlı",
+                "Plachutta - Geleneksel Avusturya",
+                "Figlmüller - Wiener Schnitzel",
+                "Café Central - Tarihi kafe",
+              ],
+            },
+            {
+              id: 7,
+              ad: "Budapeşte",
+              ulke: "Macaristan",
+              icon: "🏛️",
+              kisaAciklama:
+                "Tuna nehrinin iki yakasında kurulu, termal banyoları ve güzel mimarisi ile Doğu Avrupa'nın incisi.",
+              ozellikler: ["Termal", "Mimari", "Tarih", "Nehir"],
+              tarih:
+                "Budin ve Peşte şehirlerinin birleşmesiyle oluşan Budapeşte, Avusturya-Macaristan İmparatorluğu'nun başkenti oldu.",
+              gorulecekYerler: [
+                "Parliament Building - Parlamento binası",
+                "Buda Castle - Tarihi kale",
+                "Fisherman's Bastion - Balıkçı burcu",
+                "Chain Bridge - Zincir köprü",
+                "St. Stephen's Basilica - Bazilika",
+                "Széchenyi Baths - Termal banyolar",
+                "Heroes' Square - Kahramanlar meydanı",
+                "Margaret Island - Ada parkı",
+              ],
+              etkinlikler: [
+                "Budapest Spring Festival",
+                "Sziget Festival - Müzik festivali",
+                "Budapest Wine Festival",
+                "Christmas Markets - Noel pazarları",
+                "Budapest International Documentary Festival",
+              ],
+              restoranlar: [
+                "Costes - 1 Michelin yıldızlı",
+                "Gundel - Geleneksel Macar",
+                "Menza - Modern Macar",
+                "Central Market Hall - Geleneksel pazar",
+                "Ruszwurm - Tarihi kafe",
+              ],
+            },
+            {
+              id: 8,
+              ad: "Lizbon",
+              ulke: "Portekiz",
+              icon: "🌊",
+              kisaAciklama:
+                "Tejo nehri kıyısında, fado müziği ve pastel de nata ile Portekiz'in başkenti.",
+              ozellikler: ["Deniz", "Müzik", "Tarih", "Gastronomi"],
+              tarih:
+                "Fenikeliler tarafından kurulan Lizbon, 15. yüzyılda deniz keşiflerinin merkezi oldu. Büyük depremden sonra yeniden inşa edildi.",
+              gorulecekYerler: [
+                "Belém Tower - Deniz kulesi",
+                "Jerónimos Monastery - Manastır",
+                "Alfama - Tarihi mahalle",
+                "Castelo de São Jorge - Kale",
+                "Tram 28 - Tarihi tramvay",
+                "Baixa - Alt şehir",
+                "Bairro Alto - Üst mahalle",
+                "Miradouros - Seyir noktaları",
+              ],
+              etkinlikler: [
+                "Fado Festival - Geleneksel müzik",
+                "Lisbon Book Fair",
+                "Santo António Festivali",
+                "Lisbon Fish & Flavours",
+                "Lisbon Architecture Triennale",
+              ],
+              restoranlar: [
+                "Belcanto - 2 Michelin yıldızlı",
+                "Alma - 1 Michelin yıldızlı",
+                "A Cevicheria - Deniz ürünleri",
+                "Time Out Market - Gıda pazarı",
+                "Pasteis de Belém - Geleneksel tatlı",
+              ],
+            },
+            {
+              id: 9,
+              ad: "Kopenhag",
+              ulke: "Danimarka",
+              icon: "🧜‍♀️",
+              kisaAciklama:
+                "Hygge kültürü, bisiklet dostu sokakları ve modern tasarımı ile dünyanın en mutlu şehirlerinden biri.",
+              ozellikler: ["Tasarım", "Bisiklet", "Hygge", "Modern"],
+              tarih:
+                "Viking döneminde kurulan Kopenhag, 15. yüzyılda Danimarka'nın başkenti oldu. Günümüzde modern tasarım ve yaşam kalitesi ile öne çıkıyor.",
+              gorulecekYerler: [
+                "Little Mermaid - Küçük deniz kızı",
+                "Nyhavn - Renkli liman",
+                "Tivoli Gardens - Eğlence parkı",
+                "Amalienborg Palace - Kraliyet sarayı",
+                "Rosenborg Castle - Rönesans kalesi",
+                "Christiansborg Palace - Parlamento",
+                "Copenhagen Opera House - Opera binası",
+                "Freetown Christiania - Özgür şehir",
+              ],
+              etkinlikler: [
+                "Copenhagen Jazz Festival",
+                "Distortion Festival - Müzik festivali",
+                "Copenhagen Fashion Week",
+                "Christmas Markets - Noel pazarları",
+                "Copenhagen Cooking Festival",
+              ],
+              restoranlar: [
+                "Geranium - 3 Michelin yıldızlı",
+                "Noma - Dünya'nın en iyi restoranı",
+                "Kødbyens Fiskebar - Deniz ürünleri",
+                "Torvehallerne - Gıda pazarı",
+                "Café Norden - Geleneksel kafe",
+              ],
+            },
+            {
+              id: 10,
+              ad: "İstanbul",
+              ulke: "Türkiye",
+              icon: "🕌",
+              kisaAciklama:
+                "Doğu ile Batı'nın buluştuğu şehir. Bizans ve Osmanlı izleri, Boğaz'ın güzelliği ile benzersiz.",
+              ozellikler: ["Tarih", "Kültür", "Boğaz", "Gastronomi"],
+              tarih:
+                "M.Ö. 660 yılında kurulan İstanbul, Roma, Bizans ve Osmanlı İmparatorluklarının başkenti oldu. Doğu ile Batı'nın köprüsü.",
+              gorulecekYerler: [
+                "Hagia Sophia - Ayasofya",
+                "Blue Mosque - Sultanahmet Camii",
+                "Topkapi Palace - Topkapı Sarayı",
+                "Grand Bazaar - Kapalıçarşı",
+                "Bosphorus - Boğaz",
+                "Galata Tower - Galata Kulesi",
+                "Dolmabahçe Palace - Dolmabahçe Sarayı",
+                "Basilica Cistern - Yerebatan Sarnıcı",
+              ],
+              etkinlikler: [
+                "İstanbul Film Festivali",
+                "İstanbul Müzik Festivali",
+                "İstanbul Bienali - Sanat bienali",
+                "Tulip Festivali - Lale festivali",
+                "İstanbul Jazz Festivali",
+              ],
+              restoranlar: [
+                "Mikla - Modern Türk",
+                "Çiya Sofrası - Geleneksel Anadolu",
+                "Balıkçı Lokantası - Deniz ürünleri",
+                "Kebapçı Selim Usta - Kebap",
+                "Pandeli - Tarihi restoran",
+              ],
+            },
+          ];
+
+          $scope.sehirDetayGit = function (sehir) {
+            // Şehir detay sayfasına yönlendirme
+            localStorage.setItem("seciliSehir", JSON.stringify(sehir));
+            window.location.href = "sehir-detay.html";
+          };
+        });
+    </script>
+  </body>
+</html>

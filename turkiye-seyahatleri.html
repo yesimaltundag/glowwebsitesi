@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="tr" ng-app="GirisApp">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Türkiye Seyahatleri - GLOW</title>
+    <link rel="stylesheet" href="assets/css/style.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="assets/js/app.js"></script>
+    <style>
+      .turkiye-container {
+        max-width: 1200px;
+        margin: 40px auto;
+        padding: 32px;
+        background: rgba(255, 255, 255, 0.92);
+        border-radius: 18px;
+        box-shadow: 0 8px 32px rgba(124, 92, 74, 0.1);
+        backdrop-filter: blur(10px);
+      }
+
+      .page-header {
+        text-align: center;
+        margin-bottom: 40px;
+      }
+
+      .page-title {
+        color: #7c5c4a;
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+      }
+
+      .page-subtitle {
+        color: #b48a78;
+        font-size: 1.1rem;
+        font-weight: 500;
+      }
+
+      .geri-btn {
+        background: linear-gradient(135deg, #e2d9d0, #b48a78);
+        color: #7c5c4a;
+        border: none;
+        border-radius: 50%;
+        width: 45px;
+        height: 45px;
+        font-size: 18px;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s;
+        position: absolute;
+        top: 20px;
+        left: 20px;
+      }
+
+      .geri-btn:hover {
+        background: linear-gradient(135deg, #b48a78, #e2d9d0);
+        color: #fff;
+        transform: scale(1.1);
+      }
+
+      .sehirler-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 30px;
+        margin-top: 40px;
+      }
+
+      .sehir-card {
+        background: linear-gradient(135deg, #f8e0e1 0%, #e2d9d0 100%);
+        border-radius: 16px;
+        padding: 25px;
+        box-shadow: 0 6px 20px rgba(180, 138, 120, 0.1);
+        transition: all 0.3s ease;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .sehir-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 12px 30px rgba(180, 138, 120, 0.2);
+      }
+
+      .sehir-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #b48a78, #e2d9d0, #f8e0e1);
+      }
+
+      .sehir-baslik {
+        color: #7c5c4a;
+        font-size: 1.4rem;
+        font-weight: 700;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .sehir-bolge {
+        color: #b48a78;
+        font-size: 0.95rem;
+        font-weight: 500;
+        margin-bottom: 15px;
+      }
+
+      .sehir-aciklama {
+        color: #7c5c4a;
+        font-size: 0.95rem;
+        line-height: 1.6;
+        margin-bottom: 20px;
+      }
+
+      .sehir-ozellikler {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 20px;
+      }
+
+      .ozellik-tag {
+        background: rgba(180, 138, 120, 0.2);
+        color: #7c5c4a;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 500;
+      }
+
+      .detay-btn {
+        background: linear-gradient(135deg, #b48a78, #e2d9d0);
+        color: white;
+        border: none;
+        border-radius: 25px;
+        padding: 10px 20px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        width: 100%;
+      }
+
+      .detay-btn:hover {
+        background: linear-gradient(135deg, #e2d9d0, #b48a78);
+        transform: scale(1.02);
+      }
+
+      .sehir-icon {
+        font-size: 1.2rem;
+      }
+
+      @media (max-width: 768px) {
+        .turkiye-container {
+          margin: 20px;
+          padding: 20px;
+        }
+
+        .page-title {
+          font-size: 2rem;
+        }
+
+        .sehirler-grid {
+          grid-template-columns: 1fr;
+          gap: 20px;
+        }
+
+        .geri-btn {
+          top: 15px;
+          left: 15px;
+          width: 40px;
+          height: 40px;
+          font-size: 16px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <ng-include src="'components/header.html'"></ng-include>
+
+    <main class="main-content">
+      <div class="turkiye-container" ng-controller="TurkiyeSeyahatController">
+        <button
+          class="geri-btn"
+          onclick="window.history.back()"
+          title="Geri Dön"
+        >
+          ←
+        </button>
+
+        <div class="page-header">
+          <h1 class="page-title">🇹🇷 Türkiye Seyahatleri</h1>
+          <p class="page-subtitle">Türkiye'nin En Ünlü 10 Şehri</p>
+        </div>
+
+        <div class="sehirler-grid">
+          <div
+            class="sehir-card"
+            ng-repeat="sehir in turkiyeSehirleri"
+            ng-click="sehirDetayGit(sehir)"
+          >
+            <h3 class="sehir-baslik">
+              <span class="sehir-icon">{{sehir.icon}}</span>
+              {{sehir.ad}}
+            </h3>
+            <p class="sehir-bolge">{{sehir.bolge}}</p>
+            <p class="sehir-aciklama">{{sehir.kisaAciklama}}</p>
+
+            <div class="sehir-ozellikler">
+              <span class="ozellik-tag" ng-repeat="ozellik in sehir.ozellikler"
+                >{{ozellik}}</span
+              >
+            </div>
+
+            <button class="detay-btn">Detayları Gör</button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <ng-include src="'components/footer.html'"></ng-include>
+
+    <script>
+      angular
+        .module("GirisApp")
+        .controller("TurkiyeSeyahatController", function ($scope) {
+          $scope.kullanici = JSON.parse(
+            localStorage.getItem("girisYapan") || "null"
+          );
+
+          $scope.turkiyeSehirleri = [
+            {
+              id: 1,
+              ad: "İstanbul",
+              bolge: "Marmara Bölgesi",
+              icon: "🕌",
+              kisaAciklama:
+                "İki kıtanın buluştuğu şehir. Ayasofya, Topkapı Sarayı ve Boğaz'ın eşsiz manzarası ile dünyanın en büyüleyici metropolü.",
+              ozellikler: ["Tarih", "Kültür", "Boğaz", "Alışveriş"],
+              tarih:
+                "M.Ö. 660 yılında Megara'dan gelen Yunan kolonistler tarafından Byzantion adıyla kuruldu. 330 yılında Konstantinopolis olarak Roma İmparatorluğu'nun başkenti oldu. 1453'te Fatih Sultan Mehmet tarafından fethedildi.",
+              gorulecekYerler: [
+                "Ayasofya - Tarihi cami ve müze",
+                "Topkapı Sarayı - Osmanlı sarayı",
+                "Sultanahmet Camii - Mavi Cami",
+                "Kapalı Çarşı - Tarihi pazar",
+                "Boğaz Turu - Deniz turu",
+                "Galata Kulesi - Tarihi kule",
+                "Dolmabahçe Sarayı - Saray",
+                "Ortaköy Camii - Boğaz camisi",
+              ],
+              etkinlikler: [
+                "İstanbul Film Festivali",
+                "İstanbul Bienali",
+                "İstanbul Müzik Festivali",
+                "İstanbul Fashion Week",
+                "Boğaz Festivali",
+              ],
+              restoranlar: [
+                "Mikla - Modern Türk mutfağı",
+                "Çiya Sofrası - Geleneksel",
+                "Balıkçı Lokantası - Deniz ürünleri",
+                "Kebapçı Selim Usta - Kebap",
+                "Künefeci - Tatlı",
+              ],
+            },
+            {
+              id: 2,
+              ad: "Antalya",
+              bolge: "Akdeniz Bölgesi",
+              icon: "🏖️",
+              kisaAciklama:
+                "Turkuaz sahil şehri. Antik kalıntılar, muhteşem plajları ve doğal güzellikleri ile Türkiye'nin turizm başkenti.",
+              ozellikler: ["Plajlar", "Tarih", "Doğa", "Turizm"],
+              tarih:
+                "M.Ö. 2. yüzyılda Bergama Kralı II. Attalos tarafından kuruldu. Roma, Bizans ve Osmanlı dönemlerinde önemli bir liman şehri oldu. Günümüzde Türkiye'nin en önemli turizm merkezi.",
+              gorulecekYerler: [
+                "Kaleiçi - Tarihi merkez",
+                "Düden Şelalesi - Doğal şelale",
+                "Konyaaltı Plajı - Şehir plajı",
+                "Perge Antik Kenti - Arkeolojik site",
+                "Aspendos Tiyatrosu - Antik tiyatro",
+                "Termessos - Dağ kenti",
+                "Olympos - Antik kent",
+                "Köprülü Kanyon - Doğal park",
+              ],
+              etkinlikler: [
+                "Antalya Altın Portakal Film Festivali",
+                "Antalya Uluslararası Piyano Festivali",
+                "Antalya Maratonu",
+                "Antalya Jazz Festivali",
+                "Antalya Expo",
+              ],
+              restoranlar: [
+                "Vanilla - Modern mutfak",
+                "Pasa Bey Kebap - Geleneksel",
+                "Balık Evi - Deniz ürünleri",
+                "Kale Restaurant - Tarihi atmosfer",
+                "Seraser - Lüks",
+              ],
+            },
+            {
+              id: 3,
+              ad: "Kapadokya",
+              bolge: "İç Anadolu Bölgesi",
+              icon: "🎈",
+              kisaAciklama:
+                "Peri bacalarının diyarı. Balon turları, yeraltı şehirleri ve eşsiz manzarası ile dünyanın en büyüleyici doğal harikalarından biri.",
+              ozellikler: ["Doğa", "Balon", "Tarih", "Macera"],
+              tarih:
+                "Milyonlarca yıl önce volkanik patlamalar sonucu oluşan tüf kayaları, rüzgar ve su erozyonu ile şekillendi. Hristiyanlığın ilk dönemlerinde önemli bir dini merkez oldu.",
+              gorulecekYerler: [
+                "Göreme Açık Hava Müzesi - Kilise kompleksi",
+                "Balon Turu - Havadan manzara",
+                "Derinkuyu Yeraltı Şehri - Tarihi yapı",
+                "Ihlara Vadisi - Doğal vadi",
+                "Uçhisar Kalesi - Doğal kale",
+                "Zelve Vadisi - Peri bacaları",
+                "Avanos - Çömlekçilik",
+                "Ortahisar - Tarihi köy",
+              ],
+              etkinlikler: [
+                "Kapadokya Balon Festivali",
+                "Kapadokya Müzik Festivali",
+                "Kapadokya Maratonu",
+                "Kapadokya Şarap Festivali",
+                "Kapadokya Fotoğraf Festivali",
+              ],
+              restoranlar: [
+                "Seten Restaurant - Geleneksel",
+                "Topdeck Cave Restaurant - Mağara restoranı",
+                "Dibek Restaurant - Yerel mutfak",
+                "Ziggy Cafe - Modern",
+                "Pumpkin Göreme - Lüks",
+              ],
+            },
+            {
+              id: 4,
+              ad: "İzmir",
+              bolge: "Ege Bölgesi",
+              icon: "🌊",
+              kisaAciklama:
+                "Ege'nin incisi. Kemeraltı çarşısı, sahil şeridi ve tarihi Agora'sı ile Türkiye'nin en yaşanabilir şehri.",
+              ozellikler: ["Deniz", "Tarih", "Kültür", "Gastronomi"],
+              tarih:
+                "M.Ö. 3000 yıllarında kurulan İzmir, antik çağda Smyrna olarak bilinirdi. Roma, Bizans ve Osmanlı dönemlerinde önemli bir ticaret merkezi oldu. Günümüzde Türkiye'nin üçüncü büyük şehri.",
+              gorulecekYerler: [
+                "Kemeraltı Çarşısı - Tarihi pazar",
+                "Konak Meydanı - Şehir merkezi",
+                "Agora Antik Kenti - Arkeolojik site",
+                "Kordon - Sahil yolu",
+                "Kadifekale - Tarihi kale",
+                "Alsancak - Modern mahalle",
+                "Çeşme - Sahil kasabası",
+                "Efes Antik Kenti - Tarihi kent",
+              ],
+              etkinlikler: [
+                "İzmir Uluslararası Fuarı",
+                "İzmir Maratonu",
+                "İzmir Jazz Festivali",
+                "İzmir Tiyatro Festivali",
+                "Çeşme Müzik Festivali",
+              ],
+              restoranlar: [
+                "Deniz Restaurant - Deniz ürünleri",
+                "Köfteci Ramiz - Geleneksel",
+                "Boyozcu - Kahvaltı",
+                "Kumrucu - Sokak yemeği",
+                "Çeşme Marina - Lüks",
+              ],
+            },
+            {
+              id: 5,
+              ad: "Bursa",
+              bolge: "Marmara Bölgesi",
+              icon: "🌳",
+              kisaAciklama:
+                "Yeşil Bursa. Osmanlı'nın ilk başkenti, Uludağ'ı ve İskender kebabı ile tarihi ve doğal güzelliklerin buluştuğu şehir.",
+              ozellikler: ["Tarih", "Doğa", "Gastronomi", "Kış Sporları"],
+              tarih:
+                "M.Ö. 4. yüzyılda Bithynia Krallığı'nın başkenti oldu. 1326 yılında Orhan Bey tarafından fethedildi ve Osmanlı İmparatorluğu'nun ilk başkenti oldu. Günümüzde sanayi ve turizm şehri.",
+              gorulecekYerler: [
+                "Uludağ - Kayak merkezi",
+                "Ulu Cami - Tarihi cami",
+                "Yeşil Cami - Osmanlı mimarisi",
+                "Cumalıkızık - Tarihi köy",
+                "Tophane Saat Kulesi - Şehir simgesi",
+                "Koza Han - Tarihi han",
+                "Oylat Kaplıcaları - Termal",
+                "Bursa Kalesi - Tarihi kale",
+              ],
+              etkinlikler: [
+                "Bursa Festivali",
+                "Uludağ Kayak Festivali",
+                "Bursa Kültür Sanat Festivali",
+                "Bursa Maratonu",
+                "Cumalıkızık Festivali",
+              ],
+              restoranlar: [
+                "İskender Kebap - Geleneksel",
+                "Kebapçı İskender - Tarihi",
+                "İnegöl Köfte - Yerel mutfak",
+                "Pideli Köfte - Sokak yemeği",
+                "Bursa Kestane Şekeri - Tatlı",
+              ],
+            },
+            {
+              id: 6,
+              ad: "Trabzon",
+              bolge: "Karadeniz Bölgesi",
+              icon: "☔",
+              kisaAciklama:
+                "Yeşil Karadeniz'in kalbi. Sümela Manastırı, fındık bahçeleri ve hamsi balığı ile doğal güzelliklerin şehri.",
+              ozellikler: ["Doğa", "Tarih", "Gastronomi", "Kültür"],
+              tarih:
+                "M.Ö. 7. yüzyılda Miletoslu kolonistler tarafından kuruldu. Roma, Bizans ve Osmanlı dönemlerinde önemli bir ticaret merkezi oldu. Günümüzde Karadeniz'in en büyük şehri.",
+              gorulecekYerler: [
+                "Sümela Manastırı - Tarihi manastır",
+                "Ayasofya Müzesi - Tarihi yapı",
+                "Uzungöl - Doğal göl",
+                "Atatürk Köşkü - Müze",
+                "Boztepe - Manzara noktası",
+                "Çal Mağarası - Doğal mağara",
+                "Göğceli Camii - Ahşap cami",
+                "Trabzon Kalesi - Tarihi kale",
+              ],
+              etkinlikler: [
+                "Trabzon Festivali",
+                "Karadeniz Müzik Festivali",
+                "Trabzon Maratonu",
+                "Hamsi Festivali",
+                "Fındık Festivali",
+              ],
+              restoranlar: [
+                "Hamsi Restaurant - Deniz ürünleri",
+                "Akçaabat Köfte - Geleneksel",
+                "Kuymak Evi - Yerel mutfak",
+                "Mısır Ekmeği - Sokak yemeği",
+                "Trabzon Pidesi - Geleneksel",
+              ],
+            },
+            {
+              id: 7,
+              ad: "Konya",
+              bolge: "İç Anadolu Bölgesi",
+              icon: "🕊️",
+              kisaAciklama:
+                "Mevlana'nın şehri. Tasavvuf kültürü, tarihi camileri ve etli ekmeği ile Türkiye'nin manevi başkenti.",
+              ozellikler: ["Tarih", "Kültür", "Tasavvuf", "Gastronomi"],
+              tarih:
+                "M.Ö. 2. yüzyılda Roma döneminde Iconium olarak bilinirdi. 12. yüzyılda Selçuklu başkenti oldu. Mevlana Celaleddin Rumi'nin yaşadığı şehir olarak tasavvuf kültürünün merkezi haline geldi.",
+              gorulecekYerler: [
+                "Mevlana Müzesi - Tarihi türbe",
+                "Alaeddin Camii - Selçuklu camisi",
+                "Çatalhöyük - Neolitik yerleşim",
+                "Sille - Tarihi köy",
+                "Karatay Medresesi - Tarihi yapı",
+                "İnce Minare - Tarihi minare",
+                "Konya Tropikal Kelebek Bahçesi - Doğal park",
+                "Mevlana Kültür Merkezi - Kültür merkezi",
+              ],
+              etkinlikler: [
+                "Şeb-i Arus - Mevlana'yı anma",
+                "Konya Mistik Müzik Festivali",
+                "Konya Tiyatro Festivali",
+                "Konya Kitap Fuarı",
+                "Konya Sanat Festivali",
+              ],
+              restoranlar: [
+                "Etli Ekmek Evi - Geleneksel",
+                "Konya Mutfağı - Yerel mutfak",
+                "Fırın Kebabı - Geleneksel",
+                "Pideci - Sokak yemeği",
+                "Şekerpare - Tatlı",
+              ],
+            },
+            {
+              id: 8,
+              ad: "Gaziantep",
+              bolge: "Güneydoğu Anadolu Bölgesi",
+              icon: "🌶️",
+              kisaAciklama:
+                "Gastronomi şehri. Zeugma mozaikleri, baklava ve acılı yemekleri ile UNESCO Gastronomi Şehri unvanına sahip.",
+              ozellikler: ["Gastronomi", "Tarih", "Mozaik", "Kültür"],
+              tarih:
+                "M.Ö. 1700 yıllarında Hitit döneminde kuruldu. Roma döneminde Zeugma antik kenti ile önemli bir ticaret merkezi oldu. Günümüzde Türkiye'nin gastronomi başkenti.",
+              gorulecekYerler: [
+                "Zeugma Mozaik Müzesi - Arkeolojik müze",
+                "Gaziantep Kalesi - Tarihi kale",
+                "Bakırcılar Çarşısı - Tarihi pazar",
+                "Kurtuluş Cami - Tarihi cami",
+                "Gaziantep Hayvanat Bahçesi - Hayvanat bahçesi",
+                "Emine Göğüş Mutfak Müzesi - Mutfak müzesi",
+                "Gaziantep Savunması Müzesi - Tarihi müze",
+                "Kaleoğlu Mağarası - Doğal mağara",
+              ],
+              etkinlikler: [
+                "Gaziantep Gastronomi Festivali",
+                "Gaziantep Film Festivali",
+                "Gaziantep Kitap Fuarı",
+                "Gaziantep Maratonu",
+                "Gaziantep Sanat Festivali",
+              ],
+              restoranlar: [
+                "İmam Çağdaş - Geleneksel",
+                "Baklava Evi - Tatlı",
+                "Kebapçı Halil Usta - Kebap",
+                "Antep Mutfağı - Yerel mutfak",
+                "Katmerci - Kahvaltı",
+              ],
+            },
+            {
+              id: 9,
+              ad: "Safranbolu",
+              bolge: "Karadeniz Bölgesi",
+              icon: "🏘️",
+              kisaAciklama:
+                "Safran çiçeğinin şehri. UNESCO Dünya Mirası Listesi'ndeki tarihi evleri, safran baharatı ve geleneksel mimarisi ile açık hava müzesi.",
+              ozellikler: ["Tarih", "Mimari", "Kültür", "Doğa"],
+              tarih:
+                "M.Ö. 3000 yıllarında kurulan Safranbolu, Osmanlı döneminde önemli bir ticaret merkezi oldu. 17. yüzyılda inşa edilen tarihi evleri ile UNESCO Dünya Mirası Listesi'ne girdi.",
+              gorulecekYerler: [
+                "Safranbolu Evleri - Tarihi mimari",
+                "Cinci Han - Tarihi han",
+                "Safranbolu Kalesi - Tarihi kale",
+                "Bulak Mencilis Mağarası - Doğal mağara",
+                "Tokatlı Kanyonu - Doğal kanyon",
+                "Yörük Köyü - Tarihi köy",
+                "Safranbolu Saat Kulesi - Şehir simgesi",
+                "Köprülü Mehmet Paşa Camii - Tarihi cami",
+              ],
+              etkinlikler: [
+                "Safranbolu Festivali",
+                "Safranbolu Kültür Sanat Festivali",
+                "Safranbolu Fotoğraf Festivali",
+                "Safranbolu Maratonu",
+                "Safranbolu El Sanatları Festivali",
+              ],
+              restoranlar: [
+                "Safranbolu Evleri Restaurant - Geleneksel",
+                "Safran Çiçeği - Yerel mutfak",
+                "Köfteci - Geleneksel",
+                "Safranbolu Pidesi - Sokak yemeği",
+                "Safranlı Tatlılar - Tatlı",
+              ],
+            },
+            {
+              id: 10,
+              ad: "Mardin",
+              bolge: "Güneydoğu Anadolu Bölgesi",
+              icon: "🏰",
+              kisaAciklama:
+                "Taş şehrin kalbi. Süryani kiliseleri, tarihi evleri ve Mezopotamya manzarası ile çok kültürlü tarihi şehir.",
+              ozellikler: ["Tarih", "Kültür", "Mimari", "Manzara"],
+              tarih:
+                "M.Ö. 4000 yıllarında kurulan Mardin, Sümer, Asur, Pers, Roma, Bizans ve Osmanlı dönemlerinde önemli bir kültür merkezi oldu. Günümüzde çok kültürlü yapısı ile tanınıyor.",
+              gorulecekYerler: [
+                "Mardin Kalesi - Tarihi kale",
+                "Deyrulzafaran Manastırı - Süryani manastırı",
+                "Ulu Cami - Tarihi cami",
+                "Kasımiye Medresesi - Tarihi medrese",
+                "Mardin Müzesi - Arkeolojik müze",
+                "Zinciriye Medresesi - Tarihi yapı",
+                "Midyat - Tarihi ilçe",
+                "Dara Antik Kenti - Arkeolojik site",
+              ],
+              etkinlikler: [
+                "Mardin Festivali",
+                "Mardin Kültür Sanat Festivali",
+                "Mardin Film Festivali",
+                "Mardin Maratonu",
+                "Mardin El Sanatları Festivali",
+              ],
+              restoranlar: [
+                "Mardin Mutfağı - Geleneksel",
+                "Kebapçı - Yerel mutfak",
+                "Sembusek - Sokak yemeği",
+                "Mardin Kahvesi - Geleneksel",
+                "İrmik Helvası - Tatlı",
+              ],
+            },
+          ];
+
+          $scope.sehirDetayGit = function (sehir) {
+            // Şehir detay sayfasına yönlendirme
+            localStorage.setItem("seciliSehir", JSON.stringify(sehir));
+            window.location.href = "sehir-detay.html";
+          };
+        });
+    </script>
+  </body>
+</html>

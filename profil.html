@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="tr" ng-app="GirisApp">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Profil - GLOW</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="assets/css/style.css" />
+
+    <!-- AngularJS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="assets/js/app.js"></script>
+
+    <!-- Page Specific CSS -->
+    <style>
+      .profile-container {
+        max-width: 500px;
+        margin: 60px auto;
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 16px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        padding: 40px;
+        backdrop-filter: blur(10px);
+        position: relative;
+      }
+
+      .profile-header {
+        text-align: center;
+        margin-bottom: 30px;
+      }
+
+      .profile-header h1 {
+        color: #7c5c4a;
+        font-size: 28px;
+        margin-bottom: 10px;
+        font-weight: 600;
+      }
+
+      .close-btn {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: #b48a78;
+        color: #fff;
+        border: none;
+        border-radius: 50%;
+        font-size: 20px;
+        width: 40px;
+        height: 40px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .close-btn:hover {
+        background: #7c5c4a;
+        transform: scale(1.1);
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        color: #7c5c4a;
+        font-weight: 600;
+        font-size: 14px;
+      }
+
+      .form-group input,
+      .form-group textarea {
+        width: 100%;
+        padding: 12px 16px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 16px;
+        transition: border-color 0.3s ease;
+        background: rgba(255, 255, 255, 0.9);
+        box-sizing: border-box;
+      }
+
+      .form-group input:focus,
+      .form-group textarea:focus {
+        outline: none;
+        border-color: #b48a78;
+        box-shadow: 0 0 0 3px rgba(180, 138, 120, 0.1);
+      }
+
+      .form-group input.readonly {
+        background: #f5f5f5;
+        color: #666;
+        cursor: not-allowed;
+      }
+
+      .error-message {
+        color: #f44336;
+        font-size: 14px;
+        margin-top: 5px;
+        font-weight: 500;
+      }
+
+      .success-message {
+        color: #4caf50;
+        font-weight: 600;
+        margin-top: 15px;
+        text-align: center;
+        font-size: 16px;
+      }
+
+      .profile-actions {
+        margin-top: 30px;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      .save-btn {
+        background: linear-gradient(135deg, #e2d9d0, #d1c6b1, #f8e0e1, #c0b2b0);
+        color: #7c5c4a;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .save-btn:hover {
+        background: linear-gradient(135deg, #f8e0e1, #d1c6b1, #e2d9d0, #c0b2b0);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+      }
+
+      .logout-btn {
+        background: #f44336;
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .logout-btn:hover {
+        background: #d32f2f;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+      }
+    </style>
+  </head>
+  <body ng-controller="MainController">
+    <!-- Header Component -->
+    <ng-include src="'components/header.html'"></ng-include>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <div class="profile-container" ng-controller="ProfilController">
+        <button type="button" ng-click="geriGit()" class="close-btn">×</button>
+
+        <div class="profile-header">
+          <h1>Profil Bilgileriniz</h1>
+        </div>
+
+        <form name="profilForm" ng-submit="notuKaydet()" novalidate>
+          <div class="form-group">
+            <label>Kullanıcı Adı</label>
+            <input type="text" ng-model="kullanici.username" required />
+          </div>
+
+          <div class="form-group">
+            <label>Ad Soyad</label>
+            <input type="text" ng-model="kullanici.adsoyad" required />
+          </div>
+
+          <div class="form-group">
+            <label>Şifre (Değiştirmek istemiyorsanız boş bırakın)</label>
+            <input
+              type="password"
+              name="sifre"
+              ng-model="yeniSifre"
+              ng-minlength="6"
+              ng-maxlength="10"
+              placeholder="Yeni şifre (6-10 karakter)"
+            />
+            <div
+              class="error-message"
+              ng-show="yeniSifre && (profilForm.sifre.$error.minlength || profilForm.sifre.$error.maxlength)"
+            >
+              Şifre 6 ile 10 karakter arasında olmalıdır.
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Rol</label>
+            <input
+              type="text"
+              ng-model="kullanici.rol"
+              class="readonly"
+              readonly
+            />
+          </div>
+
+          <div class="profile-actions">
+            <button type="submit" class="save-btn">Kaydet</button>
+            <button type="button" ng-click="cikisYap()" class="logout-btn">
+              Çıkış Yap
+            </button>
+          </div>
+
+          <div class="success-message" ng-show="notKaydedildi">
+            ✅ Profil bilgileriniz başarıyla kaydedildi!
+          </div>
+        </form>
+      </div>
+    </main>
+
+    <!-- Footer Component -->
+    <ng-include src="'components/footer.html'"></ng-include>
+
+    <!-- Scroll to Top Button -->
+    <button id="scrollTopBtn" title="Yukarı Çık" ng-click="scrollToTop()">
+      ↑
+    </button>
+  </body>
+</html>

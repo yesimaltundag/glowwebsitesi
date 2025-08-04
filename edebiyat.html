@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="tr" ng-app="GirisApp">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Edebiyat - GLOW</title>
+    <link rel="stylesheet" href="assets/css/style.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="assets/js/app.js"></script>
+    <style>
+      .edebiyat-container {
+        max-width: 900px;
+        margin: 40px auto;
+        padding: 32px;
+        background: rgba(255, 255, 255, 0.92);
+        border-radius: 18px;
+        box-shadow: 0 8px 32px rgba(124, 92, 74, 0.1);
+        backdrop-filter: blur(10px);
+        position: relative;
+      }
+      .edebiyat-title {
+        color: #7c5c4a;
+        font-size: 2.2rem;
+        font-weight: 700;
+        margin-bottom: 32px;
+        text-align: center;
+        letter-spacing: 1px;
+      }
+      .edebiyat-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 24px;
+        margin-top: 20px;
+      }
+      .edebiyat-card {
+        background: linear-gradient(135deg, #f8e0e1 60%, #e2d9d0 100%);
+        border-radius: 14px;
+        box-shadow: 0 4px 16px rgba(180, 138, 120, 0.08);
+        padding: 28px 24px 22px 24px;
+        transition: box-shadow 0.3s, transform 0.3s;
+        cursor: pointer;
+      }
+      .edebiyat-card:hover {
+        box-shadow: 0 8px 32px rgba(180, 138, 120, 0.16);
+        transform: translateY(-3px) scale(1.02);
+      }
+      .edebiyat-baslik {
+        color: #b48a78;
+        font-size: 1.4rem;
+        font-weight: 600;
+        margin-bottom: 12px;
+      }
+      .edebiyat-ozet {
+        color: #7c5c4a;
+        font-size: 1rem;
+        margin-bottom: 18px;
+        line-height: 1.5;
+      }
+      .edebiyat-btn {
+        background: linear-gradient(135deg, #e2d9d0, #b48a78);
+        color: #7c5c4a;
+        border: none;
+        border-radius: 8px;
+        padding: 10px 24px;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+      .edebiyat-btn:hover {
+        background: linear-gradient(135deg, #b48a78, #e2d9d0);
+        color: #fff;
+        transform: scale(1.05);
+      }
+      .geri-btn {
+        background: linear-gradient(135deg, #e2d9d0, #b48a78);
+        color: #7c5c4a;
+        border: none;
+        border-radius: 50%;
+        width: 22px;
+        height: 22px;
+        padding: 0;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s;
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        margin: 0;
+      }
+      .geri-btn:hover {
+        background: linear-gradient(135deg, #b48a78, #e2d9d0);
+        color: #fff;
+        transform: scale(1.08);
+      }
+      @media (max-width: 600px) {
+        .edebiyat-container {
+          padding: 12px;
+        }
+        .edebiyat-title {
+          font-size: 1.3rem;
+        }
+        .edebiyat-card {
+          padding: 20px 16px 16px 16px;
+        }
+      }
+    </style>
+  </head>
+  <body ng-controller="MainController">
+    <ng-include src="'components/header.html'"></ng-include>
+    <main class="main-content">
+      <div class="edebiyat-container" ng-controller="EdebiyatController">
+        <button
+          class="geri-btn"
+          onclick="window.history.back()"
+          title="Geri Dön"
+        >
+          ←
+        </button>
+        <div class="edebiyat-title">Edebiyat</div>
+        <div class="edebiyat-grid">
+          <div class="edebiyat-card" ng-click="gotoYabanciEdebiyat()">
+            <div class="edebiyat-baslik">Yabancı Edebiyat</div>
+            <div class="edebiyat-ozet">
+              Dünya klasiklerinden seçme kitaplar ve yazarlar. Farklı
+              kültürlerin edebi mirasını keşfedin.
+            </div>
+            <button class="edebiyat-btn">Kitapları Gör</button>
+          </div>
+          <div class="edebiyat-card" ng-click="gotoTurkEdebiyati()">
+            <div class="edebiyat-baslik">Türk Edebiyatı</div>
+            <div class="edebiyat-ozet">
+              Türk edebiyatının zengin mirasından seçme eserler. Klasik ve
+              modern Türk yazarlarını tanıyın.
+            </div>
+            <button class="edebiyat-btn">Kitapları Gör</button>
+          </div>
+        </div>
+      </div>
+    </main>
+    <ng-include src="'components/footer.html'"></ng-include>
+    <button id="scrollTopBtn" title="Yukarı Çık" ng-click="scrollToTop()">
+      ↑
+    </button>
+    <script>
+      angular
+        .module("GirisApp")
+        .controller("EdebiyatController", function ($scope) {
+          $scope.gotoYabanciEdebiyat = function () {
+            window.location.href = "kitaplar.html";
+          };
+          $scope.gotoTurkEdebiyati = function () {
+            window.location.href = "turk-edebiyati.html";
+          };
+
+          $scope.scrollToTop = function () {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          };
+        });
+    </script>
+  </body>
+</html>

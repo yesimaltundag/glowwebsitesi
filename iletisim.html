@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="tr" ng-app="GirisApp">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>İletişim - GLOW</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="assets/css/style.css" />
+
+    <!-- AngularJS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="assets/js/app.js"></script>
+
+    <!-- Page Specific CSS -->
+    <style>
+      .contact-container {
+        position: relative;
+        max-width: 800px;
+        margin: 50px auto;
+        padding: 40px;
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 16px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(10px);
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        text-align: center;
+      }
+
+      .contact-title {
+        margin-bottom: 40px;
+        font-size: 2.5rem;
+        color: #7c5c4a;
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-shadow: 0 2px 12px rgba(124, 92, 74, 0.1);
+        text-transform: uppercase;
+      }
+
+      .contact-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 30px;
+        margin: 40px 0;
+      }
+
+      .contact-item {
+        background: linear-gradient(135deg, #f8e0e1, #e2d9d0);
+        border-radius: 16px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        padding: 30px;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(10px);
+      }
+
+      .contact-item:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 16px 48px rgba(0, 0, 0, 0.15);
+      }
+
+      .contact-item h3 {
+        margin: 0 0 15px 0;
+        color: #7c5c4a;
+        font-size: 20px;
+        font-weight: 600;
+      }
+
+      .contact-item p {
+        margin: 0;
+        color: #666;
+        font-size: 16px;
+        line-height: 1.6;
+      }
+
+      .contact-item i {
+        font-size: 24px;
+        color: #b48a78;
+        margin-bottom: 15px;
+        display: block;
+      }
+
+      .login-message {
+        text-align: center;
+        color: #7c5c4a;
+        margin: 100px 0;
+        font-size: 20px;
+        background: rgba(255, 255, 255, 0.9);
+        padding: 40px;
+        border-radius: 16px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(10px);
+      }
+
+      .login-message a {
+        color: #b48a78;
+        text-decoration: none;
+        font-weight: bold;
+        margin: 0 10px;
+      }
+
+      .login-message a:hover {
+        text-decoration: underline;
+      }
+
+      @media (max-width: 768px) {
+        .contact-container {
+          margin: 20px;
+          padding: 20px;
+        }
+
+        .contact-title {
+          font-size: 2rem;
+        }
+
+        .contact-grid {
+          grid-template-columns: 1fr;
+          gap: 20px;
+        }
+      }
+    </style>
+  </head>
+  <body ng-controller="MainController">
+    <!-- Header Component -->
+    <ng-include src="'components/header.html'"></ng-include>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <div ng-controller="IletisimController">
+        <!-- Giriş yapmamış kullanıcılar için mesaj -->
+        <div ng-if="!kullanici" class="login-message">
+          Bu içeriği görmek için lütfen
+          <a href="index.html">giriş yapın</a> veya
+          <a href="kayit.html">kayıt olun</a>.
+        </div>
+
+        <!-- Giriş yapmış kullanıcılar için içerik -->
+        <div class="contact-container">
+          <h2 class="contact-title">İLETİŞİM</h2>
+          <div class="contact-grid">
+            <div class="contact-item">
+              <i>📍</i>
+              <h3>Adres</h3>
+              <p>Londra, Birleşik Krallık<br />SW1A 1AA</p>
+              <div
+                style="
+                  margin-top: 16px;
+                  border-radius: 12px;
+                  overflow: hidden;
+                  box-shadow: 0 2px 12px rgba(124, 92, 74, 0.08);
+                "
+              >
+                <iframe
+                  src="https://www.google.com/maps?q=London,+UK&output=embed"
+                  width="100%"
+                  height="180"
+                  style="border: 0; min-width: 220px; min-height: 120px"
+                  allowfullscreen=""
+                  loading="lazy"
+                  referrerpolicy="no-referrer-when-downgrade"
+                  title="Londra Harita"
+                ></iframe>
+              </div>
+            </div>
+            <div class="contact-item">
+              <i>📞</i>
+              <h3>Telefon</h3>
+              <p>0 (212) 123 45 67<br />+90 532 123 45 67</p>
+            </div>
+            <div class="contact-item">
+              <i>✉️</i>
+              <h3>E-posta</h3>
+              <p>info@glowtech.com<br />destek@glowtech.com</p>
+            </div>
+            <div class="contact-item">
+              <i>🕒</i>
+              <h3>Çalışma Saatleri</h3>
+              <p>Pazartesi - Cuma<br />09:00 - 18:00</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer Component -->
+    <ng-include src="'components/footer.html'"></ng-include>
+
+    <!-- Scroll to Top Button -->
+    <button id="scrollTopBtn" title="Yukarı Çık" ng-click="scrollToTop()">↑</button>
+    
+    <script>
+      angular.module('GirisApp').controller('IletisimController', function($scope) {
+        $scope.kullanici = JSON.parse(localStorage.getItem('girisYapan') || 'null');
+        
+        $scope.scrollToTop = function () {
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        };
+      });
+    </script>
+  </body>
+</html>

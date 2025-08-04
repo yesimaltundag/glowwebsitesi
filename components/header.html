@@ -1,0 +1,54 @@
+<!-- Header Component -->
+<header class="site-header" ng-controller="HeaderController">
+  <div class="header-content">
+    <div class="logo-section">
+      <a href="anasayfa.html" class="logo-link">
+        <img src="assets/images/logo.jpg" alt="GLOW" class="logo" />
+      </a>
+    </div>
+
+    <nav class="main-navigation">
+      <ul class="nav-menu">
+        <li><a href="anasayfa.html" class="nav-link">Ana Sayfa</a></li>
+        <li><a href="hakkimizda.html" class="nav-link">Hakkımızda</a></li>
+        <li><a href="iletisim.html" class="nav-link">İletişim</a></li>
+        <li ng-if="kullanici" class="user-menu">
+          <a
+            href=""
+            class="nav-link user-link"
+            ng-if="kullanici"
+            ng-click="hesapGit($event)"
+          >
+            <svg class="user-icon" viewBox="0 0 24 24" fill="currentColor">
+              <circle cx="12" cy="8" r="4" />
+              <path
+                d="M12 14c-4.418 0-8 1.79-8 4v2h16v-2c0-2.21-3.582-4-8-4z"
+              />
+            </svg>
+            <span>Hesabım</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="auth-section">
+      <a ng-if="!kullanici" href="index.html" class="auth-btn login-btn">
+        Giriş / Kaydol
+      </a>
+      <button
+        ng-if="kullanici"
+        ng-click="cikisYap()"
+        class="auth-btn logout-btn"
+      >
+        Çıkış Yap
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- Scroll to Top Button -->
+<button id="scrollTopBtn" ng-click="scrollToTop()" title="Yukarı Çık">
+  <svg viewBox="0 0 24 24" fill="currentColor" width="24" height="24">
+    <path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z" />
+  </svg>
+</button>

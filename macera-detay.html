@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="tr" ng-app="GirisApp">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Macera Filmleri Detayı - GLOW</title>
+    <link rel="stylesheet" href="assets/css/style.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="assets/js/app.js"></script>
+    <style>
+      .macera-container {
+        max-width: 1200px;
+        margin: 40px auto;
+        padding: 40px;
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 20px;
+        box-shadow: 0 10px 40px rgba(124, 92, 74, 0.1);
+        backdrop-filter: blur(10px);
+        position: relative;
+      }
+
+      .macera-baslik {
+        color: #7c5c4a;
+        font-size: 2.5rem;
+        font-weight: 700;
+        text-align: center;
+        margin-bottom: 40px;
+        letter-spacing: 1px;
+      }
+
+      .film-satir {
+        display: flex;
+        gap: 30px;
+        margin-bottom: 40px;
+      }
+
+      .film-kart {
+        flex: 1;
+        background: linear-gradient(135deg, #f8e0e1 60%, #e2d9d0 100%);
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 8px 32px rgba(180, 138, 120, 0.15);
+        transition: transform 0.3s, box-shadow 0.3s;
+      }
+
+      .film-kart:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 16px 48px rgba(180, 138, 120, 0.25);
+      }
+
+      .film-poster {
+        width: 100%;
+        height: 400px;
+        object-fit: cover;
+      }
+
+      .film-icerik {
+        padding: 24px;
+      }
+
+      .film-baslik {
+        color: #7c5c4a;
+        font-size: 1.4rem;
+        font-weight: 600;
+        margin-bottom: 12px;
+        line-height: 1.3;
+      }
+
+      .film-meta {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 16px;
+        flex-wrap: wrap;
+      }
+
+      .film-yil,
+      .film-sure,
+      .film-imdb {
+        color: #b48a78;
+        font-size: 0.95rem;
+        font-weight: 500;
+      }
+
+      .film-ozet {
+        color: #7c5c4a;
+        font-size: 1rem;
+        line-height: 1.6;
+        margin-bottom: 20px;
+      }
+
+      .film-detay-btn {
+        background: linear-gradient(135deg, #e2d9d0, #b48a78);
+        color: #7c5c4a;
+        border: none;
+        border-radius: 8px;
+        padding: 12px 24px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        width: 100%;
+      }
+
+      .film-detay-btn:hover {
+        background: linear-gradient(135deg, #b48a78, #e2d9d0);
+        color: #fff;
+        transform: scale(1.02);
+      }
+
+      .geri-btn {
+        background: linear-gradient(135deg, #e2d9d0, #b48a78);
+        color: #7c5c4a;
+        border: none;
+        border-radius: 50%;
+        width: 45px;
+        height: 45px;
+        font-size: 18px;
+        cursor: pointer;
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        z-index: 10;
+        transition: all 0.3s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .geri-btn:hover {
+        background: linear-gradient(135deg, #b48a78, #e2d9d0);
+        color: #fff;
+        transform: scale(1.1);
+      }
+
+      @media (max-width: 768px) {
+        .macera-container {
+          padding: 20px;
+          margin: 20px;
+        }
+
+        .macera-baslik {
+          font-size: 2rem;
+        }
+
+        .film-satir {
+          flex-direction: column;
+          gap: 20px;
+        }
+
+        .film-poster {
+          height: 300px;
+        }
+
+        .film-icerik {
+          padding: 20px;
+        }
+      }
+    </style>
+  </head>
+  <body ng-controller="MainController">
+    <ng-include src="'components/header.html'"></ng-include>
+    <main class="main-content">
+      <div class="macera-container" ng-controller="MaceraDetayController">
+        <button
+          class="geri-btn"
+          onclick="window.history.back()"
+          title="Geri Dön"
+        >
+          ←
+        </button>
+
+        <h1 class="macera-baslik">Macera Filmleri</h1>
+
+        <!-- İlk Satır - 3 Film -->
+        <div class="film-satir">
+          <div
+            class="film-kart"
+            ng-click="filmDetay('Indiana Jones and the Raiders of the Lost Ark')"
+          >
+            <img
+              src="https://m.media-amazon.com/images/M/MV5BMjA0ODEzMTc1Nl5BMl5BanBnXkFtZTcwODM2MjAxNA@@._V1_SX300.jpg"
+              alt="Indiana Jones and the Raiders of the Lost Ark"
+              class="film-poster"
+            />
+            <div class="film-icerik">
+              <div class="film-baslik">
+                Indiana Jones and the Raiders of the Lost Ark
+              </div>
+              <div class="film-meta">
+                <span class="film-yil">1981</span>
+                <span class="film-sure">115 dk</span>
+                <span class="film-imdb">⭐ 8.4</span>
+              </div>
+              <div class="film-ozet">
+                Arkeolog Indiana Jones, Ahit Sandığı'nı bulmak için Nazi'lerle
+                yarışır. Tehlikeli maceralar ve antik tuzaklarla dolu bir
+                yolculuk.
+              </div>
+              <button class="film-detay-btn">Detayları Gör</button>
+            </div>
+          </div>
+
+          <div
+            class="film-kart"
+            ng-click="filmDetay('The Lord of the Rings: The Fellowship of the Ring')"
+          >
+            <img
+              src="https://m.media-amazon.com/images/M/MV5BN2EyZjM3NzUtNWUzMi00MTgxLWI0NTctMzY4M2VlOTdjZWRiXkEyXkFqcGdeQXVyNDUzOTQ5MjY@._V1_SX300.jpg"
+              alt="The Lord of the Rings: The Fellowship of the Ring"
+              class="film-poster"
+            />
+            <div class="film-icerik">
+              <div class="film-baslik">
+                The Lord of the Rings: The Fellowship of the Ring
+              </div>
+              <div class="film-meta">
+                <span class="film-yil">2001</span>
+                <span class="film-sure">178 dk</span>
+                <span class="film-imdb">⭐ 8.8</span>
+              </div>
+              <div class="film-ozet">
+                Hobbit Frodo Baggins, Yüzük'ü yok etmek için tehlikeli bir
+                yolculuğa çıkar. Orta Dünya'nın kaderi onun elinde.
+              </div>
+              <button class="film-detay-btn">Detayları Gör</button>
+            </div>
+          </div>
+
+          <div class="film-kart" ng-click="filmDetay('Jurassic Park')">
+            <img
+              src="https://m.media-amazon.com/images/M/MV5BMjM2MDgxMDg0Nl5BMl5BanBnXkFtZTgwNTM2OTM5NDE@._V1_SX300.jpg"
+              alt="Jurassic Park"
+              class="film-poster"
+            />
+            <div class="film-icerik">
+              <div class="film-baslik">Jurassic Park</div>
+              <div class="film-meta">
+                <span class="film-yil">1993</span>
+                <span class="film-sure">127 dk</span>
+                <span class="film-imdb">⭐ 8.5</span>
+              </div>
+              <div class="film-ozet">
+                Dinozorların yeniden canlandırıldığı bir tema parkında, sistem
+                arızalanınca hayatta kalma mücadelesi başlar.
+              </div>
+              <button class="film-detay-btn">Detayları Gör</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- İkinci Satır - 3 Film -->
+        <div class="film-satir">
+          <div
+            class="film-kart"
+            ng-click="filmDetay('Pirates of the Caribbean: The Curse of the Black Pearl')"
+          >
+            <img
+              src="https://m.media-amazon.com/images/M/MV5BNGYyZGM5MGMtYTY2Ni00M2Y1LWIzNjQtYWUzM2VlNGVhMDNhXkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_SX300.jpg"
+              alt="Pirates of the Caribbean: The Curse of the Black Pearl"
+              class="film-poster"
+            />
+            <div class="film-icerik">
+              <div class="film-baslik">
+                Pirates of the Caribbean: The Curse of the Black Pearl
+              </div>
+              <div class="film-meta">
+                <span class="film-yil">2003</span>
+                <span class="film-sure">143 dk</span>
+                <span class="film-imdb">⭐ 8.0</span>
+              </div>
+              <div class="film-ozet">
+                Kaptan Jack Sparrow, Elizabeth Swann'ı kurtarmak için lanetli
+                korsanlarla mücadele eder. Karayip Denizi'nde macera dolu bir
+                yolculuk.
+              </div>
+              <button class="film-detay-btn">Detayları Gör</button>
+            </div>
+          </div>
+
+          <div class="film-kart" ng-click="filmDetay('The Mummy')">
+            <img
+              src="data:image/jpeg;base64,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"
+              alt="The Mummy"
+              class="film-poster"
+            />
+            <div class="film-icerik">
+              <div class="film-baslik">The Mummy</div>
+              <div class="film-meta">
+                <span class="film-yil">1999</span>
+                <span class="film-sure">125 dk</span>
+                <span class="film-imdb">⭐ 7.1</span>
+              </div>
+              <div class="film-ozet">
+                Antik Mısır'da mumya laneti uyandırılır. Rick O'Connell ve
+                ekibi, laneti durdurmak için tehlikeli bir maceraya atılır.
+              </div>
+              <button class="film-detay-btn">Detayları Gör</button>
+            </div>
+          </div>
+
+          <div class="film-kart" ng-click="filmDetay('National Treasure')">
+            <img
+              src="https://m.media-amazon.com/images/I/51v1SI7ln0L._UF894,1000_QL80_.jpg"
+              alt="National Treasure"
+              class="film-poster"
+            />
+            <div class="film-icerik">
+              <div class="film-baslik">National Treasure</div>
+              <div class="film-meta">
+                <span class="film-yil">2004</span>
+                <span class="film-sure">131 dk</span>
+                <span class="film-imdb">⭐ 6.9</span>
+              </div>
+              <div class="film-ozet">
+                Benjamin Gates, gizli hazine haritasını bulmak için ABD'nin en
+                önemli belgelerini çalmaya çalışır. Tarihi sırlar ve macera.
+              </div>
+              <button class="film-detay-btn">Detayları Gör</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <ng-include src="'components/footer.html'"></ng-include>
+    <button id="scrollTopBtn" title="Yukarı Çık" ng-click="scrollToTop()">
+      ↑
+    </button>
+
+    <script>
+      angular
+        .module("GirisApp")
+        .controller("MaceraDetayController", function ($scope) {
+          $scope.filmDetay = function (filmAdi) {
+            if (filmAdi === "Indiana Jones and the Raiders of the Lost Ark") {
+              window.location.href = "film-detay.html?id=indiana-jones";
+            } else if (
+              filmAdi === "The Lord of the Rings: The Fellowship of the Ring"
+            ) {
+              window.location.href = "film-detay.html?id=lotr-fellowship";
+            } else if (filmAdi === "Jurassic Park") {
+              window.location.href = "film-detay.html?id=jurassic-park";
+            } else if (
+              filmAdi ===
+              "Pirates of the Caribbean: The Curse of the Black Pearl"
+            ) {
+              window.location.href = "film-detay.html?id=pirates-caribbean";
+            } else if (filmAdi === "The Mummy") {
+              window.location.href = "film-detay.html?id=the-mummy";
+            } else if (filmAdi === "National Treasure") {
+              window.location.href = "film-detay.html?id=national-treasure";
+            } else {
+              alert(filmAdi + " film detayları yakında eklenecek!");
+            }
+          };
+
+          $scope.scrollToTop = function () {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          };
+        });
+    </script>
+  </body>
+</html>

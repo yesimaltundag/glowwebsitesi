@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="tr" ng-app="GirisApp">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Şehir Detayı - GLOW</title>
+    <link rel="stylesheet" href="assets/css/style.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="assets/js/app.js"></script>
+    <style>
+      /* Kategori bazlı renk sistemleri */
+      .detay-container.avrupa {
+        background: linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.95),
+          rgba(255, 182, 193, 0.1)
+        );
+        box-shadow: 0 8px 32px rgba(255, 182, 193, 0.2);
+      }
+
+      .detay-container.asya {
+        background: linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.95),
+          rgba(255, 215, 0, 0.1)
+        );
+        box-shadow: 0 8px 32px rgba(255, 215, 0, 0.2);
+      }
+
+      .detay-container.amerika {
+        background: linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.95),
+          rgba(255, 69, 0, 0.1)
+        );
+        box-shadow: 0 8px 32px rgba(255, 69, 0, 0.2);
+      }
+
+      .detay-container.afrika {
+        background: linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.95),
+          rgba(139, 69, 19, 0.1)
+        );
+        box-shadow: 0 8px 32px rgba(139, 69, 19, 0.2);
+      }
+
+      .detay-container.turkiye {
+        background: linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.95),
+          rgba(255, 0, 0, 0.1)
+        );
+        box-shadow: 0 8px 32px rgba(255, 0, 0, 0.2);
+      }
+
+      .detay-container.deniz {
+        background: linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.95),
+          rgba(135, 206, 235, 0.1)
+        );
+        box-shadow: 0 8px 32px rgba(135, 206, 235, 0.2);
+      }
+
+      .detay-container.kamp {
+        background: linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.95),
+          rgba(34, 139, 34, 0.1)
+        );
+        box-shadow: 0 8px 32px rgba(34, 139, 34, 0.2);
+      }
+
+      .detay-container.sehir {
+        background: linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.95),
+          rgba(147, 112, 219, 0.1)
+        );
+        box-shadow: 0 8px 32px rgba(147, 112, 219, 0.2);
+      }
+
+      .detay-container {
+        max-width: 1000px;
+        margin: 40px auto;
+        padding: 32px;
+        border-radius: 18px;
+        backdrop-filter: blur(10px);
+      }
+
+      .sehir-header {
+        text-align: center;
+        margin-bottom: 40px;
+        padding-bottom: 30px;
+        border-bottom: 2px solid rgba(180, 138, 120, 0.2);
+      }
+
+      .sehir-baslik {
+        color: #7c5c4a;
+        font-size: 2.8rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 15px;
+      }
+
+      .sehir-icon {
+        font-size: 2.5rem;
+      }
+
+      .sehir-ulke {
+        color: #b48a78;
+        font-size: 1.3rem;
+        font-weight: 500;
+        margin-bottom: 15px;
+      }
+
+      .sehir-aciklama {
+        color: #7c5c4a;
+        font-size: 1.1rem;
+        line-height: 1.7;
+        max-width: 800px;
+        margin: 0 auto;
+      }
+
+      .geri-btn {
+        background: linear-gradient(135deg, #e2d9d0, #b48a78);
+        color: #7c5c4a;
+        border: none;
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s;
+        position: absolute;
+        top: 20px;
+        left: 20px;
+      }
+
+      .geri-btn:hover {
+        background: linear-gradient(135deg, #b48a78, #e2d9d0);
+        color: #fff;
+        transform: scale(1.1);
+      }
+
+      .bolumler-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+        gap: 30px;
+        margin-top: 40px;
+      }
+
+      /* Kategori bazlı bölüm kartları */
+      .bolum-card.avrupa {
+        background: linear-gradient(135deg, #f8e0e1 0%, #ffb6c1 100%);
+        box-shadow: 0 6px 20px rgba(255, 182, 193, 0.2);
+      }
+
+      .bolum-card.asya {
+        background: linear-gradient(135deg, #fff8dc 0%, #ffd700 100%);
+        box-shadow: 0 6px 20px rgba(255, 215, 0, 0.2);
+      }
+
+      .bolum-card.amerika {
+        background: linear-gradient(135deg, #ffe4e1 0%, #ff4500 100%);
+        box-shadow: 0 6px 20px rgba(255, 69, 0, 0.2);
+      }
+
+      .bolum-card.afrika {
+        background: linear-gradient(135deg, #f5f5dc 0%, #8b4513 100%);
+        box-shadow: 0 6px 20px rgba(139, 69, 19, 0.2);
+      }
+
+      .bolum-card.turkiye {
+        background: linear-gradient(135deg, #ffe4e1 0%, #ff0000 100%);
+        box-shadow: 0 6px 20px rgba(255, 0, 0, 0.2);
+      }
+
+      .bolum-card.deniz {
+        background: linear-gradient(135deg, #e0f6ff 0%, #87ceeb 100%);
+        box-shadow: 0 6px 20px rgba(135, 206, 235, 0.2);
+      }
+
+      .bolum-card.kamp {
+        background: linear-gradient(135deg, #f0fff0 0%, #228b22 100%);
+        box-shadow: 0 6px 20px rgba(34, 139, 34, 0.2);
+      }
+
+      .bolum-card.sehir {
+        background: linear-gradient(135deg, #f8f0ff 0%, #9370db 100%);
+        box-shadow: 0 6px 20px rgba(147, 112, 219, 0.2);
+      }
+
+      .bolum-card {
+        border-radius: 16px;
+        padding: 30px;
+        transition: all 0.3s ease;
+      }
+
+      .bolum-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 30px rgba(180, 138, 120, 0.2);
+      }
+
+      .bolum-baslik {
+        color: #7c5c4a;
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid rgba(180, 138, 120, 0.3);
+      }
+
+      .bolum-icon {
+        font-size: 1.3rem;
+      }
+
+      .bolum-icerik {
+        color: #7c5c4a;
+        font-size: 1rem;
+        line-height: 1.7;
+        margin-bottom: 20px;
+      }
+
+      .liste-item {
+        background: rgba(255, 255, 255, 0.7);
+        padding: 12px 16px;
+        margin-bottom: 10px;
+        border-radius: 8px;
+        border-left: 4px solid #b48a78;
+        transition: all 0.3s;
+      }
+
+      .liste-item:hover {
+        background: rgba(255, 255, 255, 0.9);
+        transform: translateX(5px);
+      }
+
+      .tarih-bolum {
+        grid-column: 1 / -1;
+      }
+
+      .tarih-icerik {
+        font-size: 1.1rem;
+        line-height: 1.8;
+        text-align: justify;
+      }
+
+      @media (max-width: 768px) {
+        .detay-container {
+          margin: 20px;
+          padding: 20px;
+        }
+
+        .sehir-baslik {
+          font-size: 2.2rem;
+          flex-direction: column;
+          gap: 10px;
+        }
+
+        .bolumler-grid {
+          grid-template-columns: 1fr;
+          gap: 20px;
+        }
+
+        .geri-btn {
+          top: 15px;
+          left: 15px;
+          width: 45px;
+          height: 45px;
+          font-size: 18px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <ng-include src="'components/header.html'"></ng-include>
+
+    <main class="main-content">
+      <div
+        class="detay-container"
+        ng-class="kategoriClass"
+        ng-controller="SehirDetayController"
+      >
+        <button
+          class="geri-btn"
+          onclick="window.history.back()"
+          title="Geri Dön"
+        >
+          ←
+        </button>
+
+        <div class="sehir-header">
+          <h1 class="sehir-baslik">
+            <span class="sehir-icon">{{sehir.icon}}</span>
+            {{sehir.ad}}
+          </h1>
+          <p class="sehir-ulke">{{sehir.ulke}}</p>
+          <p class="sehir-aciklama">{{sehir.kisaAciklama}}</p>
+        </div>
+
+        <div class="bolumler-grid">
+          <!-- Tarih Bölümü -->
+          <div class="bolum-card tarih-bolum" ng-class="kategoriClass">
+            <h2 class="bolum-baslik">
+              <span class="bolum-icon">📚</span>
+              Tarihi Bilgiler
+            </h2>
+            <div class="tarih-icerik">{{sehir.tarih}}</div>
+          </div>
+
+          <!-- Görülecek Yerler -->
+          <div class="bolum-card" ng-class="kategoriClass">
+            <h2 class="bolum-baslik">
+              <span class="bolum-icon">🏛️</span>
+              Görülecek Yerler
+            </h2>
+            <div class="liste-item" ng-repeat="yer in sehir.gorulecekYerler">
+              {{yer}}
+            </div>
+          </div>
+
+          <!-- Etkinlikler -->
+          <div class="bolum-card" ng-class="kategoriClass">
+            <h2 class="bolum-baslik">
+              <span class="bolum-icon">🎉</span>
+              Etkinlikler
+            </h2>
+            <div class="liste-item" ng-repeat="etkinlik in sehir.etkinlikler">
+              {{etkinlik}}
+            </div>
+          </div>
+
+          <!-- Restoranlar -->
+          <div class="bolum-card" ng-class="kategoriClass">
+            <h2 class="bolum-baslik">
+              <span class="bolum-icon">🍽️</span>
+              Restoranlar
+            </h2>
+            <div class="liste-item" ng-repeat="restoran in sehir.restoranlar">
+              {{restoran}}
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <ng-include src="'components/footer.html'"></ng-include>
+
+    <script>
+      angular
+        .module("GirisApp")
+        .controller("SehirDetayController", function ($scope) {
+          $scope.kullanici = JSON.parse(
+            localStorage.getItem("girisYapan") || "null"
+          );
+
+          // LocalStorage'dan seçilen şehri al
+          var seciliSehirStr = localStorage.getItem("seciliSehir");
+          if (seciliSehirStr) {
+            $scope.sehir = JSON.parse(seciliSehirStr);
+
+            // Kategori belirleme mantığı
+            $scope.kategoriClass = "avrupa"; // Varsayılan
+
+            // Şehir adına göre kategori belirleme
+            var sehirAdi = $scope.sehir.ad.toLowerCase();
+
+            // Avrupa şehirleri
+            if (
+              sehirAdi.includes("paris") ||
+              sehirAdi.includes("roma") ||
+              sehirAdi.includes("barcelona") ||
+              sehirAdi.includes("amsterdam") ||
+              sehirAdi.includes("prag") ||
+              sehirAdi.includes("viyana") ||
+              sehirAdi.includes("londra") ||
+              sehirAdi.includes("berlin") ||
+              sehirAdi.includes("budapeşte") ||
+              sehirAdi.includes("istanbul")
+            ) {
+              $scope.kategoriClass = "avrupa";
+            }
+            // Asya şehirleri
+            else if (
+              sehirAdi.includes("tokyo") ||
+              sehirAdi.includes("seul") ||
+              sehirAdi.includes("bangkok") ||
+              sehirAdi.includes("singapore") ||
+              sehirAdi.includes("hong kong") ||
+              sehirAdi.includes("beijing") ||
+              sehirAdi.includes("shanghai") ||
+              sehirAdi.includes("delhi") ||
+              sehirAdi.includes("mumbai") ||
+              sehirAdi.includes("dubai")
+            ) {
+              $scope.kategoriClass = "asya";
+            }
+            // Amerika şehirleri
+            else if (
+              sehirAdi.includes("new york") ||
+              sehirAdi.includes("los angeles") ||
+              sehirAdi.includes("chicago") ||
+              sehirAdi.includes("miami") ||
+              sehirAdi.includes("san francisco") ||
+              sehirAdi.includes("las vegas") ||
+              sehirAdi.includes("washington") ||
+              sehirAdi.includes("boston") ||
+              sehirAdi.includes("new orleans") ||
+              sehirAdi.includes("seattle")
+            ) {
+              $scope.kategoriClass = "amerika";
+            }
+            // Afrika şehirleri
+            else if (
+              sehirAdi.includes("kahire") ||
+              sehirAdi.includes("cape town") ||
+              sehirAdi.includes("marakeş") ||
+              sehirAdi.includes("nairobi") ||
+              sehirAdi.includes("lagos") ||
+              sehirAdi.includes("johannesburg") ||
+              sehirAdi.includes("khartum") ||
+              sehirAdi.includes("dakar") ||
+              sehirAdi.includes("addis ababa") ||
+              sehirAdi.includes("tunus")
+            ) {
+              $scope.kategoriClass = "afrika";
+            }
+            // Türkiye şehirleri
+            else if (
+              sehirAdi.includes("istanbul") ||
+              sehirAdi.includes("ankara") ||
+              sehirAdi.includes("izmir") ||
+              sehirAdi.includes("antalya") ||
+              sehirAdi.includes("bursa") ||
+              sehirAdi.includes("konya") ||
+              sehirAdi.includes("trabzon") ||
+              sehirAdi.includes("gaziantep") ||
+              sehirAdi.includes("kayseri") ||
+              sehirAdi.includes("eskişehir")
+            ) {
+              $scope.kategoriClass = "turkiye";
+            }
+            // Deniz destinasyonları
+            else if (
+              sehirAdi.includes("maldives") ||
+              sehirAdi.includes("santorini") ||
+              sehirAdi.includes("bora bora") ||
+              sehirAdi.includes("amalfi") ||
+              sehirAdi.includes("seychelles") ||
+              sehirAdi.includes("barrier reef") ||
+              sehirAdi.includes("dubrovnik") ||
+              sehirAdi.includes("maui") ||
+              sehirAdi.includes("cinque terre") ||
+              sehirAdi.includes("phi phi")
+            ) {
+              $scope.kategoriClass = "deniz";
+            }
+            // Kamp ve doğa destinasyonları
+            else if (
+              sehirAdi.includes("yellowstone") ||
+              sehirAdi.includes("banff") ||
+              sehirAdi.includes("patagonia") ||
+              sehirAdi.includes("swiss alps") ||
+              sehirAdi.includes("new zealand") ||
+              sehirAdi.includes("iceland") ||
+              sehirAdi.includes("norwegian fjords") ||
+              sehirAdi.includes("amazon") ||
+              sehirAdi.includes("serengeti") ||
+              sehirAdi.includes("galapagos")
+            ) {
+              $scope.kategoriClass = "kamp";
+            }
+            // Şehir turları
+            else if (
+              sehirAdi.includes("walking tour") ||
+              sehirAdi.includes("historical tour") ||
+              sehirAdi.includes("urban adventure") ||
+              sehirAdi.includes("city tour") ||
+              sehirAdi.includes("royal tour") ||
+              sehirAdi.includes("cultural tour") ||
+              sehirAdi.includes("heritage tour") ||
+              sehirAdi.includes("canal tour") ||
+              sehirAdi.includes("castle tour") ||
+              sehirAdi.includes("imperial tour")
+            ) {
+              $scope.kategoriClass = "sehir";
+            }
+          } else {
+            // Eğer şehir bilgisi yoksa ana sayfaya yönlendir
+            window.location.href = "avrupa-seyahatleri.html";
+          }
+        });
+    </script>
+  </body>
+</html>

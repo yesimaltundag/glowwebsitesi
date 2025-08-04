@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="tr" ng-app="GirisApp">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ana Sayfa - GLOW</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="assets/css/style.css" />
+
+    <!-- AngularJS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="assets/js/app.js"></script>
+
+    <!-- Page Specific CSS -->
+    <style>
+      .homepage-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      .login-message {
+        text-align: center;
+        color: #7c5c4a;
+        margin: 100px 0;
+        font-size: 20px;
+        background: rgba(255, 255, 255, 0.9);
+        padding: 40px;
+        border-radius: 16px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(10px);
+      }
+
+      .login-message a {
+        color: #b48a78;
+        text-decoration: none;
+        font-weight: bold;
+        margin: 0 10px;
+      }
+
+      .login-message a:hover {
+        text-decoration: underline;
+      }
+
+      .welcome-section {
+        text-align: center;
+        margin-bottom: 40px;
+        background: rgba(255, 255, 255, 0.9);
+        padding: 30px;
+        border-radius: 16px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(10px);
+      }
+
+      .welcome-section h1 {
+        color: #7c5c4a;
+        font-size: 32px;
+        margin-bottom: 10px;
+      }
+
+      .welcome-section p {
+        color: #666;
+        font-size: 18px;
+      }
+
+      .uyari-modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.25);
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .uyari-icerik {
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: 0 8px 32px rgba(124, 92, 74, 0.18);
+        padding: 32px 28px 24px 28px;
+        min-width: 320px;
+        max-width: 90vw;
+        position: relative;
+        text-align: center;
+      }
+      .uyari-mesaj {
+        color: #7c5c4a;
+        font-size: 1.1rem;
+        font-weight: 500;
+        margin-bottom: 8px;
+      }
+      .uyari-icerik a {
+        color: #b48a78;
+        font-weight: bold;
+        text-decoration: none;
+        margin: 0 4px;
+      }
+      .uyari-icerik a:hover {
+        text-decoration: underline;
+      }
+      .uyari-kapat {
+        position: absolute;
+        top: 10px;
+        right: 14px;
+        background: #e2d9d0;
+        color: #7c5c4a;
+        border: none;
+        border-radius: 50%;
+        width: 28px;
+        height: 28px;
+        font-size: 20px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+      .uyari-kapat:hover {
+        background: #b48a78;
+        color: #fff;
+      }
+
+      /* Son Yorumlar Bölümü */
+      .son-yorumlar-bolum {
+        margin-top: 40px;
+        background: rgba(255, 255, 255, 0.9);
+        padding: 30px;
+        border-radius: 16px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(10px);
+      }
+
+      .bolum-baslik {
+        color: #7c5c4a;
+        font-size: 28px;
+        margin-bottom: 25px;
+        text-align: center;
+      }
+
+      .loading-yorumlar {
+        text-align: center;
+        padding: 40px;
+        color: #7c5c4a;
+      }
+
+      .loading-spinner {
+        width: 40px;
+        height: 40px;
+        border: 4px solid #e2d9d0;
+        border-top: 4px solid #b48a78;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 15px;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      .yorumlar-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+        margin-top: 20px;
+      }
+
+      .yorum-card {
+        background: rgba(255, 255, 255, 0.8);
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border: 1px solid rgba(180, 138, 120, 0.2);
+      }
+
+      .yorum-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        border-color: rgba(180, 138, 120, 0.4);
+      }
+
+      .yorum-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+      }
+
+      .yorum-kullanici {
+        font-weight: bold;
+        color: #7c5c4a;
+        font-size: 16px;
+      }
+
+      .yorum-puan {
+        color: #b48a78;
+        font-weight: bold;
+        font-size: 14px;
+      }
+
+      .yorum-icerik {
+        color: #666;
+        line-height: 1.5;
+        margin-bottom: 15px;
+        font-size: 14px;
+      }
+
+      .yorum-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+
+      .yorum-tur {
+        background: #b48a78;
+        color: white;
+        padding: 4px 8px;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: bold;
+      }
+
+      .yorum-tarih {
+        color: #999;
+        font-size: 12px;
+      }
+
+      .yorum-icerik-adi {
+        color: #7c5c4a;
+        font-weight: bold;
+        font-size: 14px;
+        text-align: center;
+        padding: 8px;
+        background: rgba(180, 138, 120, 0.1);
+        border-radius: 6px;
+      }
+
+      .yorum-yok {
+        text-align: center;
+        padding: 40px;
+        color: #7c5c4a;
+        font-size: 18px;
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .yorumlar-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .son-yorumlar-bolum {
+          padding: 20px;
+        }
+
+        .bolum-baslik {
+          font-size: 24px;
+        }
+      }
+    </style>
+  </head>
+  <body ng-controller="MainController">
+    <!-- Header Component -->
+    <ng-include src="'components/header.html'"></ng-include>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <div class="homepage-container" ng-controller="AnasayfaController">
+        <div>
+          <div class="welcome-section">
+            <h1>Hoş Geldiniz!</h1>
+            <p>
+              GLOW'a hoş geldiniz. Aşağıdaki kategorilerden ilginizi çeken
+              içerikleri keşfedin.
+            </p>
+          </div>
+
+          <div class="card-grid">
+            <!-- Yazılar -->
+            <div class="card">
+              <img src="assets/images/yazilar.jpg" alt="Yazılar" />
+              <div class="card-content">
+                <h3>Yazılar</h3>
+                <p>En yeni yazılarımızı keşfedin ve ilham alın.</p>
+                <button ng-click="gotoYazilar()">Oku Daha Fazla</button>
+              </div>
+            </div>
+
+            <!-- Seyahat -->
+            <div class="card">
+              <img src="assets/images/seyahat.jpg" alt="Seyahat" />
+              <div class="card-content">
+                <h3>Seyahat</h3>
+                <p>Gezdiğimiz yerlerden ilham alın ve yeni rotalar keşfedin.</p>
+                <button ng-click="gotoSeyahat()">Oku Daha Fazla</button>
+              </div>
+            </div>
+
+            <!-- Show -->
+            <div class="card">
+              <img src="assets/images/show.jpg" alt="Show" />
+              <div class="card-content">
+                <h3>Show</h3>
+                <p>Gösteri ve etkinliklere dair içerikler burada.</p>
+                <button ng-click="gotoShow()">Oku Daha Fazla</button>
+              </div>
+            </div>
+
+            <!-- Sanat -->
+            <div class="card">
+              <img src="assets/images/sanat.jpg.jpg" alt="Sanat" />
+              <div class="card-content">
+                <h3>Sanat</h3>
+                <p>Sanatın farklı dallarını keşfet ve ilham al!</p>
+                <button ng-click="gotoSanat()">Oku Daha Fazla</button>
+              </div>
+            </div>
+
+            <!-- Yemekler -->
+            <div class="card">
+              <img src="assets/images/yemekler.jpg" alt="Yemekler" />
+              <div class="card-content">
+                <h3>Yemekler</h3>
+                <p>
+                  Dünya mutfağından lezzetli tarifler ve yemek önerileri burada.
+                </p>
+                <button ng-click="gotoYemekler()">Oku Daha Fazla</button>
+              </div>
+            </div>
+
+            <!-- Spor -->
+            <div class="card">
+              <img src="assets/images/spor.jpg" alt="Spor" />
+              <div class="card-content">
+                <h3>Spor</h3>
+                <p>
+                  Sağlıklı yaşam ve sporla ilgili motivasyon dolu içerikler.
+                </p>
+                <button ng-click="gotoSpor()">Oku Daha Fazla</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer Component -->
+    <ng-include src="'components/footer.html'"></ng-include>
+
+    <!-- Scroll to Top Button -->
+    <button id="scrollTopBtn" title="Yukarı Çık" ng-click="scrollToTop()">
+      ↑
+    </button>
+    <script>
+      angular
+        .module("GirisApp")
+        .controller("MainController", function ($scope) {
+          $scope.scrollToTop = function () {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          };
+        });
+    </script>
+  </body>
+</html>

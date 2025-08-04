@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="tr" ng-app="GirisApp">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Romantik Filmleri - GLOW</title>
+    <link rel="stylesheet" href="assets/css/style.css" />
+    <link rel="stylesheet" href="assets/css/film-styles.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="assets/js/app.js"></script>
+  </head>
+  <body ng-controller="RomantikFilmlerController">
+    <ng-include src="'components/header.html'"></ng-include>
+    <main>
+      <div class="filmler-container">
+        <div class="filmler-title">💕 Romantik Filmleri</div>
+        <button class="geri-btn" onclick="window.history.back()">←</button>
+
+        <!-- Loading durumu -->
+        <div ng-if="loading" class="loading">
+          <p>Filmler yükleniyor...</p>
+        </div>
+
+        <!-- Hata durumu -->
+        <div ng-if="error" class="error">
+          <p>{{ error }}</p>
+        </div>
+
+        <!-- Film listesi -->
+        <div class="filmler-grid" ng-if="!loading && !error">
+          <div
+            class="film-card"
+            ng-repeat="film in filmler"
+            ng-click="filmDetay(film.id)"
+          >
+            <img
+              ng-src="{{ film.poster_url }}"
+              ng-alt="{{ film.film_adi }}"
+              class="film-poster"
+              onerror="this.src='https://via.placeholder.com/300x450/cccccc/666666?text=Poster+Bulunamadı'"
+            />
+            <div class="film-icerik">
+              <div class="film-baslik">{{ film.film_adi }}</div>
+              <div class="film-yil">{{ film.yil }}</div>
+              <div class="film-imdb">⭐ IMDb: {{ film.imdb_puani }}</div>
+              <div class="film-ozet">{{ film.ozet }}</div>
+              <button class="film-btn">Detayları Gör</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <ng-include src="'components/footer.html'"></ng-include>
+    <button id="scrollTopBtn" title="Yukarı Çık" ng-click="scrollToTop()">
+      ↑
+    </button>
+    <script>
+      angular
+        .module("GirisApp")
+        .controller("RomantikFilmlerController", function ($scope, $http) {
+          $scope.loading = true;
+          $scope.error = null;
+          $scope.filmler = [];
+
+          // Veritabanından filmleri çek
+          $http
+            .get("api.php?films=1&kategori=Romantik")
+            .then(function (response) {
+              $scope.filmler = response.data;
+              $scope.loading = false;
+            })
+            .catch(function (error) {
+              $scope.error =
+                "Filmler yüklenirken hata oluştu: " + error.data.message;
+              $scope.loading = false;
+            });
+
+          $scope.filmDetay = function (filmId) {
+            window.location.href = "film-detay.html?id=" + filmId;
+          };
+
+          $scope.scrollToTop = function () {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          };
+        });
+    </script>
+  </body>
+</html>

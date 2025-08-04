@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="tr" ng-app="GirisApp">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Deniz Seyahatleri - GLOW</title>
+    <link rel="stylesheet" href="assets/css/style.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="assets/js/app.js"></script>
+    <style>
+      .deniz-container {
+        max-width: 1200px;
+        margin: 40px auto;
+        padding: 32px;
+        background: rgba(255, 255, 255, 0.92);
+        border-radius: 18px;
+        box-shadow: 0 8px 32px rgba(124, 92, 74, 0.1);
+        backdrop-filter: blur(10px);
+      }
+
+      .page-header {
+        text-align: center;
+        margin-bottom: 40px;
+      }
+
+      .page-title {
+        color: #7c5c4a;
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+      }
+
+      .page-subtitle {
+        color: #b48a78;
+        font-size: 1.1rem;
+        font-weight: 500;
+      }
+
+      .geri-btn {
+        background: linear-gradient(135deg, #e2d9d0, #b48a78);
+        color: #7c5c4a;
+        border: none;
+        border-radius: 50%;
+        width: 45px;
+        height: 45px;
+        font-size: 18px;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s;
+        position: absolute;
+        top: 20px;
+        left: 20px;
+      }
+
+      .geri-btn:hover {
+        background: linear-gradient(135deg, #b48a78, #e2d9d0);
+        color: #fff;
+        transform: scale(1.1);
+      }
+
+      .destinasyonlar-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 30px;
+        margin-top: 40px;
+      }
+
+      .destinasyon-card {
+        background: linear-gradient(135deg, #e8f4fd 0%, #d4e9f7 100%);
+        border-radius: 16px;
+        padding: 25px;
+        box-shadow: 0 6px 20px rgba(180, 138, 120, 0.1);
+        transition: all 0.3s ease;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .destinasyon-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 12px 30px rgba(180, 138, 120, 0.2);
+      }
+
+      .destinasyon-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #4a90e2, #87ceeb, #b0e0e6);
+      }
+
+      .destinasyon-baslik {
+        color: #2c5aa0;
+        font-size: 1.4rem;
+        font-weight: 700;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .destinasyon-deniz {
+        color: #4a90e2;
+        font-size: 0.95rem;
+        font-weight: 500;
+        margin-bottom: 15px;
+      }
+
+      .destinasyon-aciklama {
+        color: #2c5aa0;
+        font-size: 0.95rem;
+        line-height: 1.6;
+        margin-bottom: 20px;
+      }
+
+      .destinasyon-ozellikler {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 20px;
+      }
+
+      .ozellik-tag {
+        background: rgba(74, 144, 226, 0.2);
+        color: #2c5aa0;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 500;
+      }
+
+      .detay-btn {
+        background: linear-gradient(135deg, #4a90e2, #87ceeb);
+        color: white;
+        border: none;
+        border-radius: 25px;
+        padding: 10px 20px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        width: 100%;
+      }
+
+      .detay-btn:hover {
+        background: linear-gradient(135deg, #87ceeb, #4a90e2);
+        transform: scale(1.02);
+      }
+
+      .destinasyon-icon {
+        font-size: 1.2rem;
+      }
+
+      @media (max-width: 768px) {
+        .deniz-container {
+          margin: 20px;
+          padding: 20px;
+        }
+
+        .page-title {
+          font-size: 2rem;
+        }
+
+        .destinasyonlar-grid {
+          grid-template-columns: 1fr;
+          gap: 20px;
+        }
+
+        .geri-btn {
+          top: 15px;
+          left: 15px;
+          width: 40px;
+          height: 40px;
+          font-size: 16px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <ng-include src="'components/header.html'"></ng-include>
+
+    <main class="main-content">
+      <div class="deniz-container" ng-controller="DenizSeyahatController">
+        <button
+          class="geri-btn"
+          onclick="window.history.back()"
+          title="Geri Dön"
+        >
+          ←
+        </button>
+
+        <div class="page-header">
+          <h1 class="page-title">⛵ Deniz Seyahatleri</h1>
+          <p class="page-subtitle">
+            Dünyanın En Büyüleyici 10 Deniz Destinasyonu
+          </p>
+        </div>
+
+        <div class="destinasyonlar-grid">
+          <div
+            class="destinasyon-card"
+            ng-repeat="destinasyon in denizDestinasyonlari"
+            ng-click="destinasyonDetayGit(destinasyon)"
+          >
+            <h3 class="destinasyon-baslik">
+              <span class="destinasyon-icon">{{destinasyon.icon}}</span>
+              {{destinasyon.ad}}
+            </h3>
+            <p class="destinasyon-deniz">{{destinasyon.deniz}}</p>
+            <p class="destinasyon-aciklama">{{destinasyon.kisaAciklama}}</p>
+
+            <div class="destinasyon-ozellikler">
+              <span
+                class="ozellik-tag"
+                ng-repeat="ozellik in destinasyon.ozellikler"
+                >{{ozellik}}</span
+              >
+            </div>
+
+            <button class="detay-btn">Detayları Gör</button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <ng-include src="'components/footer.html'"></ng-include>
+
+    <script>
+      angular
+        .module("GirisApp")
+        .controller("DenizSeyahatController", function ($scope) {
+          $scope.kullanici = JSON.parse(
+            localStorage.getItem("girisYapan") || "null"
+          );
+
+          $scope.denizDestinasyonlari = [
+            {
+              id: 1,
+              ad: "Maldives",
+              deniz: "Hint Okyanusu",
+              icon: "🏝️",
+              kisaAciklama:
+                "Turkuaz lagünlerin cenneti. Overwater bungalow'lar, mercan resifleri ve kristal berraklığındaki sular ile dünyanın en romantik deniz destinasyonu.",
+              ozellikler: ["Lüks", "Romantik", "Dalış", "Plaj"],
+              tarih:
+                "M.Ö. 5. yüzyılda Budist keşişler tarafından keşfedilen Maldivler, 12. yüzyılda İslam'ı kabul etti. Günümüzde dünyanın en lüks deniz turizmi merkezi.",
+              gorulecekYerler: [
+                "Male - Başkent adası",
+                "Maafushi - Yerel ada yaşamı",
+                "Hulhumale - Yapay ada",
+                "Vaadhoo - Biyoluminesan plaj",
+                "Fuvahmulah - Tek tepe adası",
+                "Utheemu - Tarihi ada",
+                "Thulusdhoo - Surf merkezi",
+                "Gan - Güney adası",
+              ],
+              etkinlikler: [
+                "Maldives Surf Festival",
+                "Maldives Whale Shark Festival",
+                "Maldives Underwater Festival",
+                "Maldives Food Festival",
+                "Maldives Music Festival",
+              ],
+              restoranlar: [
+                "Ithaa Undersea Restaurant - Denizaltı restoranı",
+                "Subsix - Sualtı restoranı",
+                "5.8 Undersea Restaurant - Lüks",
+                "The Lighthouse Restaurant - Deniz manzarası",
+                "Reethi Restaurant - Geleneksel",
+              ],
+            },
+            {
+              id: 2,
+              ad: "Santorini",
+              deniz: "Ege Denizi",
+              icon: "🌅",
+              kisaAciklama:
+                "Mavi kubbelerin adası. Caldera manzarası, beyaz evleri ve gün batımı ile Yunan adalarının en romantik destinasyonu.",
+              ozellikler: ["Romantik", "Tarih", "Gün Batımı", "Şarap"],
+              tarih:
+                "M.Ö. 1600 yılında volkanik patlama sonucu oluşan Santorini, antik Thera şehrinin kalıntılarını barındırır. Günümüzde dünyanın en popüler ada destinasyonu.",
+              gorulecekYerler: [
+                "Oia - Gün batımı noktası",
+                "Fira - Ana şehir",
+                "Imerovigli - Caldera manzarası",
+                "Akrotiri - Antik kent",
+                "Red Beach - Kırmızı plaj",
+                "Black Beach - Siyah plaj",
+                "Nea Kameni - Volkanik ada",
+                "Thirassia - Geleneksel ada",
+              ],
+              etkinlikler: [
+                "Santorini Wine Festival",
+                "Santorini Jazz Festival",
+                "Santorini Arts Festival",
+                "Santorini Food Festival",
+                "Santorini Sunset Festival",
+              ],
+              restoranlar: [
+                "Ambrosia - Lüks restoran",
+                "La Maison - Geleneksel Yunan",
+                "Metaxi Mas - Modern",
+                "Pyrgos - Şarap restoranı",
+                "Dimitris Ammoudi - Deniz ürünleri",
+              ],
+            },
+            {
+              id: 3,
+              ad: "Bora Bora",
+              deniz: "Pasifik Okyanusu",
+              icon: "🏖️",
+              kisaAciklama:
+                "Lagünün incisi. Overwater bungalow'lar, mercan resifleri ve dağ manzarası ile Fransız Polinezyası'nın en büyüleyici adası.",
+              ozellikler: ["Lüks", "Dalış", "Doğa", "Macera"],
+              tarih:
+                "M.Ö. 4. yüzyılda Polinezyalılar tarafından yerleşilen Bora Bora, 18. yüzyılda Avrupalılar tarafından keşfedildi. Günümüzde dünyanın en lüks ada destinasyonu.",
+              gorulecekYerler: [
+                "Matira Beach - Ana plaj",
+                "Mount Otemanu - Dağ",
+                "Coral Gardens - Mercan bahçeleri",
+                "Bora Bora Lagoonarium - Deniz yaşamı",
+                "Bloody Mary's - Ünlü restoran",
+                "Vaitape - Ana köy",
+                "Point Venus - Tarihi nokta",
+                "Motu Tapu - Özel ada",
+              ],
+              etkinlikler: [
+                "Bora Bora Pearl Festival",
+                "Bora Bora Heiva Festival",
+                "Bora Bora Fishing Tournament",
+                "Bora Bora Art Festival",
+                "Bora Bora Music Festival",
+              ],
+              restoranlar: [
+                "St. Regis Bora Bora - Lüks",
+                "Bloody Mary's - Geleneksel",
+                "La Villa Mahana - Fransız",
+                "Matira Beach Restaurant - Deniz ürünleri",
+                "Bora Bora Yacht Club - Marina",
+              ],
+            },
+            {
+              id: 4,
+              ad: "Amalfi Coast",
+              deniz: "Tyrrhenian Denizi",
+              icon: "🏔️",
+              kisaAciklama:
+                "İtalya'nın sahil incisi. Renkli evleri, limon bahçeleri ve muhteşem sahil yolu ile Akdeniz'in en güzel kıyı şeridi.",
+              ozellikler: ["Tarih", "Kültür", "Gastronomi", "Manzara"],
+              tarih:
+                "M.S. 4. yüzyılda Roma döneminde kurulan Amalfi, Orta Çağ'da önemli bir deniz ticaret merkezi oldu. Günümüzde UNESCO Dünya Mirası Listesi'nde.",
+              gorulecekYerler: [
+                "Amalfi - Ana şehir",
+                "Positano - Renkli evler",
+                "Ravello - Villa şehri",
+                "Sorrento - Limon şehri",
+                "Capri - Lüks ada",
+                "Ischia - Termal ada",
+                "Procida - Geleneksel ada",
+                "Path of the Gods - Tanrılar yolu",
+              ],
+              etkinlikler: [
+                "Amalfi Coast Music Festival",
+                "Ravello Festival",
+                "Lemon Festival",
+                "Amalfi Coast Food Festival",
+                "Amalfi Coast Art Festival",
+              ],
+              restoranlar: [
+                "Ristorante Marina Grande - Deniz ürünleri",
+                "La Sponda - Lüks",
+                "Don Alfonso 1890 - Michelin yıldızlı",
+                "Lo Scoglio - Geleneksel",
+                "Il San Pietro - Otel restoranı",
+              ],
+            },
+            {
+              id: 5,
+              ad: "Seychelles",
+              deniz: "Hint Okyanusu",
+              icon: "🌴",
+              kisaAciklama:
+                "Granit adaların cenneti. Dev kaplumbağalar, tropik ormanlar ve el değmemiş plajları ile Afrika'nın en güzel ada grubu.",
+              ozellikler: ["Doğa", "Vahşi Yaşam", "Plaj", "Macera"],
+              tarih:
+                "1502 yılında Portekizli Vasco da Gama tarafından keşfedilen Seychelles, 18. yüzyılda Fransız kolonisi oldu. 1976'da bağımsızlığını kazandı.",
+              gorulecekYerler: [
+                "Mahe - Ana ada",
+                "Praslin - Palmiye adası",
+                "La Digue - Bisiklet adası",
+                "Aldabra - Kaplumbağa adası",
+                "Curieuse - Doğa rezervi",
+                "Cousin - Kuş adası",
+                "Aride - Vahşi yaşam",
+                "Silhouette - Dağ adası",
+              ],
+              etkinlikler: [
+                "Seychelles Creole Festival",
+                "Seychelles Ocean Festival",
+                "Seychelles Arts Festival",
+                "Seychelles Food Festival",
+                "Seychelles Music Festival",
+              ],
+              restoranlar: [
+                "Marie-Antoinette - Geleneksel",
+                "Le Jardin du Roi - Bahçe restoranı",
+                "Kaz Kreol - Yerel mutfak",
+                "La Plage - Plaj restoranı",
+                "Cap Lazare - Lüks",
+              ],
+            },
+            {
+              id: 6,
+              ad: "Great Barrier Reef",
+              deniz: "Pasifik Okyanusu",
+              icon: "🐠",
+              kisaAciklama:
+                "Dünyanın en büyük mercan resifi. Renkli mercanlar, tropik balıklar ve deniz yaşamı ile Avustralya'nın deniz cenneti.",
+              ozellikler: ["Dalış", "Doğa", "Vahşi Yaşam", "Macera"],
+              tarih:
+                "M.Ö. 20.000 yıl önce oluşmaya başlayan Great Barrier Reef, dünyanın en büyük canlı organizması. 1981'de UNESCO Dünya Mirası Listesi'ne girdi.",
+              gorulecekYerler: [
+                "Cairns - Ana şehir",
+                "Whitsunday Islands - Beyaz kum adaları",
+                "Heron Island - Kuş adası",
+                "Lady Elliot Island - Mercan adası",
+                "Lizard Island - Lüks ada",
+                "Hamilton Island - Turizm adası",
+                "Fitzroy Island - Doğa adası",
+                "Green Island - Tropik ada",
+              ],
+              etkinlikler: [
+                "Great Barrier Reef Festival",
+                "Cairns Indigenous Art Fair",
+                "Cairns Festival",
+                "Great Barrier Reef Marathon",
+                "Cairns Food Festival",
+              ],
+              restoranlar: [
+                "Ochre Restaurant - Avustralya mutfağı",
+                "Waterbar & Grill - Deniz ürünleri",
+                "Dundee's Restaurant - Geleneksel",
+                "Salt House - Modern",
+                "Tha Fish - Balık restoranı",
+              ],
+            },
+            {
+              id: 7,
+              ad: "Dubrovnik",
+              deniz: "Adriyatik Denizi",
+              icon: "🏰",
+              kisaAciklama:
+                "Orta Çağ'ın incisi. Tarihi surları, kırmızı çatıları ve Adriyatik manzarası ile Hırvatistan'ın en güzel sahil şehri.",
+              ozellikler: ["Tarih", "Kültür", "Mimari", "Deniz"],
+              tarih:
+                "7. yüzyılda kurulan Dubrovnik, Orta Çağ'da Ragusa Cumhuriyeti'nin başkenti oldu. 1979'da UNESCO Dünya Mirası Listesi'ne girdi.",
+              gorulecekYerler: [
+                "Old Town - Eski şehir",
+                "City Walls - Şehir surları",
+                "Stradun - Ana cadde",
+                "Lokrum - Ada",
+                "Cable Car - Teleferik",
+                "Banje Beach - Şehir plajı",
+                "Sponza Palace - Saray",
+                "Rector's Palace - Vali sarayı",
+              ],
+              etkinlikler: [
+                "Dubrovnik Summer Festival",
+                "Dubrovnik Film Festival",
+                "Dubrovnik Food Festival",
+                "Dubrovnik Music Festival",
+                "Dubrovnik Carnival",
+              ],
+              restoranlar: [
+                "360° - Lüks restoran",
+                "Lady Pi-Pi - Deniz ürünleri",
+                "Nautika - Geleneksel",
+                "Azur - Modern",
+                "Pantarul - Fine dining",
+              ],
+            },
+            {
+              id: 8,
+              ad: "Maui",
+              deniz: "Pasifik Okyanusu",
+              icon: "🌺",
+              kisaAciklama:
+                "Hawaii'nin büyüleyici adası. Haleakala volkanı, Road to Hana ve muhteşem plajları ile macera ve dinlenmenin buluştuğu yer.",
+              ozellikler: ["Macera", "Doğa", "Surf", "Kültür"],
+              tarih:
+                "M.S. 1000 yıllarında Polinezyalılar tarafından yerleşilen Maui, 1778'de James Cook tarafından keşfedildi. 1959'da Hawaii'nin bir parçası oldu.",
+              gorulecekYerler: [
+                "Haleakala - Volkan",
+                "Road to Hana - Sahil yolu",
+                "Lahaina - Tarihi şehir",
+                "Kaanapali Beach - Ana plaj",
+                "Iao Valley - Vadi",
+                "Molokini - Mercan adası",
+                "Hana - Uzak köy",
+                "Upcountry - Dağ bölgesi",
+              ],
+              etkinlikler: [
+                "Maui Film Festival",
+                "Maui Onion Festival",
+                "Maui Ukulele Festival",
+                "Maui Whale Festival",
+                "Maui Arts Festival",
+              ],
+              restoranlar: [
+                "Mama's Fish House - Deniz ürünleri",
+                "Merriman's Kapalua - Modern",
+                "Lahaina Grill - Geleneksel",
+                "Gannon's - Lüks",
+                "Hali'imaile General Store - Yerel",
+              ],
+            },
+            {
+              id: 9,
+              ad: "Cinque Terre",
+              deniz: "Ligurya Denizi",
+              icon: "🏘️",
+              kisaAciklama:
+                "Renkli evlerin sahil şeridi. Beş tarihi köy, yürüyüş yolları ve İtalyan Riviera'sının en güzel manzarası.",
+              ozellikler: ["Tarih", "Yürüyüş", "Gastronomi", "Manzara"],
+              tarih:
+                "Orta Çağ'da kurulan Cinque Terre köyleri, 1997'de UNESCO Dünya Mirası Listesi'ne girdi. Geleneksel balıkçılık ve şarap üretimi ile tanınıyor.",
+              gorulecekYerler: [
+                "Monterosso al Mare - En büyük köy",
+                "Vernazza - Liman köyü",
+                "Corniglia - Tepe köyü",
+                "Manarola - Renkli köy",
+                "Riomaggiore - Güney köyü",
+                "Sentiero Azzurro - Mavi yol",
+                "Porto Venere - Tarihi liman",
+                "Palmaria - Ada",
+              ],
+              etkinlikler: [
+                "Cinque Terre Wine Festival",
+                "Cinque Terre Food Festival",
+                "Cinque Terre Music Festival",
+                "Cinque Terre Art Festival",
+                "Cinque Terre Hiking Festival",
+              ],
+              restoranlar: [
+                "Ristorante Miky - Deniz ürünleri",
+                "Trattoria dal Billy - Geleneksel",
+                "Ristorante Belforte - Lüks",
+                "Il Grottino - Yerel",
+                "Ristorante La Torre - Manzara",
+              ],
+            },
+            {
+              id: 10,
+              ad: "Phi Phi Islands",
+              deniz: "Andaman Denizi",
+              icon: "🏊",
+              kisaAciklama:
+                "Tayland'ın tropik cenneti. Maya Bay, kristal sular ve kireçtaşı kayaları ile dünyanın en güzel ada grubu.",
+              ozellikler: ["Tropik", "Dalış", "Plaj", "Macera"],
+              tarih:
+                "1980'lerde keşfedilen Phi Phi Adaları, 2000'de \"The Beach\" filmi ile ünlendi. Günümüzde dünyanın en popüler ada destinasyonlarından biri.",
+              gorulecekYerler: [
+                "Phi Phi Don - Ana ada",
+                "Maya Bay - Film plajı",
+                "Monkey Beach - Maymun plajı",
+                "Viking Cave - Mağara",
+                "Bamboo Island - Bambu adası",
+                "Mosquito Island - Sivrisinek adası",
+                "Pileh Lagoon - Lagün",
+                "Viewpoint - Manzara noktası",
+              ],
+              etkinlikler: [
+                "Phi Phi Island Festival",
+                "Phi Phi Regatta",
+                "Phi Phi Beach Party",
+                "Phi Phi Food Festival",
+                "Phi Phi Music Festival",
+              ],
+              restoranlar: [
+                "Pee Pee Restaurant - Deniz ürünleri",
+                "Le Grand Bleu - Fransız",
+                "Unni's Restaurant - İskandinav",
+                "Papaya Restaurant - Tay mutfağı",
+                "Cosmic Restaurant - Uluslararası",
+              ],
+            },
+          ];
+
+          $scope.destinasyonDetayGit = function (destinasyon) {
+            // Destinasyon detay sayfasına yönlendirme
+            localStorage.setItem("seciliSehir", JSON.stringify(destinasyon));
+            window.location.href = "sehir-detay.html";
+          };
+        });
+    </script>
+  </body>
+</html>

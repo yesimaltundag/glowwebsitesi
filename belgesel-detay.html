@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="tr" ng-app="GirisApp">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Belgesel Detayı - GLOW</title>
+    <link rel="stylesheet" href="assets/css/style.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="assets/js/app.js"></script>
+    <style>
+      .detay-container {
+        max-width: 1200px;
+        margin: 40px auto;
+        padding: 32px;
+        background: rgba(255, 255, 255, 0.92);
+        border-radius: 18px;
+        box-shadow: 0 8px 32px rgba(124, 92, 74, 0.1);
+        backdrop-filter: blur(10px);
+        position: relative;
+      }
+
+      .detay-header {
+        display: grid;
+        grid-template-columns: 200px 1fr;
+        gap: 32px;
+        margin-bottom: 32px;
+        align-items: start;
+      }
+
+      .detay-poster {
+        width: 200px;
+        height: 280px;
+        background: linear-gradient(135deg, #4caf50, #45a049);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 80px;
+        color: white;
+        box-shadow: 0 4px 16px rgba(76, 175, 80, 0.3);
+      }
+
+      .detay-bilgiler {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      .detay-baslik {
+        color: #7c5c4a;
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin: 0;
+        line-height: 1.2;
+      }
+
+      .detay-yonetmen {
+        color: #b48a78;
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin: 0;
+      }
+
+      .detay-puan {
+        background: linear-gradient(135deg, #4caf50, #45a049);
+        color: white;
+        padding: 8px 16px;
+        border-radius: 25px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        display: inline-block;
+        width: fit-content;
+      }
+
+      .detay-ozellikler {
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+        margin-top: 8px;
+      }
+
+      .ozellik-item {
+        background: rgba(180, 138, 120, 0.1);
+        color: #7c5c4a;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        font-weight: 600;
+      }
+
+      .detay-aciklama {
+        color: #555;
+        font-size: 1.1rem;
+        line-height: 1.6;
+        margin: 24px 0;
+        text-align: justify;
+      }
+
+      .detay-icerik {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 32px;
+        margin-top: 32px;
+      }
+
+      .detay-bolum {
+        background: rgba(255, 255, 255, 0.8);
+        border-radius: 16px;
+        padding: 24px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+      }
+
+      .bolum-baslik {
+        color: #7c5c4a;
+        font-size: 1.4rem;
+        font-weight: 700;
+        margin-bottom: 20px;
+        text-align: center;
+      }
+
+      .belgesel-foto {
+        width: 100%;
+        height: 300px;
+        background: linear-gradient(135deg, #4caf50, #45a049);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 60px;
+        color: white;
+        margin-bottom: 16px;
+        box-shadow: 0 4px 16px rgba(76, 175, 80, 0.3);
+      }
+
+      .geri-btn {
+        background: linear-gradient(135deg, #e2d9d0, #b48a78);
+        color: #7c5c4a;
+        border: none;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        font-size: 18px;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s;
+        position: absolute;
+        top: 20px;
+        right: 20px;
+      }
+
+      .geri-btn:hover {
+        background: linear-gradient(135deg, #b48a78, #e2d9d0);
+        color: #fff;
+        transform: scale(1.1);
+      }
+
+      .loading {
+        text-align: center;
+        color: #7c5c4a;
+        font-size: 1.1rem;
+        padding: 40px;
+      }
+
+      .error {
+        text-align: center;
+        color: #f44336;
+        font-size: 1.1rem;
+        padding: 40px;
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .detay-header {
+          grid-template-columns: 1fr;
+          text-align: center;
+        }
+
+        .detay-poster {
+          width: 150px;
+          height: 210px;
+          margin: 0 auto;
+          font-size: 60px;
+        }
+
+        .detay-icerik {
+          grid-template-columns: 1fr;
+          gap: 24px;
+        }
+
+        .detay-baslik {
+          font-size: 2rem;
+        }
+      }
+    </style>
+  </head>
+  <body ng-controller="MainController">
+    <ng-include src="'components/header.html'"></ng-include>
+    <main class="main-content">
+      <div class="detay-container" ng-controller="BelgeselDetayController">
+        <button
+          class="geri-btn"
+          onclick="window.history.back()"
+          title="Geri Dön"
+        >
+          ←
+        </button>
+
+        <div class="loading" ng-if="loading">Belgesel yükleniyor...</div>
+        <div class="error" ng-if="error">{{ error }}</div>
+
+        <div ng-if="!loading && !error && belgesel">
+          <div class="detay-header">
+            <div class="detay-poster">📺</div>
+            <div class="detay-bilgiler">
+              <h1 class="detay-baslik">{{ belgesel.belgesel_adi }}</h1>
+              <div class="detay-yonetmen">{{ belgesel.yonetmen }}</div>
+              <div class="detay-puan">⭐ {{ belgesel.puan }}/10</div>
+              <div class="detay-ozellikler">
+                <div class="ozellik-item">{{ belgesel.yil }}</div>
+                <div class="ozellik-item">{{ belgesel.tur }}</div>
+                <div class="ozellik-item">{{ belgesel.sure }}</div>
+                <div class="ozellik-item" ng-if="belgesel.ulke">
+                  {{ belgesel.ulke }}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="detay-aciklama">{{ belgesel.aciklama }}</div>
+
+          <div class="detay-icerik">
+            <div class="detay-bolum">
+              <h3 class="bolum-baslik">📸 Belgesel Fotoğrafları</h3>
+              <div class="belgesel-foto">📷</div>
+              <p style="text-align: center; color: #7f8c8d; font-style: italic">
+                Bu belgeselin çekim fotoğrafları ve görselleri burada yer alacak
+              </p>
+            </div>
+
+            <div class="detay-bolum">
+              <h3 class="bolum-baslik">📋 Belgesel Detayları</h3>
+              <div style="color: #34495e; line-height: 1.6">
+                <p><strong>Yönetmen:</strong> {{ belgesel.yonetmen }}</p>
+                <p><strong>Yapım Yılı:</strong> {{ belgesel.yil }}</p>
+                <p><strong>Tür:</strong> {{ belgesel.tur }}</p>
+                <p><strong>Süre:</strong> {{ belgesel.sure }}</p>
+                <p ng-if="belgesel.ulke">
+                  <strong>Ülke:</strong> {{ belgesel.ulke }}
+                </p>
+                <p ng-if="belgesel.dil">
+                  <strong>Dil:</strong> {{ belgesel.dil }}
+                </p>
+                <p ng-if="belgesel.konu">
+                  <strong>Konu:</strong> {{ belgesel.konu }}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Yorum Bölümü -->
+          <div class="yorum-bolum">
+            <h3 class="yorum-baslik">💬 Yorumlar ({{ yorumlar.length }})</h3>
+
+            <!-- Yorum Ekleme Formu -->
+            <div class="yorum-form" ng-if="kullanici">
+              <h4>Yorum Yap</h4>
+              <div class="form-grup">
+                <label>Yorumunuz:</label>
+                <textarea
+                  ng-model="yeniYorum.yorum"
+                  placeholder="Bu belgesel hakkında düşüncelerinizi paylaşın..."
+                  rows="4"
+                  maxlength="500"
+                ></textarea>
+                <div class="karakter-sayisi">
+                  {{ yeniYorum.yorum.length }}/500
+                </div>
+              </div>
+
+              <div class="form-grup">
+                <label>Puanınız:</label>
+                <div class="puan-secici">
+                  <span
+                    ng-repeat="i in [1,2,3,4,5,6,7,8,9,10]"
+                    ng-click="yeniYorum.puan = i"
+                    ng-class="{ 'secili': yeniYorum.puan >= i }"
+                    class="puan-yildiz"
+                    >⭐</span
+                  >
+                </div>
+                <div class="puan-text">{{ yeniYorum.puan }}/10</div>
+              </div>
+
+              <button
+                class="yorum-gonder-btn"
+                ng-click="yorumEkle()"
+                ng-disabled="!yeniYorum.yorum || yeniYorum.yorum.length < 10 || !yeniYorum.puan"
+              >
+                Yorum Gönder
+              </button>
+            </div>
+
+            <!-- Giriş Yapmamış Kullanıcı -->
+            <div class="giris-uyari" ng-if="!kullanici">
+              <p>
+                Yorum yapmak için lütfen <a href="index.html">giriş yapın</a>.
+              </p>
+            </div>
+
+            <!-- Yorumlar Listesi -->
+            <div class="yorumlar-liste" ng-if="yorumlar.length > 0">
+              <div class="yorum-item" ng-repeat="yorum in yorumlar">
+                <div class="yorum-header">
+                  <div class="yorum-kullanici">{{ yorum.kullanici_adi }}</div>
+                  <div class="yorum-puan-container">
+                    <div
+                      class="yorum-puan"
+                      ng-bind-html="yorum.puan | yildizSistemi"
+                    ></div>
+                    <button
+                      class="yorum-sil-btn"
+                      ng-if="kullanici && kullanici.id == yorum.kullanici_id"
+                      ng-click="yorumSil(yorum.id)"
+                      title="Yorumu Sil"
+                    >
+                      🗑️
+                    </button>
+                  </div>
+                  <div class="yorum-tarih">
+                    {{ yorum.created_at | date:'dd.MM.yyyy HH:mm' }}
+                  </div>
+                </div>
+                <div class="yorum-icerik">{{ yorum.yorum }}</div>
+              </div>
+            </div>
+
+            <!-- Yorum Yok -->
+            <div class="yorum-yok" ng-if="yorumlar.length === 0">
+              <p>Henüz yorum yapılmamış. İlk yorumu siz yapın!</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <ng-include src="'components/footer.html'"></ng-include>
+
+    <button id="scrollTopBtn" title="Yukarı Çık" ng-click="scrollToTop()">
+      ↑
+    </button>
+  </body>
+</html>

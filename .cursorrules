@@ -1,0 +1,135 @@
+# 🎯 Cursor AI Kuralları - GLOW Projesi
+
+## 🌟 **Ana Kurallar**
+- **Türkçe İletişim**: Her zaman Türkçe konuş, teknik terimlerde gerektiğinde İngilizce kullan
+- **Emoji Kullanımı**: Önemli noktaları vurgula (✅ başarılı, ❌ başarısız)
+- **Terminal Komutları**: Asla çalıştırma, sadece string olarak ver
+- **Proje Odaklı**: İlk prompt'u asla unutma, ana konuya odaklan
+
+## 🏗️ **Proje Yapısı**
+- **Component Tabanlı**: Header/footer her sayfada sabit olmalı
+- **Modüler CSS**: Gereksiz kodlar kaldırıldı, mantıklı bölümler
+- **Tek JavaScript Dosyası**: Tüm controller'lar app.js'de
+- **Responsive Tasarım**: Mobile-first yaklaşım
+- **Modern UI**: Glassmorphism, gradient efektler
+
+## 📁 **Dosya Organizasyonu**
+```
+yesim/
+├── api.php                 # Backend API
+├── *.html                  # Sayfa dosyaları
+├── components/             # Component klasörü
+│   ├── header.html        # Header component
+│   ├── footer.html        # Footer component
+│   ├── page-css.html      # Sayfa özel CSS
+│   └── page-scripts.html  # Sayfa özel JS
+├── assets/
+│   ├── css/style.css      # Ana CSS (temiz, modüler)
+│   ├── js/app.js          # Tüm AngularJS controller'lar
+│   └── images/            # Görseller
+└── README.md              # Proje dokümantasyonu
+```
+
+## 🎨 **CSS Kuralları**
+- **Modüler Yapı**: Mantıklı bölümler (HEADER, NAVIGATION, FORMS, etc.)
+- **Responsive**: Mobile-first, breakpoint'ler: 768px, 1024px
+- **Modern Efektler**: Glassmorphism, gradient, smooth animations
+- **Temiz Kod**: Gereksiz CSS yok, optimize edilmiş
+
+## ⚡ **JavaScript Kuralları**
+- **Tek Dosya**: Tüm controller'lar app.js'de
+- **Modern Syntax**: ES6+ özellikleri
+- **Error Handling**: Kapsamlı hata yönetimi
+- **Utility Functions**: showMessage() gibi yardımcı fonksiyonlar
+
+## 🔧 **Geliştirme Prensipleri**
+1. **Component Yapısını Koru**: Header/footer her sayfada
+2. **CSS Modülerliği**: Gereksiz kod ekleme
+3. **JavaScript Temizliği**: Tek dosyada controller'lar
+4. **Responsive**: Mobil öncelikli tasarım
+5. **Modern UI**: Glassmorphism ve gradient efektler
+
+## 🚀 **Teknoloji Stack**
+- **Frontend**: AngularJS 1.8.2
+- **Backend**: PHP 7.4+
+- **Database**: MySQL
+- **CSS**: Modern CSS3
+- **JS**: ES6+ Syntax
+
+## 📱 **Responsive Breakpoints**
+- **Mobile**: < 768px
+- **Tablet**: 768px - 1024px  
+- **Desktop**: > 1024px
+
+## 🎯 **API Endpoints**
+- `GET api.php` - Kullanıcı listesi
+- `POST api.php` - Yeni kullanıcı
+- `POST api.php?login=1` - Giriş
+- `PUT api.php` - Güncelleme
+- `DELETE api.php?id=X` - Silme
+
+## 🔒 **Güvenlik**
+- **Password Hashing**: PHP PASSWORD_DEFAULT
+- **Input Validation**: Kullanıcı girdisi kontrolü
+- **Session Management**: LocalStorage
+- **Admin Control**: Yetki kontrolleri
+
+## 📝 **Kod Standartları**
+- **Indentation**: 2 spaces
+- **Naming**: camelCase (JS), kebab-case (CSS)
+- **Comments**: Türkçe açıklamalar
+- **Structure**: Mantıklı dosya organizasyonu
+
+## 🚀 **Performans**
+- **Minimal CSS**: Gereksiz kodlar kaldırıldı
+- **Optimized JS**: Tek dosyada controller'lar
+- **Fast Loading**: Hızlı sayfa yükleme
+- **Efficient API**: Optimize edilmiş endpoint'ler
+
+## 🔄 **Güncelleme Süreci**
+1. Component yapısını koru
+2. CSS modülerliğini sürdür
+3. JavaScript temizliğini koru
+4. Responsive tasarımı koru
+5. Modern UI/UX'i sürdür
+
+## ⚠️ **Önemli Notlar**
+- **Header/Footer**: Her sayfada sabit olmalı
+- **Component Sistemi**: Modüler yapı korunmalı
+- **Temiz Kod**: Gereksiz kodlar kaldırılmalı
+- **Modern UI**: Glassmorphism efektleri sürdürülmeli
+- **Responsive**: Mobil uyumluluk korunmalı
+
+## 🎨 **Tasarım Prensipleri**
+- **Glassmorphism**: Şeffaf, blur efektleri
+- **Gradient**: Modern renk geçişleri
+- **Smooth Animations**: Yumuşak geçişler
+- **Modern Buttons**: Hover efektleri
+- **Clean Typography**: Okunabilir yazı tipleri
+
+## 📊 **Veritabanı Yapısı**
+```sql
+CREATE TABLE kullanicilar (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    adsoyad VARCHAR(100) NOT NULL,
+    sifre VARCHAR(255) NOT NULL,
+    rol ENUM('admin', 'kullanici') DEFAULT 'kullanici',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+## 🔧 **Kurulum**
+1. XAMPP/WAMP başlat
+2. Projeyi htdocs klasörüne kopyala
+3. MySQL veritabanını oluştur
+4. api.php'deki veritabanı ayarlarını kontrol et
+5. index.html'i aç
+
+## 📞 **İletişim**
+Proje hakkında sorular için README.md dosyasını incele.
+
+---
+**Proje**: GLOW - Modern Web Uygulaması
+**Versiyon**: 2.0 (Modern Component Yapısı)
+**Durum**: ✅ Tamamlandı 

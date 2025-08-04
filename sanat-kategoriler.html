@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="tr" ng-app="GirisApp">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sanat Kategorileri - GLOW</title>
+    <link rel="stylesheet" href="assets/css/style.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="assets/js/app.js"></script>
+    <style>
+      .kategori-container {
+        max-width: 1200px;
+        margin: 40px auto;
+        padding: 32px;
+        background: rgba(255, 255, 255, 0.92);
+        border-radius: 18px;
+        box-shadow: 0 8px 32px rgba(124, 92, 74, 0.1);
+        backdrop-filter: blur(10px);
+        position: relative;
+      }
+      .kategori-header {
+        text-align: center;
+        margin-bottom: 40px;
+      }
+      .kategori-baslik {
+        color: #7c5c4a;
+        font-size: 2.5rem;
+        font-weight: 700;
+        letter-spacing: 2px;
+        margin-bottom: 16px;
+        text-shadow: 0 2px 4px rgba(124, 92, 74, 0.1);
+      }
+      .kategori-aciklama {
+        color: #b48a78;
+        font-size: 1.1rem;
+        font-weight: 500;
+        max-width: 600px;
+        margin: 0 auto;
+        line-height: 1.6;
+      }
+      .kategori-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 24px;
+        margin-top: 32px;
+      }
+      .kategori-card {
+        background: linear-gradient(135deg, #f8e0e1 60%, #e2d9d0 100%);
+        border-radius: 16px;
+        box-shadow: 0 4px 16px rgba(180, 138, 120, 0.08);
+        padding: 24px;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+        text-align: center;
+      }
+      .kategori-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 24px rgba(180, 138, 120, 0.15);
+      }
+      .kategori-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #b48a78, #e2d9d0);
+      }
+      .kategori-icon {
+        font-size: 3rem;
+        margin-bottom: 16px;
+        display: block;
+      }
+      .kategori-baslik-card {
+        color: #7c5c4a;
+        font-size: 1.3rem;
+        font-weight: 700;
+        margin-bottom: 12px;
+        line-height: 1.3;
+      }
+      .kategori-aciklama-card {
+        color: #b48a78;
+        font-size: 0.95rem;
+        font-weight: 500;
+        line-height: 1.5;
+      }
+      .geri-btn {
+        background: linear-gradient(135deg, #e2d9d0, #b48a78);
+        color: #7c5c4a;
+        border: none;
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s;
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        z-index: 1000;
+        box-shadow: 0 4px 12px rgba(124, 92, 74, 0.2);
+      }
+      .geri-btn:hover {
+        background: linear-gradient(135deg, #b48a78, #e2d9d0);
+        color: #fff;
+        transform: scale(1.1);
+      }
+      @media (max-width: 768px) {
+        .kategori-container {
+          padding: 20px;
+          margin: 20px;
+        }
+        .kategori-baslik {
+          font-size: 2rem;
+        }
+        .kategori-grid {
+          grid-template-columns: 1fr;
+          gap: 20px;
+        }
+        .geri-btn {
+          width: 45px;
+          height: 45px;
+          font-size: 18px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <ng-include src="'components/header.html'"></ng-include>
+    <main class="main-content">
+      <div
+        class="kategori-container"
+        ng-controller="SanatKategorilerController"
+      >
+        <button class="geri-btn" ng-click="geriDon()" title="Ana Sayfa'ya Dön">
+          ←
+        </button>
+        <div class="kategori-header">
+          <h1 class="kategori-baslik">Sanat Kategorileri</h1>
+          <p class="kategori-aciklama">
+            Sanatın farklı dallarını keşfet ve ilham al! Her kategori kendine
+            özgü güzellikler ve yaratıcılık sunar.
+          </p>
+        </div>
+        <div class="kategori-grid">
+          <div
+            class="kategori-card"
+            ng-repeat="kategori in kategoriler"
+            ng-click="kategoriSec(kategori)"
+          >
+            <span class="kategori-icon">{{kategori.icon}}</span>
+            <h3 class="kategori-baslik-card">{{kategori.ad}}</h3>
+            <p class="kategori-aciklama-card">{{kategori.aciklama}}</p>
+          </div>
+        </div>
+      </div>
+    </main>
+    <ng-include src="'components/footer.html'"></ng-include>
+    <button id="scrollTopBtn" title="Yukarı Çık" ng-click="scrollToTop()">
+      ↑
+    </button>
+    <script>
+      angular
+        .module("GirisApp")
+        .controller("SanatKategorilerController", function ($scope) {
+          $scope.kullanici = JSON.parse(
+            localStorage.getItem("girisYapan") || "null"
+          );
+
+          $scope.kategoriler = [
+            {
+              id: "resim",
+              ad: "Resim",
+              icon: "🎨",
+              aciklama:
+                "Geleneksel ve modern resim teknikleri, sanatçılar ve eserler",
+            },
+            {
+              id: "muzik",
+              ad: "Müzik",
+              icon: "🎵",
+              aciklama:
+                "Klasik, modern ve dünya müzikleri, besteciler ve enstrümanlar",
+            },
+            {
+              id: "heykel",
+              ad: "Heykel",
+              icon: "🗿",
+              aciklama:
+                "Üç boyutlu sanat eserleri, heykeltıraşlar ve teknikler",
+            },
+            {
+              id: "sinema",
+              ad: "Sinema",
+              icon: "🎬",
+              aciklama: "Film sanatı, yönetmenler, oyuncular ve sinema tarihi",
+            },
+            {
+              id: "tiyatro",
+              ad: "Tiyatro",
+              icon: "🎭",
+              aciklama: "Sahne sanatları, oyunlar, yazarlar ve performanslar",
+            },
+            {
+              id: "mimari",
+              ad: "Mimari",
+              icon: "🏛️",
+              aciklama: "Bina tasarımı, mimarlar ve tarihi yapılar",
+            },
+            {
+              id: "fotograf",
+              ad: "Fotoğraf",
+              icon: "📷",
+              aciklama: "Fotoğraf sanatı, fotoğrafçılar ve teknikler",
+            },
+            {
+              id: "grafik",
+              ad: "Grafik",
+              icon: "🖌️",
+              aciklama: "Grafik tasarım, dijital sanat ve görsel iletişim",
+            },
+            {
+              id: "edebiyat",
+              ad: "Edebiyat",
+              icon: "📚",
+              aciklama: "Şiir, roman, hikaye ve edebi eserler",
+            },
+            {
+              id: "dans",
+              ad: "Dans",
+              icon: "💃",
+              aciklama: "Dans türleri, koreograflar ve performans sanatları",
+            },
+          ];
+
+          $scope.kategoriSec = function (kategori) {
+            // Kategori seçildiğinde yapılacak işlem
+            alert(
+              kategori.ad + " kategorisi seçildi! Bu özellik yakında eklenecek."
+            );
+          };
+
+          $scope.geriDon = function () {
+            window.location.href = "anasayfa.html";
+          };
+
+          $scope.scrollToTop = function () {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          };
+        });
+    </script>
+  </body>
+</html>

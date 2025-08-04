@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="tr" ng-app="GirisApp">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Anime - GLOW</title>
+    <link rel="stylesheet" href="assets/css/style.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="assets/js/app.js"></script>
+    <style>
+      .anime-container {
+        max-width: 1200px;
+        margin: 40px auto;
+        padding: 32px;
+        background: rgba(255, 255, 255, 0.92);
+        border-radius: 18px;
+        box-shadow: 0 8px 32px rgba(124, 92, 74, 0.1);
+        backdrop-filter: blur(10px);
+        position: relative;
+      }
+
+      .anime-title {
+        color: #7c5c4a;
+        font-size: 2.5rem;
+        font-weight: 700;
+        text-align: center;
+        margin-bottom: 32px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .anime-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+        margin-top: 40px;
+      }
+
+      .anime-card {
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 16px;
+        padding: 24px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        border: 1px solid rgba(124, 92, 74, 0.1);
+      }
+
+      .anime-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        border-color: rgba(124, 92, 74, 0.3);
+      }
+
+      .anime-content {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .anime-baslik {
+        color: #7c5c4a;
+        font-size: 1.4rem;
+        font-weight: 700;
+        margin: 0;
+        line-height: 1.3;
+      }
+
+      .anime-yonetmen {
+        color: #b48a78;
+        font-size: 1rem;
+        font-weight: 600;
+        margin: 0;
+      }
+
+      .anime-puan {
+        background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+        color: white;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        display: inline-block;
+        width: fit-content;
+      }
+
+      .anime-detay {
+        color: #666;
+        font-size: 0.9rem;
+        line-height: 1.4;
+      }
+
+      .anime-aciklama {
+        color: #555;
+        font-size: 0.95rem;
+        line-height: 1.5;
+        margin-top: 8px;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+
+      .anime-izlenme {
+        color: #7c5c4a;
+        font-size: 0.85rem;
+        font-weight: 600;
+        margin-top: 8px;
+      }
+
+      .geri-btn {
+        background: linear-gradient(135deg, #e2d9d0, #b48a78);
+        color: #7c5c4a;
+        border: none;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        font-size: 18px;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s;
+        position: absolute;
+        top: 20px;
+        right: 20px;
+      }
+
+      .geri-btn:hover {
+        background: linear-gradient(135deg, #b48a78, #e2d9d0);
+        color: #fff;
+        transform: scale(1.1);
+      }
+
+      .loading {
+        text-align: center;
+        color: #7c5c4a;
+        font-size: 1.1rem;
+        padding: 40px;
+      }
+
+      .error {
+        text-align: center;
+        color: #f44336;
+        font-size: 1.1rem;
+        padding: 40px;
+      }
+
+      /* Responsive */
+      @media (max-width: 1024px) {
+        .anime-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      @media (max-width: 768px) {
+        .anime-container {
+          margin: 20px;
+          padding: 20px;
+        }
+
+        .anime-title {
+          font-size: 2rem;
+        }
+
+        .anime-grid {
+          grid-template-columns: 1fr;
+          gap: 20px;
+        }
+
+        .anime-card {
+          padding: 20px;
+        }
+      }
+    </style>
+  </head>
+  <body ng-controller="MainController">
+    <ng-include src="'components/header.html'"></ng-include>
+    <main class="main-content">
+      <div class="anime-container" ng-controller="AnimeController">
+        <button
+          class="geri-btn"
+          onclick="window.history.back()"
+          title="Geri Dön"
+        >
+          ←
+        </button>
+
+        <h1 class="anime-title">🎌 Anime</h1>
+
+        <!-- Loading -->
+        <div class="loading" ng-if="loading">Animeler yükleniyor...</div>
+
+        <!-- Error -->
+        <div class="error" ng-if="error">{{ error }}</div>
+
+        <!-- Animeler -->
+        <div class="anime-grid" ng-if="!loading && !error">
+          <div
+            class="anime-card"
+            ng-repeat="anime in animeler"
+            ng-click="animeDetayGit(anime.id)"
+            style="cursor: pointer"
+          >
+            <div class="anime-content">
+              <h3 class="anime-baslik">{{ anime.anime_adi }}</h3>
+              <div class="anime-yonetmen">{{ anime.yonetmen }}</div>
+              <div class="anime-puan">⭐ {{ anime.puan }}/10</div>
+              <div class="anime-detay">
+                <strong>Yıl:</strong> {{ anime.yil }} | <strong>Tür:</strong> {{
+                anime.tur }} | <strong>Bölüm:</strong> {{ anime.bolum_sayisi }}
+              </div>
+              <div class="anime-detay" ng-if="anime.sure">
+                <strong>Süre:</strong> {{ anime.sure }} |
+                <strong>Stüdyo:</strong> {{ anime.stüdyo }}
+              </div>
+              <div class="anime-detay" ng-if="anime.durum">
+                <strong>Durum:</strong> {{ anime.durum }}
+              </div>
+              <p class="anime-aciklama">{{ anime.aciklama }}</p>
+              <div class="anime-izlenme" ng-if="anime.izlenme_sayisi">
+                👁️ {{ anime.izlenme_sayisi | number }} izlenme
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <ng-include src="'components/footer.html'"></ng-include>
+
+    <button id="scrollTopBtn" title="Yukarı Çık" ng-click="scrollToTop()">
+      ↑
+    </button>
+  </body>
+</html>

@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="tr" ng-app="GirisApp">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Asya Seyahatleri - GLOW</title>
+    <link rel="stylesheet" href="assets/css/style.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="assets/js/app.js"></script>
+    <style>
+      .asya-container {
+        max-width: 1200px;
+        margin: 40px auto;
+        padding: 32px;
+        background: rgba(255, 255, 255, 0.92);
+        border-radius: 18px;
+        box-shadow: 0 8px 32px rgba(124, 92, 74, 0.1);
+        backdrop-filter: blur(10px);
+      }
+
+      .page-header {
+        text-align: center;
+        margin-bottom: 40px;
+      }
+
+      .page-title {
+        color: #7c5c4a;
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+      }
+
+      .page-subtitle {
+        color: #b48a78;
+        font-size: 1.1rem;
+        font-weight: 500;
+      }
+
+      .geri-btn {
+        background: linear-gradient(135deg, #e2d9d0, #b48a78);
+        color: #7c5c4a;
+        border: none;
+        border-radius: 50%;
+        width: 45px;
+        height: 45px;
+        font-size: 18px;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s;
+        position: absolute;
+        top: 20px;
+        left: 20px;
+      }
+
+      .geri-btn:hover {
+        background: linear-gradient(135deg, #b48a78, #e2d9d0);
+        color: #fff;
+        transform: scale(1.1);
+      }
+
+      .sehirler-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 30px;
+        margin-top: 40px;
+      }
+
+      .sehir-card {
+        background: linear-gradient(135deg, #f8e0e1 0%, #e2d9d0 100%);
+        border-radius: 16px;
+        padding: 25px;
+        box-shadow: 0 6px 20px rgba(180, 138, 120, 0.1);
+        transition: all 0.3s ease;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .sehir-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 12px 30px rgba(180, 138, 120, 0.2);
+      }
+
+      .sehir-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #b48a78, #e2d9d0, #f8e0e1);
+      }
+
+      .sehir-baslik {
+        color: #7c5c4a;
+        font-size: 1.4rem;
+        font-weight: 700;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .sehir-ulke {
+        color: #b48a78;
+        font-size: 0.95rem;
+        font-weight: 500;
+        margin-bottom: 15px;
+      }
+
+      .sehir-aciklama {
+        color: #7c5c4a;
+        font-size: 0.95rem;
+        line-height: 1.6;
+        margin-bottom: 20px;
+      }
+
+      .sehir-ozellikler {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 20px;
+      }
+
+      .ozellik-tag {
+        background: rgba(180, 138, 120, 0.2);
+        color: #7c5c4a;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 500;
+      }
+
+      .detay-btn {
+        background: linear-gradient(135deg, #b48a78, #e2d9d0);
+        color: white;
+        border: none;
+        border-radius: 25px;
+        padding: 10px 20px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        width: 100%;
+      }
+
+      .detay-btn:hover {
+        background: linear-gradient(135deg, #e2d9d0, #b48a78);
+        transform: scale(1.02);
+      }
+
+      .sehir-icon {
+        font-size: 1.2rem;
+      }
+
+      @media (max-width: 768px) {
+        .asya-container {
+          margin: 20px;
+          padding: 20px;
+        }
+
+        .page-title {
+          font-size: 2rem;
+        }
+
+        .sehirler-grid {
+          grid-template-columns: 1fr;
+          gap: 20px;
+        }
+
+        .geri-btn {
+          top: 15px;
+          left: 15px;
+          width: 40px;
+          height: 40px;
+          font-size: 16px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <ng-include src="'components/header.html'"></ng-include>
+
+    <main class="main-content">
+      <div class="asya-container" ng-controller="AsyaSeyahatController">
+        <button
+          class="geri-btn"
+          onclick="window.history.back()"
+          title="Geri Dön"
+        >
+          ←
+        </button>
+
+        <div class="page-header">
+          <h1 class="page-title">🌏 Asya Seyahatleri</h1>
+          <p class="page-subtitle">Asya'nın En Ünlü 10 Şehri</p>
+        </div>
+
+        <div class="sehirler-grid">
+          <div
+            class="sehir-card"
+            ng-repeat="sehir in asyaSehirleri"
+            ng-click="sehirDetayGit(sehir)"
+          >
+            <h3 class="sehir-baslik">
+              <span class="sehir-icon">{{sehir.icon}}</span>
+              {{sehir.ad}}
+            </h3>
+            <p class="sehir-ulke">{{sehir.ulke}}</p>
+            <p class="sehir-aciklama">{{sehir.kisaAciklama}}</p>
+
+            <div class="sehir-ozellikler">
+              <span class="ozellik-tag" ng-repeat="ozellik in sehir.ozellikler"
+                >{{ozellik}}</span
+              >
+            </div>
+
+            <button class="detay-btn">Detayları Gör</button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <ng-include src="'components/footer.html'"></ng-include>
+
+    <script>
+      angular
+        .module("GirisApp")
+        .controller("AsyaSeyahatController", function ($scope) {
+          $scope.kullanici = JSON.parse(
+            localStorage.getItem("girisYapan") || "null"
+          );
+
+          $scope.asyaSehirleri = [
+            {
+              id: 1,
+              ad: "Tokyo",
+              ulke: "Japonya",
+              icon: "🗾",
+              kisaAciklama:
+                "Geleceğin şehri. Gelenek ve modernliğin mükemmel uyumu, neon ışıkları ve gelişmiş teknolojisi ile dünyanın en dinamik metropolü.",
+              ozellikler: ["Teknoloji", "Kültür", "Gastronomi", "Alışveriş"],
+              tarih:
+                "M.S. 12. yüzyılda Edo adıyla kurulan Tokyo, 1868'de Japonya'nın başkenti oldu. İkinci Dünya Savaşı'ndan sonra hızla gelişerek dünyanın en büyük metropollerinden biri haline geldi.",
+              gorulecekYerler: [
+                "Senso-ji Tapınağı - Tokyo'nun en eski tapınağı",
+                "Tokyo Skytree - 634 metre yüksekliğinde kule",
+                "Shibuya Crossing - Dünyanın en kalabalık yaya geçidi",
+                "Tsukiji Fish Market - Balık pazarı",
+                "Meiji Shrine - İmparatorluk tapınağı",
+                "Tokyo Tower - Şehrin simgesi",
+                "Harajuku - Gençlik kültürü merkezi",
+                "Ueno Park - Büyük park ve müzeler",
+              ],
+              etkinlikler: [
+                "Cherry Blossom Festivali - Kiraz çiçeği festivali",
+                "Tokyo Game Show - Oyun fuarı",
+                "Tokyo International Film Festival",
+                "Sumidagawa Fireworks - Havai fişek festivali",
+                "Sanja Matsuri - Geleneksel festival",
+              ],
+              restoranlar: [
+                "Sukiyabashi Jiro - 3 Michelin yıldızlı sushi",
+                "Narisawa - Modern Japon mutfağı",
+                "Ichiran - Geleneksel ramen",
+                "Gonpachi - Kill Bill restoranı",
+                "Kozasa - Geleneksel tempura",
+              ],
+            },
+            {
+              id: 2,
+              ad: "Seul",
+              ulke: "Güney Kore",
+              icon: "🏯",
+              kisaAciklama:
+                "K-pop kültürünün merkezi, geleneksel hanok evleri ve ultra-modern gökdelenleri ile Doğu Asya'nın kalbi.",
+              ozellikler: ["K-pop", "Teknoloji", "Kültür", "Gastronomi"],
+              tarih:
+                "M.Ö. 18 yılında kurulan Seul, Joseon Hanedanlığı'nın başkenti oldu. 20. yüzyılda hızla modernleşerek dünyanın en gelişmiş şehirlerinden biri haline geldi.",
+              gorulecekYerler: [
+                "Gyeongbokgung Palace - Ana saray",
+                "N Seoul Tower - Şehir kulesi",
+                "Myeongdong - Alışveriş caddesi",
+                "Bukchon Hanok Village - Geleneksel evler",
+                "Changdeokgung Palace - UNESCO mirası saray",
+                "Hongdae - Gençlik bölgesi",
+                "Dongdaemun Design Plaza - Modern mimari",
+                "Namsan Park - Şehir parkı",
+              ],
+              etkinlikler: [
+                "Seoul Lantern Festival - Fener festivali",
+                "Busan International Film Festival",
+                "K-pop World Festival",
+                "Seoul Fashion Week",
+                "Cherry Blossom Festivali",
+              ],
+              restoranlar: [
+                "Jungsik - Modern Kore mutfağı",
+                "Gwangjang Market - Geleneksel pazar",
+                "Myeongdong Kyoja - Kalguksu",
+                "Mapo Galmaegi - Barbekü",
+                "Isaac Toast - Kahvaltı",
+              ],
+            },
+            {
+              id: 3,
+              ad: "Bangkok",
+              ulke: "Tayland",
+              icon: "🏛️",
+              kisaAciklama:
+                "Tapınaklar şehri, sokak yemekleri ve canlı gece hayatı ile Güneydoğu Asya'nın en dinamik başkenti.",
+              ozellikler: [
+                "Tapınaklar",
+                "Gastronomi",
+                "Gece Hayatı",
+                "Alışveriş",
+              ],
+              tarih:
+                "1782 yılında Rama I tarafından kurulan Bangkok, Siam Krallığı'nın başkenti oldu. Günümüzde Tayland'ın ekonomik ve kültürel merkezi.",
+              gorulecekYerler: [
+                "Grand Palace - Kraliyet sarayı",
+                "Wat Phra Kaew - Zümrüt Buda tapınağı",
+                "Wat Arun - Şafak tapınağı",
+                "Chatuchak Weekend Market - Dünyanın en büyük pazarı",
+                "Khao San Road - Backpacker caddesi",
+                "Chinatown - Çin mahallesi",
+                "Siam Paragon - Lüks alışveriş merkezi",
+                "Lumphini Park - Şehir parkı",
+              ],
+              etkinlikler: [
+                "Songkran Festivali - Su festivali",
+                "Loi Krathong - Işık festivali",
+                "Bangkok International Film Festival",
+                "Bangkok Fashion Week",
+                "Vegetarian Festival",
+              ],
+              restoranlar: [
+                "Gaggan - Modern Hint mutfağı",
+                "Jay Fai - Michelin yıldızlı sokak yemeği",
+                "Thip Samai - Pad Thai",
+                "Somtum Der - Isan mutfağı",
+                "Bo.lan - Geleneksel Tay",
+              ],
+            },
+            {
+              id: 4,
+              ad: "Singapur",
+              ulke: "Singapur",
+              icon: "🌴",
+              kisaAciklama:
+                "Lüks ve modernliğin simgesi. Marina Bay Sands, Gardens by the Bay ve temiz sokakları ile Asya'nın incisi.",
+              ozellikler: ["Lüks", "Teknoloji", "Gastronomi", "Doğa"],
+              tarih:
+                "1819 yılında Sir Stamford Raffles tarafından kurulan Singapur, 1965'te bağımsızlığını kazandı. Kısa sürede dünyanın en zengin ülkelerinden biri haline geldi.",
+              gorulecekYerler: [
+                "Marina Bay Sands - Lüks otel ve casino",
+                "Gardens by the Bay - Botanik bahçeleri",
+                "Sentosa Island - Eğlence adası",
+                "Orchard Road - Alışveriş caddesi",
+                "Chinatown - Çin mahallesi",
+                "Little India - Hint mahallesi",
+                "Singapore Zoo - Hayvanat bahçesi",
+                "Clarke Quay - Nehir kenarı",
+              ],
+              etkinlikler: [
+                "Singapore Food Festival",
+                "Great Singapore Sale",
+                "Singapore International Film Festival",
+                "Singapore Art Week",
+                "Formula 1 Grand Prix",
+              ],
+              restoranlar: [
+                "Odette - 3 Michelin yıldızlı",
+                "Liao Fan Hong Kong Soya Sauce Chicken Rice - Sokak yemeği",
+                "Jumbo Seafood - Deniz ürünleri",
+                "Din Tai Fung - Çin mutfağı",
+                "Maxwell Food Centre - Hawker merkezi",
+              ],
+            },
+            {
+              id: 5,
+              ad: "Hong Kong",
+              ulke: "Çin",
+              icon: "🏙️",
+              kisaAciklama:
+                "Gökdelenler ormanı, Victoria Harbour ve canlı sokak hayatı ile Doğu'nun New York'u.",
+              ozellikler: ["Gökdelenler", "Alışveriş", "Gastronomi", "Finans"],
+              tarih:
+                "1841 yılında İngiliz kolonisi olan Hong Kong, 1997'de Çin'e geri verildi. Günümüzde dünyanın önde gelen finans merkezlerinden biri.",
+              gorulecekYerler: [
+                "Victoria Peak - Şehrin en yüksek noktası",
+                "Victoria Harbour - Liman ve körfez",
+                "Tsim Sha Tsui - Alışveriş bölgesi",
+                "Central - Finans merkezi",
+                "Mong Kok - Sokak pazarı",
+                "Lantau Island - Büyük Buda",
+                "Hong Kong Disneyland",
+                "Ocean Park - Eğlence parkı",
+              ],
+              etkinlikler: [
+                "Hong Kong Arts Festival",
+                "Hong Kong International Film Festival",
+                "Hong Kong Sevens - Rugby turnuvası",
+                "Chinese New Year Parade",
+                "Mid-Autumn Festival",
+              ],
+              restoranlar: [
+                "Lung King Heen - 3 Michelin yıldızlı",
+                "Tim Ho Wan - Dim sum",
+                "Mak's Noodle - Geleneksel erişte",
+                "Yung Kee - Kızarmış ördek",
+                "Tai Cheong Bakery - Yumurta tartı",
+              ],
+            },
+            {
+              id: 6,
+              ad: "Pekin",
+              ulke: "Çin",
+              icon: "🏮",
+              kisaAciklama:
+                "Çin İmparatorluğu'nun kalbi. Yasak Şehir, Çin Seddi ve binlerce yıllık tarihi ile dünyanın en eski başkentlerinden biri.",
+              ozellikler: ["Tarih", "Kültür", "Mimari", "Gastronomi"],
+              tarih:
+                "M.Ö. 1045 yılında kurulan Pekin, Ming ve Qing hanedanlarının başkenti oldu. Günümüzde Çin'in siyasi ve kültürel merkezi.",
+              gorulecekYerler: [
+                "Forbidden City - Yasak Şehir",
+                "Great Wall of China - Çin Seddi",
+                "Temple of Heaven - Cennet Tapınağı",
+                "Summer Palace - Yaz Sarayı",
+                "Tiananmen Square - Tiananmen Meydanı",
+                "Hutong - Geleneksel mahalleler",
+                "Beijing National Stadium - Kuş Yuvası",
+                "Beihai Park - Şehir parkı",
+              ],
+              etkinlikler: [
+                "Spring Festival - Çin Yeni Yılı",
+                "Beijing International Film Festival",
+                "Mid-Autumn Festival",
+                "National Day Celebrations",
+                "Beijing Opera Festival",
+              ],
+              restoranlar: [
+                "Da Dong - Kızarmış ördek",
+                "Haidilao - Hot pot",
+                "Donglaishun - Geleneksel mutfak",
+                "Quanjude - Pekin ördeği",
+                "Jingzun - Modern Çin",
+              ],
+            },
+            {
+              id: 7,
+              ad: "Şangay",
+              ulke: "Çin",
+              icon: "🌃",
+              kisaAciklama:
+                "Doğu'nun Paris'i. Bund, Pudong ve neon ışıkları ile Çin'in en modern ve uluslararası şehri.",
+              ozellikler: ["Modern", "Finans", "Gastronomi", "Gece Hayatı"],
+              tarih:
+                "13. yüzyılda küçük bir balıkçı köyü olan Şangay, 19. yüzyılda uluslararası ticaret merkezi haline geldi. Günümüzde dünyanın en büyük liman şehirlerinden biri.",
+              gorulecekYerler: [
+                "The Bund - Tarihi liman caddesi",
+                "Pudong - Modern finans bölgesi",
+                "Yu Garden - Geleneksel bahçe",
+                "Nanjing Road - Alışveriş caddesi",
+                "Shanghai Tower - 632 metre yüksekliğinde",
+                "Shanghai Disneyland",
+                "Tianzifang - Sanat mahallesi",
+                "Xintiandi - Restoran bölgesi",
+              ],
+              etkinlikler: [
+                "Shanghai International Film Festival",
+                "Shanghai Fashion Week",
+                "Shanghai International Arts Festival",
+                "Formula 1 Chinese Grand Prix",
+                "Shanghai International Literary Festival",
+              ],
+              restoranlar: [
+                "Ultraviolet - 3 Michelin yıldızlı",
+                "Din Tai Fung - Dim sum",
+                "Xiaolongbao - Çorba köftesi",
+                "Hai Di Lao - Hot pot",
+                "Jia Jia Tang Bao - Geleneksel",
+              ],
+            },
+            {
+              id: 8,
+              ad: "Delhi",
+              ulke: "Hindistan",
+              icon: "🕌",
+              kisaAciklama:
+                "Eski Delhi'nin labirent sokakları ve Yeni Delhi'nin geniş caddeleri ile Hindistan'ın kalbi.",
+              ozellikler: ["Tarih", "Kültür", "Gastronomi", "Mimari"],
+              tarih:
+                "M.Ö. 6. yüzyılda kurulan Delhi, birçok hanedanın başkenti oldu. Eski Delhi ve Yeni Delhi olarak iki farklı karaktere sahip.",
+              gorulecekYerler: [
+                "Red Fort - Kırmızı Kale",
+                "Qutub Minar - UNESCO mirası kule",
+                "Humayun's Tomb - Babür mimarisi",
+                "India Gate - Zafer takı",
+                "Lotus Temple - Bahai tapınağı",
+                "Chandni Chowk - Eski pazar",
+                "Akshardham Temple - Modern tapınak",
+                "Lodi Gardens - Tarihi park",
+              ],
+              etkinlikler: [
+                "Republic Day Parade",
+                "Independence Day Celebrations",
+                "Delhi International Arts Festival",
+                "Qutub Festival",
+                "Delhi Book Fair",
+              ],
+              restoranlar: [
+                "Indian Accent - Modern Hint",
+                "Karim's - Geleneksel Mughlai",
+                "Bukhara - Kuzey Hint",
+                "Dum Pukht - Awadhi mutfağı",
+                "Khan Chacha - Sokak yemeği",
+              ],
+            },
+            {
+              id: 9,
+              ad: "Mumbai",
+              ulke: "Hindistan",
+              icon: "🎬",
+              kisaAciklama:
+                "Bollywood'un merkezi, Gateway of India ve canlı sokak hayatı ile Hindistan'ın finansal başkenti.",
+              ozellikler: ["Bollywood", "Finans", "Gastronomi", "Gece Hayatı"],
+              tarih:
+                "M.Ö. 3. yüzyılda kurulan Mumbai, Portekiz ve İngiliz sömürgesi dönemlerinden sonra Hindistan'ın en önemli şehri haline geldi.",
+              gorulecekYerler: [
+                "Gateway of India - Hindistan'ın kapısı",
+                "Taj Mahal Palace - Lüks otel",
+                "Marine Drive - Deniz kenarı yolu",
+                "Juhu Beach - Sahil",
+                "Elephanta Caves - Mağara tapınakları",
+                "Colaba Causeway - Alışveriş caddesi",
+                "Bandra West - Moda mahallesi",
+                "Dharavi - En büyük slum",
+              ],
+              etkinlikler: [
+                "Mumbai Film Festival",
+                "Ganesh Chaturthi - Festival",
+                "Kala Ghoda Arts Festival",
+                "Mumbai Marathon",
+                "Elephanta Festival",
+              ],
+              restoranlar: [
+                "Gymkhana - Modern Hint",
+                "Bademiya - Sokak yemeği",
+                "Trishna - Deniz ürünleri",
+                "Peshawri - Kuzeybatı mutfağı",
+                "Leopold Cafe - Tarihi kafe",
+              ],
+            },
+            {
+              id: 10,
+              ad: "Dubai",
+              ulke: "Birleşik Arap Emirlikleri",
+              icon: "🏗️",
+              kisaAciklama:
+                "Çölün ortasında yükselen mucize. Burj Khalifa, Palm Jumeirah ve lüks alışveriş merkezleri ile Orta Doğu'nun incisi.",
+              ozellikler: ["Lüks", "Mimari", "Alışveriş", "Eğlence"],
+              tarih:
+                "1833 yılında küçük bir balıkçı köyü olan Dubai, 1966'da petrol bulunmasıyla hızla gelişti. Günümüzde dünyanın en lüks şehirlerinden biri.",
+              gorulecekYerler: [
+                "Burj Khalifa - Dünyanın en yüksek binası",
+                "Palm Jumeirah - Palmiye şeklinde ada",
+                "Burj Al Arab - 7 yıldızlı otel",
+                "Dubai Mall - En büyük alışveriş merkezi",
+                "Dubai Frame - Çerçeve binası",
+                "Dubai Marina - Marina bölgesi",
+                "Dubai Miracle Garden - Çiçek bahçesi",
+                "Dubai Desert Safari - Çöl safari",
+              ],
+              etkinlikler: [
+                "Dubai Shopping Festival",
+                "Dubai International Film Festival",
+                "Dubai World Cup - At yarışı",
+                "Dubai Food Festival",
+                "Dubai Design Week",
+              ],
+              restoranlar: [
+                "Al Muntaha - Burj Al Arab'da",
+                "Zuma - Modern Japon",
+                "Pai Thai - Thai mutfağı",
+                "Al Ustad - Geleneksel İran",
+                "Ravi Restaurant - Pakistan mutfağı",
+              ],
+            },
+          ];
+
+          $scope.sehirDetayGit = function (sehir) {
+            // Şehir detay sayfasına yönlendirme
+            localStorage.setItem("seciliSehir", JSON.stringify(sehir));
+            window.location.href = "sehir-detay.html";
+          };
+        });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="tr" ng-app="GirisApp">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Amerika Seyahatleri - GLOW</title>
+    <link rel="stylesheet" href="assets/css/style.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="assets/js/app.js"></script>
+    <style>
+      .amerika-container {
+        max-width: 1200px;
+        margin: 40px auto;
+        padding: 32px;
+        background: rgba(255, 255, 255, 0.92);
+        border-radius: 18px;
+        box-shadow: 0 8px 32px rgba(124, 92, 74, 0.1);
+        backdrop-filter: blur(10px);
+      }
+
+      .page-header {
+        text-align: center;
+        margin-bottom: 40px;
+      }
+
+      .page-title {
+        color: #7c5c4a;
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+      }
+
+      .page-subtitle {
+        color: #b48a78;
+        font-size: 1.1rem;
+        font-weight: 500;
+      }
+
+      .geri-btn {
+        background: linear-gradient(135deg, #e2d9d0, #b48a78);
+        color: #7c5c4a;
+        border: none;
+        border-radius: 50%;
+        width: 45px;
+        height: 45px;
+        font-size: 18px;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s;
+        position: absolute;
+        top: 20px;
+        left: 20px;
+      }
+
+      .geri-btn:hover {
+        background: linear-gradient(135deg, #b48a78, #e2d9d0);
+        color: #fff;
+        transform: scale(1.1);
+      }
+
+      .sehirler-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 30px;
+        margin-top: 40px;
+      }
+
+      .sehir-card {
+        background: linear-gradient(135deg, #f8e0e1 0%, #e2d9d0 100%);
+        border-radius: 16px;
+        padding: 25px;
+        box-shadow: 0 6px 20px rgba(180, 138, 120, 0.1);
+        transition: all 0.3s ease;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .sehir-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 12px 30px rgba(180, 138, 120, 0.2);
+      }
+
+      .sehir-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #b48a78, #e2d9d0, #f8e0e1);
+      }
+
+      .sehir-baslik {
+        color: #7c5c4a;
+        font-size: 1.4rem;
+        font-weight: 700;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .sehir-ulke {
+        color: #b48a78;
+        font-size: 0.95rem;
+        font-weight: 500;
+        margin-bottom: 15px;
+      }
+
+      .sehir-aciklama {
+        color: #7c5c4a;
+        font-size: 0.95rem;
+        line-height: 1.6;
+        margin-bottom: 20px;
+      }
+
+      .sehir-ozellikler {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 20px;
+      }
+
+      .ozellik-tag {
+        background: rgba(180, 138, 120, 0.2);
+        color: #7c5c4a;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 500;
+      }
+
+      .detay-btn {
+        background: linear-gradient(135deg, #b48a78, #e2d9d0);
+        color: white;
+        border: none;
+        border-radius: 25px;
+        padding: 10px 20px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        width: 100%;
+      }
+
+      .detay-btn:hover {
+        background: linear-gradient(135deg, #e2d9d0, #b48a78);
+        transform: scale(1.02);
+      }
+
+      .sehir-icon {
+        font-size: 1.2rem;
+      }
+
+      @media (max-width: 768px) {
+        .amerika-container {
+          margin: 20px;
+          padding: 20px;
+        }
+
+        .page-title {
+          font-size: 2rem;
+        }
+
+        .sehirler-grid {
+          grid-template-columns: 1fr;
+          gap: 20px;
+        }
+
+        .geri-btn {
+          top: 15px;
+          left: 15px;
+          width: 40px;
+          height: 40px;
+          font-size: 16px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <ng-include src="'components/header.html'"></ng-include>
+
+    <main class="main-content">
+      <div class="amerika-container" ng-controller="AmerikaSeyahatController">
+        <button
+          class="geri-btn"
+          onclick="window.history.back()"
+          title="Geri Dön"
+        >
+          ←
+        </button>
+
+        <div class="page-header">
+          <h1 class="page-title">🌎 Amerika Seyahatleri</h1>
+          <p class="page-subtitle">Amerika'nın En Ünlü 10 Şehri</p>
+        </div>
+
+        <div class="sehirler-grid">
+          <div
+            class="sehir-card"
+            ng-repeat="sehir in amerikaSehirleri"
+            ng-click="sehirDetayGit(sehir)"
+          >
+            <h3 class="sehir-baslik">
+              <span class="sehir-icon">{{sehir.icon}}</span>
+              {{sehir.ad}}
+            </h3>
+            <p class="sehir-ulke">{{sehir.ulke}}</p>
+            <p class="sehir-aciklama">{{sehir.kisaAciklama}}</p>
+
+            <div class="sehir-ozellikler">
+              <span class="ozellik-tag" ng-repeat="ozellik in sehir.ozellikler"
+                >{{ozellik}}</span
+              >
+            </div>
+
+            <button class="detay-btn">Detayları Gör</button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <ng-include src="'components/footer.html'"></ng-include>
+
+    <script>
+      angular
+        .module("GirisApp")
+        .controller("AmerikaSeyahatController", function ($scope) {
+          $scope.kullanici = JSON.parse(
+            localStorage.getItem("girisYapan") || "null"
+          );
+
+          $scope.amerikaSehirleri = [
+            {
+              id: 1,
+              ad: "New York",
+              ulke: "ABD",
+              icon: "🗽",
+              kisaAciklama:
+                "Dünyanın finansal başkenti. Times Square, Central Park ve Özgürlük Heykeli ile dünyanın en dinamik şehri.",
+              ozellikler: ["Finans", "Kültür", "Alışveriş", "Sanat"],
+              tarih:
+                "1624 yılında Hollandalılar tarafından New Amsterdam olarak kurulan şehir, 1664'te İngilizler tarafından New York olarak yeniden adlandırıldı. Günümüzde dünyanın en önemli finans ve kültür merkezi.",
+              gorulecekYerler: [
+                "Statue of Liberty - Özgürlük Heykeli",
+                "Times Square - Şehrin kalbi",
+                "Central Park - Büyük şehir parkı",
+                "Empire State Building - İkonik gökdelen",
+                "Brooklyn Bridge - Tarihi köprü",
+                "Metropolitan Museum of Art - Sanat müzesi",
+                "Broadway - Tiyatro caddesi",
+                "Fifth Avenue - Lüks alışveriş caddesi",
+              ],
+              etkinlikler: [
+                "New Year's Eve Ball Drop - Yılbaşı kutlaması",
+                "Macy's Thanksgiving Day Parade",
+                "New York Fashion Week",
+                "US Open Tennis Championship",
+                "New York Film Festival",
+              ],
+              restoranlar: [
+                "Le Bernardin - 3 Michelin yıldızlı",
+                "Katz's Delicatessen - Geleneksel deli",
+                "Peter Luger Steak House - Biftek",
+                "Russ & Daughters - Geleneksel Yahudi",
+                "Joe's Pizza - Klasik pizza",
+              ],
+            },
+            {
+              id: 2,
+              ad: "Los Angeles",
+              ulke: "ABD",
+              icon: "🎬",
+              kisaAciklama:
+                "Hollywood'un merkezi, güneşli iklimi ve plajları ile eğlence dünyasının başkenti.",
+              ozellikler: ["Hollywood", "Plajlar", "Eğlence", "Teknoloji"],
+              tarih:
+                "1781 yılında İspanyol misyonerler tarafından kurulan Los Angeles, 1848'de Meksika-Amerika Savaşı sonrası ABD'ye katıldı. 20. yüzyılda film endüstrisinin merkezi haline geldi.",
+              gorulecekYerler: [
+                "Hollywood Walk of Fame - Yıldızlar caddesi",
+                "Universal Studios - Film stüdyosu",
+                "Venice Beach - Plaj ve boardwalk",
+                "Griffith Observatory - Gözlemevi",
+                "Santa Monica Pier - Tarihi iskele",
+                "Getty Center - Sanat müzesi",
+                "Beverly Hills - Lüks mahalle",
+                "Downtown LA - Şehir merkezi",
+              ],
+              etkinlikler: [
+                "Academy Awards - Oscar töreni",
+                "LA Pride Parade",
+                "Coachella Valley Music Festival",
+                "Los Angeles Film Festival",
+                "Rose Bowl Parade",
+              ],
+              restoranlar: [
+                "Providence - 2 Michelin yıldızlı",
+                "In-N-Out Burger - Fast food",
+                "Pink's Hot Dogs - Geleneksel hot dog",
+                "Philippe The Original - French dip",
+                "Guelaguetza - Meksika mutfağı",
+              ],
+            },
+            {
+              id: 3,
+              ad: "Chicago",
+              ulke: "ABD",
+              icon: "🏙️",
+              kisaAciklama:
+                "Gökdelenlerin doğduğu şehir. Deep dish pizza, blues müziği ve güzel mimarisi ile Orta Batı'nın incisi.",
+              ozellikler: ["Mimari", "Müzik", "Gastronomi", "Spor"],
+              tarih:
+                "1833 yılında kurulan Chicago, 1871'deki büyük yangından sonra yeniden inşa edildi. Gökdelen mimarisinin doğduğu yer olarak bilinir.",
+              gorulecekYerler: [
+                "Willis Tower - Eski Sears Tower",
+                "Millennium Park - Şehir parkı",
+                "Navy Pier - Eğlence iskelesi",
+                "Art Institute of Chicago - Sanat müzesi",
+                "Magnificent Mile - Alışveriş caddesi",
+                "Wrigley Field - Beyzbol stadyumu",
+                "Cloud Gate - Bean heykeli",
+                "Chicago Riverwalk - Nehir kenarı",
+              ],
+              etkinlikler: [
+                "Taste of Chicago - Yemek festivali",
+                "Lollapalooza - Müzik festivali",
+                "Chicago Blues Festival",
+                "St. Patrick's Day Parade",
+                "Chicago Air and Water Show",
+              ],
+              restoranlar: [
+                "Alinea - 3 Michelin yıldızlı",
+                "Giordano's - Deep dish pizza",
+                "Portillo's - Chicago hot dog",
+                "Lou Malnati's - Geleneksel pizza",
+                "The Publican - Modern Amerikan",
+              ],
+            },
+            {
+              id: 4,
+              ad: "Miami",
+              ulke: "ABD",
+              icon: "🏖️",
+              kisaAciklama:
+                "Tropikal iklim, Art Deco mimarisi ve Latin kültürü ile Florida'nın en canlı şehri.",
+              ozellikler: ["Plajlar", "Gece Hayatı", "Latin Kültürü", "Lüks"],
+              tarih:
+                "1896 yılında kurulan Miami, 1920'lerde Art Deco mimarisi ile gelişti. Küba Devrimi sonrası büyük Latin göçü aldı ve günümüzde Latin kültürünün merkezi haline geldi.",
+              gorulecekYerler: [
+                "South Beach - Plaj ve Art Deco",
+                "Wynwood Walls - Sokak sanatı",
+                "Little Havana - Küba mahallesi",
+                "Vizcaya Museum - Tarihi villa",
+                "Bayside Marketplace - Alışveriş merkezi",
+                "Miami Design District - Tasarım bölgesi",
+                "Coconut Grove - Bohem mahalle",
+                "Key Biscayne - Ada",
+              ],
+              etkinlikler: [
+                "Art Basel Miami Beach",
+                "Ultra Music Festival",
+                "Miami International Film Festival",
+                "Calle Ocho Festival",
+                "Miami Fashion Week",
+              ],
+              restoranlar: [
+                "Joe's Stone Crab - Deniz ürünleri",
+                "Versailles - Geleneksel Küba",
+                "La Sandwicherie - Sandviç",
+                "Yardbird Southern Table - Güney mutfağı",
+                "Coyo Taco - Meksika",
+              ],
+            },
+            {
+              id: 5,
+              ad: "San Francisco",
+              ulke: "ABD",
+              icon: "🌉",
+              kisaAciklama:
+                "Golden Gate Köprüsü, Alcatraz ve teknoloji vadisi ile Kaliforniya'nın en kültürel şehri.",
+              ozellikler: ["Teknoloji", "Kültür", "Mimari", "Gastronomi"],
+              tarih:
+                "1776 yılında İspanyol misyonerler tarafından kurulan San Francisco, 1849 Altına Hücum döneminde hızla büyüdü. 1960'larda hippi hareketinin merkezi oldu.",
+              gorulecekYerler: [
+                "Golden Gate Bridge - İkonik köprü",
+                "Alcatraz Island - Tarihi hapishane",
+                "Fisherman's Wharf - Balıkçı iskelesi",
+                "Chinatown - Çin mahallesi",
+                "Painted Ladies - Renkli evler",
+                "Lombard Street - Kıvrımlı cadde",
+                "Pier 39 - Eğlence iskelesi",
+                "Coit Tower - Şehir kulesi",
+              ],
+              etkinlikler: [
+                "San Francisco Pride Parade",
+                "Outside Lands Music Festival",
+                "San Francisco International Film Festival",
+                "Fleet Week - Donanma haftası",
+                "Chinese New Year Parade",
+              ],
+              restoranlar: [
+                "Atelier Crenn - 3 Michelin yıldızlı",
+                "Tartine Bakery - Fırın",
+                "Swan Oyster Depot - Deniz ürünleri",
+                "Zuni Café - Kaliforniya mutfağı",
+                "Tony's Pizza Napoletana - Pizza",
+              ],
+            },
+            {
+              id: 6,
+              ad: "Las Vegas",
+              ulke: "ABD",
+              icon: "🎰",
+              kisaAciklama:
+                "Eğlencenin başkenti. Casino'lar, gösteriler ve gece hayatı ile dünyanın en canlı şehri.",
+              ozellikler: ["Eğlence", "Casino", "Gösteriler", "Gece Hayatı"],
+              tarih:
+                "1905 yılında demiryolu istasyonu olarak kurulan Las Vegas, 1931'de kumarın yasallaşmasıyla hızla gelişti. Günümüzde dünyanın en büyük eğlence merkezi.",
+              gorulecekYerler: [
+                "The Strip - Ana casino caddesi",
+                "Fremont Street - Eski şehir",
+                "Bellagio Fountains - Çeşme gösterisi",
+                "High Roller - Dünyanın en büyük dönme dolabı",
+                "Red Rock Canyon - Doğal park",
+                "Hoover Dam - Baraj",
+                "Neon Museum - Neon müzesi",
+                "Downtown Container Park - Alışveriş",
+              ],
+              etkinlikler: [
+                "Electric Daisy Carnival - EDM festivali",
+                "Las Vegas Film Festival",
+                "Life is Beautiful Festival",
+                "National Finals Rodeo",
+                "CES - Teknoloji fuarı",
+              ],
+              restoranlar: [
+                "Joël Robuchon - 3 Michelin yıldızlı",
+                "Gordon Ramsay Hell's Kitchen",
+                "Bacchanal Buffet - Büfe",
+                "In-N-Out Burger - Fast food",
+                "Lotus of Siam - Thai mutfağı",
+              ],
+            },
+            {
+              id: 7,
+              ad: "Washington DC",
+              ulke: "ABD",
+              icon: "🏛️",
+              kisaAciklama:
+                "Amerika'nın başkenti. Beyaz Saray, Capitol ve müzeleri ile siyasetin ve tarihin merkezi.",
+              ozellikler: ["Siyaset", "Tarih", "Müzeler", "Mimari"],
+              tarih:
+                "1790 yılında başkent olarak planlanan Washington DC, 1800'de resmi olarak başkent oldu. Pierre L'Enfant tarafından özel olarak tasarlandı.",
+              gorulecekYerler: [
+                "White House - Beyaz Saray",
+                "Capitol Building - Kongre binası",
+                "Lincoln Memorial - Lincoln anıtı",
+                "National Mall - Ana meydan",
+                "Smithsonian Museums - Müzeler",
+                "Washington Monument - Anıt",
+                "Georgetown - Tarihi mahalle",
+                "Arlington National Cemetery - Mezarlık",
+              ],
+              etkinlikler: [
+                "National Cherry Blossom Festival",
+                "Fourth of July Celebrations",
+                "Smithsonian Folklife Festival",
+                "DC Jazz Festival",
+                "National Book Festival",
+              ],
+              restoranlar: [
+                "The Inn at Little Washington - 3 Michelin yıldızlı",
+                "Ben's Chili Bowl - Geleneksel",
+                "Founding Farmers - Modern Amerikan",
+                "Rasika - Hint mutfağı",
+                "Old Ebbitt Grill - Tarihi restoran",
+              ],
+            },
+            {
+              id: 8,
+              ad: "Boston",
+              ulke: "ABD",
+              icon: "🎓",
+              kisaAciklama:
+                "Amerikan Devrimi'nin beşiği. Harvard, MIT ve tarihi Freedom Trail ile eğitimin ve tarihin şehri.",
+              ozellikler: ["Eğitim", "Tarih", "Kültür", "Spor"],
+              tarih:
+                "1630 yılında İngiliz kolonistler tarafından kurulan Boston, Amerikan Devrimi'nin merkezi oldu. Günümüzde dünyanın en önemli eğitim merkezlerinden biri.",
+              gorulecekYerler: [
+                "Freedom Trail - Tarihi yürüyüş yolu",
+                "Harvard University - Üniversite",
+                "Fenway Park - Beyzbol stadyumu",
+                "Boston Common - Şehir parkı",
+                "Quincy Market - Tarihi pazar",
+                "USS Constitution - Tarihi gemi",
+                "Beacon Hill - Tarihi mahalle",
+                "Newbury Street - Alışveriş caddesi",
+              ],
+              etkinlikler: [
+                "Boston Marathon",
+                "Independence Day Celebrations",
+                "Boston Pops Fireworks",
+                "Head of the Charles Regatta",
+                "Boston Film Festival",
+              ],
+              restoranlar: [
+                "O Ya - Modern sushi",
+                "Neptune Oyster - Deniz ürünleri",
+                "Mike's Pastry - Tatlı",
+                "Union Oyster House - Tarihi restoran",
+                "Flour Bakery - Fırın",
+              ],
+            },
+            {
+              id: 9,
+              ad: "New Orleans",
+              ulke: "ABD",
+              icon: "🎷",
+              kisaAciklama:
+                "Jazz'ın doğduğu şehir. Mardi Gras, Cajun mutfağı ve French Quarter ile Louisiana'nın ruhu.",
+              ozellikler: ["Jazz", "Mardi Gras", "Gastronomi", "Kültür"],
+              tarih:
+                "1718 yılında Fransızlar tarafından kurulan New Orleans, 1803'te Louisiana Satın Alımı ile ABD'ye katıldı. Jazz müziğinin doğduğu yer olarak bilinir.",
+              gorulecekYerler: [
+                "French Quarter - Tarihi mahalle",
+                "Bourbon Street - Gece hayatı caddesi",
+                "Jackson Square - Tarihi meydan",
+                "Garden District - Bahçeli mahalle",
+                "St. Louis Cathedral - Katedral",
+                "Audubon Zoo - Hayvanat bahçesi",
+                "National WWII Museum - Müze",
+                "Steamboat Natchez - Buharlı gemi",
+              ],
+              etkinlikler: [
+                "Mardi Gras - Karnaval",
+                "New Orleans Jazz & Heritage Festival",
+                "French Quarter Festival",
+                "Voodoo Music Festival",
+                "Essence Festival",
+              ],
+              restoranlar: [
+                "Commander's Palace - Geleneksel",
+                "Café du Monde - Beignet",
+                "Acme Oyster House - İstiridye",
+                "Dooky Chase's - Soul food",
+                "Galatoire's - Fransız",
+              ],
+            },
+            {
+              id: 10,
+              ad: "Seattle",
+              ulke: "ABD",
+              icon: "☕",
+              kisaAciklama:
+                "Starbucks'ın doğduğu şehir. Space Needle, Pike Place Market ve teknoloji şirketleri ile Pasifik Kuzeybatı'nın incisi.",
+              ozellikler: ["Teknoloji", "Kahve", "Doğa", "Kültür"],
+              tarih:
+                "1851 yılında kurulan Seattle, 1897 Klondike Altına Hücum döneminde gelişti. Günümüzde Microsoft, Amazon gibi teknoloji şirketlerinin merkezi.",
+              gorulecekYerler: [
+                "Space Needle - Şehir kulesi",
+                "Pike Place Market - Tarihi pazar",
+                "Starbucks Reserve Roastery - Kahve",
+                "Chihuly Garden and Glass - Cam sanatı",
+                "Seattle Aquarium - Akvaryum",
+                "Museum of Pop Culture - Pop kültürü",
+                "Kerry Park - Manzara noktası",
+                "Fremont Troll - Heykel",
+              ],
+              etkinlikler: [
+                "Bumbershoot - Sanat festivali",
+                "Seattle International Film Festival",
+                "Seattle Pride Parade",
+                "Seattle Seafair",
+                "Northwest Folklife Festival",
+              ],
+              restoranlar: [
+                "Canlis - Lüks restoran",
+                "Pike Place Chowder - Çorba",
+                "Dick's Drive-In - Fast food",
+                "Tilikum Place Café - Modern",
+                "Salumi - İtalyan",
+              ],
+            },
+          ];
+
+          $scope.sehirDetayGit = function (sehir) {
+            // Şehir detay sayfasına yönlendirme
+            localStorage.setItem("seciliSehir", JSON.stringify(sehir));
+            window.location.href = "sehir-detay.html";
+          };
+        });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="tr" ng-app="GirisApp">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tiyatro - GLOW</title>
+    <link rel="stylesheet" href="assets/css/style.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="assets/js/app.js"></script>
+    <style>
+      .tiyatro-container {
+        max-width: 1200px;
+        margin: 40px auto;
+        padding: 32px;
+        background: rgba(255, 255, 255, 0.92);
+        border-radius: 18px;
+        box-shadow: 0 8px 32px rgba(124, 92, 74, 0.1);
+        backdrop-filter: blur(10px);
+        position: relative;
+      }
+
+      .tiyatro-title {
+        color: #7c5c4a;
+        font-size: 2.2rem;
+        font-weight: 700;
+        text-align: center;
+        margin-bottom: 32px;
+        letter-spacing: 1px;
+      }
+
+      .eserler-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 24px;
+        margin-top: 40px;
+      }
+
+      .eser-card {
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 16px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        transition: transform 0.3s, box-shadow 0.3s;
+      }
+
+      .eser-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+      }
+
+      .eser-content {
+        padding: 20px;
+      }
+
+      .eser-baslik {
+        color: #7c5c4a;
+        font-size: 1.3rem;
+        font-weight: 700;
+        margin-bottom: 8px;
+      }
+
+      .eser-yazar {
+        color: #b48a78;
+        font-size: 1rem;
+        font-weight: 600;
+        margin-bottom: 12px;
+      }
+
+      .eser-detay {
+        color: #666;
+        font-size: 0.9rem;
+        margin-bottom: 8px;
+      }
+
+      .eser-puan {
+        background: linear-gradient(135deg, #4caf50, #45a049);
+        color: white;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        display: inline-block;
+        margin-bottom: 12px;
+      }
+
+      .eser-aciklama {
+        color: #555;
+        font-size: 0.9rem;
+        line-height: 1.5;
+        margin-bottom: 16px;
+      }
+
+      .geri-btn {
+        background: linear-gradient(135deg, #e2d9d0, #b48a78);
+        color: #7c5c4a;
+        border: none;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        font-size: 18px;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s;
+        position: absolute;
+        top: 20px;
+        right: 20px;
+      }
+
+      .geri-btn:hover {
+        background: linear-gradient(135deg, #b48a78, #e2d9d0);
+        color: #fff;
+        transform: scale(1.1);
+      }
+
+      .loading {
+        text-align: center;
+        color: #7c5c4a;
+        font-size: 1.1rem;
+        padding: 40px;
+      }
+
+      .error {
+        text-align: center;
+        color: #f44336;
+        font-size: 1.1rem;
+        padding: 40px;
+      }
+    </style>
+  </head>
+  <body ng-controller="MainController">
+    <ng-include src="'components/header.html'"></ng-include>
+    <main class="main-content">
+      <div class="tiyatro-container" ng-controller="TiyatroController">
+        <button
+          class="geri-btn"
+          onclick="window.history.back()"
+          title="Geri Dön"
+        >
+          ←
+        </button>
+
+        <h1 class="tiyatro-title">🎭 Tiyatro Eserleri</h1>
+
+        <!-- Loading -->
+        <div class="loading" ng-if="loading">
+          Tiyatro eserleri yükleniyor...
+        </div>
+
+        <!-- Error -->
+        <div class="error" ng-if="error">{{ error }}</div>
+
+        <!-- Eserler -->
+        <div class="eserler-grid" ng-if="!loading && !error">
+          <div
+            class="eser-card"
+            ng-repeat="eser in tiyatroEserleri"
+            ng-click="eserDetayGit(eser.id)"
+            style="cursor: pointer"
+          >
+            <div class="eser-content">
+              <h3 class="eser-baslik">{{ eser.eser_adi }}</h3>
+              <div class="eser-yazar">{{ eser.yazar }}</div>
+              <div class="eser-puan">⭐ {{ eser.puan }}/10</div>
+              <div class="eser-detay">
+                <strong>Yıl:</strong> {{ eser.yil }} | <strong>Tür:</strong> {{
+                eser.tur }} | <strong>Süre:</strong> {{ eser.sure }}
+              </div>
+              <div class="eser-detay" ng-if="eser.karakter_sayisi">
+                <strong>Karakter Sayısı:</strong> {{ eser.karakter_sayisi }}
+              </div>
+              <p class="eser-aciklama">{{ eser.aciklama }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <ng-include src="'components/footer.html'"></ng-include>
+
+    <button id="scrollTopBtn" title="Yukarı Çık" ng-click="scrollToTop()">
+      ↑
+    </button>
+  </body>
+</html>

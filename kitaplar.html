@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="tr" ng-app="GirisApp">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kitaplar - GLOW</title>
+    <link rel="stylesheet" href="assets/css/style.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="assets/js/app.js"></script>
+    <style>
+      .kitaplar-container {
+        max-width: 900px;
+        margin: 40px auto;
+        padding: 32px;
+        background: rgba(255, 255, 255, 0.92);
+        border-radius: 18px;
+        box-shadow: 0 8px 32px rgba(124, 92, 74, 0.1);
+        backdrop-filter: blur(10px);
+        position: relative;
+      }
+      .kitaplar-title {
+        color: #7c5c4a;
+        font-size: 2.2rem;
+        font-weight: 700;
+        margin-bottom: 32px;
+        text-align: center;
+        letter-spacing: 1px;
+      }
+      .kitap-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0 18px;
+      }
+      .kitap-table th,
+      .kitap-table td {
+        text-align: left;
+        padding: 12px 10px;
+        font-size: 1rem;
+      }
+      .kitap-table th {
+        color: #b48a78;
+        font-size: 1.1rem;
+        font-weight: 700;
+        background: none;
+        border-bottom: 2px solid #e2d9d0;
+      }
+      .kitap-table tr {
+        background: linear-gradient(135deg, #f8e0e1 60%, #e2d9d0 100%);
+        border-radius: 14px;
+        box-shadow: 0 4px 16px rgba(180, 138, 120, 0.08);
+        transition: box-shadow 0.3s;
+      }
+      .kitap-table tr:hover {
+        box-shadow: 0 8px 32px rgba(180, 138, 120, 0.16);
+      }
+      .kitap-foto {
+        width: 56px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(124, 92, 74, 0.1);
+        background: #eee;
+      }
+      .kitap-bilgi {
+        color: #7c5c4a;
+        font-size: 1.05rem;
+        font-weight: 500;
+      }
+      .kitap-yazar {
+        color: #b48a78;
+        font-size: 0.98rem;
+        font-weight: 400;
+        margin-top: 2px;
+      }
+      .oku-btn {
+        background: linear-gradient(135deg, #e2d9d0, #b48a78);
+        color: #7c5c4a;
+        border: none;
+        border-radius: 8px;
+        padding: 8px 22px;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        float: right;
+      }
+      .oku-btn:hover {
+        background: linear-gradient(135deg, #b48a78, #e2d9d0);
+        color: #fff;
+        transform: scale(1.05);
+      }
+      .geri-btn {
+        background: linear-gradient(135deg, #e2d9d0, #b48a78);
+        color: #7c5c4a;
+        border: none;
+        border-radius: 50%;
+        width: 22px;
+        height: 22px;
+        padding: 0;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s;
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        margin: 0;
+      }
+      .geri-btn:hover {
+        background: linear-gradient(135deg, #b48a78, #e2d9d0);
+        color: #fff;
+        transform: scale(1.08);
+      }
+      @media (max-width: 600px) {
+        .kitaplar-container {
+          padding: 12px;
+        }
+        .kitaplar-title {
+          font-size: 1.3rem;
+        }
+        .kitap-table th,
+        .kitap-table td {
+          font-size: 0.95rem;
+          padding: 8px 4px;
+        }
+        .kitap-foto {
+          width: 40px;
+          height: 56px;
+        }
+      }
+    </style>
+  </head>
+  <body ng-controller="MainController">
+    <ng-include src="'components/header.html'"></ng-include>
+    <main class="main-content">
+      <div class="kitaplar-container" ng-controller="KitaplarController">
+        <button
+          class="geri-btn"
+          onclick="window.history.back()"
+          title="Geri Dön"
+        >
+          ←
+        </button>
+        <div
+          class="kitaplar-title-row"
+          style="
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 32px;
+          "
+        >
+          <div
+            class="kitaplar-title"
+            style="line-height: 1; vertical-align: middle"
+          >
+            Klasik Kitaplar
+          </div>
+        </div>
+        <table class="kitap-table">
+          <thead>
+            <tr>
+              <th>Kitap</th>
+              <th>Yazar</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="kitap in kitaplar">
+              <td>
+                <img
+                  class="kitap-foto"
+                  ng-src="{{kitap.foto}}"
+                  alt="{{kitap.ad}}"
+                />
+              </td>
+              <td>
+                <div class="kitap-bilgi">{{kitap.ad}}</div>
+                <div class="kitap-yazar">{{kitap.yazar}}</div>
+              </td>
+              <td>
+                <button class="oku-btn" ng-click="oku(kitap)">Oku</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
+    <ng-include src="'components/footer.html'"></ng-include>
+    <button id="scrollTopBtn" title="Yukarı Çık" ng-click="scrollToTop()">
+      ↑
+    </button>
+    <script>
+      angular
+        .module("GirisApp")
+        .controller("KitaplarController", function ($scope) {
+          $scope.kitaplar = [
+            {
+              ad: "Suç ve Ceza",
+              yazar: "Fyodor Dostoyevski",
+              foto: "https://covers.openlibrary.org/b/id/12315028-M.jpg",
+            },
+            {
+              ad: "Sefiller",
+              yazar: "Victor Hugo",
+              foto: "https://covers.openlibrary.org/b/id/12218285-M.jpg",
+            },
+            {
+              ad: "Anna Karenina",
+              yazar: "Lev Tolstoy",
+              foto: "https://covers.openlibrary.org/b/id/12639895-M.jpg",
+            },
+            {
+              ad: "Büyük Umutlar",
+              yazar: "Charles Dickens",
+              foto: "https://covers.openlibrary.org/b/id/12310271-M.jpg",
+            },
+            {
+              ad: "Karamazov Kardeşler",
+              yazar: "Fyodor Dostoyevski",
+              foto: "https://covers.openlibrary.org/b/id/10848852-M.jpg",
+            },
+          ];
+          $scope.oku = function (kitap) {
+            window.location.href =
+              "alintilar.html?kitap=" + encodeURIComponent(kitap.ad);
+          };
+          $scope.scrollToTop = function () {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          };
+        });
+      // Controller'ı sayfaya bağla
+      angular.element(document).ready(function () {
+        var el = document.querySelector(".kitaplar-container");
+        if (el) angular.bootstrap(el, ["GirisApp"]);
+      });
+    </script>
+  </body>
+</html>

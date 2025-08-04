@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="tr" ng-app="GirisApp">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Spor - GLOW</title>
+    <link rel="stylesheet" href="assets/css/style.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="assets/js/app.js"></script>
+    <style>
+      .spor-container {
+        max-width: 900px;
+        margin: 40px auto;
+        padding: 32px;
+        background: rgba(255, 255, 255, 0.92);
+        border-radius: 18px;
+        box-shadow: 0 8px 32px rgba(124, 92, 74, 0.1);
+        backdrop-filter: blur(10px);
+        position: relative;
+      }
+      .spor-title-row {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        margin-bottom: 32px;
+      }
+      .spor-title {
+        color: #7c5c4a;
+        font-size: 2.2rem;
+        font-weight: 700;
+        line-height: 1;
+        letter-spacing: 1px;
+      }
+      .kategori-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 18px;
+        margin-top: 36px;
+        margin-bottom: 10px;
+      }
+      .kategori-card {
+        background: linear-gradient(135deg, #f8e0e1 60%, #e2d9d0 100%);
+        border-radius: 14px;
+        box-shadow: 0 4px 16px rgba(180, 138, 120, 0.08);
+        padding: 24px 0;
+        text-align: center;
+        color: #7c5c4a;
+        font-size: 1.08rem;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        transition: box-shadow 0.3s, transform 0.3s;
+        cursor: pointer;
+      }
+      .kategori-card:hover {
+        box-shadow: 0 8px 32px rgba(180, 138, 120, 0.16);
+        transform: translateY(-3px) scale(1.04);
+      }
+      .geri-btn {
+        background: linear-gradient(135deg, #e2d9d0, #b48a78);
+        color: #7c5c4a;
+        border: none;
+        border-radius: 50%;
+        width: 22px;
+        height: 22px;
+        padding: 0;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s;
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        margin: 0;
+      }
+      .geri-btn:hover {
+        background: linear-gradient(135deg, #b48a78, #e2d9d0);
+        color: #fff;
+        transform: scale(1.08);
+      }
+    </style>
+  </head>
+  <body>
+    <ng-include src="'components/header.html'"></ng-include>
+    <main class="main-content">
+      <div class="spor-container" ng-controller="SporController">
+        <button
+          class="geri-btn"
+          onclick="window.history.back()"
+          title="Geri Dön"
+        >
+          ←
+        </button>
+        <div class="spor-title-row">
+          <div class="spor-title">Spor</div>
+        </div>
+        <div class="kategori-grid">
+          <div class="kategori-card" ng-click="kategoriSec('Futbol')">
+            Futbol
+          </div>
+          <div class="kategori-card" ng-click="kategoriSec('Basketbol')">
+            Basketbol
+          </div>
+          <div class="kategori-card" ng-click="kategoriSec('Voleybol')">
+            Voleybol
+          </div>
+          <div class="kategori-card" ng-click="kategoriSec('Fitness')">
+            Fitness
+          </div>
+          <div class="kategori-card" ng-click="kategoriSec('Tenis')">Tenis</div>
+          <div class="kategori-card" ng-click="kategoriSec('Yoga')">Yoga</div>
+          <div class="kategori-card" ng-click="kategoriSec('Boks')">Boks</div>
+        </div>
+      </div>
+    </main>
+    <ng-include src="'components/footer.html'"></ng-include>
+    <button id="scrollTopBtn" title="Yukarı Çık" ng-click="scrollToTop()">
+      ↑
+    </button>
+    <script>
+      angular
+        .module("GirisApp")
+        .controller("SporController", function ($scope) {
+          $scope.kullanici = JSON.parse(
+            localStorage.getItem("girisYapan") || "null"
+          );
+
+          $scope.kategoriSec = function (kategori) {
+            alert(
+              kategori + " kategorisi seçildi! Bu özellik yakında eklenecek."
+            );
+          };
+
+          $scope.scrollToTop = function () {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          };
+        });
+    </script>
+  </body>
+</html>

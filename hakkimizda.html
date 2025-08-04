@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="tr" ng-app="GirisApp">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hakkımızda - GLOW</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="assets/css/style.css" />
+
+    <!-- AngularJS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="assets/js/app.js"></script>
+
+    <!-- Page Specific CSS -->
+    <style>
+      .about-container {
+        position: relative;
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+        max-width: 800px;
+        margin: 50px auto;
+        padding: 40px;
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 16px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(10px);
+      }
+
+      .about-text {
+        flex: 2;
+        padding-right: 30px;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        color: #7c5c4a;
+      }
+
+      .about-image {
+        flex: 1;
+      }
+
+      .about-image img {
+        max-width: 400px;
+        border-radius: 16px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+        transition: transform 0.3s ease;
+      }
+
+      .about-image img:hover {
+        transform: scale(1.02);
+      }
+
+      .about-text h2 {
+        color: #7c5c4a;
+        margin-bottom: 20px;
+        font-size: 32px;
+        font-weight: 600;
+      }
+
+      .about-text p {
+        line-height: 1.8;
+        color: #666;
+        font-size: 16px;
+      }
+
+      .login-message {
+        text-align: center;
+        color: #7c5c4a;
+        margin: 100px 0;
+        font-size: 20px;
+        background: rgba(255, 255, 255, 0.9);
+        padding: 40px;
+        border-radius: 16px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(10px);
+      }
+
+      .login-message a {
+        color: #b48a78;
+        text-decoration: none;
+        font-weight: bold;
+        margin: 0 10px;
+      }
+
+      .login-message a:hover {
+        text-decoration: underline;
+      }
+
+      @media (max-width: 768px) {
+        .about-container {
+          flex-direction: column;
+          padding: 20px;
+        }
+
+        .about-text {
+          padding-right: 0;
+          margin-bottom: 20px;
+        }
+
+        .about-image img {
+          max-width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body ng-controller="MainController">
+    <!-- Header Component -->
+    <ng-include src="'components/header.html'"></ng-include>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <div ng-controller="HakkimizdaController">
+        <!-- Giriş yapmamış kullanıcılar için mesaj -->
+        <div ng-if="!kullanici" class="login-message">
+          Bu içeriği görmek için lütfen
+          <a href="index.html">giriş yapın</a> veya
+          <a href="kayit.html">kayıt olun</a>.
+        </div>
+
+        <!-- Giriş yapmış kullanıcılar için içerik -->
+        <div class="about-container">
+          <div class="about-text">
+            <h2>Daenerys Targaryen</h2>
+            <p>
+              Daenerys Stormborn, House Targaryen'in son yaşayan üyelerinden
+              biridir. Ejderhaların Annesi, Zincir Kıran ve Yedi Krallığın Meşru
+              Kraliçesi olarak tanınır. Adaleti sağlamak, köleliği sonlandırmak
+              ve halkı için daha iyi bir dünya inşa etmek amacıyla uzun bir
+              yolculuğa çıkmıştır.
+            </p>
+            <p>
+              Güçlü bir lider ve vizyoner olarak, Daenerys Targaryen'in hikayesi
+              cesaret, kararlılık ve değişim üzerine kurulmuştur. Onun
+              yolculuğu, adalet ve özgürlük arayışının güçlü bir örneğidir.
+            </p>
+          </div>
+          <div class="about-image">
+            <img src="assets/images/daenerys.jpg" alt="Daenerys Targaryen" />
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer Component -->
+    <ng-include src="'components/footer.html'"></ng-include>
+
+    <!-- Scroll to Top Button -->
+    <button id="scrollTopBtn" title="Yukarı Çık" ng-click="scrollToTop()">
+      ↑
+    </button>
+  </body>
+</html>

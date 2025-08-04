@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="tr" ng-app="GirisApp">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Yorum Yönetimi - GLOW</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="assets/css/style.css" />
+
+    <!-- AngularJS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="assets/js/app.js"></script>
+
+    <!-- Page Specific CSS -->
+    <style>
+      .admin-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      .admin-header {
+        text-align: center;
+        margin-bottom: 30px;
+        background: rgba(255, 255, 255, 0.9);
+        padding: 30px;
+        border-radius: 16px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(10px);
+      }
+
+      .admin-header h1 {
+        color: #7c5c4a;
+        font-size: 32px;
+        margin-bottom: 10px;
+        font-weight: 600;
+      }
+
+      .admin-buttons {
+        margin-top: 20px;
+      }
+
+      .admin-btn {
+        background: linear-gradient(135deg, #e2d9d0, #b48a78);
+        color: #7c5c4a;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 25px;
+        font-size: 1rem;
+        cursor: pointer;
+        margin: 0 10px;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 16px rgba(124, 92, 74, 0.2);
+      }
+
+      .admin-btn:hover {
+        background: linear-gradient(135deg, #b48a78, #e2d9d0);
+        color: #fff;
+        transform: translateY(-2px);
+      }
+
+      .back-btn {
+        background: linear-gradient(135deg, #6c757d, #495057);
+        color: white;
+      }
+
+      .back-btn:hover {
+        background: linear-gradient(135deg, #495057, #6c757d);
+      }
+
+      .filter-container {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+
+      .filter-select {
+        padding: 10px 15px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 14px;
+        background: rgba(255, 255, 255, 0.9);
+        transition: border-color 0.3s ease;
+      }
+
+      .filter-select:focus {
+        outline: none;
+        border-color: #b48a78;
+        box-shadow: 0 0 0 3px rgba(180, 138, 120, 0.1);
+      }
+
+      .search-box {
+        flex: 1;
+        min-width: 200px;
+        padding: 10px 15px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 14px;
+        transition: border-color 0.3s ease;
+        background: rgba(255, 255, 255, 0.9);
+      }
+
+      .search-box:focus {
+        outline: none;
+        border-color: #b48a78;
+        box-shadow: 0 0 0 3px rgba(180, 138, 120, 0.1);
+      }
+
+      .table-container {
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        margin: 20px 0;
+        backdrop-filter: blur(10px);
+      }
+
+      .table-container table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      .table-container th,
+      .table-container td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #e0e0e0;
+        font-size: 14px;
+      }
+
+      .table-container th {
+        background: #7c5c4a;
+        color: white;
+        font-weight: 600;
+        position: sticky;
+        top: 0;
+      }
+
+      .table-container tr:nth-child(even) {
+        background: rgba(248, 240, 241, 0.5);
+      }
+
+      .table-container tr:hover {
+        background: rgba(226, 217, 208, 0.3);
+      }
+
+      .yorum-text {
+        max-width: 300px;
+        word-wrap: break-word;
+        line-height: 1.4;
+      }
+
+      .yorum-tur {
+        padding: 4px 8px;
+        border-radius: 12px;
+        font-size: 12px;
+        font-weight: 600;
+        text-align: center;
+        min-width: 60px;
+      }
+
+      .tur-tiyatro {
+        background: #e3f2fd;
+        color: #1976d2;
+      }
+
+      .tur-film {
+        background: #f3e5f5;
+        color: #7b1fa2;
+      }
+
+      .tur-dizi {
+        background: #e8f5e8;
+        color: #388e3c;
+      }
+
+      .tur-belgesel {
+        background: #fff3e0;
+        color: #f57c00;
+      }
+
+      .tur-anime {
+        background: #fce4ec;
+        color: #c2185b;
+      }
+
+      .delete-btn {
+        background: linear-gradient(135deg, #ffebee, #f44336);
+        color: white;
+        border: none;
+        padding: 6px 12px;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 8px rgba(244, 67, 54, 0.2);
+      }
+
+      .delete-btn:hover {
+        background: linear-gradient(135deg, #f44336, #ffebee);
+        transform: scale(1.05);
+      }
+
+      .pagination {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 15px;
+        margin-top: 30px;
+        background: rgba(255, 255, 255, 0.9);
+        padding: 20px;
+        border-radius: 16px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(10px);
+      }
+
+      .pagination button {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 8px;
+        background: linear-gradient(135deg, #e2d9d0, #d1c6b1, #f8e0e1, #c0b2b0);
+        color: #7c5c4a;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .pagination button:hover:not(:disabled) {
+        background: linear-gradient(135deg, #f8e0e1, #d1c6b1, #e2d9d0, #c0b2b0);
+        transform: translateY(-2px);
+      }
+
+      .pagination button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      .pagination span {
+        color: #7c5c4a;
+        font-weight: 600;
+        font-size: 16px;
+      }
+
+      .stats-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+      }
+
+      .stat-card {
+        background: rgba(255, 255, 255, 0.9);
+        padding: 20px;
+        border-radius: 16px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(10px);
+        text-align: center;
+      }
+
+      .stat-number {
+        font-size: 32px;
+        font-weight: bold;
+        color: #7c5c4a;
+        margin-bottom: 5px;
+      }
+
+      .stat-label {
+        color: #666;
+        font-size: 14px;
+      }
+
+      .access-denied {
+        text-align: center;
+        color: #7c5c4a;
+        margin: 100px 0;
+        font-size: 20px;
+        background: rgba(255, 255, 255, 0.9);
+        padding: 40px;
+        border-radius: 16px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(10px);
+      }
+
+      .access-denied a {
+        color: #b48a78;
+        text-decoration: none;
+        font-weight: bold;
+        margin: 0 10px;
+      }
+
+      .access-denied a:hover {
+        text-decoration: underline;
+      }
+
+      .loading {
+        text-align: center;
+        padding: 40px;
+        color: #7c5c4a;
+        font-size: 18px;
+      }
+
+      .no-comments {
+        text-align: center;
+        padding: 40px;
+        color: #666;
+        font-size: 16px;
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 16px;
+        margin: 20px 0;
+      }
+    </style>
+  </head>
+  <body ng-controller="MainController">
+    <!-- Header Component -->
+    <ng-include src="'components/header.html'"></ng-include>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <div class="admin-container" ng-controller="YorumYonetimiController">
+        <!-- Yetki kontrolü -->
+        <div
+          ng-if="!kullanici || kullanici.rol !== 'Yönetici'"
+          class="access-denied"
+        >
+          Bu sayfaya erişim yetkiniz yok. Lütfen
+          <a href="index.html">giriş yapın</a> veya
+          <a href="anasayfa.html">ana sayfaya dönün</a>.
+        </div>
+
+        <!-- Yönetici içeriği -->
+        <div ng-if="kullanici && kullanici.rol === 'Yönetici'">
+          <div class="admin-header">
+            <h1>💬 Yorum Yönetimi</h1>
+            <p>Tüm yorumları görüntüleyin, filtreleyin ve yönetin</p>
+
+            <!-- Yönetim Butonları -->
+            <div class="admin-buttons">
+              <button class="admin-btn back-btn" ng-click="listeSayfasinaGit()">
+                ← Kullanıcı Listesine Dön
+              </button>
+              <button class="admin-btn" ng-click="yorumlariYenile()">
+                🔄 Yorumları Yenile
+              </button>
+            </div>
+          </div>
+
+          <!-- İstatistikler -->
+          <div class="stats-container">
+            <div class="stat-card">
+              <div class="stat-number">{{toplamYorum}}</div>
+              <div class="stat-label">Toplam Yorum</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number">{{tiyatroYorum}}</div>
+              <div class="stat-label">Tiyatro Yorumu</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number">{{filmYorum}}</div>
+              <div class="stat-label">Film Yorumu</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number">{{diziYorum}}</div>
+              <div class="stat-label">Dizi Yorumu</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number">{{belgeselYorum}}</div>
+              <div class="stat-label">Belgesel Yorumu</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number">{{animeYorum}}</div>
+              <div class="stat-label">Anime Yorumu</div>
+            </div>
+          </div>
+
+          <!-- Filtreler -->
+          <div class="filter-container">
+            <select
+              ng-model="seciliTur"
+              class="filter-select"
+              ng-change="filtrele()"
+            >
+              <option value="">Tüm Türler</option>
+              <option value="tiyatro">Tiyatro</option>
+              <option value="film">Film</option>
+              <option value="dizi">Dizi</option>
+              <option value="belgesel">Belgesel</option>
+              <option value="anime">Anime</option>
+            </select>
+
+            <select
+              ng-model="seciliPuan"
+              class="filter-select"
+              ng-change="filtrele()"
+            >
+              <option value="">Tüm Puanlar</option>
+              <option value="5">5 Yıldız</option>
+              <option value="4">4 Yıldız</option>
+              <option value="3">3 Yıldız</option>
+              <option value="2">2 Yıldız</option>
+              <option value="1">1 Yıldız</option>
+            </select>
+
+            <input
+              ng-model="aramaMetni"
+              placeholder="Ara: kullanıcı adı, içerik adı veya yorum"
+              class="search-box"
+              ng-change="filtrele()"
+            />
+          </div>
+
+          <!-- Yorumlar Tablosu -->
+          <div class="table-container">
+            <div ng-if="loading" class="loading">🔄 Yorumlar yükleniyor...</div>
+
+            <div
+              ng-if="!loading && filteredYorumlar.length === 0"
+              class="no-comments"
+            >
+              📝 Filtrelere uygun yorum bulunamadı
+            </div>
+
+            <table ng-if="!loading && filteredYorumlar.length > 0">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Kullanıcı</th>
+                  <th>Tür</th>
+                  <th>İçerik</th>
+                  <th>Yorum</th>
+                  <th>Puan</th>
+                  <th>Tarih</th>
+                  <th>İşlemler</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="yorum in paginatedYorumlar()">
+                  <td>{{yorum.id}}</td>
+                  <td><strong>{{yorum.kullanici_adi}}</strong></td>
+                  <td>
+                    <span class="yorum-tur tur-{{yorum.tur}}">
+                      {{yorum.tur | uppercase}}
+                    </span>
+                  </td>
+                  <td>{{yorum.icerik_adi}}</td>
+                  <td class="yorum-text">{{yorum.yorum}}</td>
+                  <td>
+                    <span ng-bind-html="yorum.puan | yildizSistemi"></span>
+                  </td>
+                  <td>{{yorum.created_at | date:'dd.MM.yyyy HH:mm'}}</td>
+                  <td>
+                    <button
+                      class="delete-btn"
+                      ng-click="yorumSil(yorum.id)"
+                      title="Yorumu Sil"
+                    >
+                      🗑️ Sil
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Sayfalama -->
+          <div
+            class="pagination"
+            ng-if="filteredYorumlar.length > itemsPerPage"
+          >
+            <button ng-click="oncekiSayfa()" ng-disabled="currentPage == 1">
+              ← Önceki
+            </button>
+
+            <span>Sayfa {{currentPage}} / {{pageCount()}}</span>
+
+            <button
+              ng-click="sonrakiSayfa()"
+              ng-disabled="currentPage == pageCount()"
+            >
+              Sonraki →
+            </button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer Component -->
+    <ng-include src="'components/footer.html'"></ng-include>
+
+    <!-- Scroll to Top Button -->
+    <button id="scrollTopBtn" title="Yukarı Çık" ng-click="scrollToTop()">
+      ↑
+    </button>
+  </body>
+</html>

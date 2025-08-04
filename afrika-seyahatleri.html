@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="tr" ng-app="GirisApp">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Afrika Seyahatleri - GLOW</title>
+    <link rel="stylesheet" href="assets/css/style.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="assets/js/app.js"></script>
+    <style>
+      .afrika-container {
+        max-width: 1200px;
+        margin: 40px auto;
+        padding: 32px;
+        background: rgba(255, 255, 255, 0.92);
+        border-radius: 18px;
+        box-shadow: 0 8px 32px rgba(124, 92, 74, 0.1);
+        backdrop-filter: blur(10px);
+      }
+
+      .page-header {
+        text-align: center;
+        margin-bottom: 40px;
+      }
+
+      .page-title {
+        color: #7c5c4a;
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+      }
+
+      .page-subtitle {
+        color: #b48a78;
+        font-size: 1.1rem;
+        font-weight: 500;
+      }
+
+      .geri-btn {
+        background: linear-gradient(135deg, #e2d9d0, #b48a78);
+        color: #7c5c4a;
+        border: none;
+        border-radius: 50%;
+        width: 45px;
+        height: 45px;
+        font-size: 18px;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s;
+        position: absolute;
+        top: 20px;
+        left: 20px;
+      }
+
+      .geri-btn:hover {
+        background: linear-gradient(135deg, #b48a78, #e2d9d0);
+        color: #fff;
+        transform: scale(1.1);
+      }
+
+      .sehirler-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 30px;
+        margin-top: 40px;
+      }
+
+      .sehir-card {
+        background: linear-gradient(135deg, #f8e0e1 0%, #e2d9d0 100%);
+        border-radius: 16px;
+        padding: 25px;
+        box-shadow: 0 6px 20px rgba(180, 138, 120, 0.1);
+        transition: all 0.3s ease;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .sehir-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 12px 30px rgba(180, 138, 120, 0.2);
+      }
+
+      .sehir-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #b48a78, #e2d9d0, #f8e0e1);
+      }
+
+      .sehir-baslik {
+        color: #7c5c4a;
+        font-size: 1.4rem;
+        font-weight: 700;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .sehir-ulke {
+        color: #b48a78;
+        font-size: 0.95rem;
+        font-weight: 500;
+        margin-bottom: 15px;
+      }
+
+      .sehir-aciklama {
+        color: #7c5c4a;
+        font-size: 0.95rem;
+        line-height: 1.6;
+        margin-bottom: 20px;
+      }
+
+      .sehir-ozellikler {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 20px;
+      }
+
+      .ozellik-tag {
+        background: rgba(180, 138, 120, 0.2);
+        color: #7c5c4a;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 500;
+      }
+
+      .detay-btn {
+        background: linear-gradient(135deg, #b48a78, #e2d9d0);
+        color: white;
+        border: none;
+        border-radius: 25px;
+        padding: 10px 20px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        width: 100%;
+      }
+
+      .detay-btn:hover {
+        background: linear-gradient(135deg, #e2d9d0, #b48a78);
+        transform: scale(1.02);
+      }
+
+      .sehir-icon {
+        font-size: 1.2rem;
+      }
+
+      @media (max-width: 768px) {
+        .afrika-container {
+          margin: 20px;
+          padding: 20px;
+        }
+
+        .page-title {
+          font-size: 2rem;
+        }
+
+        .sehirler-grid {
+          grid-template-columns: 1fr;
+          gap: 20px;
+        }
+
+        .geri-btn {
+          top: 15px;
+          left: 15px;
+          width: 40px;
+          height: 40px;
+          font-size: 16px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <ng-include src="'components/header.html'"></ng-include>
+
+    <main class="main-content">
+      <div class="afrika-container" ng-controller="AfrikaSeyahatController">
+        <button
+          class="geri-btn"
+          onclick="window.history.back()"
+          title="Geri Dön"
+        >
+          ←
+        </button>
+
+        <div class="page-header">
+          <h1 class="page-title">🌍 Afrika Seyahatleri</h1>
+          <p class="page-subtitle">Afrika'nın En Ünlü 10 Şehri</p>
+        </div>
+
+        <div class="sehirler-grid">
+          <div
+            class="sehir-card"
+            ng-repeat="sehir in afrikaSehirleri"
+            ng-click="sehirDetayGit(sehir)"
+          >
+            <h3 class="sehir-baslik">
+              <span class="sehir-icon">{{sehir.icon}}</span>
+              {{sehir.ad}}
+            </h3>
+            <p class="sehir-ulke">{{sehir.ulke}}</p>
+            <p class="sehir-aciklama">{{sehir.kisaAciklama}}</p>
+
+            <div class="sehir-ozellikler">
+              <span class="ozellik-tag" ng-repeat="ozellik in sehir.ozellikler"
+                >{{ozellik}}</span
+              >
+            </div>
+
+            <button class="detay-btn">Detayları Gör</button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <ng-include src="'components/footer.html'"></ng-include>
+
+    <script>
+      angular
+        .module("GirisApp")
+        .controller("AfrikaSeyahatController", function ($scope) {
+          $scope.kullanici = JSON.parse(
+            localStorage.getItem("girisYapan") || "null"
+          );
+
+          $scope.afrikaSehirleri = [
+            {
+              id: 1,
+              ad: "Kahire",
+              ulke: "Mısır",
+              icon: "🏛️",
+              kisaAciklama:
+                "Piramitlerin şehri. Antik Mısır uygarlığının kalbi, Nil Nehri ve binlerce yıllık tarihi ile Afrika'nın en büyük metropolü.",
+              ozellikler: ["Tarih", "Kültür", "Mimari", "Arkeoloji"],
+              tarih:
+                "M.Ö. 969 yılında Fatımi Hanedanlığı tarafından kurulan Kahire, antik Memphis şehrinin yakınında inşa edildi. Günümüzde Mısır'ın başkenti ve Afrika'nın en büyük şehri.",
+              gorulecekYerler: [
+                "Giza Piramitleri - Antik dünyanın harikası",
+                "Sphinx - Büyük sfenks",
+                "Egyptian Museum - Mısır müzesi",
+                "Khan el-Khalili - Tarihi pazar",
+                "Salah El Din Citadel - Kale",
+                "Al-Azhar Mosque - Cami",
+                "Cairo Tower - Şehir kulesi",
+                "Nile River - Nil Nehri",
+              ],
+              etkinlikler: [
+                "Cairo International Film Festival",
+                "Cairo Jazz Festival",
+                "Ramadan Celebrations",
+                "Eid al-Fitr Festivities",
+                "Cairo Book Fair",
+              ],
+              restoranlar: [
+                "Abou El Sid - Geleneksel Mısır",
+                "Koshary Abou Tarek - Koshary",
+                "Felfela - Geleneksel",
+                "Andrea Mariouteya - Balık",
+                "El Horreya - Kahve",
+              ],
+            },
+            {
+              id: 2,
+              ad: "Cape Town",
+              ulke: "Güney Afrika",
+              icon: "🏔️",
+              kisaAciklama:
+                "Table Mountain'ın eteklerinde. Doğal güzellikleri, şarap bağları ve kültürel çeşitliliği ile Afrika'nın en güzel şehri.",
+              ozellikler: ["Doğa", "Şarap", "Kültür", "Plajlar"],
+              tarih:
+                "1652 yılında Hollandalı Jan van Riebeeck tarafından kurulan Cape Town, Güney Afrika'nın en eski şehri. Günümüzde ülkenin yasama başkenti.",
+              gorulecekYerler: [
+                "Table Mountain - Masa dağı",
+                "Robben Island - Mandela'nın hapishanesi",
+                "V&A Waterfront - Liman bölgesi",
+                "Cape Point - Ümit Burnu",
+                "Kirstenbosch Gardens - Botanik bahçesi",
+                "Boulders Beach - Penguen plajı",
+                "Bo-Kaap - Renkli mahalle",
+                "Lion's Head - Aslan başı",
+              ],
+              etkinlikler: [
+                "Cape Town International Jazz Festival",
+                "Cape Town International Film Festival",
+                "Cape Town Carnival",
+                "Two Oceans Marathon",
+                "Cape Town Fringe Festival",
+              ],
+              restoranlar: [
+                "The Test Kitchen - Modern Güney Afrika",
+                "Gold Restaurant - Geleneksel",
+                "Mama Africa - Afrika mutfağı",
+                "The Pot Luck Club - Tapas",
+                "Codfather - Deniz ürünleri",
+              ],
+            },
+            {
+              id: 3,
+              ad: "Marakeş",
+              ulke: "Fas",
+              icon: "🏺",
+              kisaAciklama:
+                "Kırmızı şehir. Jemaa el-Fnaa meydanı, medina'sı ve geleneksel riad evleri ile Fas'ın en büyüleyici şehri.",
+              ozellikler: ["Tarih", "Kültür", "Gastronomi", "Alışveriş"],
+              tarih:
+                "1062 yılında Almoravid Hanedanlığı tarafından kurulan Marakeş, Fas'ın eski başkenti. Günümüzde ülkenin en turistik şehri.",
+              gorulecekYerler: [
+                "Jemaa el-Fnaa - Ana meydan",
+                "Medina - Eski şehir",
+                "Koutoubia Mosque - Büyük cami",
+                "Bahia Palace - Saray",
+                "Majorelle Gardens - Bahçe",
+                "Saadian Tombs - Mezarlar",
+                "El Badi Palace - Saray kalıntıları",
+                "Atlas Mountains - Atlas dağları",
+              ],
+              etkinlikler: [
+                "Marrakech International Film Festival",
+                "Gnaoua World Music Festival",
+                "Marrakech Biennale",
+                "Fantasia Festival",
+                "Rose Festival",
+              ],
+              restoranlar: [
+                "La Mamounia - Lüks restoran",
+                "Nomad - Modern Fas",
+                "Café des Épices - Geleneksel",
+                "Le Jardin - Bahçe restoranı",
+                "Al Fassia - Geleneksel",
+              ],
+            },
+            {
+              id: 4,
+              ad: "Nairobi",
+              ulke: "Kenya",
+              icon: "🦁",
+              kisaAciklama:
+                "Safari'nin başkenti. Nairobi National Park, modern gökdelenleri ve doğal yaşamı ile Doğu Afrika'nın kalbi.",
+              ozellikler: ["Safari", "Doğa", "Finans", "Kültür"],
+              tarih:
+                "1899 yılında İngiliz sömürgeciler tarafından demiryolu istasyonu olarak kurulan Nairobi, 1963'te Kenya'nın başkenti oldu. Günümüzde Doğu Afrika'nın finans merkezi.",
+              gorulecekYerler: [
+                "Nairobi National Park - Milli park",
+                "David Sheldrick Wildlife Trust - Fil yetimhanesi",
+                "Giraffe Centre - Zürafa merkezi",
+                "Karen Blixen Museum - Müze",
+                "Nairobi National Museum - Ulusal müze",
+                "Kazuri Beads - El sanatları",
+                "Bomas of Kenya - Kültür merkezi",
+                "Uhuru Park - Şehir parkı",
+              ],
+              etkinlikler: [
+                "Nairobi International Film Festival",
+                "Kenya Music Festival",
+                "Nairobi Fashion Week",
+                "Safari Rally",
+                "Nairobi Marathon",
+              ],
+              restoranlar: [
+                "Carnivore - Et restoranı",
+                "Talisman - Modern Kenya",
+                "Java House - Kahve",
+                "Nyama Mama - Geleneksel",
+                "About Thyme - İtalyan",
+              ],
+            },
+            {
+              id: 5,
+              ad: "Lagos",
+              ulke: "Nijerya",
+              icon: "🌆",
+              kisaAciklama:
+                "Afrika'nın en büyük şehri. Nollywood, Afrobeat müziği ve canlı gece hayatı ile Batı Afrika'nın dinamik metropolü.",
+              ozellikler: ["Müzik", "Film", "Gece Hayatı", "Finans"],
+              tarih:
+                "15. yüzyılda Yoruba halkı tarafından kurulan Lagos, 1861'de İngiliz kolonisi oldu. 1960'ta Nijerya'nın başkenti oldu, 1991'de Abuja'ya taşındı.",
+              gorulecekYerler: [
+                "Victoria Island - Ada",
+                "Lagos Island - Ana ada",
+                "National Museum Lagos - Müze",
+                "Lekki Conservation Centre - Doğa merkezi",
+                "Tarkwa Bay - Plaj",
+                "Freedom Park - Park",
+                "Nike Art Gallery - Sanat galerisi",
+                "Lagos Lagoon - Lagün",
+              ],
+              etkinlikler: [
+                "Lagos International Jazz Festival",
+                "Lagos Fashion Week",
+                "Felabration - Fela Kuti festivali",
+                "Lagos Photo Festival",
+                "Lagos Food Festival",
+              ],
+              restoranlar: [
+                "Yellow Chilli - Modern Nijerya",
+                "Bogobiri House - Geleneksel",
+                "Terra Kulture - Kültür merkezi",
+                "Cactus Restaurant - Lüks",
+                "Shiro - Asya mutfağı",
+              ],
+            },
+            {
+              id: 6,
+              ad: "Johannesburg",
+              ulke: "Güney Afrika",
+              icon: "🏢",
+              kisaAciklama:
+                "Altın şehrin kalbi. Apartheid müzesi, Soweto ve modern gökdelenleri ile Güney Afrika'nın ekonomik merkezi.",
+              ozellikler: ["Tarih", "Finans", "Kültür", "Müzik"],
+              tarih:
+                "1886 yılında altın bulunmasıyla kurulan Johannesburg, kısa sürede Güney Afrika'nın en büyük şehri haline geldi. Günümüzde ülkenin ekonomik başkenti.",
+              gorulecekYerler: [
+                "Apartheid Museum - Apartheid müzesi",
+                "Soweto - Tarihi mahalle",
+                "Constitution Hill - Anayasa tepesi",
+                "Gold Reef City - Eğlence parkı",
+                "Cradle of Humankind - İnsanlığın beşiği",
+                "Lion Park - Aslan parkı",
+                "Montecasino - Casino",
+                "Sandton City - Alışveriş merkezi",
+              ],
+              etkinlikler: [
+                "Johannesburg International Film Festival",
+                "Joy of Jazz Festival",
+                "Johannesburg Pride",
+                "Standard Bank Joy of Jazz",
+                "Johannesburg Art Fair",
+              ],
+              restoranlar: [
+                "Moyo - Afrika mutfağı",
+                "The Local Grill - Biftek",
+                "Pata Pata - Geleneksel",
+                "Marble - Modern",
+                "The Butcher Shop - Et",
+              ],
+            },
+            {
+              id: 7,
+              ad: "Khartum",
+              ulke: "Sudan",
+              icon: "🌊",
+              kisaAciklama:
+                "İki Nil'in buluştuğu yer. Mavi ve Beyaz Nil'in birleştiği nokta, tarihi camileri ve kültürel mirası ile Sudan'ın başkenti.",
+              ozellikler: ["Tarih", "Kültür", "Mimari", "Nehir"],
+              tarih:
+                "1821 yılında Mısır valisi Muhammed Ali tarafından kurulan Khartum, 1956'da Sudan'ın başkenti oldu. Mavi ve Beyaz Nil'in birleştiği stratejik noktada yer alır.",
+              gorulecekYerler: [
+                "Confluence of the Niles - Nil birleşimi",
+                "Khartum National Museum - Ulusal müze",
+                "Presidential Palace - Başkanlık sarayı",
+                "Al-Mogran Family Park - Aile parkı",
+                "Souk Arabi - Arap pazarı",
+                "Khartum University - Üniversite",
+                "Tuti Island - Ada",
+                "Omdurman - Eski şehir",
+              ],
+              etkinlikler: [
+                "Khartum International Film Festival",
+                "Sudan Music Festival",
+                "Khartum Book Fair",
+                "Independence Day Celebrations",
+                "Islamic Cultural Festival",
+              ],
+              restoranlar: [
+                "Al-Rawabi - Geleneksel Sudan",
+                "Al-Salam Rotana - Lüks",
+                "Café Khartum - Kafe",
+                "Al-Zahra - Restoran",
+                "Al-Mogran - Nehir kenarı",
+              ],
+            },
+            {
+              id: 8,
+              ad: "Dakar",
+              ulke: "Senegal",
+              icon: "🌊",
+              kisaAciklama:
+                "Goree Adası'nın karşısında. Batı Afrika'nın en batı noktası, müzik kültürü ve tarihi ile Senegal'in başkenti.",
+              ozellikler: ["Müzik", "Tarih", "Kültür", "Plajlar"],
+              tarih:
+                "1857 yılında Fransız sömürgeciler tarafından kurulan Dakar, 1960'ta Senegal'in başkenti oldu. Goree Adası'nın karşısında yer alır.",
+              gorulecekYerler: [
+                "Goree Island - Tarihi ada",
+                "African Renaissance Monument - Anıt",
+                "Dakar Grand Mosque - Büyük cami",
+                "IFAN Museum - Müze",
+                "Corniche - Sahil yolu",
+                "Dakar Cathedral - Katedral",
+                "Sandaga Market - Pazar",
+                "Lake Retba - Pembe göl",
+              ],
+              etkinlikler: [
+                "Dakar Biennale - Sanat bienali",
+                "Saint-Louis Jazz Festival",
+                "Dakar Fashion Week",
+                "Dakar Rally - Ralli",
+                "Goree Diaspora Festival",
+              ],
+              restoranlar: [
+                "La Galette - Fransız",
+                "Le Lagon - Deniz ürünleri",
+                "Chez Loutcha - Geleneksel",
+                "Le Djoloff - Modern",
+                "Alkimia - Lüks",
+              ],
+            },
+            {
+              id: 9,
+              ad: "Addis Ababa",
+              ulke: "Etiyopya",
+              icon: "☕",
+              kisaAciklama:
+                "Yeni çiçek. Kahvenin doğduğu yer, Afrika Birliği'nin merkezi ve Etiyopya'nın tarihi başkenti.",
+              ozellikler: ["Kahve", "Tarih", "Kültür", "Diplomasi"],
+              tarih:
+                '1886 yılında İmparator Menelik II tarafından kurulan Addis Ababa, "Yeni Çiçek" anlamına gelir. Günümüzde Afrika Birliği\'nin merkezi.',
+              gorulecekYerler: [
+                "National Museum - Ulusal müze",
+                "Holy Trinity Cathedral - Katedral",
+                "Meskel Square - Meydan",
+                "Entoto Hill - Tepe",
+                "Addis Mercato - Büyük pazar",
+                "Unity Park - Birlik parkı",
+                "Red Terror Martyrs Memorial - Anıt",
+                "Lion Zoo - Aslan bahçesi",
+              ],
+              etkinlikler: [
+                "Addis International Film Festival",
+                "Ethiopian Music Festival",
+                "Meskel Festival - Haç festivali",
+                "Timket Festival - Epifani",
+                "Addis Fashion Week",
+              ],
+              restoranlar: [
+                "Yod Abyssinia - Geleneksel Etiyopya",
+                "Habesha - Geleneksel",
+                "Kategna - Modern",
+                "Tomoca Coffee - Kahve",
+                "Sishu - Lüks",
+              ],
+            },
+            {
+              id: 10,
+              ad: "Tunus",
+              ulke: "Tunus",
+              icon: "🏺",
+              kisaAciklama:
+                "Kartaca'nın torunları. Antik Kartaca kalıntıları, medina'sı ve Akdeniz kıyısı ile Tunus'un tarihi başkenti.",
+              ozellikler: ["Tarih", "Arkeoloji", "Kültür", "Deniz"],
+              tarih:
+                "M.Ö. 814 yılında Fenikeliler tarafından kurulan Kartaca'nın yakınında gelişen Tunus, 7. yüzyılda Arap hakimiyetine girdi. Günümüzde ülkenin başkenti.",
+              gorulecekYerler: [
+                "Carthage Ruins - Kartaca kalıntıları",
+                "Medina of Tunis - Eski şehir",
+                "Bardo Museum - Müze",
+                "Zitouna Mosque - Cami",
+                "Sidi Bou Said - Mavi-beyaz köy",
+                "Carthage National Museum - Müze",
+                "Lake of Tunis - Tunus gölü",
+                "Belvedere Park - Park",
+              ],
+              etkinlikler: [
+                "Carthage International Festival",
+                "Tunis International Film Festival",
+                "Mediterranean Festival",
+                "Tunis Fashion Week",
+                "Carthage Jazz Festival",
+              ],
+              restoranlar: [
+                "Dar El Jeld - Geleneksel Tunus",
+                "Le Baroque - Lüks",
+                "Café des Nattes - Geleneksel",
+                "Restaurant El Ali - Deniz ürünleri",
+                "Dar Bel Hadj - Geleneksel",
+              ],
+            },
+          ];
+
+          $scope.sehirDetayGit = function (sehir) {
+            // Şehir detay sayfasına yönlendirme
+            localStorage.setItem("seciliSehir", JSON.stringify(sehir));
+            window.location.href = "sehir-detay.html";
+          };
+        });
+    </script>
+  </body>
+</html>

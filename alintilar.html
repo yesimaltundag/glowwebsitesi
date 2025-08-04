@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="tr" ng-app="GirisApp">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kitap Detayı - GLOW</title>
+    <link rel="stylesheet" href="assets/css/style.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="assets/js/app.js"></script>
+    <style>
+      .kitap-container {
+        max-width: 900px;
+        margin: 40px auto;
+        padding: 32px;
+        background: rgba(255, 255, 255, 0.92);
+        border-radius: 18px;
+        box-shadow: 0 8px 32px rgba(124, 92, 74, 0.1);
+        backdrop-filter: blur(10px);
+        position: relative;
+      }
+      .geri-btn {
+        background: linear-gradient(135deg, #e2d9d0, #b48a78);
+        color: #7c5c4a;
+        border: none;
+        border-radius: 50%;
+        width: 22px;
+        height: 22px;
+        padding: 0;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s;
+      }
+      .geri-btn:hover {
+        background: linear-gradient(135deg, #b48a78, #e2d9d0);
+        color: #fff;
+        transform: scale(1.1);
+      }
+      .kitap-header {
+        display: flex;
+        align-items: flex-start;
+        gap: 28px;
+        margin-bottom: 32px;
+      }
+      .kitap-foto {
+        width: 150px;
+        height: 220px;
+        object-fit: cover;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(124, 92, 74, 0.15);
+        background: #eee;
+        transition: transform 0.3s;
+      }
+      .kitap-foto:hover {
+        transform: scale(1.05);
+      }
+      .kitap-bilgi {
+        flex: 1;
+        padding-top: 8px;
+      }
+      .kitap-baslik {
+        color: #7c5c4a;
+        font-size: 2.2rem;
+        font-weight: 700;
+        margin-bottom: 8px;
+        letter-spacing: 1px;
+      }
+      .kitap-yazar {
+        color: #b48a78;
+        font-size: 1.3rem;
+        font-weight: 500;
+        margin-bottom: 24px;
+      }
+      .kitap-detaylar {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+        margin-bottom: 32px;
+      }
+      .detay-item {
+        background: linear-gradient(135deg, #f8e0e1 60%, #e2d9d0 100%);
+        border-radius: 12px;
+        padding: 16px;
+        box-shadow: 0 2px 8px rgba(180, 138, 120, 0.08);
+      }
+      .detay-label {
+        color: #b48a78;
+        font-size: 0.9rem;
+        font-weight: 600;
+        margin-bottom: 4px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      .detay-deger {
+        color: #7c5c4a;
+        font-size: 1.1rem;
+        font-weight: 500;
+      }
+      .kitap-tanitim {
+        background: linear-gradient(135deg, #f8e0e1 60%, #e2d9d0 100%);
+        border-radius: 16px;
+        padding: 28px;
+        box-shadow: 0 4px 16px rgba(180, 138, 120, 0.08);
+      }
+      .tanitim-baslik {
+        color: #7c5c4a;
+        font-size: 1.5rem;
+        font-weight: 700;
+        text-align: center;
+        margin-bottom: 24px;
+        letter-spacing: 1px;
+      }
+      .tanitim-metin {
+        color: #7c5c4a;
+        font-size: 1.08rem;
+        line-height: 1.7;
+        white-space: pre-line;
+      }
+      @media (max-width: 768px) {
+        .kitap-container {
+          margin: 20px;
+          padding: 24px;
+        }
+        .kitap-header {
+          flex-direction: column;
+          align-items: center;
+          text-align: center;
+          gap: 20px;
+        }
+        .kitap-foto {
+          width: 120px;
+          height: 180px;
+        }
+        .kitap-baslik {
+          font-size: 1.8rem;
+        }
+        .kitap-yazar {
+          font-size: 1.1rem;
+        }
+        .kitap-detaylar {
+          grid-template-columns: 1fr;
+          gap: 12px;
+        }
+        .kitap-tanitim {
+          padding: 20px;
+        }
+        .tanitim-baslik {
+          font-size: 1.3rem;
+        }
+        .tanitim-metin {
+          font-size: 1rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <ng-include src="'components/header.html'"></ng-include>
+    <main ng-controller="KitapDetayController">
+      <div class="kitap-container">
+        <button class="geri-btn" ng-click="geriDon()" title="Geri Dön">
+          ←
+        </button>
+
+        <div class="kitap-header">
+          <img class="kitap-foto" ng-src="{{kitap.foto}}" alt="{{kitap.ad}}" />
+          <div class="kitap-bilgi">
+            <h1 class="kitap-baslik">{{kitap.ad}}</h1>
+            <div class="kitap-yazar">{{kitap.yazar}}</div>
+          </div>
+        </div>
+
+        <div class="kitap-detaylar">
+          <div class="detay-item">
+            <div class="detay-label">Yazar</div>
+            <div class="detay-deger">{{kitap.yazar}}</div>
+          </div>
+          <div class="detay-item">
+            <div class="detay-label">Sayfa Sayısı</div>
+            <div class="detay-deger">{{kitap.sayfa}}</div>
+          </div>
+          <div class="detay-item">
+            <div class="detay-label">Basım Yılı</div>
+            <div class="detay-deger">{{kitap.yil}}</div>
+          </div>
+          <div class="detay-item">
+            <div class="detay-label">Basım Yeri</div>
+            <div class="detay-deger">{{kitap.basimYeri}}</div>
+          </div>
+          <div class="detay-item">
+            <div class="detay-label">Kategori</div>
+            <div class="detay-deger">{{kitap.kategori}}</div>
+          </div>
+          <div class="detay-item">
+            <div class="detay-label">ISBN</div>
+            <div class="detay-deger">{{kitap.isbn}}</div>
+          </div>
+        </div>
+
+        <div class="kitap-tanitim">
+          <h2 class="tanitim-baslik">Kitap Tanıtımı</h2>
+          <div class="tanitim-metin">{{kitap.tanitim}}</div>
+        </div>
+      </div>
+    </main>
+    <ng-include src="'components/footer.html'"></ng-include>
+    <button id="scrollTopBtn" title="Yukarı Çık" ng-click="scrollToTop()">
+      ↑
+    </button>
+    <script>
+      angular
+        .module("GirisApp")
+        .controller("KitapDetayController", function ($scope) {
+          $scope.kullanici = JSON.parse(
+            localStorage.getItem("girisYapan") || "null"
+          );
+
+          // Giriş kontrolü - Kullanıcı giriş yapmamışsa ana sayfaya yönlendir
+          if (!$scope.kullanici) {
+            alert(
+              "Kitap tanıtımlarını görmek için giriş yapmanız gerekmektedir."
+            );
+            window.location.href = "index.html";
+            return;
+          }
+
+          function getQueryParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+          }
+
+          const kitapAd = getQueryParam("kitap");
+
+          // Kitap veritabanı
+          const kitapVeritabani = {
+            "Suç ve Ceza": {
+              ad: "Suç ve Ceza",
+              yazar: "Fyodor Dostoyevski",
+              foto: "https://covers.openlibrary.org/b/id/12315028-M.jpg",
+              sayfa: "671",
+              yil: "1866",
+              basimYeri: "Sankt Petersburg, Rusya",
+              kategori: "Klasik Edebiyat",
+              isbn: "978-975-07-6789-0",
+              tanitim: `Suç ve Ceza, Fyodor Dostoyevski'nin en önemli eserlerinden biridir. Rodion Raskolnikov adlı genç bir öğrencinin işlediği cinayet sonrası yaşadığı psikolojik çöküşü ve vicdani hesaplaşmasını anlatan bu roman, dünya edebiyatının en derin psikolojik analizlerinden biridir.
+
+              Kitap, suç, ceza, vicdan, kefaret ve kurtuluş temalarını işler. Raskolnikov'un "üstün insan" teorisi ve bu teorinin pratikte nasıl çöktüğü, romanın ana eksenini oluşturur. Dostoyevski, insan ruhunun en karanlık köşelerini aydınlatır ve okuyucuya derin bir psikolojik yolculuk sunar.
+
+              Suç ve Ceza, sadece bir polisiye roman değil, aynı zamanda felsefi ve teolojik sorgulamaları da içeren çok katmanlı bir eserdir. Dostoyevski'nin güçlü karakter analizi ve toplumsal eleştirisi, eseri dünya edebiyatının en önemli klasiklerinden biri haline getirmiştir.
+
+              Roman, 19. yüzyıl Rus toplumunun sosyal ve ekonomik sorunlarını da arka plana alarak, yoksulluk, ahlak, adalet ve insan doğası gibi evrensel temaları derinlemesine ele alır.`,
+            },
+            Sefiller: {
+              ad: "Sefiller",
+              yazar: "Victor Hugo",
+              foto: "https://covers.openlibrary.org/b/id/12218285-M.jpg",
+              sayfa: "1488",
+              yil: "1862",
+              basimYeri: "Paris, Fransa",
+              kategori: "Klasik Edebiyat",
+              isbn: "978-975-07-7890-1",
+              tanitim: `Sefiller, Victor Hugo'nun en önemli eserlerinden biridir. Jean Valjean'ın hayatındaki dönüşümü ve 19. yüzyıl Fransa'sının toplumsal sorunlarını anlatan bu dev roman, dünya edebiyatının en etkileyici eserlerinden biridir.
+
+              Kitap, adalet, merhamet, sevgi ve kefaret temalarını işler. Valjean'ın küçük bir ekmek çalması nedeniyle 19 yıl hapis yatması ve sonrasında yaşadığı dönüşüm, romanın ana eksenini oluşturur. Hugo, toplumsal adaletsizlikleri ve insan ruhunun iyilik potansiyelini derinlemesine analiz eder.
+
+              Sefiller, sadece bir roman değil, aynı zamanda 19. yüzyıl Fransa'sının sosyal ve politik panoramasını da sunan tarihi bir belgedir. Hugo'nun güçlü karakter analizi ve toplumsal eleştirisi, eseri dünya edebiyatının en önemli klasiklerinden biri haline getirmiştir.
+
+              Roman, yoksulluk, eğitim, aile, aşk ve devrim gibi evrensel temaları işleyerek, insanlığın en temel değerlerini sorgular.`,
+            },
+            "Anna Karenina": {
+              ad: "Anna Karenina",
+              yazar: "Lev Tolstoy",
+              foto: "https://covers.openlibrary.org/b/id/12639895-M.jpg",
+              sayfa: "864",
+              yil: "1877",
+              basimYeri: "Moskova, Rusya",
+              kategori: "Klasik Edebiyat",
+              isbn: "978-975-07-8901-2",
+              tanitim: `Anna Karenina, Lev Tolstoy'un en önemli eserlerinden biridir. Anna Karenina'nın aşk ve evlilik arasında yaşadığı trajik çelişkiyi anlatan bu roman, dünya edebiyatının en derin psikolojik analizlerinden biridir.
+
+              Kitap, aşk, evlilik, toplumsal kurallar, ahlak ve mutluluk temalarını işler. Anna'nın Vronsky ile yaşadığı büyük aşk ve bu aşkın toplumsal baskılar altında nasıl trajik bir sona ulaştığı, romanın ana eksenini oluşturur. Tolstoy, insan ilişkilerinin karmaşıklığını ve toplumsal normların birey üzerindeki etkisini derinlemesine analiz eder.
+
+              Anna Karenina, sadece bir aşk romanı değil, aynı zamanda 19. yüzyıl Rus aristokrasisinin yaşam tarzını ve değerlerini de gözler önüne seren sosyolojik bir eserdir. Tolstoy'un güçlü karakter analizi ve gerçekçi anlatımı, eseri dünya edebiyatının en önemli klasiklerinden biri haline getirmiştir.
+
+              Roman, aile, toplum, din ve felsefe gibi evrensel temaları işleyerek, insan yaşamının anlamını sorgular.`,
+            },
+            "Büyük Umutlar": {
+              ad: "Büyük Umutlar",
+              yazar: "Charles Dickens",
+              foto: "https://covers.openlibrary.org/b/id/12310271-M.jpg",
+              sayfa: "544",
+              yil: "1861",
+              basimYeri: "Londra, İngiltere",
+              kategori: "Klasik Edebiyat",
+              isbn: "978-975-07-9012-3",
+              tanitim: `Büyük Umutlar, Charles Dickens'ın en önemli eserlerinden biridir. Pip adlı yetim bir çocuğun hayatındaki değişimleri ve sosyal sınıf farklılıklarının insan üzerindeki etkisini anlatan bu roman, dünya edebiyatının en etkileyici eserlerinden biridir.
+
+              Kitap, sosyal sınıf, aşk, dostluk, ihanet ve kefaret temalarını işler. Pip'in beklenmedik bir miras sayesinde yüksek sosyal sınıfa geçişi ve bu geçişin onun karakteri üzerindeki etkisi, romanın ana eksenini oluşturur. Dickens, İngiliz toplumunun sosyal yapısını ve insan doğasının karmaşıklığını derinlemesine analiz eder.
+
+              Büyük Umutlar, sadece bir roman değil, aynı zamanda 19. yüzyıl İngiltere'sinin sosyal ve ekonomik yapısını da gözler önüne seren tarihi bir belgedir. Dickens'ın güçlü karakter analizi ve sosyal eleştirisi, eseri dünya edebiyatının en önemli klasiklerinden biri haline getirmiştir.
+
+              Roman, eğitim, aile, para, aşk ve dostluk gibi evrensel temaları işleyerek, insan yaşamının gerçek değerlerini sorgular.`,
+            },
+            "Karamazov Kardeşler": {
+              ad: "Karamazov Kardeşler",
+              yazar: "Fyodor Dostoyevski",
+              foto: "https://covers.openlibrary.org/b/id/10848852-M.jpg",
+              sayfa: "796",
+              yil: "1880",
+              basimYeri: "Sankt Petersburg, Rusya",
+              kategori: "Klasik Edebiyat",
+              isbn: "978-975-07-9123-4",
+              tanitim: `Karamazov Kardeşler, Fyodor Dostoyevski'nin son ve en önemli eseridir. Karamazov ailesinin dört oğlunun babalarının ölümü etrafında yaşadığı dramı anlatan bu roman, dünya edebiyatının en derin felsefi analizlerinden biridir.
+
+              Kitap, aile, din, ahlak, suç, ceza ve kefaret temalarını işler. Alyoşa'nın dindarlığı, İvan'ın ateizmi, Dmitri'nin tutkuları ve Smerdyakov'un kötülüğü, romanın ana eksenini oluşturur. Dostoyevski, insan ruhunun en derin köşelerini ve Tanrı-insan ilişkisini derinlemesine analiz eder.
+
+              Karamazov Kardeşler, sadece bir roman değil, aynı zamanda felsefi ve teolojik sorgulamaları da içeren çok katmanlı bir eserdir. Dostoyevski'nin güçlü karakter analizi ve felsefi derinliği, eseri dünya edebiyatının en önemli klasiklerinden biri haline getirmiştir.
+
+              Roman, aile ilişkileri, din, ahlak, suç ve ceza gibi evrensel temaları işleyerek, insanlığın en temel sorularını sorgular.`,
+            },
+            Çalıkuşu: {
+              ad: "Çalıkuşu",
+              yazar: "Reşat Nuri Güntekin",
+              foto: "https://covers.openlibrary.org/b/id/8231856-L.jpg",
+              sayfa: "448",
+              yil: "1922",
+              basimYeri: "İstanbul, Türkiye",
+              kategori: "Türk Edebiyatı",
+              isbn: "978-975-07-1234-5",
+              tanitim: `Çalıkuşu, Reşat Nuri Güntekin'in en önemli eserlerinden biridir. Feride'nin öğretmenlik yaparken yaşadığı zorlukları ve aşk hayatındaki trajedileri anlatan bu roman, Türk edebiyatının en sevilen eserlerinden biridir.
+
+              Kitap, eğitim, aşk, toplumsal değerler ve kadının toplumdaki yeri temalarını işler. Feride'nin Anadolu'nın farklı köşelerinde öğretmenlik yaparken karşılaştığı zorluklar ve Kamran ile yaşadığı büyük aşk, romanın ana eksenini oluşturur. Güntekin, dönemin toplumsal yapısını ve insan ilişkilerini derinlemesine analiz eder.
+
+              Çalıkuşu, sadece bir aşk romanı değil, aynı zamanda 20. yüzyılın başında Türkiye'nin sosyal ve kültürel yapısını da gözler önüne seren önemli bir eserdir. Güntekin'in sıcak üslubu ve gerçekçi anlatımı, eseri Türk edebiyatının klasikleri arasına taşımıştır.
+
+              Roman, eğitim, aile, aşk ve toplumsal değişim gibi evrensel temaları işleyerek, insan yaşamının anlamını sorgular.`,
+            },
+            Tutunamayanlar: {
+              ad: "Tutunamayanlar",
+              yazar: "Oğuz Atay",
+              foto: "https://covers.openlibrary.org/b/id/10031512-M.jpg",
+              sayfa: "724",
+              yil: "1972",
+              basimYeri: "İstanbul, Türkiye",
+              kategori: "Türk Edebiyatı",
+              isbn: "978-975-07-2345-6",
+              tanitim: `Tutunamayanlar, Oğuz Atay'ın Türk edebiyatında postmodern akımın öncü eserlerinden biridir. Turgut Özben'in arkadaşı Selim Işık'ın intiharından sonra onun geçmişini araştırması ve kendini keşfetmesi sürecini anlatan bu roman, Türk edebiyatının en önemli eserlerinden biri kabul edilir.
+
+              Kitap, geleneksel roman yapısını bozarak, farklı anlatım teknikleri kullanır. İç monolog, parodi, ironi ve mizah unsurlarıyla zenginleştirilmiş olan eser, Türk aydınının yaşadığı kimlik bunalımını ve topluma tutunamama durumunu derinlemesine analiz eder.
+
+              Tutunamayanlar, sadece edebi açıdan değil, aynı zamanda felsefi ve psikolojik açıdan da zengin bir eserdir. Atay'ın kendine özgü üslubu ve yaratıcı anlatımı, eseri Türk edebiyatının en özgün yapıtlarından biri haline getirmiştir.`,
+            },
+            "Kürk Mantolu Madonna": {
+              ad: "Kürk Mantolu Madonna",
+              yazar: "Sabahattin Ali",
+              foto: "https://covers.openlibrary.org/b/id/10031512-M.jpg",
+              sayfa: "160",
+              yil: "1943",
+              basimYeri: "İstanbul, Türkiye",
+              kategori: "Türk Edebiyatı",
+              isbn: "978-975-07-3456-7",
+              tanitim: `Kürk Mantolu Madonna, Sabahattin Ali'nin en önemli eserlerinden biridir. Raif Efendi'nin Berlin'de yaşadığı aşk hikayesini anlatan bu roman, Türk edebiyatının en etkileyici aşk hikayelerinden biridir.
+
+              Kitap, Raif Efendi'nin gençlik yıllarında Berlin'de tanıştığı Maria Puder ile yaşadığı büyük aşkı ve sonrasında yaşadığı yalnızlığı konu alır. Sabahattin Ali, aşkın, yalnızlığın ve kültürler arası farklılıkların insan üzerindeki etkisini derinlemesine analiz eder.
+
+              Kürk Mantolu Madonna, sadece bir aşk romanı değil, aynı zamanda dönemin toplumsal yapısını ve kültürel değişimleri de gözler önüne seren önemli bir eserdir. Ali'nin lirik üslubu ve psikolojik derinliği, eseri Türk edebiyatının klasikleri arasına taşımıştır.`,
+            },
+            "Memleketimden İnsan Manzaraları": {
+              ad: "Memleketimden İnsan Manzaraları",
+              yazar: "Nâzım Hikmet",
+              foto: "https://covers.openlibrary.org/b/id/14994023-M.jpg",
+              sayfa: "2000",
+              yil: "1966",
+              basimYeri: "İstanbul, Türkiye",
+              kategori: "Türk Edebiyatı",
+              isbn: "978-975-07-4567-8",
+              tanitim: `Memleketimden İnsan Manzaraları, Nâzım Hikmet'in en önemli eserlerinden biridir. Türk toplumunun farklı kesimlerinden insanların hikayelerini anlatan bu destansı şiir, Türk edebiyatının en kapsamlı toplumsal analizlerinden biridir.
+
+              Kitap, 20. yüzyılın ilk yarısında Türkiye'de yaşayan farklı sosyal sınıflardan insanların yaşamlarını, umutlarını, hayal kırıklıklarını ve mücadelelerini anlatır. Nâzım Hikmet, toplumun her kesiminden insanı şiirine dahil ederek, Türk toplumunun geniş bir panoramasını çizer.
+
+              Memleketimden İnsan Manzaraları, sadece edebi açıdan değil, aynı zamanda tarihi ve sosyolojik açıdan da önemli bir eserdir. Hikmet'in güçlü lirizmi ve toplumsal duyarlılığı, eseri Türk edebiyatının en önemli yapıtlarından biri haline getirmiştir.`,
+            },
+            "Kara Kitap": {
+              ad: "Kara Kitap",
+              yazar: "Orhan Pamuk",
+              foto: "https://covers.openlibrary.org/b/id/12297420-M.jpg",
+              sayfa: "448",
+              yil: "1990",
+              basimYeri: "İstanbul, Türkiye",
+              kategori: "Türk Edebiyatı",
+              isbn: "978-975-07-5678-9",
+              tanitim: `Kara Kitap, Orhan Pamuk'un en önemli eserlerinden biridir. Galip'in kaybolan eşi Rüya'yı arama sürecinde İstanbul'un gizemli sokaklarında yaşadığı maceraları anlatan bu roman, postmodern Türk edebiyatının önemli örneklerinden biridir.
+
+              Kitap, geleneksel Doğu hikayeleri, tasavvuf felsefesi ve modern roman tekniklerini bir araya getirir. Pamuk, İstanbul'un tarihi ve kültürel zenginliğini arka plana alarak, kimlik arayışı, aşk, kayıp ve dönüşüm temalarını işler.
+
+              Kara Kitap, sadece bir roman değil, aynı zamanda İstanbul'un ruhunu ve Türk kültürünün derinliklerini keşfeden felsefi bir eserdir. Pamuk'un zengin hayal gücü ve özgün üslubu, eseri dünya edebiyatının önemli yapıtları arasına taşımıştır.`,
+            },
+          };
+
+          // Kitap adını temizle ve bul
+          const temizKitapAd = kitapAd ? kitapAd.trim() : "";
+          const decodeKitapAd = decodeURIComponent(temizKitapAd);
+
+          // Kitabı veritabanından bul
+          let bulunanKitap = kitapVeritabani[decodeKitapAd];
+
+          $scope.kitap = bulunanKitap || {
+            ad: decodeKitapAd,
+            yazar: "Bilinmeyen Yazar",
+            foto: "https://covers.openlibrary.org/b/id/8231856-L.jpg",
+            sayfa: "Bilinmiyor",
+            yil: "Bilinmiyor",
+            basimYeri: "Bilinmiyor",
+            kategori: "Klasik Edebiyat",
+            isbn: "Bilinmiyor",
+            tanitim: `Bu kitap hakkında henüz detaylı bilgi bulunmamaktadır. Kitap adı: "${decodeKitapAd}"`,
+          };
+
+          $scope.geriDon = function () {
+            window.history.back();
+          };
+
+          $scope.scrollToTop = function () {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          };
+        });
+    </script>
+  </body>
+</html>

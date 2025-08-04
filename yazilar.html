@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="tr" ng-app="GirisApp">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Yazılar - GLOW</title>
+    <link rel="stylesheet" href="assets/css/style.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="assets/js/app.js"></script>
+    <style>
+      .yazilar-container {
+        max-width: 900px;
+        margin: 40px auto;
+        padding: 32px;
+        background: rgba(255, 255, 255, 0.92);
+        border-radius: 18px;
+        box-shadow: 0 8px 32px rgba(124, 92, 74, 0.1);
+        backdrop-filter: blur(10px);
+        position: relative;
+      }
+      .yazilar-title {
+        color: #7c5c4a;
+        font-size: 2.2rem;
+        font-weight: 700;
+        margin-bottom: 32px;
+        text-align: center;
+        letter-spacing: 1px;
+      }
+      .yazi-card {
+        background: linear-gradient(135deg, #f8e0e1 60%, #e2d9d0 100%);
+        border-radius: 14px;
+        box-shadow: 0 4px 16px rgba(180, 138, 120, 0.08);
+        margin-bottom: 28px;
+        padding: 24px 20px 18px 20px;
+        transition: box-shadow 0.3s;
+      }
+      .yazi-card:hover {
+        box-shadow: 0 8px 32px rgba(180, 138, 120, 0.16);
+      }
+      .yazi-baslik {
+        color: #b48a78;
+        font-size: 1.3rem;
+        font-weight: 600;
+        margin-bottom: 10px;
+      }
+      .yazi-ozet {
+        color: #7c5c4a;
+        font-size: 1rem;
+        margin-bottom: 16px;
+      }
+      .devam-btn {
+        background: linear-gradient(135deg, #e2d9d0, #b48a78);
+        color: #7c5c4a;
+        border: none;
+        border-radius: 8px;
+        padding: 8px 22px;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+      .devam-btn:hover {
+        background: linear-gradient(135deg, #b48a78, #e2d9d0);
+        color: #fff;
+        transform: scale(1.05);
+      }
+      .geri-btn {
+        background: linear-gradient(135deg, #e2d9d0, #b48a78);
+        color: #7c5c4a;
+        border: none;
+        border-radius: 50%;
+        width: 22px;
+        height: 22px;
+        padding: 0;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s;
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        margin: 0;
+      }
+      .geri-btn:hover {
+        background: linear-gradient(135deg, #b48a78, #e2d9d0);
+        color: #fff;
+        transform: scale(1.08);
+      }
+      @media (max-width: 600px) {
+        .yazilar-container {
+          padding: 12px;
+        }
+        .yazilar-title {
+          font-size: 1.3rem;
+        }
+        .yazi-card {
+          padding: 12px 8px 10px 8px;
+        }
+      }
+      .kategori-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 18px;
+        margin-top: 36px;
+        margin-bottom: 10px;
+      }
+      .kategori-card {
+        background: linear-gradient(135deg, #f8e0e1 60%, #e2d9d0 100%);
+        border-radius: 14px;
+        box-shadow: 0 4px 16px rgba(180, 138, 120, 0.08);
+        padding: 24px 0;
+        text-align: center;
+        color: #7c5c4a;
+        font-size: 1.08rem;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        transition: box-shadow 0.3s, transform 0.3s;
+        cursor: pointer;
+      }
+      .kategori-card:hover {
+        box-shadow: 0 8px 32px rgba(180, 138, 120, 0.16);
+        transform: translateY(-3px) scale(1.04);
+      }
+    </style>
+  </head>
+  <body>
+    <ng-include src="'components/header.html'"></ng-include>
+    <main class="main-content">
+      <div class="yazilar-container" ng-controller="YazilarController">
+        <button
+          class="geri-btn"
+          onclick="window.location.href='anasayfa.html'"
+          title="Ana Sayfa'ya Dön"
+        >
+          ←
+        </button>
+        <div
+          class="yazilar-title-row"
+          style="
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 32px;
+          "
+        >
+          <div class="yazilar-title" style="line-height: 1">Yazılar</div>
+        </div>
+        <!-- Kategoriler -->
+        <div class="kategori-grid">
+          <div class="kategori-card" ng-click="gotoEdebiyat()">Edebiyat</div>
+          <div class="kategori-card" ng-click="gotoKisiselGelisim()">
+            Kişisel Gelişim
+          </div>
+          <div class="kategori-card" ng-click="gotoKulturToplum()">
+            Kültür & Toplum
+          </div>
+          <div class="kategori-card" ng-click="gotoTeknoloji()">Teknoloji</div>
+          <div class="kategori-card" ng-click="gotoSanat()">Sanat</div>
+          <div class="kategori-card" ng-click="gotoEgitim()">Eğitim</div>
+          <div class="kategori-card" ng-click="gotoYasamTarzi()">
+            Yaşam Tarzı
+          </div>
+          <div class="kategori-card" ng-click="gotoSeyahat()">Seyahat</div>
+        </div>
+      </div>
+    </main>
+    <ng-include src="'components/footer.html'"></ng-include>
+    <button id="scrollTopBtn" title="Yukarı Çık" ng-click="scrollToTop()">
+      ↑
+    </button>
+    <script>
+      angular
+        .module("GirisApp")
+        .controller("YazilarController", function ($scope) {
+          $scope.gotoKitaplar = function () {
+            window.location.href = "kitaplar.html";
+          };
+          $scope.gotoEdebiyat = function () {
+            window.location.href = "edebiyat.html";
+          };
+          $scope.gotoKisiselGelisim = function () {
+            window.location.href = "kisisel-gelisim.html";
+          };
+          $scope.gotoKulturToplum = function () {
+            window.location.href = "kultur-toplum.html";
+          };
+          $scope.gotoTeknoloji = function () {
+            window.location.href = "teknoloji.html";
+          };
+          $scope.gotoSanat = function () {
+            window.location.href = "sanat.html";
+          };
+          $scope.gotoEgitim = function () {
+            window.location.href = "egitim.html";
+          };
+          $scope.gotoYasamTarzi = function () {
+            window.location.href = "yasam-tarzi.html";
+          };
+          $scope.gotoSeyahat = function () {
+            window.location.href = "seyahat.html";
+          };
+
+          $scope.scrollToTop = function () {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          };
+        });
+    </script>
+  </body>
+</html>

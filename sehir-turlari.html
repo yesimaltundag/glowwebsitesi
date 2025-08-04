@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="tr" ng-app="GirisApp">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Şehir Turları - GLOW</title>
+    <link rel="stylesheet" href="assets/css/style.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="assets/js/app.js"></script>
+    <style>
+      .sehir-container {
+        max-width: 1200px;
+        margin: 40px auto;
+        padding: 32px;
+        background: rgba(255, 255, 255, 0.92);
+        border-radius: 18px;
+        box-shadow: 0 8px 32px rgba(124, 92, 74, 0.1);
+        backdrop-filter: blur(10px);
+      }
+
+      .page-header {
+        text-align: center;
+        margin-bottom: 40px;
+      }
+
+      .page-title {
+        color: #7c5c4a;
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+      }
+
+      .page-subtitle {
+        color: #b48a78;
+        font-size: 1.1rem;
+        font-weight: 500;
+      }
+
+      .geri-btn {
+        background: linear-gradient(135deg, #e2d9d0, #b48a78);
+        color: #7c5c4a;
+        border: none;
+        border-radius: 50%;
+        width: 45px;
+        height: 45px;
+        font-size: 18px;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s;
+        position: absolute;
+        top: 20px;
+        left: 20px;
+      }
+
+      .geri-btn:hover {
+        background: linear-gradient(135deg, #b48a78, #e2d9d0);
+        color: #fff;
+        transform: scale(1.1);
+      }
+
+      .destinasyonlar-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 30px;
+        margin-top: 40px;
+      }
+
+      .destinasyon-card {
+        background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%);
+        border-radius: 16px;
+        padding: 25px;
+        box-shadow: 0 6px 20px rgba(180, 138, 120, 0.1);
+        transition: all 0.3s ease;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .destinasyon-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 12px 30px rgba(180, 138, 120, 0.2);
+      }
+
+      .destinasyon-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #9c27b0, #e1bee7, #f3e5f5);
+      }
+
+      .destinasyon-baslik {
+        color: #4a148c;
+        font-size: 1.4rem;
+        font-weight: 700;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .destinasyon-sehir {
+        color: #9c27b0;
+        font-size: 0.95rem;
+        font-weight: 500;
+        margin-bottom: 15px;
+      }
+
+      .destinasyon-aciklama {
+        color: #4a148c;
+        font-size: 0.95rem;
+        line-height: 1.6;
+        margin-bottom: 20px;
+      }
+
+      .destinasyon-ozellikler {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 20px;
+      }
+
+      .ozellik-tag {
+        background: rgba(156, 39, 176, 0.2);
+        color: #4a148c;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 500;
+      }
+
+      .detay-btn {
+        background: linear-gradient(135deg, #9c27b0, #e1bee7);
+        color: white;
+        border: none;
+        border-radius: 25px;
+        padding: 10px 20px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        width: 100%;
+      }
+
+      .detay-btn:hover {
+        background: linear-gradient(135deg, #e1bee7, #9c27b0);
+        transform: scale(1.02);
+      }
+
+      .destinasyon-icon {
+        font-size: 1.2rem;
+      }
+
+      @media (max-width: 768px) {
+        .sehir-container {
+          margin: 20px;
+          padding: 20px;
+        }
+
+        .page-title {
+          font-size: 2rem;
+        }
+
+        .destinasyonlar-grid {
+          grid-template-columns: 1fr;
+          gap: 20px;
+        }
+
+        .geri-btn {
+          top: 15px;
+          left: 15px;
+          width: 40px;
+          height: 40px;
+          font-size: 16px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <ng-include src="'components/header.html'"></ng-include>
+
+    <main class="main-content">
+      <div class="sehir-container" ng-controller="SehirTurlariController">
+        <button
+          class="geri-btn"
+          onclick="window.history.back()"
+          title="Geri Dön"
+        >
+          ←
+        </button>
+
+        <div class="page-header">
+          <h1 class="page-title">🏙️ Şehir Turları</h1>
+          <p class="page-subtitle">
+            Dünyanın En Büyüleyici 10 Şehir Turu Destinasyonu
+          </p>
+        </div>
+
+        <div class="destinasyonlar-grid">
+          <div
+            class="destinasyon-card"
+            ng-repeat="destinasyon in sehirDestinasyonlari"
+            ng-click="destinasyonDetayGit(destinasyon)"
+          >
+            <h3 class="destinasyon-baslik">
+              <span class="destinasyon-icon">{{destinasyon.icon}}</span>
+              {{destinasyon.ad}}
+            </h3>
+            <p class="destinasyon-sehir">{{destinasyon.sehir}}</p>
+            <p class="destinasyon-aciklama">{{destinasyon.kisaAciklama}}</p>
+
+            <div class="destinasyon-ozellikler">
+              <span
+                class="ozellik-tag"
+                ng-repeat="ozellik in destinasyon.ozellikler"
+                >{{ozellik}}</span
+              >
+            </div>
+
+            <button class="detay-btn">Detayları Gör</button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <ng-include src="'components/footer.html'"></ng-include>
+
+    <script>
+      angular
+        .module("GirisApp")
+        .controller("SehirTurlariController", function ($scope) {
+          $scope.kullanici = JSON.parse(
+            localStorage.getItem("girisYapan") || "null"
+          );
+
+          $scope.sehirDestinasyonlari = [
+            {
+              id: 1,
+              ad: "Paris Walking Tour",
+              sehir: "Paris, Fransa",
+              icon: "🗼",
+              kisaAciklama:
+                "Aşkın şehri. Eiffel Kulesi, Louvre Müzesi, Notre-Dame ve Seine Nehri boyunca romantik yürüyüşler ile Paris'in en güzel yanlarını keşfedin.",
+              ozellikler: ["Tarih", "Kültür", "Sanat", "Romantik"],
+              tarih:
+                "M.Ö. 3. yüzyılda kurulan Paris, Orta Çağ'dan günümüze Avrupa'nın kültür ve sanat başkenti. Dünyanın en romantik şehri olarak tanınıyor.",
+              gorulecekYerler: [
+                "Eiffel Tower - Demir kule",
+                "Louvre Museum - Sanat müzesi",
+                "Notre-Dame Cathedral - Gotik katedral",
+                "Champs-Élysées - Lüks caddesi",
+                "Arc de Triomphe - Zafer takı",
+                "Montmartre - Sanatçılar tepesi",
+                "Seine River - Nehir",
+                "Palace of Versailles - Saray",
+              ],
+              etkinlikler: [
+                "Paris Fashion Week",
+                "Paris Jazz Festival",
+                "Paris Film Festival",
+                "Paris Food Festival",
+                "Paris Music Festival",
+              ],
+              restoranlar: [
+                "Le Jules Verne - Eiffel Kulesi",
+                "L'Arpège - Michelin yıldızlı",
+                "Le Comptoir du Relais - Geleneksel",
+                "Septime - Modern",
+                "L'Ami Louis - Tarihi",
+              ],
+            },
+            {
+              id: 2,
+              ad: "Rome Historical Tour",
+              sehir: "Roma, İtalya",
+              icon: "🏛️",
+              kisaAciklama:
+                "Ebedi şehir. Colosseum, Vatikan, Trevi Çeşmesi ve antik Roma kalıntıları ile tarihin en büyük imparatorluğunun izlerini takip edin.",
+              ozellikler: ["Tarih", "Arkeoloji", "Din", "Mimari"],
+              tarih:
+                "M.Ö. 753 yılında kurulan Roma, antik dünyanın en büyük imparatorluğunun başkenti. Günümüzde Hıristiyanlığın merkezi Vatikan'ı da barındırır.",
+              gorulecekYerler: [
+                "Colosseum - Antik arena",
+                "Vatican Museums - Müzeler",
+                "St. Peter's Basilica - Bazilika",
+                "Trevi Fountain - Çeşme",
+                "Roman Forum - Antik forum",
+                "Pantheon - Tapınak",
+                "Sistine Chapel - Şapel",
+                "Spanish Steps - Merdivenler",
+              ],
+              etkinlikler: [
+                "Rome Film Festival",
+                "Vatican Easter Celebrations",
+                "Rome Opera Festival",
+                "Rome Food Festival",
+                "Rome Historical Festival",
+              ],
+              restoranlar: [
+                "La Pergola - Lüks restoran",
+                "Roscioli - Geleneksel",
+                "Il Pagliaccio - Modern",
+                "Da Enzo - Yerel",
+                "Armando al Pantheon - Tarihi",
+              ],
+            },
+            {
+              id: 3,
+              ad: "Tokyo Urban Adventure",
+              sehir: "Tokyo, Japonya",
+              icon: "🗾",
+              kisaAciklama:
+                "Geleceğin şehri. Shibuya, Harajuku, Akihabara ve geleneksel tapınaklar ile geleneksel ve modern Japonya'nın mükemmel karışımını yaşayın.",
+              ozellikler: ["Teknoloji", "Kültür", "Alışveriş", "Gastronomi"],
+              tarih:
+                "1603 yılında Edo adıyla kurulan Tokyo, 1868'de başkent oldu. Günümüzde dünyanın en büyük metropolü ve teknoloji merkezi.",
+              gorulecekYerler: [
+                "Shibuya Crossing - Ünlü kavşak",
+                "Senso-ji Temple - Tapınak",
+                "Tokyo Skytree - Kule",
+                "Tsukiji Fish Market - Balık pazarı",
+                "Harajuku - Moda bölgesi",
+                "Akihabara - Elektronik",
+                "Meiji Shrine - Tapınak",
+                "Tokyo Tower - Kule",
+              ],
+              etkinlikler: [
+                "Tokyo Game Show",
+                "Tokyo International Film Festival",
+                "Cherry Blossom Festival",
+                "Tokyo Food Festival",
+                "Tokyo Fashion Week",
+              ],
+              restoranlar: [
+                "Sukiyabashi Jiro - Sushi",
+                "Narisawa - Modern",
+                "Ishikawa - Geleneksel",
+                "Den - Yaratıcı",
+                "Sukiyabashi Jiro - Lüks",
+              ],
+            },
+            {
+              id: 4,
+              ad: "New York City Tour",
+              sehir: "New York, ABD",
+              icon: "🗽",
+              kisaAciklama:
+                "Hiç uyumayan şehir. Times Square, Central Park, Broadway ve Manhattan'ın ikonik gökdelenleri ile dünyanın finans ve kültür başkentini keşfedin.",
+              ozellikler: ["Finans", "Kültür", "Eğlence", "Sanat"],
+              tarih:
+                "1624 yılında Hollandalılar tarafından kurulan New York, 19. yüzyılda göçmen dalgası ile büyüdü. Günümüzde dünyanın finans merkezi.",
+              gorulecekYerler: [
+                "Times Square - Meydan",
+                "Central Park - Park",
+                "Statue of Liberty - Özgürlük heykeli",
+                "Empire State Building - Gökdelen",
+                "Broadway - Tiyatro caddesi",
+                "Brooklyn Bridge - Köprü",
+                "Metropolitan Museum - Müze",
+                "Wall Street - Finans merkezi",
+              ],
+              etkinlikler: [
+                "New York Fashion Week",
+                "Broadway Shows",
+                "New York Film Festival",
+                "Macy's Thanksgiving Parade",
+                "New Year's Eve Ball Drop",
+              ],
+              restoranlar: [
+                "Eleven Madison Park - Lüks",
+                "Le Bernardin - Deniz ürünleri",
+                "Per Se - Modern",
+                "Katz's Delicatessen - Geleneksel",
+                "Peter Luger Steak House - Et",
+              ],
+            },
+            {
+              id: 5,
+              ad: "London Royal Tour",
+              sehir: "Londra, İngiltere",
+              icon: "🏰",
+              kisaAciklama:
+                "Kraliyet şehri. Buckingham Sarayı, Big Ben, Tower Bridge ve British Museum ile İngiliz tarihinin ve kültürünün kalbini ziyaret edin.",
+              ozellikler: ["Kraliyet", "Tarih", "Kültür", "Mimari"],
+              tarih:
+                "M.S. 43 yılında Romalılar tarafından kurulan Londra, Orta Çağ'dan günümüze İngiltere'nin başkenti. Dünya tarihinin en önemli şehirlerinden biri.",
+              gorulecekYerler: [
+                "Buckingham Palace - Kraliyet sarayı",
+                "Big Ben - Saat kulesi",
+                "Tower Bridge - Köprü",
+                "British Museum - Müze",
+                "Westminster Abbey - Manastır",
+                "London Eye - Dönme dolap",
+                "Tower of London - Kule",
+                "St. Paul's Cathedral - Katedral",
+              ],
+              etkinlikler: [
+                "London Fashion Week",
+                "Royal Ascot",
+                "Notting Hill Carnival",
+                "London Film Festival",
+                "Changing of the Guard",
+              ],
+              restoranlar: [
+                "The Fat Duck - Lüks",
+                "Gordon Ramsay Restaurant - Modern",
+                "Dishoom - Hint mutfağı",
+                "Sketch - Yaratıcı",
+                "The Ivy - Geleneksel",
+              ],
+            },
+            {
+              id: 6,
+              ad: "Barcelona Cultural Tour",
+              sehir: "Barselona, İspanya",
+              icon: "🏟️",
+              kisaAciklama:
+                "Gaudi'nin şehri. Sagrada Familia, Park Güell, La Rambla ve Katalan kültürünün canlı atmosferi ile Akdeniz'in en güzel şehrini keşfedin.",
+              ozellikler: ["Mimari", "Kültür", "Sanat", "Gastronomi"],
+              tarih:
+                "M.Ö. 1. yüzyılda Romalılar tarafından kurulan Barselona, Orta Çağ'da önemli bir deniz ticaret merkezi oldu. Gaudi'nin eserleri ile ünlü.",
+              gorulecekYerler: [
+                "Sagrada Familia - Katedral",
+                "Park Güell - Park",
+                "La Rambla - Cadde",
+                "Casa Batlló - Ev",
+                "Casa Milà - Ev",
+                "Gothic Quarter - Mahalle",
+                "Barceloneta Beach - Plaj",
+                "Montjuïc - Tepe",
+              ],
+              etkinlikler: [
+                "Barcelona Fashion Week",
+                "Sonar Music Festival",
+                "La Mercè Festival",
+                "Barcelona Food Festival",
+                "Barcelona Film Festival",
+              ],
+              restoranlar: [
+                "El Celler de Can Roca - Lüks",
+                "Tickets - Tapas",
+                "Disfrutar - Modern",
+                "Cal Pep - Geleneksel",
+                "Quimet & Quimet - Meze",
+              ],
+            },
+            {
+              id: 7,
+              ad: "Istanbul Heritage Tour",
+              sehir: "İstanbul, Türkiye",
+              icon: "🕌",
+              kisaAciklama:
+                "İki kıtanın şehri. Ayasofya, Topkapı Sarayı, Sultanahmet ve Boğaz manzarası ile Doğu ile Batı'nın buluştuğu eşsiz şehri keşfedin.",
+              ozellikler: ["Tarih", "Kültür", "Din", "Boğaz"],
+              tarih:
+                "M.Ö. 660 yılında Bizans olarak kurulan İstanbul, Roma, Bizans ve Osmanlı imparatorluklarına başkentlik yaptı. Dünya tarihinin en önemli şehirlerinden.",
+              gorulecekYerler: [
+                "Hagia Sophia - Müze",
+                "Topkapi Palace - Saray",
+                "Blue Mosque - Cami",
+                "Grand Bazaar - Kapalı çarşı",
+                "Bosphorus - Boğaz",
+                "Sultanahmet Square - Meydan",
+                "Galata Tower - Kule",
+                "Dolmabahçe Palace - Saray",
+              ],
+              etkinlikler: [
+                "Istanbul Film Festival",
+                "Istanbul Biennial",
+                "Istanbul Music Festival",
+                "Istanbul Food Festival",
+                "Istanbul Fashion Week",
+              ],
+              restoranlar: [
+                "Mikla - Modern Türk",
+                "Çiya Sofrası - Geleneksel",
+                "Nusr-Et - Et restoranı",
+                "Balıkçı Lokantası - Deniz ürünleri",
+                "Kebapçı Selim Usta - Kebap",
+              ],
+            },
+            {
+              id: 8,
+              ad: "Amsterdam Canal Tour",
+              sehir: "Amsterdam, Hollanda",
+              icon: "🚲",
+              kisaAciklama:
+                "Kanal şehri. Dam Meydanı, Van Gogh Müzesi, Anne Frank Evi ve bisiklet kültürü ile Hollanda'nın en güzel şehrini keşfedin.",
+              ozellikler: ["Kanallar", "Bisiklet", "Sanat", "Tarih"],
+              tarih:
+                "12. yüzyılda balıkçı köyü olarak kurulan Amsterdam, 17. yüzyılda Altın Çağ'ını yaşadı. Günümüzde liberal kültürü ile tanınıyor.",
+              gorulecekYerler: [
+                "Dam Square - Meydan",
+                "Van Gogh Museum - Müze",
+                "Anne Frank House - Ev",
+                "Canal Ring - Kanal halkası",
+                "Rijksmuseum - Müze",
+                "Vondelpark - Park",
+                "Red Light District - Mahalle",
+                "Royal Palace - Saray",
+              ],
+              etkinlikler: [
+                "Amsterdam Dance Event",
+                "King's Day Celebrations",
+                "Amsterdam Light Festival",
+                "Amsterdam Food Festival",
+                "Amsterdam Fashion Week",
+              ],
+              restoranlar: [
+                "Restaurant de Librije - Lüks",
+                "Restaurant Ciel Bleu - Modern",
+                "Moeders - Geleneksel",
+                "Restaurant Floreyn - Yaratıcı",
+                "Café de Jaren - Kafe",
+              ],
+            },
+            {
+              id: 9,
+              ad: "Prague Castle Tour",
+              sehir: "Prag, Çek Cumhuriyeti",
+              icon: "🏰",
+              kisaAciklama:
+                "Altın şehir. Prag Kalesi, Charles Köprüsü, Old Town Square ve Orta Çağ mimarisi ile Avrupa'nın en güzel şehirlerinden birini keşfedin.",
+              ozellikler: ["Kale", "Mimari", "Tarih", "Kültür"],
+              tarih:
+                "9. yüzyılda kurulan Prag, Orta Çağ'da Bohemya Krallığı'nın başkenti oldu. Günümüzde UNESCO Dünya Mirası Listesi'nde.",
+              gorulecekYerler: [
+                "Prague Castle - Kale",
+                "Charles Bridge - Köprü",
+                "Old Town Square - Meydan",
+                "Astronomical Clock - Saat",
+                "St. Vitus Cathedral - Katedral",
+                "Wenceslas Square - Meydan",
+                "Jewish Quarter - Mahalle",
+                "Petrin Tower - Kule",
+              ],
+              etkinlikler: [
+                "Prague Spring Festival",
+                "Prague Fringe Festival",
+                "Prague Food Festival",
+                "Prague Christmas Markets",
+                "Prague Beer Festival",
+              ],
+              restoranlar: [
+                "La Degustation - Lüks",
+                "Field - Modern",
+                "U Modré Kachničky - Geleneksel",
+                "Sansho - Asya mutfağı",
+                "Café Savoy - Kafe",
+              ],
+            },
+            {
+              id: 10,
+              ad: "Vienna Imperial Tour",
+              sehir: "Viyana, Avusturya",
+              icon: "🎭",
+              kisaAciklama:
+                "Müzik şehri. Schönbrunn Sarayı, Belvedere, Viyana Operası ve Habsburg İmparatorluğu'nun ihtişamını keşfedin.",
+              ozellikler: ["Müzik", "Saray", "Kültür", "Tarih"],
+              tarih:
+                "M.S. 1. yüzyılda Romalılar tarafından kurulan Viyana, Habsburg İmparatorluğu'nun başkenti oldu. Mozart, Beethoven gibi bestecilerin şehri.",
+              gorulecekYerler: [
+                "Schönbrunn Palace - Saray",
+                "Belvedere Palace - Saray",
+                "Vienna State Opera - Opera",
+                "St. Stephen's Cathedral - Katedral",
+                "Hofburg Palace - Saray",
+                "Prater - Eğlence parkı",
+                "Ringstrasse - Cadde",
+                "Kunsthistorisches Museum - Müze",
+              ],
+              etkinlikler: [
+                "Vienna Opera Ball",
+                "Vienna Film Festival",
+                "Vienna Jazz Festival",
+                "Vienna Food Festival",
+                "Vienna Christmas Markets",
+              ],
+              restoranlar: [
+                "Steirereck - Lüks",
+                "Silvio Nickol - Modern",
+                "Plachutta - Geleneksel",
+                "Mochi - Yaratıcı",
+                "Café Central - Tarihi kafe",
+              ],
+            },
+          ];
+
+          $scope.destinasyonDetayGit = function (destinasyon) {
+            // Destinasyon detay sayfasına yönlendirme
+            localStorage.setItem("seciliSehir", JSON.stringify(destinasyon));
+            window.location.href = "sehir-detay.html";
+          };
+        });
+    </script>
+  </body>
+</html>

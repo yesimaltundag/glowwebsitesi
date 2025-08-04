@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="tr" ng-app="GirisApp">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tiyatro Detay - GLOW</title>
+    <link rel="stylesheet" href="assets/css/style.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="assets/js/app.js"></script>
+    <style>
+      .detay-container {
+        max-width: 1200px;
+        margin: 40px auto;
+        padding: 40px;
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 20px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(15px);
+        position: relative;
+      }
+
+      .detay-header {
+        display: grid;
+        grid-template-columns: 300px 1fr;
+        gap: 40px;
+        margin-bottom: 40px;
+        align-items: start;
+      }
+
+      .detay-poster {
+        width: 100%;
+        height: 450px;
+        border-radius: 15px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        background: linear-gradient(135deg, #f8e0e1, #e2d9d0);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 4rem;
+        color: #7c5c4a;
+      }
+
+      .detay-bilgiler {
+        padding: 20px 0;
+        color: #2c3e50;
+      }
+
+      .detay-baslik {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #2c3e50;
+        margin-bottom: 15px;
+        line-height: 1.2;
+      }
+
+      .detay-yazar {
+        font-size: 1.3rem;
+        color: #7f8c8d;
+        font-weight: 600;
+        margin-bottom: 20px;
+      }
+
+      .detay-puan {
+        background: linear-gradient(135deg, #f39c12, #e67e22);
+        color: white;
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        margin-bottom: 20px;
+      }
+
+      .detay-ozellikler {
+        display: flex;
+        gap: 20px;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+      }
+
+      .ozellik-item {
+        background: linear-gradient(135deg, #3498db, #2980b9);
+        color: white;
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        font-weight: 600;
+      }
+
+      .detay-aciklama {
+        color: #34495e;
+        font-size: 1.1rem;
+        line-height: 1.7;
+        margin-bottom: 40px;
+        text-align: justify;
+      }
+
+      .detay-icerik {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 32px;
+        margin-top: 40px;
+      }
+
+      .detay-bolum {
+        background: rgba(255, 255, 255, 0.8);
+        border-radius: 16px;
+        padding: 24px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+      }
+
+      .bolum-baslik {
+        color: #7c5c4a;
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 16px;
+        text-align: center;
+      }
+
+      .tiyatro-gorsel {
+        width: 100%;
+        height: 300px;
+        background: linear-gradient(135deg, #f8e0e1, #e2d9d0);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 3rem;
+        color: #7c5c4a;
+        margin-bottom: 16px;
+      }
+
+      .geri-btn {
+        background: linear-gradient(135deg, #e2d9d0, #b48a78);
+        color: #7c5c4a;
+        border: none;
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s;
+        position: absolute;
+        top: 20px;
+        right: 20px;
+      }
+
+      .geri-btn:hover {
+        background: linear-gradient(135deg, #b48a78, #e2d9d0);
+        color: #fff;
+        transform: scale(1.1);
+      }
+
+      .loading {
+        text-align: center;
+        color: #7c5c4a;
+        font-size: 1.1rem;
+        padding: 40px;
+      }
+
+      .error {
+        text-align: center;
+        color: #f44336;
+        font-size: 1.1rem;
+        padding: 40px;
+      }
+
+      @media (max-width: 768px) {
+        .detay-header {
+          grid-template-columns: 1fr;
+          gap: 20px;
+        }
+
+        .detay-baslik {
+          font-size: 2rem;
+        }
+
+        .detay-icerik {
+          grid-template-columns: 1fr;
+          gap: 20px;
+        }
+
+        .detay-ozellikler {
+          gap: 10px;
+        }
+
+        .ozellik-item {
+          font-size: 0.8rem;
+          padding: 6px 12px;
+        }
+      }
+    </style>
+  </head>
+  <body ng-controller="TiyatroDetayController">
+    <ng-include src="'components/header.html'"></ng-include>
+    <main class="main-content">
+      <div class="detay-container">
+        <button
+          class="geri-btn"
+          onclick="window.history.back()"
+          title="Geri Dön"
+        >
+          ←
+        </button>
+
+        <!-- Loading -->
+        <div class="loading" ng-if="loading">Tiyatro eseri yükleniyor...</div>
+
+        <!-- Error -->
+        <div class="error" ng-if="error">{{ error }}</div>
+
+        <!-- Detay İçeriği -->
+        <div ng-if="!loading && !error && tiyatroEseri">
+          <div class="detay-header">
+            <div class="detay-poster">🎭</div>
+            <div class="detay-bilgiler">
+              <h1 class="detay-baslik">{{ tiyatroEseri.eser_adi }}</h1>
+              <div class="detay-yazar">{{ tiyatroEseri.yazar }}</div>
+              <div class="detay-puan">⭐ {{ tiyatroEseri.puan }}/10</div>
+
+              <div class="detay-ozellikler">
+                <div class="ozellik-item">{{ tiyatroEseri.yil }}</div>
+                <div class="ozellik-item">{{ tiyatroEseri.tur }}</div>
+                <div class="ozellik-item">{{ tiyatroEseri.sure }}</div>
+                <div class="ozellik-item" ng-if="tiyatroEseri.karakter_sayisi">
+                  {{ tiyatroEseri.karakter_sayisi }} Karakter
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="detay-aciklama">{{ tiyatroEseri.aciklama }}</div>
+
+          <div class="detay-icerik">
+            <div class="detay-bolum">
+              <h3 class="bolum-baslik">🎭 Sahne Görselleri</h3>
+              <div class="tiyatro-gorsel">🎪</div>
+              <p style="text-align: center; color: #7f8c8d; font-style: italic">
+                Bu tiyatro eserinin sahne görselleri ve performans fotoğrafları
+                burada yer alacak
+              </p>
+            </div>
+            <div class="detay-bolum">
+              <h3 class="bolum-baslik">📖 Eser Detayları</h3>
+              <div style="color: #34495e; line-height: 1.6">
+                <p><strong>Yazar:</strong> {{ tiyatroEseri.yazar }}</p>
+                <p><strong>Yazıldığı Yıl:</strong> {{ tiyatroEseri.yil }}</p>
+                <p><strong>Tür:</strong> {{ tiyatroEseri.tur }}</p>
+                <p><strong>Süre:</strong> {{ tiyatroEseri.sure }}</p>
+                <p ng-if="tiyatroEseri.karakter_sayisi">
+                  <strong>Karakter Sayısı:</strong> {{
+                  tiyatroEseri.karakter_sayisi }}
+                </p>
+                <p ng-if="tiyatroEseri.dil">
+                  <strong>Dil:</strong> {{ tiyatroEseri.dil }}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Yorum Bölümü -->
+          <div class="yorum-bolum">
+            <h3 class="yorum-baslik">
+              💬 Yorumlar ({{ yorumlar ? yorumlar.length : 0 }})
+            </h3>
+
+            <!-- Yorum Ekleme Formu -->
+            <div class="yorum-form" ng-if="kullanici">
+              <h4>Yorum Yap</h4>
+              <div class="form-grup">
+                <label>Yorumunuz:</label>
+                <textarea
+                  ng-model="yeniYorum.yorum"
+                  placeholder="Bu tiyatro eseri hakkında düşüncelerinizi paylaşın..."
+                  rows="4"
+                  maxlength="500"
+                ></textarea>
+                <div class="karakter-sayisi">
+                  {{ yeniYorum.yorum.length }}/500
+                </div>
+              </div>
+
+              <div class="form-grup">
+                <label>Puanınız:</label>
+                <div class="puan-secici">
+                  <span
+                    ng-repeat="i in [1,2,3,4,5,6,7,8,9,10]"
+                    ng-click="puanSec(i)"
+                    ng-class="{ 'secili': yeniYorum.puan >= i }"
+                    class="puan-yildiz"
+                    style="cursor: pointer"
+                    >⭐</span
+                  >
+                </div>
+                <div class="puan-text">{{ yeniYorum.puan || 0 }}/10</div>
+              </div>
+
+              <button
+                class="yorum-gonder-btn"
+                ng-click="yorumEkle()"
+                ng-disabled="!yeniYorum.yorum || yeniYorum.yorum.length < 10 || !yeniYorum.puan || yeniYorum.puan < 1"
+              >
+                Yorum Gönder
+              </button>
+
+              <!-- Test Butonu -->
+              <button
+                style="margin-left: 10px; background: #e74c3c"
+                ng-click="testYorumEkle()"
+              >
+                Test Yorum Ekle
+              </button>
+
+              <!-- Debug Butonu -->
+              <button
+                style="margin-left: 10px; background: #3498db"
+                ng-click="debugYorumlar()"
+              >
+                Debug Yorumlar
+              </button>
+
+              <!-- Manuel Test Butonu -->
+              <button
+                style="margin-left: 10px; background: #27ae60"
+                ng-click="manuelTestYorumlar()"
+              >
+                Manuel Test
+              </button>
+            </div>
+
+            <!-- Giriş Yapmamış Kullanıcı -->
+            <div class="giris-uyari" ng-if="!kullanici">
+              <p>
+                Yorum yapmak için lütfen <a href="index.html">giriş yapın</a>.
+              </p>
+            </div>
+
+            <!-- Yorumlar Listesi -->
+            <div class="yorumlar-liste" ng-if="yorumlar && yorumlar.length > 0">
+              <div
+                class="yorum-item"
+                ng-repeat="yorum in yorumlar track by yorum.id"
+              >
+                <div class="yorum-header">
+                  <div class="yorum-kullanici">{{ yorum.kullanici_adi }}</div>
+                  <div
+                    class="yorum-puan"
+                    ng-bind-html="yorum.puan | yildizSistemi"
+                  ></div>
+                  <div class="yorum-tarih">
+                    {{ yorum.created_at | date:'dd.MM.yyyy HH:mm' }}
+                  </div>
+                </div>
+                <div class="yorum-icerik">{{ yorum.yorum }}</div>
+              </div>
+            </div>
+
+            <!-- Yorum Yok -->
+            <div class="yorum-yok" ng-if="!yorumlar || yorumlar.length === 0">
+              <p>Henüz yorum yapılmamış. İlk yorumu siz yapın!</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <ng-include src="'components/footer.html'"></ng-include>
+
+    <button id="scrollTopBtn" title="Yukarı Çık" ng-click="scrollToTop()">
+      ↑
+    </button>
+  </body>
+</html>

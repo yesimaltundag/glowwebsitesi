@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="tr" ng-app="GirisApp">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dizi Kategorileri - GLOW</title>
+    <link rel="stylesheet" href="assets/css/style.css" />
+    <link rel="stylesheet" href="assets/css/dizi-styles.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="assets/js/app.js"></script>
+    <style>
+      body {
+        background: linear-gradient(135deg, #f5e7e0 0%, #e9d6d1 100%);
+        min-height: 100vh;
+      }
+      .main-content {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .kategori-wrapper {
+        background: rgba(255, 255, 255, 0.85);
+        box-shadow: 0 8px 32px rgba(124, 92, 74, 0.1);
+        border-radius: 22px;
+        padding: 48px 32px 32px 32px;
+        max-width: 900px;
+        margin: 40px auto;
+        width: 100%;
+        position: relative;
+      }
+      .kategori-title {
+        text-align: center;
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #7c5c4a;
+        margin-bottom: 36px;
+        letter-spacing: 1px;
+      }
+      .kategori-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 28px;
+      }
+      .kategori-card {
+        background: linear-gradient(135deg, #f8e0e1 60%, #e2d9d0 100%);
+        border-radius: 16px;
+        box-shadow: 0 4px 16px rgba(180, 138, 120, 0.08);
+        padding: 32px 24px 24px 24px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        transition: box-shadow 0.3s, transform 0.3s;
+        cursor: pointer;
+        position: relative;
+      }
+      .kategori-card:hover {
+        box-shadow: 0 8px 32px rgba(180, 138, 120, 0.16);
+        transform: translateY(-3px) scale(1.02);
+      }
+      .kategori-icon {
+        font-size: 2.2rem;
+        margin-bottom: 10px;
+      }
+      .kategori-baslik {
+        font-size: 1.3rem;
+        font-weight: 600;
+        color: #b48a78;
+        margin-bottom: 8px;
+      }
+      .kategori-aciklama {
+        color: #7c5c4a;
+        font-size: 1rem;
+        margin-bottom: 18px;
+        min-height: 48px;
+      }
+      .kategori-btn {
+        background: linear-gradient(135deg, #e2d9d0, #b48a78);
+        color: #7c5c4a;
+        border: none;
+        border-radius: 8px;
+        padding: 10px 24px;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        align-self: flex-end;
+      }
+      .kategori-btn:hover {
+        background: linear-gradient(135deg, #b48a78, #e2d9d0);
+        color: #fff;
+        transform: scale(1.05);
+      }
+      .geri-btn {
+        background: linear-gradient(135deg, #e2d9d0, #b48a78);
+        color: #7c5c4a;
+        border: none;
+        border-radius: 50%;
+        width: 36px;
+        height: 36px;
+        font-size: 18px;
+        font-weight: 600;
+        cursor: pointer;
+        position: absolute;
+        top: 18px;
+        left: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s;
+        z-index: 2;
+      }
+      .geri-btn:hover {
+        background: linear-gradient(135deg, #b48a78, #e2d9d0);
+        color: #fff;
+        transform: scale(1.08);
+      }
+      @media (max-width: 900px) {
+        .kategori-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+      @media (max-width: 600px) {
+        .kategori-wrapper {
+          padding: 18px 4px 18px 4px;
+        }
+        .kategori-title {
+          font-size: 1.5rem;
+        }
+        .kategori-grid {
+          grid-template-columns: 1fr;
+          gap: 18px;
+        }
+      }
+    </style>
+  </head>
+  <body ng-controller="DiziKategorilerController">
+    <ng-include src="'components/header.html'"></ng-include>
+    <main class="main-content">
+      <div class="kategori-wrapper">
+        <button
+          class="geri-btn"
+          onclick="window.history.back()"
+          title="Geri Dön"
+        >
+          ←
+        </button>
+        <div class="kategori-title">Dizi Türleri</div>
+        <div class="kategori-grid">
+          <div class="kategori-card" ng-click="kategoriSec('dram')">
+            <span class="kategori-icon">🎭</span>
+            <div class="kategori-baslik">Dram</div>
+            <div class="kategori-aciklama">
+              Duygusal derinliği olan, etkileyici dram dizileri.
+            </div>
+            <button
+              class="kategori-btn"
+              ng-click="kategoriSec('dram'); $event.stopPropagation()"
+            >
+              Dizileri Gör
+            </button>
+          </div>
+          <div class="kategori-card" ng-click="kategoriSec('komedi')">
+            <span class="kategori-icon">😂</span>
+            <div class="kategori-baslik">Komedi</div>
+            <div class="kategori-aciklama">
+              Eğlenceli ve güldürücü komedi dizileri.
+            </div>
+            <button
+              class="kategori-btn"
+              ng-click="kategoriSec('komedi'); $event.stopPropagation()"
+            >
+              Dizileri Gör
+            </button>
+          </div>
+          <div class="kategori-card" ng-click="kategoriSec('aksiyon')">
+            <span class="kategori-icon">💥</span>
+            <div class="kategori-baslik">Aksiyon</div>
+            <div class="kategori-aciklama">
+              Heyecan dolu aksiyon sahneleri ve macera dolu diziler.
+            </div>
+            <button
+              class="kategori-btn"
+              ng-click="kategoriSec('aksiyon'); $event.stopPropagation()"
+            >
+              Dizileri Gör
+            </button>
+          </div>
+          <div class="kategori-card" ng-click="kategoriSec('romantik')">
+            <span class="kategori-icon">💕</span>
+            <div class="kategori-baslik">Romantik</div>
+            <div class="kategori-aciklama">
+              Aşk ve romantizm temalı diziler.
+            </div>
+            <button
+              class="kategori-btn"
+              ng-click="kategoriSec('romantik'); $event.stopPropagation()"
+            >
+              Dizileri Gör
+            </button>
+          </div>
+          <div class="kategori-card" ng-click="kategoriSec('bilim_kurgu')">
+            <span class="kategori-icon">🚀</span>
+            <div class="kategori-baslik">Bilim Kurgu</div>
+            <div class="kategori-aciklama">
+              Gelecek ve teknoloji temalı bilim kurgu dizileri.
+            </div>
+            <button
+              class="kategori-btn"
+              ng-click="kategoriSec('bilim_kurgu'); $event.stopPropagation()"
+            >
+              Dizileri Gör
+            </button>
+          </div>
+          <div class="kategori-card" ng-click="kategoriSec('gerilim')">
+            <span class="kategori-icon">😱</span>
+            <div class="kategori-baslik">Gerilim / Korku</div>
+            <div class="kategori-aciklama">
+              Sürükleyici ve korku dolu gerilim dizileri.
+            </div>
+            <button
+              class="kategori-btn"
+              ng-click="kategoriSec('gerilim'); $event.stopPropagation()"
+            >
+              Dizileri Gör
+            </button>
+          </div>
+          <div class="kategori-card" ng-click="kategoriSec('fantastik')">
+            <span class="kategori-icon">🐉</span>
+            <div class="kategori-baslik">Fantastik</div>
+            <div class="kategori-aciklama">
+              Büyülü ve fantastik dünyaların dizileri.
+            </div>
+            <button
+              class="kategori-btn"
+              ng-click="kategoriSec('fantastik'); $event.stopPropagation()"
+            >
+              Dizileri Gör
+            </button>
+          </div>
+          <div class="kategori-card" ng-click="kategoriSec('polisiye')">
+            <span class="kategori-icon">🕵️</span>
+            <div class="kategori-baslik">Polisiye</div>
+            <div class="kategori-aciklama">
+              Dedektiflik ve suç temalı polisiye diziler.
+            </div>
+            <button
+              class="kategori-btn"
+              ng-click="kategoriSec('polisiye'); $event.stopPropagation()"
+            >
+              Dizileri Gör
+            </button>
+          </div>
+          <div class="kategori-card" ng-click="kategoriSec('yerli')">
+            <span class="kategori-icon">🇹🇷</span>
+            <div class="kategori-baslik">Yerli Dizi</div>
+            <div class="kategori-aciklama">Türk yapımı, yerli diziler.</div>
+            <button
+              class="kategori-btn"
+              ng-click="kategoriSec('yerli'); $event.stopPropagation()"
+            >
+              Dizileri Gör
+            </button>
+          </div>
+        </div>
+      </div>
+    </main>
+    <ng-include src="'components/footer.html'"></ng-include>
+    <button id="scrollTopBtn" title="Yukarı Çık" ng-click="scrollToTop()">
+      ↑
+    </button>
+    <script>
+      angular
+        .module("GirisApp")
+        .controller("DiziKategorilerController", function ($scope) {
+          $scope.kullanici = JSON.parse(
+            localStorage.getItem("girisYapan") || "null"
+          );
+          $scope.kategoriSec = function (kategori) {
+            var kategoriUrl = kategori.replace("_", "-");
+            window.location.href = kategoriUrl + "-diziler.html";
+          };
+          $scope.scrollToTop = function () {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          };
+        });
+    </script>
+  </body>
+</html>

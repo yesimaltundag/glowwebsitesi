@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="tr" ng-app="GirisApp">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Resim Galerisi - GLOW</title>
+    <link rel="stylesheet" href="assets/css/style.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="assets/js/app.js"></script>
+    <style>
+      .resimler-container {
+        max-width: 100%;
+        margin: 40px auto;
+        padding: 32px 40px;
+        background: rgba(255, 255, 255, 0.92);
+        border-radius: 18px;
+        box-shadow: 0 8px 32px rgba(124, 92, 74, 0.1);
+        backdrop-filter: blur(10px);
+        position: relative;
+        width: 100%;
+      }
+
+      .resimler-header {
+        text-align: center;
+        margin-bottom: 40px;
+      }
+
+      .resimler-baslik {
+        color: #7c5c4a;
+        font-size: 2.5rem;
+        font-weight: 700;
+        letter-spacing: 2px;
+        margin-bottom: 16px;
+        text-shadow: 0 2px 4px rgba(124, 92, 74, 0.1);
+      }
+
+      .resimler-aciklama {
+        color: #b48a78;
+        font-size: 1.1rem;
+        font-weight: 500;
+        max-width: 600px;
+        margin: 0 auto;
+        line-height: 1.6;
+      }
+
+      .resimler-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 40px;
+        margin-top: 40px;
+      }
+
+      .resim-card {
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 8px 24px rgba(180, 138, 120, 0.15);
+        overflow: hidden;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        position: relative;
+      }
+
+      .resim-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 16px 40px rgba(180, 138, 120, 0.25);
+      }
+
+      .resim-card-img {
+        width: 100%;
+        height: 350px;
+        overflow: hidden;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f8f8f8;
+      }
+
+      .resim-card-img img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        transition: transform 0.3s ease;
+        background: #f8f8f8;
+      }
+
+      .resim-card:hover .resim-card-img img {
+        transform: scale(1.05);
+      }
+
+      .resim-card-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+        padding: 20px;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+
+      .resim-card:hover .resim-card-overlay {
+        opacity: 1;
+      }
+
+      .resim-card-overlay h3 {
+        color: white;
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 8px;
+      }
+
+      .resim-card-overlay p {
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 14px;
+        margin-bottom: 5px;
+      }
+
+      .resim-card-bilgi {
+        padding: 30px;
+      }
+
+      .resim-card-baslik {
+        color: #7c5c4a;
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin-bottom: 12px;
+        line-height: 1.3;
+      }
+
+      .resim-card-sanatci {
+        color: #b48a78;
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin-bottom: 8px;
+      }
+
+      .resim-card-tarih {
+        color: #999;
+        font-size: 1rem;
+        margin-bottom: 20px;
+      }
+
+      .resim-card-aciklama {
+        color: #666;
+        font-size: 1.1rem;
+        line-height: 1.6;
+        display: -webkit-box;
+        -webkit-line-clamp: 4;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+
+      .geri-btn {
+        background: linear-gradient(135deg, #e2d9d0, #b48a78);
+        color: #7c5c4a;
+        border: none;
+        border-radius: 50%;
+        width: 45px;
+        height: 45px;
+        padding: 0;
+        font-size: 18px;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s;
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        margin: 0;
+      }
+
+      .geri-btn:hover {
+        background: linear-gradient(135deg, #b48a78, #e2d9d0);
+        color: #fff;
+        transform: scale(1.1);
+      }
+
+      @media (max-width: 768px) {
+        .resimler-container {
+          padding: 20px;
+          margin: 20px;
+        }
+
+        .resimler-baslik {
+          font-size: 2rem;
+        }
+
+        .resimler-grid {
+          grid-template-columns: 1fr;
+          gap: 30px;
+        }
+
+        .geri-btn {
+          width: 45px;
+          height: 45px;
+          font-size: 18px;
+        }
+
+        .resim-card-img {
+          height: 250px;
+        }
+
+        .resim-tarihce-modal-icerik {
+          margin: 10px;
+          max-height: 95vh;
+        }
+
+        .resim-tarihce-modal-resim {
+          height: 200px;
+        }
+
+        .resim-tarihce-modal-bilgi {
+          padding: 20px;
+        }
+
+        .resim-tarihce-modal-bilgi h2 {
+          font-size: 20px;
+        }
+
+        .resim-sanatci {
+          font-size: 16px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <ng-include src="'components/header.html'"></ng-include>
+    <main class="main-content">
+      <div class="resimler-container" ng-controller="ResimlerController">
+        <button
+          class="geri-btn"
+          ng-click="geriDon()"
+          title="Sanat Kategorileri'ne Dön"
+        >
+          ←
+        </button>
+
+        <div class="resimler-header">
+          <h1 class="resimler-baslik">🎨 Resim Galerisi</h1>
+          <p class="resimler-aciklama">
+            Dünya sanatının en ünlü resim eserlerini keşfedin. Her resme
+            tıklayarak detaylı tarihçesini ve sanatçı hakkında bilgileri
+            okuyabilirsiniz.
+          </p>
+        </div>
+
+        <div class="resimler-grid">
+          <div
+            class="resim-card"
+            ng-repeat="resim in resimEserleri"
+            ng-click="resimDetayGoster(resim)"
+          >
+            <div class="resim-card-img">
+              <img ng-src="{{resim.resim}}" alt="{{resim.baslik}}" />
+              <div class="resim-card-overlay">
+                <h3>{{resim.baslik}}</h3>
+                <p>{{resim.sanatci}}</p>
+                <p>{{resim.tarih}}</p>
+              </div>
+            </div>
+            <div class="resim-card-bilgi">
+              <h3 class="resim-card-baslik">{{resim.baslik}}</h3>
+              <p class="resim-card-sanatci">{{resim.sanatci}}</p>
+              <p class="resim-card-tarih">{{resim.tarih}}</p>
+              <p class="resim-card-aciklama">{{resim.tarihce}}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <ng-include src="'components/footer.html'"></ng-include>
+
+    <button id="scrollTopBtn" title="Yukarı Çık" ng-click="scrollToTop()">
+      ↑
+    </button>
+
+    <script>
+      angular
+        .module("GirisApp")
+        .controller("ResimlerController", function ($scope) {
+          $scope.kullanici = JSON.parse(
+            localStorage.getItem("girisYapan") || "null"
+          );
+
+          // Resim galerisi için veri
+          $scope.resimEserleri = [
+            {
+              id: "mona-lisa",
+              baslik: "Mona Lisa",
+              sanatci: "Leonardo da Vinci",
+              tarih: "1503-1519",
+              resim:
+                "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg/687px-Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg",
+              tarihce:
+                "Mona Lisa, Leonardo da Vinci'nin en ünlü eseridir. İtalyan Rönesans döneminde yapılan bu portre, dünya sanat tarihinin en değerli ve en çok tanınan eserlerinden biridir. Eserin gizemli gülümsemesi ve sfumato tekniği ile yapılan yumuşak geçişler, sanat tarihinde devrim yaratmıştır. Şu anda Paris'teki Louvre Müzesi'nde sergilenmektedir.",
+            },
+            {
+              id: "yildizli-gece",
+              baslik: "Yıldızlı Gece",
+              sanatci: "Vincent van Gogh",
+              tarih: "1889",
+              resim:
+                "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg/1280px-Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg",
+              tarihce:
+                "Yıldızlı Gece, Van Gogh'un en ünlü eserlerinden biridir. Sanatçının Saint-Rémy-de-Provence'daki akıl hastanesinde kaldığı dönemde yapılmıştır. Eser, gecenin dinamik ve hareketli bir yorumunu sunar. Dönen bulutlar ve parlayan yıldızlar, sanatçının iç dünyasının yoğun duygusal durumunu yansıtır. Modern sanatın en etkili eserlerinden biri olarak kabul edilir.",
+            },
+            {
+              id: "guernica",
+              baslik: "Guernica",
+              sanatci: "Pablo Picasso",
+              tarih: "1937",
+              resim:
+                "https://upload.wikimedia.org/wikipedia/en/7/74/PicassoGuernica.jpg",
+              tarihce:
+                "Guernica, Picasso'nun İspanya İç Savaşı sırasında Nazi Almanyası'nın Guernica şehrini bombalaması üzerine yaptığı güçlü bir anti-savaş eseridir. Siyah, beyaz ve gri tonlarında yapılan eser, savaşın dehşetini ve acısını dramatik bir şekilde yansıtır. Modern sanatın en önemli politik eserlerinden biri olarak kabul edilir ve barışın sembolü haline gelmiştir.",
+            },
+            {
+              id: "ciglik",
+              baslik: "Çığlık",
+              sanatci: "Edvard Munch",
+              tarih: "1893",
+              resim:
+                "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Edvard_Munch%2C_1893%2C_The_Scream%2C_oil%2C_tempera_and_pastel_on_cardboard%2C_91_x_73_cm%2C_National_Gallery_of_Norway.jpg/1280px-Edvard_Munch%2C_1893%2C_The_Scream%2C_oil%2C_tempera_and_pastel_on_cardboard%2C_91_x_73_cm%2C_National_Gallery_of_Norway.jpg",
+              tarihce:
+                "Çığlık, Edvard Munch'un en ünlü eseridir ve ekspresyonist sanatın simgesi haline gelmiştir. Eser, modern insanın varoluşsal kaygısını ve yalnızlığını güçlü bir şekilde ifade eder. Dalgalı çizgiler ve yoğun renkler kullanılarak yapılan eser, sanatçının iç dünyasındaki huzursuzluğu ve toplumsal değişimlerin yarattığı stresi yansıtır.",
+            },
+            {
+              id: "son-aksam-yemegi",
+              baslik: "Son Akşam Yemeği",
+              sanatci: "Leonardo da Vinci",
+              tarih: "1495-1498",
+              resim:
+                "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/%C3%9Altima_Cena_-_Da_Vinci_5.jpg/1280px-%C3%9Altima_Cena_-_Da_Vinci_5.jpg",
+              tarihce:
+                "Son Akşam Yemeği, Leonardo da Vinci'nin Milano'daki Santa Maria delle Grazie manastırının yemek salonunda yaptığı fresk eseridir. İsa'nın havarileriyle son akşam yemeğini yediği anı tasvir eder. Perspektif kullanımı ve karakterlerin duygusal ifadeleri ile Rönesans sanatının en önemli eserlerinden biri olarak kabul edilir.",
+            },
+            {
+              id: "venus-dogusu",
+              baslik: "Venüs'ün Doğuşu",
+              sanatci: "Sandro Botticelli",
+              tarih: "1485",
+              resim:
+                "https://upload.wikimedia.org/wikipedia/commons/c/c5/Sandro_Botticelli_-_La_nascita_di_Venere_-_Google_Art_ProjectFXD.jpg",
+              tarihce:
+                "Venüs'ün Doğuşu, Botticelli'nin en ünlü eserlerinden biridir. Antik Yunan mitolojisinden esinlenen eser, güzellik tanrıçası Venüs'ün deniz köpüğünden doğuşunu tasvir eder. Rönesans döneminin en güzel eserlerinden biri olarak kabul edilir ve klasik mitolojinin yeniden canlandırılmasının simgesi haline gelmiştir.",
+            },
+          ];
+
+          // Resim detay sayfasına yönlendirme fonksiyonu
+          $scope.resimDetayGoster = function (resim) {
+            window.location.href = "resim-detay.html?id=" + resim.id;
+          };
+
+          $scope.geriDon = function () {
+            window.location.href = "sanat-kategoriler.html";
+          };
+
+          $scope.scrollToTop = function () {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          };
+        });
+    </script>
+  </body>
+</html>

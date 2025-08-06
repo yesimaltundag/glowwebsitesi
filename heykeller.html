@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="tr" ng-app="GirisApp">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ünlü Heykeller - GLOW</title>
+    <link rel="stylesheet" href="assets/css/style.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="assets/js/app.js"></script>
+    <style>
+      .heykel-container {
+        max-width: 100%;
+        margin: 40px auto;
+        padding: 32px 40px;
+        background: rgba(255, 255, 255, 0.92);
+        border-radius: 18px;
+        box-shadow: 0 8px 32px rgba(124, 92, 74, 0.1);
+        backdrop-filter: blur(10px);
+        position: relative;
+        width: 100%;
+      }
+      .heykel-header {
+        text-align: center;
+        margin-bottom: 40px;
+      }
+      .heykel-baslik {
+        color: #7c5c4a;
+        font-size: 2.5rem;
+        font-weight: 700;
+        letter-spacing: 2px;
+        margin-bottom: 16px;
+        text-shadow: 0 2px 4px rgba(124, 92, 74, 0.1);
+      }
+      .heykel-aciklama {
+        color: #b48a78;
+        font-size: 1.1rem;
+        font-weight: 500;
+        max-width: 600px;
+        margin: 0 auto;
+        line-height: 1.6;
+      }
+      .heykel-icon {
+        font-size: 4rem;
+        margin-bottom: 20px;
+        display: block;
+        filter: drop-shadow(0 4px 8px rgba(124, 92, 74, 0.3));
+      }
+      .heykel-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 32px;
+        margin-top: 32px;
+      }
+      .heykel-card {
+        background: linear-gradient(135deg, #f8e0e1 60%, #e2d9d0 100%);
+        border-radius: 16px;
+        box-shadow: 0 4px 16px rgba(180, 138, 120, 0.08);
+        padding: 32px;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        min-height: 400px;
+      }
+      .heykel-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 32px rgba(180, 138, 120, 0.2);
+      }
+      .heykel-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #b48a78, #e2d9d0);
+      }
+      .heykel-fotograf {
+        width: 100%;
+        height: 200px;
+        border-radius: 12px;
+        object-fit: cover;
+        box-shadow: 0 4px 12px rgba(124, 92, 74, 0.2);
+        flex-shrink: 0;
+        transition: transform 0.3s ease;
+      }
+      .heykel-card:hover .heykel-fotograf {
+        transform: scale(1.02);
+      }
+      .heykel-bilgi {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+      .heykel-baslik-card {
+        color: #7c5c4a;
+        font-size: 1.3rem;
+        font-weight: 700;
+        margin-bottom: 8px;
+        line-height: 1.3;
+      }
+      .heykel-sanatci {
+        color: #b48a78;
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 8px;
+      }
+      .heykel-yil {
+        color: #b48a78;
+        font-size: 0.9rem;
+        font-weight: 500;
+        margin-bottom: 12px;
+      }
+      .heykel-ozellikler {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      .heykel-tag {
+        background: rgba(180, 138, 120, 0.15);
+        color: #7c5c4a;
+        padding: 4px 10px;
+        border-radius: 15px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        border: 1px solid rgba(180, 138, 120, 0.2);
+      }
+      .heykel-tarihce {
+        color: #b48a78;
+        font-size: 0.95rem;
+        font-weight: 500;
+        line-height: 1.6;
+        margin-top: 8px;
+        text-align: justify;
+      }
+      .geri-btn {
+        background: linear-gradient(135deg, #e2d9d0, #b48a78);
+        color: #7c5c4a;
+        border: none;
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s;
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        z-index: 1000;
+        box-shadow: 0 4px 12px rgba(124, 92, 74, 0.2);
+      }
+      .geri-btn:hover {
+        background: linear-gradient(135deg, #b48a78, #e2d9d0);
+        color: #fff;
+        transform: scale(1.1);
+      }
+
+      @media (max-width: 768px) {
+        .heykel-container {
+          padding: 20px;
+          margin: 20px;
+        }
+        .heykel-baslik {
+          font-size: 2rem;
+        }
+        .heykel-grid {
+          grid-template-columns: 1fr;
+          gap: 24px;
+        }
+        .heykel-card {
+          padding: 24px;
+          min-height: 350px;
+        }
+        .heykel-fotograf {
+          height: 150px;
+        }
+        .geri-btn {
+          width: 45px;
+          height: 45px;
+          font-size: 18px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <ng-include src="'components/header.html'"></ng-include>
+    <main class="main-content">
+      <div class="heykel-container" ng-controller="HeykellerController">
+        <button
+          class="geri-btn"
+          ng-click="geriDon()"
+          title="Sanat Kategorileri'ne Dön"
+        >
+          ←
+        </button>
+        <div class="heykel-header">
+          <span class="heykel-icon">🗿</span>
+          <h1 class="heykel-baslik">Ünlü Heykeller</h1>
+          <p class="heykel-aciklama">
+            Dünya sanat tarihinin en önemli heykellerini keşfet! Her heykel
+            kendine özgü hikayesi ve sanatsal değeriyle tarihe damga vurmuş.
+          </p>
+        </div>
+        <div class="heykel-grid">
+          <div
+            class="heykel-card"
+            ng-repeat="heykel in heykeller"
+            ng-click="heykelSec(heykel)"
+          >
+            <img
+              class="heykel-fotograf"
+              ng-src="{{heykel.fotograf}}"
+              alt="{{heykel.baslik}}"
+              onerror="this.src='https://via.placeholder.com/400x200/7c5c4a/ffffff?text=🗿'"
+            />
+            <div class="heykel-bilgi">
+              <h3 class="heykel-baslik-card">{{heykel.baslik}}</h3>
+              <p class="heykel-sanatci">{{heykel.sanatci}}</p>
+              <p class="heykel-yil">{{heykel.yil}}</p>
+              <div class="heykel-ozellikler">
+                <span
+                  class="heykel-tag"
+                  ng-repeat="ozellik in heykel.ozellikler"
+                  >{{ozellik}}</span
+                >
+              </div>
+              <p class="heykel-tarihce">{{heykel.tarihce}}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <ng-include src="'components/footer.html'"></ng-include>
+    <button id="scrollTopBtn" title="Yukarı Çık" ng-click="scrollToTop()">
+      ↑
+    </button>
+    <script>
+      angular
+        .module("GirisApp")
+        .controller("HeykellerController", function ($scope) {
+          $scope.kullanici = JSON.parse(
+            localStorage.getItem("girisYapan") || "null"
+          );
+
+          $scope.heykeller = [
+            {
+              baslik: "David",
+              sanatci: "Michelangelo",
+              yil: "1501-1504",
+              ozellikler: ["Mermer", "Rönesans", "İtalya"],
+              fotograf:
+                "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=200&fit=crop&crop=center",
+              tarihce:
+                "Michelangelo'nun en ünlü eseri olan David heykeli, İncil'deki Davut ve Golyat hikayesinden esinlenilmiştir. 5.17 metre yüksekliğindeki bu mermer heykel, Rönesans sanatının en önemli başarılarından biri olarak kabul edilir. Heykel, Davut'un Golyat'ı taşla vurmadan önceki anını, yoğun konsantrasyon ve kararlılık haliyle tasvir eder.",
+            },
+            {
+              baslik: "Venüs de Milo",
+              sanatci: "Aleksandros",
+              yil: "MÖ 130-100",
+              ozellikler: ["Mermer", "Antik Yunan", "Louvre"],
+              fotograf:
+                "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=200&fit=crop&crop=center",
+              tarihce:
+                "Antik Yunan'ın en ünlü heykellerinden biri olan Venüs de Milo, 1820'de Yunanistan'ın Milos adasında keşfedilmiştir. Heykel, güzellik ve aşk tanrıçası Afrodit'i tasvir eder. Kolları eksik olmasına rağmen, zarif duruşu ve idealize edilmiş güzelliği ile dünya sanat tarihinin en değerli eserlerinden biri haline gelmiştir.",
+            },
+            {
+              baslik: "Düşünen Adam",
+              sanatci: "Auguste Rodin",
+              yil: "1880",
+              ozellikler: ["Bronz", "Modern", "Fransa"],
+              fotograf:
+                "https://images.unsplash.com/photo-1516280440614-37939bbacd81?w=400&h=200&fit=crop&crop=center",
+              tarihce:
+                "Auguste Rodin'in en tanınmış eseri olan Düşünen Adam, derin düşünce halindeki çıplak bir adamı tasvir eder. Heykel, Dante'nin İlahi Komedya'sındaki 'Cehennem Kapısı' adlı büyük projesinin bir parçası olarak tasarlanmıştır. Modern heykel sanatının en önemli örneklerinden biri olarak kabul edilir ve insan düşüncesinin evrensel sembolü haline gelmiştir.",
+            },
+            {
+              baslik: "Özgürlük Heykeli",
+              sanatci: "Frédéric Auguste Bartholdi",
+              yil: "1886",
+              ozellikler: ["Bakır", "Neoklasik", "ABD"],
+              fotograf:
+                "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&h=200&fit=crop&crop=center",
+              tarihce:
+                "Fransa tarafından ABD'ye hediye edilen Özgürlük Heykeli, 1886'da New York Limanı'nda açılmıştır. 93 metre yüksekliğindeki heykel, özgürlük tanrıçası Libertas'ı tasvir eder. Sağ elinde meşale, sol elinde ise ABD Bağımsızlık Bildirgesi'ni tutar. Dünya çapında özgürlük ve demokrasinin sembolü haline gelmiştir.",
+            },
+            {
+              baslik: "Pieta",
+              sanatci: "Michelangelo",
+              yil: "1498-1499",
+              ozellikler: ["Mermer", "Rönesans", "Vatikan"],
+              fotograf:
+                "https://images.unsplash.com/photo-1516280440614-37939bbacd81?w=400&h=200&fit=crop&crop=center",
+              tarihce:
+                "Michelangelo'nun 24 yaşında tamamladığı Pieta, Hz. İsa'nın çarmıhtan indirildikten sonra annesi Meryem'in kucağında yatışını tasvir eder. Vatikan'daki Aziz Petrus Bazilikası'nda bulunan bu eser, Rönesans sanatının en etkileyici örneklerinden biridir. Mermerin yumuşak dokusu ve detaylı işçiliği ile dikkat çeker.",
+            },
+            {
+              baslik: "Nike (Zafer Tanrıçası)",
+              sanatci: "Bilinmeyen",
+              yil: "MÖ 190",
+              ozellikler: ["Mermer", "Helenistik", "Louvre"],
+              fotograf:
+                "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=200&fit=crop&crop=center",
+              tarihce:
+                "Helenistik dönemin en önemli heykellerinden biri olan Nike (Zafer Tanrıçası), 1863'te Yunanistan'ın Samothrace adasında keşfedilmiştir. Heykel, zafer tanrıçası Nike'yi kanatları açık, geminin pruvasında dururken tasvir eder. Dinamik duruşu ve zarif kanatları ile Helenistik sanatın en etkileyici örneklerinden biridir.",
+            },
+          ];
+
+          $scope.heykelSec = function (heykel) {
+            // Heykel seçildiğinde yapılacak işlemler
+            alert(
+              heykel.baslik +
+                " - " +
+                heykel.sanatci +
+                " seçildi! Bu özellik yakında eklenecek."
+            );
+          };
+
+          $scope.geriDon = function () {
+            window.location.href = "sanat-kategoriler.html";
+          };
+
+          $scope.scrollToTop = function () {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          };
+        });
+    </script>
+  </body>
+</html>

@@ -13,10 +13,13 @@ header("Access-Control-Allow-Headers: Content-Type");
 $baglanti = new mysqli("localhost", "root", "", "basit_sistem");
 
 if ($baglanti->connect_error) {
+    error_log("Veritabanı bağlantı hatası: " . $baglanti->connect_error);
     http_response_code(500);
-    echo json_encode(["success" => false, "message" => "Veritabanına bağlanılamadı."]);
+    echo json_encode(["success" => false, "message" => "Veritabanına bağlanılamadı: " . $baglanti->connect_error]);
     exit;
 }
+
+error_log("Veritabanı bağlantısı başarılı");
 
 // Film API endpoint'leri
 if (isset($_GET["films"])) {
@@ -199,12 +202,26 @@ if ($_SERVER["REQUEST_METHOD"] === "GET" && isset($_GET["anime"])) {
     }
 }
 
-// GET: Listeleme (varsayılan) - Sadece belirli parametreler yoksa
-if ($_SERVER["REQUEST_METHOD"] === "GET" && !isset($_GET["yorum"]) && !isset($_GET["films"]) && !isset($_GET["tiyatro"]) && !isset($_GET["belgesel"]) && !isset($_GET["anime"]) && !isset($_GET["son_yorumlar"]) && !isset($_GET["tum_yorumlar"])) {
-    $sonuc = $baglanti->query("SELECT * FROM kisiler ORDER BY id ASC");
+// GET: Kullanıcıları getir
+if ($_SERVER["REQUEST_METHOD"] === "GET" && isset($_GET["kisiler"])) {
+    header("Content-Type: application/json");
+    error_log("Kisiler endpoint çağrıldı");
+    
+    $sonuc = $baglanti->query("SELECT id, username, adsoyad, e_posta, rol FROM kisiler ORDER BY id ASC");
     $kisiler = [];
     while ($satir = $sonuc->fetch_assoc()) {
-        unset($satir["sifre"]); // Güvenlik: şifreyi göstermiyoruz
+        $kisiler[] = $satir;
+    }
+    error_log("Bulunan kullanıcı sayısı: " . count($kisiler));
+    echo json_encode($kisiler);
+    exit;
+}
+
+// GET: Listeleme (varsayılan) - Sadece belirli parametreler yoksa
+if ($_SERVER["REQUEST_METHOD"] === "GET" && !isset($_GET["yorum"]) && !isset($_GET["films"]) && !isset($_GET["tiyatro"]) && !isset($_GET["belgesel"]) && !isset($_GET["anime"]) && !isset($_GET["son_yorumlar"]) && !isset($_GET["tum_yorumlar"]) && !isset($_GET["kisiler"])) {
+    $sonuc = $baglanti->query("SELECT id, username, adsoyad, e_posta, rol FROM kisiler ORDER BY id ASC");
+    $kisiler = [];
+    while ($satir = $sonuc->fetch_assoc()) {
         $kisiler[] = $satir;
     }
     echo json_encode($kisiler);
@@ -275,6 +292,106 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_GET["yorum"])) {
     exit;
 }
 
+// POST: İletişim mesajı
+if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_GET["iletisim"])) {
+    error_log("İletişim endpoint'i çağrıldı");
+    
+    try {
+        // JSON header'ı ekle
+        header('Content-Type: application/json');
+        
+        $girdi = json_decode(file_get_contents("php://input"), true);
+
+        // Debug: Gelen veriyi logla
+        error_log("İletişim verisi: " . json_encode($girdi));
+
+    // Parametre kontrolü
+    if (!isset($girdi["username"]) || empty($girdi["username"])) {
+        http_response_code(400);
+        echo json_encode(["success" => false, "message" => "Ad soyad alanı boş bırakılamaz."]);
+        exit;
+    }
+    
+    if (!isset($girdi["email"]) || empty($girdi["email"])) {
+        http_response_code(400);
+        echo json_encode(["success" => false, "message" => "E-posta alanı boş bırakılamaz."]);
+        exit;
+    }
+
+    if (!isset($girdi["message"]) || empty($girdi["message"])) {
+        http_response_code(400);
+        echo json_encode(["success" => false, "message" => "Mesaj alanı boş bırakılamaz."]);
+        exit;
+    }
+
+    if (strlen($girdi["message"]) > 300) {
+        http_response_code(400);
+        echo json_encode(["success" => false, "message" => "Mesaj 300 karakterden uzun olamaz."]);
+        exit;
+    }
+
+    $username = $baglanti->real_escape_string($girdi["username"]);
+    $email = $baglanti->real_escape_string($girdi["email"]);
+    $message = $baglanti->real_escape_string($girdi["message"]);
+
+    // Önce tablonun var olup olmadığını kontrol et
+    $table_check = $baglanti->query("SHOW TABLES LIKE 'iletisim_formu'");
+    if (!$table_check) {
+        error_log("Tablo kontrol hatası: " . $baglanti->error);
+        http_response_code(500);
+        echo json_encode(["success" => false, "message" => "Tablo kontrolü başarısız: " . $baglanti->error]);
+        exit;
+    }
+    
+    if ($table_check->num_rows === 0) {
+        error_log("iletisim_formu tablosu bulunamadı");
+        http_response_code(500);
+        echo json_encode(["success" => false, "message" => "iletisim_formu tablosu bulunamadı."]);
+        exit;
+    }
+
+    error_log("iletisim_formu tablosu bulundu");
+
+    // Tablo yapısını kontrol et
+    $column_check = $baglanti->query("SHOW COLUMNS FROM iletisim_formu LIKE 'adisoyadi'");
+    if (!$column_check) {
+        error_log("Sütun kontrol hatası: " . $baglanti->error);
+        http_response_code(500);
+        echo json_encode(["success" => false, "message" => "Sütun kontrolü başarısız: " . $baglanti->error]);
+        exit;
+    }
+    
+    if ($column_check->num_rows === 0) {
+        error_log("adisoyadi sütunu bulunamadı");
+        http_response_code(500);
+        echo json_encode(["success" => false, "message" => "adisoyadi sütunu bulunamadı."]);
+        exit;
+    }
+
+    error_log("adisoyadi sütunu bulundu");
+
+    // iletisim_formu tablosuna kayıt
+    $insert_sql = "INSERT INTO iletisim_formu (adisoyadi, eposta, mesaj, konu) 
+                    VALUES ('$username', '$email', '$message', 'İletişim Formu')";
+    
+    if ($baglanti->query($insert_sql)) {
+        echo json_encode(["success" => true, "message" => "Mesaj başarıyla gönderildi."]);
+    } else {
+        http_response_code(500);
+        $error_message = "Mesaj gönderilemedi";
+        if ($baglanti->error) {
+            $error_message .= ": " . $baglanti->error;
+        }
+        echo json_encode(["success" => false, "message" => $error_message]);
+    }
+    } catch (Exception $e) {
+        error_log("İletişim hatası: " . $e->getMessage());
+        http_response_code(500);
+        echo json_encode(["success" => false, "message" => "Sunucu hatası: " . $e->getMessage()]);
+    }
+    exit;
+}
+
 // POST: Yeni kayıt
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_GET["kayit"])) {
     $girdi = json_decode(file_get_contents("php://input"), true);
@@ -292,8 +409,15 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_GET["kayit"])) {
         exit;
     }
 
+    if (!isset($girdi["eposta"]) || empty($girdi["eposta"])) {
+        http_response_code(400);
+        echo json_encode(["success" => false, "message" => "E-posta alanı boş bırakılamaz."]);
+        exit;
+    }
+
     $username = $baglanti->real_escape_string($girdi["username"]);
     $adsoyad = $baglanti->real_escape_string($girdi["adsoyad"]);
+    $eposta = $baglanti->real_escape_string($girdi["eposta"]);
     if (!isset($girdi["sifre"]) || empty($girdi["sifre"])) {
         http_response_code(400);
         echo json_encode(["success" => false, "message" => "Şifre alanı boş bırakılamaz."]);
@@ -313,8 +437,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_GET["kayit"])) {
         }
     }
 
-    $sql = "INSERT INTO kisiler (username, adsoyad, sifre, rol) 
-            VALUES ('$username', '$adsoyad', '$sifre', '$rol')";
+    $sql = "INSERT INTO kisiler (username, adsoyad, sifre, e_posta, rol) 
+            VALUES ('$username', '$adsoyad', '$sifre', '$eposta', '$rol')";
 
     if ($baglanti->query($sql)) {
         echo json_encode(["success" => true, "message" => "Kayıt başarıyla eklendi."]);
@@ -424,6 +548,7 @@ if ($_SERVER["REQUEST_METHOD"] === "PUT" && !isset($_GET["films"])) {
     $id = (int)$girdi["id"];
     $username = $baglanti->real_escape_string($girdi["username"]);
     $adsoyad = $baglanti->real_escape_string($girdi["adsoyad"]);
+    $e_posta = isset($girdi["e_posta"]) ? $baglanti->real_escape_string($girdi["e_posta"]) : "";
     $rol = isset($girdi["rol"]) ? $baglanti->real_escape_string($girdi["rol"]) : "kullanici";
 
     if ($rol === "admin") {
@@ -439,11 +564,11 @@ if ($_SERVER["REQUEST_METHOD"] === "PUT" && !isset($_GET["films"])) {
     if (isset($girdi["sifre"]) && !empty($girdi["sifre"])) {
         $sifre = password_hash($girdi["sifre"], PASSWORD_DEFAULT);
         $sql = "UPDATE kisiler 
-                SET username='$username', adsoyad='$adsoyad', sifre='$sifre', rol='$rol' 
+                SET username='$username', adsoyad='$adsoyad', e_posta='$e_posta', sifre='$sifre', rol='$rol' 
                 WHERE id=$id";
     } else {
         $sql = "UPDATE kisiler 
-                SET username='$username', adsoyad='$adsoyad', rol='$rol' 
+                SET username='$username', adsoyad='$adsoyad', e_posta='$e_posta', rol='$rol' 
                 WHERE id=$id";
     }
 
@@ -756,6 +881,104 @@ if ($_SERVER["REQUEST_METHOD"] === "GET" && isset($_GET["tiyatro"])) {
     
     error_log("Bulunan tiyatro sayısı: " . count($tiyatrolar));
     echo json_encode($tiyatrolar);
+    exit;
+}
+
+// MESAJ YÖNETİMİ ENDPOINT'LERİ
+// GET: Mesajları getir
+if ($_SERVER["REQUEST_METHOD"] === "GET" && isset($_GET["mesajlar"])) {
+    header("Content-Type: application/json");
+    
+    error_log("=== MESAJLAR ENDPOINT BAŞLADI ===");
+    error_log("Mesajlar endpoint çağrıldı");
+    
+    // Tabloların varlığını kontrol et
+    $tablo_kontrol = $baglanti->query("SHOW TABLES LIKE 'iletisim_formu'");
+    error_log("Tablo kontrol sonucu: " . $tablo_kontrol->num_rows);
+    
+    if ($tablo_kontrol->num_rows == 0) {
+        error_log("❌ iletisim_formu tablosu bulunamadı");
+        echo json_encode([]);
+        exit;
+    }
+    
+    error_log("✅ iletisim_formu tablosu bulundu");
+    
+    // Tablo yapısını kontrol et
+    $sutun_kontrol = $baglanti->query("SHOW COLUMNS FROM iletisim_formu");
+    error_log("Sütun kontrol sonucu: " . $sutun_kontrol->num_rows);
+    
+    $sutunlar = [];
+    while ($sutun = $sutun_kontrol->fetch_assoc()) {
+        $sutunlar[] = $sutun['Field'];
+    }
+    error_log("📋 Tablo sütunları: " . json_encode($sutunlar));
+    
+    $sql = "SELECT * FROM iletisim_formu ORDER BY id DESC";
+    error_log("SQL sorgusu: " . $sql);
+    
+    $sonuc = $baglanti->query($sql);
+    
+    if (!$sonuc) {
+        error_log("❌ SQL hatası: " . $baglanti->error);
+        echo json_encode([]);
+        exit;
+    }
+    
+    error_log("✅ SQL sorgusu başarılı");
+    error_log("📊 Bulunan satır sayısı: " . $sonuc->num_rows);
+    
+    $mesajlar = [];
+    while ($satir = $sonuc->fetch_assoc()) {
+        $mesajlar[] = $satir;
+        error_log("📝 Mesaj verisi: " . json_encode($satir));
+    }
+    
+    error_log("✅ Bulunan mesaj sayısı: " . count($mesajlar));
+    error_log("📤 JSON yanıtı: " . json_encode($mesajlar));
+    echo json_encode($mesajlar);
+    error_log("=== MESAJLAR ENDPOINT BİTTİ ===");
+    exit;
+}
+
+// DELETE: Mesaj sil
+if ($_SERVER["REQUEST_METHOD"] === "DELETE" && isset($_GET["mesaj"])) {
+    header("Content-Type: application/json");
+    error_log("=== MESAJ SİLME BAŞLADI ===");
+    
+    $mesaj_id = (int)$_GET["id"];
+    error_log("Silinecek mesaj ID: $mesaj_id");
+    
+    // Mesajın var olup olmadığını kontrol et
+    $kontrol_sql = "SELECT id FROM iletisim_formu WHERE id = $mesaj_id";
+    error_log("Kontrol SQL: " . $kontrol_sql);
+    $kontrol = $baglanti->query($kontrol_sql);
+    
+    if ($kontrol && $kontrol->num_rows > 0) {
+        error_log("✅ Mesaj bulundu, silme işlemi başlıyor");
+        
+        // Silme işlemi
+        $sql = "DELETE FROM iletisim_formu WHERE id = $mesaj_id";
+        error_log("Silme SQL: " . $sql);
+        
+        $silme_sonuc = $baglanti->query($sql);
+        error_log("Silme sonucu: " . ($silme_sonuc ? "true" : "false"));
+        error_log("Etkilenen satır sayısı: " . $baglanti->affected_rows);
+        
+        if ($silme_sonuc && $baglanti->affected_rows > 0) {
+            error_log("✅ Mesaj silindi");
+            echo json_encode(["success" => true, "message" => "Mesaj başarıyla silindi"]);
+        } else {
+            error_log("❌ Mesaj silinirken hata: " . $baglanti->error);
+            http_response_code(500);
+            echo json_encode(["success" => false, "message" => "Mesaj silinirken hata: " . $baglanti->error]);
+        }
+    } else {
+        error_log("❌ Mesaj bulunamadı (ID: $mesaj_id)");
+        http_response_code(404);
+        echo json_encode(["success" => false, "message" => "Mesaj bulunamadı"]);
+    }
+    error_log("=== MESAJ SİLME BİTTİ ===");
     exit;
 }
 

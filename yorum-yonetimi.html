@@ -15,9 +15,10 @@
     <!-- Page Specific CSS -->
     <style>
       .admin-container {
-        max-width: 1400px;
+        max-width: 100%;
         margin: 0 auto;
-        padding: 20px;
+        padding: 20px 40px;
+        width: 100%;
       }
 
       .admin-header {
@@ -28,6 +29,7 @@
         border-radius: 16px;
         box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
         backdrop-filter: blur(10px);
+        position: relative;
       }
 
       .admin-header h1 {
@@ -297,6 +299,33 @@
         gap: 1px;
       }
 
+      .geri-btn {
+        background: linear-gradient(135deg, #e2d9d0, #b48a78);
+        color: #7c5c4a;
+        border: none;
+        border-radius: 50%;
+        width: 45px;
+        height: 45px;
+        padding: 0;
+        font-size: 18px;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s;
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        margin: 0;
+      }
+
+      .geri-btn:hover {
+        background: linear-gradient(135deg, #b48a78, #e2d9d0);
+        color: #fff;
+        transform: scale(1.08);
+      }
+
       .yildiz {
         width: 20px;
         height: 20px;
@@ -344,6 +373,29 @@
       .yildiz.beyaz::before {
         filter: drop-shadow(0 0 3px rgba(0, 0, 0, 0.3));
       }
+      .icerik-link {
+        color: #7c5c4a;
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        padding: 4px 8px;
+        border-radius: 6px;
+        display: inline-block;
+      }
+
+      .icerik-link:hover {
+        color: #b48a78;
+        background: rgba(180, 138, 120, 0.1);
+        text-decoration: underline;
+        transform: translateY(-1px);
+      }
+      @media (max-width: 600px) {
+        .admin-container {
+          padding: 20px;
+          max-width: 100%;
+        }
+      }
     </style>
   </head>
   <body ng-controller="MainController">
@@ -355,7 +407,7 @@
       <div class="admin-container" ng-controller="YorumYonetimiController">
         <!-- Yetki kontrolü -->
         <div
-          ng-if="!kullanici || kullanici.rol !== 'Yönetici'"
+          ng-if="!kullanici || (kullanici.rol !== 'admin' && kullanici.rol !== 'Yönetici')"
           class="access-denied"
         >
           Bu sayfaya erişim yetkiniz yok. Lütfen
@@ -364,15 +416,20 @@
         </div>
 
         <!-- Yönetici içeriği -->
-        <div ng-if="kullanici && kullanici.rol === 'Yönetici'">
+        <div
+          ng-if="kullanici && (kullanici.rol === 'admin' || kullanici.rol === 'Yönetici')"
+        >
           <div class="admin-header">
             <h1>💬 Yorum Yönetimi</h1>
-            
 
             <!-- Yönetim Butonları -->
             <div class="admin-buttons">
-              <button class="admin-btn back-btn" ng-click="listeSayfasinaGit()">
-                ← Kullanıcı Listesine Dön
+              <button
+                class="geri-btn"
+                ng-click="listeSayfasinaGit()"
+                title="Kullanıcı Listesine Dön"
+              >
+                ←
               </button>
             </div>
           </div>
@@ -480,7 +537,16 @@
                       {{yorum.tur | uppercase}}
                     </span>
                   </td>
-                  <td>{{yorum.icerik_adi}}</td>
+                  <td>
+                    <a
+                      href="javascript:void(0)"
+                      ng-click="icerikSayfasinaGit(yorum.icerik_adi, yorum.tur, yorum.icerik_id)"
+                      class="icerik-link"
+                      title="İçeriğe git"
+                    >
+                      {{yorum.icerik_adi}}
+                    </a>
+                  </td>
                   <td class="yorum-text">{{yorum.yorum}}</td>
                   <td>
                     <span ng-bind-html="yorum.puan | yildizSistemi"></span>

@@ -9,14 +9,15 @@
     <script src="assets/js/app.js"></script>
     <style>
       .detay-container {
-        max-width: 1200px;
+        max-width: 100%;
         margin: 40px auto;
-        padding: 40px;
+        padding: 40px 40px;
         background: rgba(255, 255, 255, 0.95);
         border-radius: 20px;
         box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
         backdrop-filter: blur(15px);
         position: relative;
+        width: 100%;
       }
 
       .detay-header {
@@ -137,9 +138,10 @@
         color: #7c5c4a;
         border: none;
         border-radius: 50%;
-        width: 50px;
-        height: 50px;
-        font-size: 20px;
+        width: 45px;
+        height: 45px;
+        padding: 0;
+        font-size: 18px;
         font-weight: 600;
         cursor: pointer;
         display: flex;
@@ -148,7 +150,8 @@
         transition: all 0.3s;
         position: absolute;
         top: 20px;
-        right: 20px;
+        left: 20px;
+        margin: 0;
       }
 
       .geri-btn:hover {
@@ -195,6 +198,12 @@
           padding: 6px 12px;
         }
       }
+      @media (max-width: 600px) {
+        .detay-container {
+          padding: 20px;
+          max-width: 100%;
+        }
+      }
     </style>
   </head>
   <body ng-controller="TiyatroDetayController">
@@ -222,7 +231,7 @@
             <div class="detay-bilgiler">
               <h1 class="detay-baslik">{{ tiyatroEseri.eser_adi }}</h1>
               <div class="detay-yazar">{{ tiyatroEseri.yazar }}</div>
-              <div class="detay-puan">⭐ {{ tiyatroEseri.puan }}/10</div>
+              <div class="detay-puan">{{ tiyatroEseri.puan }}/10</div>
 
               <div class="detay-ozellikler">
                 <div class="ozellik-item">{{ tiyatroEseri.yil }}</div>
@@ -295,8 +304,7 @@
                     ng-class="{ 'secili': yeniYorum.puan >= i }"
                     class="puan-yildiz"
                     style="cursor: pointer"
-                    >⭐</span
-                  >
+                  ></span>
                 </div>
                 <div class="puan-text">{{ yeniYorum.puan || 0 }}/10</div>
               </div>
@@ -307,30 +315,6 @@
                 ng-disabled="!yeniYorum.yorum || yeniYorum.yorum.length < 10 || !yeniYorum.puan || yeniYorum.puan < 1"
               >
                 Yorum Gönder
-              </button>
-
-              <!-- Test Butonu -->
-              <button
-                style="margin-left: 10px; background: #e74c3c"
-                ng-click="testYorumEkle()"
-              >
-                Test Yorum Ekle
-              </button>
-
-              <!-- Debug Butonu -->
-              <button
-                style="margin-left: 10px; background: #3498db"
-                ng-click="debugYorumlar()"
-              >
-                Debug Yorumlar
-              </button>
-
-              <!-- Manuel Test Butonu -->
-              <button
-                style="margin-left: 10px; background: #27ae60"
-                ng-click="manuelTestYorumlar()"
-              >
-                Manuel Test
               </button>
             </div>
 

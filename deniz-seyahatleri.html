@@ -9,9 +9,10 @@
     <script src="assets/js/app.js"></script>
     <style>
       .deniz-container {
-        max-width: 1200px;
+        max-width: 100%;
         margin: 40px auto;
-        padding: 32px;
+        padding: 32px 40px;
+        width: 100%;
         background: rgba(255, 255, 255, 0.92);
         border-radius: 18px;
         box-shadow: 0 8px 32px rgba(124, 92, 74, 0.1);
@@ -118,38 +119,24 @@
         margin-bottom: 20px;
       }
 
-      .destinasyon-ozellikler {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-        margin-bottom: 20px;
-      }
-
-      .ozellik-tag {
-        background: rgba(74, 144, 226, 0.2);
-        color: #2c5aa0;
-        padding: 4px 12px;
-        border-radius: 20px;
-        font-size: 0.8rem;
-        font-weight: 500;
-      }
-
       .detay-btn {
-        background: linear-gradient(135deg, #4a90e2, #87ceeb);
-        color: white;
-        border: none;
-        border-radius: 25px;
-        padding: 10px 20px;
-        font-size: 0.9rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s;
-        width: 100%;
+        background: linear-gradient(135deg, #4a90e2, #87ceeb) !important;
+        color: white !important;
+        border: none !important;
+        border-radius: 10px !important;
+        padding: 8px !important;
+        font-size: 0.8rem !important;
+        font-weight: 600 !important;
+        cursor: pointer !important;
+        transition: all 0.3s !important;
+        width: auto !important;
+        margin: 0 auto !important;
+        display: block !important;
       }
 
       .detay-btn:hover {
-        background: linear-gradient(135deg, #87ceeb, #4a90e2);
-        transform: scale(1.02);
+        background: linear-gradient(135deg, #87ceeb, #4a90e2) !important;
+        transform: scale(1.02) !important;
       }
 
       .destinasyon-icon {
@@ -160,6 +147,7 @@
         .deniz-container {
           margin: 20px;
           padding: 20px;
+          max-width: 100%;
         }
 
         .page-title {
@@ -214,14 +202,6 @@
             <p class="destinasyon-deniz">{{destinasyon.deniz}}</p>
             <p class="destinasyon-aciklama">{{destinasyon.kisaAciklama}}</p>
 
-            <div class="destinasyon-ozellikler">
-              <span
-                class="ozellik-tag"
-                ng-repeat="ozellik in destinasyon.ozellikler"
-                >{{ozellik}}</span
-              >
-            </div>
-
             <button class="detay-btn">Detayları Gör</button>
           </div>
         </div>
@@ -246,7 +226,6 @@
               icon: "🏝️",
               kisaAciklama:
                 "Turkuaz lagünlerin cenneti. Overwater bungalow'lar, mercan resifleri ve kristal berraklığındaki sular ile dünyanın en romantik deniz destinasyonu.",
-              ozellikler: ["Lüks", "Romantik", "Dalış", "Plaj"],
               tarih:
                 "M.Ö. 5. yüzyılda Budist keşişler tarafından keşfedilen Maldivler, 12. yüzyılda İslam'ı kabul etti. Günümüzde dünyanın en lüks deniz turizmi merkezi.",
               gorulecekYerler: [
@@ -281,7 +260,6 @@
               icon: "🌅",
               kisaAciklama:
                 "Mavi kubbelerin adası. Caldera manzarası, beyaz evleri ve gün batımı ile Yunan adalarının en romantik destinasyonu.",
-              ozellikler: ["Romantik", "Tarih", "Gün Batımı", "Şarap"],
               tarih:
                 "M.Ö. 1600 yılında volkanik patlama sonucu oluşan Santorini, antik Thera şehrinin kalıntılarını barındırır. Günümüzde dünyanın en popüler ada destinasyonu.",
               gorulecekYerler: [
@@ -316,7 +294,6 @@
               icon: "🏖️",
               kisaAciklama:
                 "Lagünün incisi. Overwater bungalow'lar, mercan resifleri ve dağ manzarası ile Fransız Polinezyası'nın en büyüleyici adası.",
-              ozellikler: ["Lüks", "Dalış", "Doğa", "Macera"],
               tarih:
                 "M.Ö. 4. yüzyılda Polinezyalılar tarafından yerleşilen Bora Bora, 18. yüzyılda Avrupalılar tarafından keşfedildi. Günümüzde dünyanın en lüks ada destinasyonu.",
               gorulecekYerler: [
@@ -351,7 +328,6 @@
               icon: "🏔️",
               kisaAciklama:
                 "İtalya'nın sahil incisi. Renkli evleri, limon bahçeleri ve muhteşem sahil yolu ile Akdeniz'in en güzel kıyı şeridi.",
-              ozellikler: ["Tarih", "Kültür", "Gastronomi", "Manzara"],
               tarih:
                 "M.S. 4. yüzyılda Roma döneminde kurulan Amalfi, Orta Çağ'da önemli bir deniz ticaret merkezi oldu. Günümüzde UNESCO Dünya Mirası Listesi'nde.",
               gorulecekYerler: [
@@ -386,7 +362,6 @@
               icon: "🌴",
               kisaAciklama:
                 "Granit adaların cenneti. Dev kaplumbağalar, tropik ormanlar ve el değmemiş plajları ile Afrika'nın en güzel ada grubu.",
-              ozellikler: ["Doğa", "Vahşi Yaşam", "Plaj", "Macera"],
               tarih:
                 "1502 yılında Portekizli Vasco da Gama tarafından keşfedilen Seychelles, 18. yüzyılda Fransız kolonisi oldu. 1976'da bağımsızlığını kazandı.",
               gorulecekYerler: [
@@ -421,7 +396,6 @@
               icon: "🐠",
               kisaAciklama:
                 "Dünyanın en büyük mercan resifi. Renkli mercanlar, tropik balıklar ve deniz yaşamı ile Avustralya'nın deniz cenneti.",
-              ozellikler: ["Dalış", "Doğa", "Vahşi Yaşam", "Macera"],
               tarih:
                 "M.Ö. 20.000 yıl önce oluşmaya başlayan Great Barrier Reef, dünyanın en büyük canlı organizması. 1981'de UNESCO Dünya Mirası Listesi'ne girdi.",
               gorulecekYerler: [
@@ -456,7 +430,6 @@
               icon: "🏰",
               kisaAciklama:
                 "Orta Çağ'ın incisi. Tarihi surları, kırmızı çatıları ve Adriyatik manzarası ile Hırvatistan'ın en güzel sahil şehri.",
-              ozellikler: ["Tarih", "Kültür", "Mimari", "Deniz"],
               tarih:
                 "7. yüzyılda kurulan Dubrovnik, Orta Çağ'da Ragusa Cumhuriyeti'nin başkenti oldu. 1979'da UNESCO Dünya Mirası Listesi'ne girdi.",
               gorulecekYerler: [
@@ -491,7 +464,6 @@
               icon: "🌺",
               kisaAciklama:
                 "Hawaii'nin büyüleyici adası. Haleakala volkanı, Road to Hana ve muhteşem plajları ile macera ve dinlenmenin buluştuğu yer.",
-              ozellikler: ["Macera", "Doğa", "Surf", "Kültür"],
               tarih:
                 "M.S. 1000 yıllarında Polinezyalılar tarafından yerleşilen Maui, 1778'de James Cook tarafından keşfedildi. 1959'da Hawaii'nin bir parçası oldu.",
               gorulecekYerler: [
@@ -526,7 +498,6 @@
               icon: "🏘️",
               kisaAciklama:
                 "Renkli evlerin sahil şeridi. Beş tarihi köy, yürüyüş yolları ve İtalyan Riviera'sının en güzel manzarası.",
-              ozellikler: ["Tarih", "Yürüyüş", "Gastronomi", "Manzara"],
               tarih:
                 "Orta Çağ'da kurulan Cinque Terre köyleri, 1997'de UNESCO Dünya Mirası Listesi'ne girdi. Geleneksel balıkçılık ve şarap üretimi ile tanınıyor.",
               gorulecekYerler: [
@@ -561,7 +532,6 @@
               icon: "🏊",
               kisaAciklama:
                 "Tayland'ın tropik cenneti. Maya Bay, kristal sular ve kireçtaşı kayaları ile dünyanın en güzel ada grubu.",
-              ozellikler: ["Tropik", "Dalış", "Plaj", "Macera"],
               tarih:
                 "1980'lerde keşfedilen Phi Phi Adaları, 2000'de \"The Beach\" filmi ile ünlendi. Günümüzde dünyanın en popüler ada destinasyonlarından biri.",
               gorulecekYerler: [

@@ -9,13 +9,14 @@
     <script src="assets/js/app.js"></script>
     <style>
       .kamp-container {
-        max-width: 1200px;
+        max-width: 100%;
         margin: 40px auto;
-        padding: 32px;
+        padding: 32px 40px;
         background: rgba(255, 255, 255, 0.92);
         border-radius: 18px;
         box-shadow: 0 8px 32px rgba(124, 92, 74, 0.1);
         backdrop-filter: blur(10px);
+        width: 100%;
       }
 
       .page-header {
@@ -118,38 +119,24 @@
         margin-bottom: 20px;
       }
 
-      .destinasyon-ozellikler {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-        margin-bottom: 20px;
-      }
-
-      .ozellik-tag {
-        background: rgba(76, 175, 80, 0.2);
-        color: #2e7d32;
-        padding: 4px 12px;
-        border-radius: 20px;
-        font-size: 0.8rem;
-        font-weight: 500;
-      }
-
       .detay-btn {
-        background: linear-gradient(135deg, #4caf50, #8bc34a);
-        color: white;
-        border: none;
-        border-radius: 25px;
-        padding: 10px 20px;
-        font-size: 0.9rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s;
-        width: 100%;
+        background: linear-gradient(135deg, #4caf50, #8bc34a) !important;
+        color: white !important;
+        border: none !important;
+        border-radius: 10px !important;
+        padding: 8px !important;
+        font-size: 0.8rem !important;
+        font-weight: 600 !important;
+        cursor: pointer !important;
+        transition: all 0.3s !important;
+        width: auto !important;
+        margin: 0 auto !important;
+        display: block !important;
       }
 
       .detay-btn:hover {
-        background: linear-gradient(135deg, #8bc34a, #4caf50);
-        transform: scale(1.02);
+        background: linear-gradient(135deg, #8bc34a, #4caf50) !important;
+        transform: scale(1.02) !important;
       }
 
       .destinasyon-icon {
@@ -177,6 +164,12 @@
           width: 40px;
           height: 40px;
           font-size: 16px;
+        }
+      }
+      @media (max-width: 600px) {
+        .kamp-container {
+          padding: 20px;
+          max-width: 100%;
         }
       }
     </style>
@@ -214,14 +207,6 @@
             <p class="destinasyon-doga">{{destinasyon.doga}}</p>
             <p class="destinasyon-aciklama">{{destinasyon.kisaAciklama}}</p>
 
-            <div class="destinasyon-ozellikler">
-              <span
-                class="ozellik-tag"
-                ng-repeat="ozellik in destinasyon.ozellikler"
-                >{{ozellik}}</span
-              >
-            </div>
-
             <button class="detay-btn">Detayları Gör</button>
           </div>
         </div>
@@ -246,7 +231,6 @@
               icon: "🌋",
               kisaAciklama:
                 "Dünyanın ilk milli parkı. Gayzerler, sıcak su kaynakları, vahşi yaşam ve muhteşem manzaralar ile doğanın en büyüleyici gösterisi.",
-              ozellikler: ["Gayzerler", "Vahşi Yaşam", "Yürüyüş", "Kamp"],
               tarih:
                 "1872 yılında ABD'nin ilk milli parkı olarak kurulan Yellowstone, dünyanın en büyük süper volkanı üzerinde yer alır. UNESCO Dünya Mirası Listesi'nde.",
               gorulecekYerler: [
@@ -281,7 +265,6 @@
               icon: "🏔️",
               kisaAciklama:
                 "Kanada'nın Rocky Dağları'ndaki cennet. Turkuaz göller, buzullar ve dağ manzaraları ile dünyanın en güzel doğa parklarından biri.",
-              ozellikler: ["Dağlar", "Göller", "Buzullar", "Yürüyüş"],
               tarih:
                 "1885 yılında Kanada'nın ilk milli parkı olarak kurulan Banff, UNESCO Dünya Mirası Listesi'nde. Rocky Dağları'nın kalbinde yer alır.",
               gorulecekYerler: [
@@ -316,7 +299,6 @@
               icon: "🗻",
               kisaAciklama:
                 "Güney Amerika'nın vahşi kalbi. Torres del Paine, Fitz Roy ve muhteşem buzullar ile dünyanın en uzak doğa cenneti.",
-              ozellikler: ["Vahşi Doğa", "Dağlar", "Buzullar", "Macera"],
               tarih:
                 "1520 yılında Ferdinand Magellan tarafından keşfedilen Patagonia, Şili ve Arjantin arasında uzanır. Dünyanın en vahşi doğa bölgelerinden biri.",
               gorulecekYerler: [
@@ -351,7 +333,6 @@
               icon: "⛷️",
               kisaAciklama:
                 "Avrupa'nın çatısı. Jungfrau, Matterhorn ve muhteşem dağ manzaraları ile dünyanın en güzel dağ destinasyonu.",
-              ozellikler: ["Dağlar", "Kayak", "Yürüyüş", "Kültür"],
               tarih:
                 "Milyonlarca yıl önce oluşan Alp Dağları, Avrupa'nın en yüksek sıradağları. İsviçre Alpleri dünyanın en güzel dağ manzaralarını sunar.",
               gorulecekYerler: [
@@ -386,7 +367,6 @@
               icon: "🌿",
               kisaAciklama:
                 "Orta Dünya'nın gerçek yeri. Milford Sound, Tongariro ve muhteşem doğal güzellikler ile dünyanın en güzel ada ülkesi.",
-              ozellikler: ["Adalar", "Yürüyüş", "Macera", "Kültür"],
               tarih:
                 "1642 yılında Abel Tasman tarafından keşfedilen Yeni Zelanda, Maori kültürü ve muhteşem doğası ile tanınıyor. Lord of the Rings filmlerinin çekildiği yer.",
               gorulecekYerler: [
@@ -421,12 +401,6 @@
               icon: "🧊",
               kisaAciklama:
                 "Ateş ve buzun adası. Gayzerler, şelaleler, buzullar ve kuzey ışıkları ile dünyanın en büyüleyici doğa harikaları.",
-              ozellikler: [
-                "Volkanlar",
-                "Buzullar",
-                "Kuzey Işıkları",
-                "Gayzerler",
-              ],
               tarih:
                 "874 yılında Vikingler tarafından yerleşilen İzlanda, Avrupa'nın en genç ada ülkesi. Volkanik aktivite ve buzulların buluştuğu yer.",
               gorulecekYerler: [
@@ -461,7 +435,6 @@
               icon: "🌊",
               kisaAciklama:
                 "Norveç'in derin fiyordları. Geiranger, Nærøyfjord ve muhteşem dağ manzaraları ile dünyanın en güzel kıyı şeridi.",
-              ozellikler: ["Fiyordlar", "Dağlar", "Şelaleler", "Kültür"],
               tarih:
                 "Buzul çağında oluşan Norveç fiyordları, dünyanın en derin ve en güzel fiyordları. UNESCO Dünya Mirası Listesi'nde.",
               gorulecekYerler: [
@@ -496,12 +469,6 @@
               icon: "🌴",
               kisaAciklama:
                 "Dünyanın akciğerleri. Vahşi yaşam, nehirler ve muhteşem biyoçeşitlilik ile dünyanın en büyük tropik ormanı.",
-              ozellikler: [
-                "Vahşi Yaşam",
-                "Nehirler",
-                "Biyoçeşitlilik",
-                "Macera",
-              ],
               tarih:
                 "Milyonlarca yıl önce oluşan Amazon yağmur ormanları, dünyanın en büyük tropik ormanı. Dünya oksijeninin %20'sini üretir.",
               gorulecekYerler: [
@@ -536,7 +503,6 @@
               icon: "🦁",
               kisaAciklama:
                 "Afrika'nın vahşi kalbi. Büyük göç, aslanlar ve muhteşem vahşi yaşam ile dünyanın en ünlü safari destinasyonu.",
-              ozellikler: ["Safari", "Vahşi Yaşam", "Göç", "Doğa"],
               tarih:
                 "Milyonlarca yıldır var olan Serengeti, Afrika'nın en büyük vahşi yaşam ekosistemi. Büyük göç her yıl 2 milyon hayvanı içerir.",
               gorulecekYerler: [
@@ -571,7 +537,6 @@
               icon: "🐢",
               kisaAciklama:
                 "Darwin'in evrim laboratuvarı. Dev kaplumbağalar, iguanalar ve benzersiz vahşi yaşam ile dünyanın en özel ada grubu.",
-              ozellikler: ["Vahşi Yaşam", "Evrim", "Deniz", "Macera"],
               tarih:
                 "1835 yılında Charles Darwin tarafından ziyaret edilen Galapagos, evrim teorisinin doğduğu yer. UNESCO Dünya Mirası Listesi'nde.",
               gorulecekYerler: [

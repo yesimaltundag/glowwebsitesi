@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="tr" ng-app="GirisApp">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Resim Detayı - GLOW</title>
+    <link rel="stylesheet" href="assets/css/style.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="assets/js/app.js"></script>
+    <style>
+      .resim-detay-container {
+        max-width: 100%;
+        margin: 40px auto;
+        padding: 32px 40px;
+        background: rgba(255, 255, 255, 0.92);
+        border-radius: 18px;
+        box-shadow: 0 8px 32px rgba(124, 92, 74, 0.1);
+        backdrop-filter: blur(10px);
+        position: relative;
+        width: 100%;
+      }
+
+      .geri-btn {
+        background: linear-gradient(135deg, #e2d9d0, #b48a78);
+        color: #7c5c4a;
+        border: none;
+        border-radius: 50%;
+        width: 45px;
+        height: 45px;
+        padding: 0;
+        font-size: 18px;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s;
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        margin: 0;
+      }
+
+      .geri-btn:hover {
+        background: linear-gradient(135deg, #b48a78, #e2d9d0);
+        color: #fff;
+        transform: scale(1.1);
+      }
+
+      .resim-detay-header {
+        text-align: center;
+        margin-bottom: 40px;
+        padding-top: 20px;
+      }
+
+      .resim-detay-baslik {
+        color: #7c5c4a;
+        font-size: 2.5rem;
+        font-weight: 700;
+        letter-spacing: 2px;
+        margin-bottom: 16px;
+        text-shadow: 0 2px 4px rgba(124, 92, 74, 0.1);
+      }
+
+      .resim-detay-sanatci {
+        color: #b48a78;
+        font-size: 1.3rem;
+        font-weight: 600;
+        margin-bottom: 8px;
+      }
+
+      .resim-detay-tarih {
+        color: #999;
+        font-size: 1.1rem;
+        margin-bottom: 30px;
+      }
+
+      .resim-detay-content {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 40px;
+        align-items: start;
+      }
+
+      .resim-detay-img-container {
+        position: relative;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+        transition: transform 0.3s ease;
+      }
+
+      .resim-detay-img-container:hover {
+        transform: scale(1.02);
+      }
+
+      .resim-detay-img {
+        width: 100%;
+        height: 500px;
+        object-fit: cover;
+        display: block;
+      }
+
+      .resim-detay-bilgi {
+        padding: 20px;
+      }
+
+      .resim-detay-bilgi h3 {
+        color: #7c5c4a;
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 20px;
+        border-bottom: 3px solid #e2d9d0;
+        padding-bottom: 10px;
+      }
+
+      .resim-detay-tarihce {
+        color: #666;
+        font-size: 1.1rem;
+        line-height: 1.8;
+        text-align: justify;
+        margin-bottom: 30px;
+      }
+
+      .resim-detay-ozellikler {
+        background: linear-gradient(135deg, #f8e0e1 0%, #e2d9d0 100%);
+        border-radius: 12px;
+        padding: 20px;
+        margin-top: 20px;
+      }
+
+      .resim-detay-ozellikler h4 {
+        color: #7c5c4a;
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin-bottom: 15px;
+      }
+
+      .ozellik-item {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+        padding: 8px 0;
+        border-bottom: 1px solid rgba(124, 92, 74, 0.1);
+      }
+
+      .ozellik-label {
+        color: #7c5c4a;
+        font-weight: 600;
+        font-size: 0.95rem;
+      }
+
+      .ozellik-value {
+        color: #b48a78;
+        font-weight: 500;
+        font-size: 0.95rem;
+      }
+
+      .resim-detay-etiketler {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 20px;
+      }
+
+      .etiket {
+        background: linear-gradient(135deg, #b48a78, #e2d9d0);
+        color: white;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        box-shadow: 0 2px 8px rgba(180, 138, 120, 0.3);
+      }
+
+      .resim-detay-actions {
+        display: flex;
+        gap: 15px;
+        margin-top: 30px;
+        justify-content: center;
+      }
+
+      .action-btn {
+        background: linear-gradient(135deg, #b48a78, #e2d9d0);
+        color: white;
+        border: none;
+        border-radius: 25px;
+        padding: 12px 24px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(180, 138, 120, 0.3);
+      }
+
+      .action-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(180, 138, 120, 0.4);
+      }
+
+      .action-btn.secondary {
+        background: linear-gradient(135deg, #e2d9d0, #b48a78);
+        color: #7c5c4a;
+      }
+
+      @media (max-width: 768px) {
+        .resim-detay-container {
+          padding: 20px;
+          margin: 20px;
+        }
+
+        .resim-detay-baslik {
+          font-size: 2rem;
+        }
+
+        .resim-detay-content {
+          grid-template-columns: 1fr;
+          gap: 30px;
+        }
+
+        .resim-detay-img {
+          height: 300px;
+        }
+
+        .geri-btn {
+          width: 45px;
+          height: 45px;
+          font-size: 18px;
+        }
+
+        .resim-detay-actions {
+          flex-direction: column;
+          align-items: center;
+        }
+
+        .action-btn {
+          width: 100%;
+          max-width: 200px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <ng-include src="'components/header.html'"></ng-include>
+    <main class="main-content">
+      <div class="resim-detay-container" ng-controller="ResimDetayController">
+        <button
+          class="geri-btn"
+          ng-click="geriDon()"
+          title="Resim Galerisi'ne Dön"
+        >
+          ←
+        </button>
+
+        <div class="resim-detay-header">
+          <h1 class="resim-detay-baslik">{{seciliResim.baslik}}</h1>
+          <p class="resim-detay-sanatci">{{seciliResim.sanatci}}</p>
+          <p class="resim-detay-tarih">{{seciliResim.tarih}}</p>
+        </div>
+
+        <div class="resim-detay-content">
+          <div class="resim-detay-img-container">
+            <img
+              class="resim-detay-img"
+              ng-src="{{seciliResim.resim}}"
+              alt="{{seciliResim.baslik}}"
+            />
+          </div>
+
+          <div class="resim-detay-bilgi">
+            <h3>📖 Tarihçe</h3>
+            <p class="resim-detay-tarihce">{{seciliResim.tarihce}}</p>
+
+            <div class="resim-detay-ozellikler">
+              <h4>🎨 Eser Bilgileri</h4>
+              <div class="ozellik-item">
+                <span class="ozellik-label">Sanatçı:</span>
+                <span class="ozellik-value">{{seciliResim.sanatci}}</span>
+              </div>
+              <div class="ozellik-item">
+                <span class="ozellik-label">Tarih:</span>
+                <span class="ozellik-value">{{seciliResim.tarih}}</span>
+              </div>
+              <div class="ozellik-item">
+                <span class="ozellik-label">Tür:</span>
+                <span class="ozellik-value"
+                  >{{seciliResim.tur || 'Yağlı Boya'}}</span
+                >
+              </div>
+              <div class="ozellik-item">
+                <span class="ozellik-label">Boyut:</span>
+                <span class="ozellik-value"
+                  >{{seciliResim.boyut || 'Standart'}}</span
+                >
+              </div>
+              <div class="ozellik-item">
+                <span class="ozellik-label">Konum:</span>
+                <span class="ozellik-value"
+                  >{{seciliResim.konum || 'Müze Koleksiyonu'}}</span
+                >
+              </div>
+            </div>
+
+            <div class="resim-detay-etiketler">
+              <span class="etiket">Rönesans</span>
+              <span class="etiket">Portre</span>
+              <span class="etiket">Klasik</span>
+              <span class="etiket">Ünlü Eser</span>
+            </div>
+
+            <div class="resim-detay-actions">
+              <button class="action-btn" ng-click="paylas()">📤 Paylaş</button>
+              <button class="action-btn secondary" ng-click="favorilereEkle()">
+                ❤️ Favorilere Ekle
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <ng-include src="'components/footer.html'"></ng-include>
+
+    <button id="scrollTopBtn" title="Yukarı Çık" ng-click="scrollToTop()">
+      ↑
+    </button>
+
+    <script>
+      angular
+        .module("GirisApp")
+        .controller("ResimDetayController", function ($scope, $location) {
+          $scope.kullanici = JSON.parse(
+            localStorage.getItem("girisYapan") || "null"
+          );
+
+          // URL'den resim ID'sini al
+          const urlParams = new URLSearchParams(window.location.search);
+          const resimId = urlParams.get("id");
+
+          // Resim verileri
+          const resimEserleri = [
+            {
+              id: "mona-lisa",
+              baslik: "Mona Lisa",
+              sanatci: "Leonardo da Vinci",
+              tarih: "1503-1519",
+              tur: "Yağlı Boya",
+              boyut: "77 cm × 53 cm",
+              konum: "Louvre Müzesi, Paris",
+              resim:
+                "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg/687px-Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg",
+              tarihce:
+                "Mona Lisa, Leonardo da Vinci'nin en ünlü eseridir. İtalyan Rönesans döneminde yapılan bu portre, dünya sanat tarihinin en değerli ve en çok tanınan eserlerinden biridir. Eserin gizemli gülümsemesi ve sfumato tekniği ile yapılan yumuşak geçişler, sanat tarihinde devrim yaratmıştır. Şu anda Paris'teki Louvre Müzesi'nde sergilenmektedir.",
+            },
+            {
+              id: "yildizli-gece",
+              baslik: "Yıldızlı Gece",
+              sanatci: "Vincent van Gogh",
+              tarih: "1889",
+              tur: "Yağlı Boya",
+              boyut: "73.7 cm × 92.1 cm",
+              konum: "MoMA, New York",
+              resim:
+                "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg/1280px-Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg",
+              tarihce:
+                "Yıldızlı Gece, Van Gogh'un en ünlü eserlerinden biridir. Sanatçının Saint-Rémy-de-Provence'daki akıl hastanesinde kaldığı dönemde yapılmıştır. Eser, gecenin dinamik ve hareketli bir yorumunu sunar. Dönen bulutlar ve parlayan yıldızlar, sanatçının iç dünyasının yoğun duygusal durumunu yansıtır. Modern sanatın en etkili eserlerinden biri olarak kabul edilir.",
+            },
+            {
+              id: "guernica",
+              baslik: "Guernica",
+              sanatci: "Pablo Picasso",
+              tarih: "1937",
+              tur: "Yağlı Boya",
+              boyut: "349.3 cm × 776.6 cm",
+              konum: "Reina Sofía Müzesi, Madrid",
+              resim:
+                "https://upload.wikimedia.org/wikipedia/en/7/74/PicassoGuernica.jpg",
+              tarihce:
+                "Guernica, Picasso'nun İspanya İç Savaşı sırasında Nazi Almanyası'nın Guernica şehrini bombalaması üzerine yaptığı güçlü bir anti-savaş eseridir. Siyah, beyaz ve gri tonlarında yapılan eser, savaşın dehşetini ve acısını dramatik bir şekilde yansıtır. Modern sanatın en önemli politik eserlerinden biri olarak kabul edilir ve barışın sembolü haline gelmiştir.",
+            },
+            {
+              id: "ciglik",
+              baslik: "Çığlık",
+              sanatci: "Edvard Munch",
+              tarih: "1893",
+              tur: "Yağlı Boya, Tempera, Pastel",
+              boyut: "91 cm × 73.5 cm",
+              konum: "Ulusal Galeri, Oslo",
+              resim:
+                "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Edvard_Munch%2C_1893%2C_The_Scream%2C_oil%2C_tempera_and_pastel_on_cardboard%2C_91_x_73_cm%2C_National_Gallery_of_Norway.jpg/1280px-Edvard_Munch%2C_1893%2C_The_Scream%2C_oil%2C_tempera_and_pastel_on_cardboard%2C_91_x_73_cm%2C_National_Gallery_of_Norway.jpg",
+              tarihce:
+                "Çığlık, Edvard Munch'un en ünlü eseridir ve ekspresyonist sanatın simgesi haline gelmiştir. Eser, modern insanın varoluşsal kaygısını ve yalnızlığını güçlü bir şekilde ifade eder. Dalgalı çizgiler ve yoğun renkler kullanılarak yapılan eser, sanatçının iç dünyasındaki huzursuzluğu ve toplumsal değişimlerin yarattığı stresi yansıtır.",
+            },
+            {
+              id: "son-aksam-yemegi",
+              baslik: "Son Akşam Yemeği",
+              sanatci: "Leonardo da Vinci",
+              tarih: "1495-1498",
+              tur: "Fresk",
+              boyut: "460 cm × 880 cm",
+              konum: "Santa Maria delle Grazie, Milano",
+              resim:
+                "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/%C3%9Altima_Cena_-_Da_Vinci_5.jpg/1280px-%C3%9Altima_Cena_-_Da_Vinci_5.jpg",
+              tarihce:
+                "Son Akşam Yemeği, Leonardo da Vinci'nin Milano'daki Santa Maria delle Grazie manastırının yemek salonunda yaptığı fresk eseridir. İsa'nın havarileriyle son akşam yemeğini yediği anı tasvir eder. Perspektif kullanımı ve karakterlerin duygusal ifadeleri ile Rönesans sanatının en önemli eserlerinden biri olarak kabul edilir.",
+            },
+            {
+              id: "venus-dogusu",
+              baslik: "Venüs'ün Doğuşu",
+              sanatci: "Sandro Botticelli",
+              tarih: "1485",
+              tur: "Tempera",
+              boyut: "172.5 cm × 278.5 cm",
+              konum: "Uffizi Galerisi, Floransa",
+              resim:
+                "https://upload.wikimedia.org/wikipedia/commons/c/c5/Sandro_Botticelli_-_La_nascita_di_Venere_-_Google_Art_ProjectFXD.jpg",
+              tarihce:
+                "Venüs'ün Doğuşu, Botticelli'nin en ünlü eserlerinden biridir. Antik Yunan mitolojisinden esinlenen eser, güzellik tanrıçası Venüs'ün deniz köpüğünden doğuşunu tasvir eder. Rönesans döneminin en güzel eserlerinden biri olarak kabul edilir ve klasik mitolojinin yeniden canlandırılmasının simgesi haline gelmiştir.",
+            },
+          ];
+
+          // Seçilen resmi bul
+          $scope.seciliResim =
+            resimEserleri.find((resim) => resim.id === resimId) ||
+            resimEserleri[0];
+
+          // Fonksiyonlar
+          $scope.geriDon = function () {
+            window.location.href = "resimler.html";
+          };
+
+          $scope.paylas = function () {
+            if (navigator.share) {
+              navigator.share({
+                title: $scope.seciliResim.baslik,
+                text:
+                  $scope.seciliResim.sanatci +
+                  " - " +
+                  $scope.seciliResim.baslik,
+                url: window.location.href,
+              });
+            } else {
+              // Fallback: URL'yi kopyala
+              navigator.clipboard.writeText(window.location.href);
+              alert("Link kopyalandı!");
+            }
+          };
+
+          $scope.favorilereEkle = function () {
+            let favoriler = JSON.parse(
+              localStorage.getItem("favoriResimler") || "[]"
+            );
+            const resimVar = favoriler.find(
+              (f) => f.id === $scope.seciliResim.id
+            );
+
+            if (resimVar) {
+              favoriler = favoriler.filter(
+                (f) => f.id !== $scope.seciliResim.id
+              );
+              alert("Favorilerden çıkarıldı!");
+            } else {
+              favoriler.push($scope.seciliResim);
+              alert("Favorilere eklendi!");
+            }
+
+            localStorage.setItem("favoriResimler", JSON.stringify(favoriler));
+          };
+
+          $scope.scrollToTop = function () {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          };
+        });
+    </script>
+  </body>
+</html>

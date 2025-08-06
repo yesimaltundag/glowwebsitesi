@@ -9,14 +9,15 @@
     <script src="assets/js/app.js"></script>
     <style>
       .belgesel-container {
-        max-width: 1200px;
+        max-width: 100%;
         margin: 40px auto;
-        padding: 32px;
+        padding: 32px 40px;
         background: rgba(255, 255, 255, 0.92);
         border-radius: 18px;
         box-shadow: 0 8px 32px rgba(124, 92, 74, 0.1);
         backdrop-filter: blur(10px);
         position: relative;
+        width: 100%;
       }
 
       .belgesel-title {
@@ -128,6 +129,12 @@
         font-size: 1.1rem;
         padding: 40px;
       }
+      @media (max-width: 600px) {
+        .belgesel-container {
+          padding: 20px;
+          max-width: 100%;
+        }
+      }
     </style>
   </head>
   <body ng-controller="MainController">
@@ -150,8 +157,6 @@
         <!-- Error -->
         <div class="error" ng-if="error">{{ error }}</div>
 
-        
-
         <!-- Belgeseller -->
         <div class="belgeseller-grid" ng-if="!loading && !error">
           <div
@@ -163,7 +168,7 @@
             <div class="belgesel-content">
               <h3 class="belgesel-baslik">{{ belgesel.belgesel_adi }}</h3>
               <div class="belgesel-yonetmen">{{ belgesel.yonetmen }}</div>
-              <div class="belgesel-puan">⭐ {{ belgesel.puan }}/10</div>
+              <div class="belgesel-puan">{{ belgesel.puan }}/10</div>
               <div class="belgesel-detay">
                 <strong>Yıl:</strong> {{ belgesel.yil }} |
                 <strong>Tür:</strong> {{ belgesel.tur }} |

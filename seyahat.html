@@ -8,63 +8,92 @@
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
     <script src="assets/js/app.js"></script>
     <style>
-      .seyahat-container {
-        max-width: 900px;
-        margin: 40px auto;
-        padding: 32px;
-        background: rgba(255, 255, 255, 0.92);
-        border-radius: 18px;
-        box-shadow: 0 8px 32px rgba(124, 92, 74, 0.1);
-        backdrop-filter: blur(10px);
-        position: relative;
+      body {
+        background: linear-gradient(135deg, #f8e0e1 0%, #e2d9d0 100%);
+        min-height: 100vh;
       }
-      .seyahat-title-row {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-        margin-bottom: 32px;
+      .seyahat-container {
+        max-width: 100%;
+        margin: 60px auto;
+        padding: 60px 60px;
+        background: rgba(255, 255, 255, 0.82);
+        border-radius: 32px;
+        box-shadow: 0 16px 48px rgba(124, 92, 74, 0.18);
+        backdrop-filter: blur(18px);
+        width: 100%;
+        position: relative;
       }
       .seyahat-title {
         color: #7c5c4a;
-        font-size: 2.2rem;
-        font-weight: 700;
-        line-height: 1;
-        letter-spacing: 1px;
+        font-size: 3.5rem;
+        font-weight: 800;
+        line-height: 1.1;
+        letter-spacing: 2px;
+        margin-bottom: 60px;
+        text-align: center;
+        text-shadow: 0 4px 24px rgba(124, 92, 74, 0.08);
       }
       .kategori-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-        gap: 18px;
-        margin-top: 36px;
-        margin-bottom: 10px;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+        margin-top: 40px;
+        margin-bottom: 20px;
       }
       .kategori-card {
-        background: linear-gradient(135deg, #f8e0e1 60%, #e2d9d0 100%);
-        border-radius: 14px;
-        box-shadow: 0 4px 16px rgba(180, 138, 120, 0.08);
-        padding: 24px 0;
-        text-align: center;
-        color: #7c5c4a;
-        font-size: 1.08rem;
-        font-weight: 600;
-        letter-spacing: 0.5px;
-        transition: box-shadow 0.3s, transform 0.3s;
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 16px;
+        padding: 24px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        border: 1px solid rgba(124, 92, 74, 0.1);
         cursor: pointer;
+        position: relative;
+        overflow: hidden;
+        min-height: 200px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
       }
       .kategori-card:hover {
-        box-shadow: 0 8px 32px rgba(180, 138, 120, 0.16);
-        transform: translateY(-3px) scale(1.04);
+        transform: translateY(-4px);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        border-color: rgba(124, 92, 74, 0.3);
+      }
+      .kategori-card .kategori-ikon {
+        font-size: 3rem;
+        margin-bottom: 16px;
+        display: block;
+      }
+      .kategori-card-title {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: #7c5c4a;
+        margin-bottom: 8px;
+        line-height: 1.3;
+      }
+      .kategori-card-desc {
+        font-size: 0.95rem;
+        color: #b48a78;
+        font-weight: 500;
+        line-height: 1.5;
+      }
+      .kategori-card span {
+        font-size: 1.25rem;
+        font-weight: 600;
+        letter-spacing: 0.5px;
       }
       .geri-btn {
         background: linear-gradient(135deg, #e2d9d0, #b48a78);
         color: #7c5c4a;
         border: none;
         border-radius: 50%;
-        width: 22px;
-        height: 22px;
+        width: 45px;
+        height: 45px;
         padding: 0;
-        font-size: 13px;
+        font-size: 18px;
         font-weight: 600;
         cursor: pointer;
         display: flex;
@@ -72,14 +101,40 @@
         justify-content: center;
         transition: all 0.3s;
         position: absolute;
-        top: 12px;
-        right: 12px;
+        top: 20px;
+        left: 20px;
         margin: 0;
       }
       .geri-btn:hover {
         background: linear-gradient(135deg, #b48a78, #e2d9d0);
         color: #fff;
         transform: scale(1.08);
+      }
+      @media (max-width: 1024px) {
+        .kategori-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      @media (max-width: 768px) {
+        .seyahat-container {
+          padding: 30px 10px;
+        }
+        .kategori-grid {
+          grid-template-columns: 1fr;
+          gap: 20px;
+        }
+        .seyahat-title {
+          font-size: 2.2rem;
+          margin-bottom: 30px;
+        }
+        .kategori-card {
+          min-height: 120px;
+        }
+        .kategori-card-content {
+          padding: 30px 10px 20px 10px;
+          border-radius: 18px;
+        }
       }
     </style>
   </head>
@@ -94,48 +149,54 @@
         >
           ←
         </button>
-        <div class="seyahat-title-row">
-          <div class="seyahat-title">Seyahat</div>
-        </div>
+        <div class="seyahat-title">Seyahat</div>
         <div class="kategori-grid">
           <div
             class="kategori-card"
             ng-click="kategoriSec('Avrupa Seyahatleri')"
           >
-            Avrupa Seyahatleri
+            <div class="kategori-ikon">🇪🇺</div>
+            <div class="kategori-card-title">Avrupa Seyahatleri</div>
           </div>
           <div class="kategori-card" ng-click="kategoriSec('Asya Seyahatleri')">
-            Asya Seyahatleri
+            <div class="kategori-ikon">🌏</div>
+            <div class="kategori-card-title">Asya Seyahatleri</div>
           </div>
           <div
             class="kategori-card"
             ng-click="kategoriSec('Amerika Seyahatleri')"
           >
-            Amerika Seyahatleri
+            <div class="kategori-ikon">🌎</div>
+            <div class="kategori-card-title">Amerika Seyahatleri</div>
           </div>
           <div
             class="kategori-card"
             ng-click="kategoriSec('Afrika Seyahatleri')"
           >
-            Afrika Seyahatleri
+            <div class="kategori-ikon">🌍</div>
+            <div class="kategori-card-title">Afrika Seyahatleri</div>
           </div>
           <div
             class="kategori-card"
             ng-click="kategoriSec('Türkiye Seyahatleri')"
           >
-            Türkiye Seyahatleri
+            <div class="kategori-ikon">🇹🇷</div>
+            <div class="kategori-card-title">Türkiye Seyahatleri</div>
           </div>
           <div
             class="kategori-card"
             ng-click="kategoriSec('Deniz Seyahatleri')"
           >
-            Deniz Seyahatleri
+            <div class="kategori-ikon">⛵</div>
+            <div class="kategori-card-title">Deniz Seyahatleri</div>
           </div>
           <div class="kategori-card" ng-click="kategoriSec('Kamp ve Doğa')">
-            Kamp ve Doğa
+            <div class="kategori-ikon">🏕️</div>
+            <div class="kategori-card-title">Kamp ve Doğa</div>
           </div>
           <div class="kategori-card" ng-click="kategoriSec('Şehir Turları')">
-            Şehir Turları
+            <div class="kategori-ikon">🏙️</div>
+            <div class="kategori-card-title">Şehir Turları</div>
           </div>
         </div>
       </div>

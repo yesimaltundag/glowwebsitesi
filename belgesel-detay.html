@@ -9,14 +9,15 @@
     <script src="assets/js/app.js"></script>
     <style>
       .detay-container {
-        max-width: 1200px;
+        max-width: 100%;
         margin: 40px auto;
-        padding: 32px;
+        padding: 32px 40px;
         background: rgba(255, 255, 255, 0.92);
         border-radius: 18px;
         box-shadow: 0 8px 32px rgba(124, 92, 74, 0.1);
         backdrop-filter: blur(10px);
         position: relative;
+        width: 100%;
       }
 
       .detay-header {
@@ -217,7 +218,7 @@
             <div class="detay-bilgiler">
               <h1 class="detay-baslik">{{ belgesel.belgesel_adi }}</h1>
               <div class="detay-yonetmen">{{ belgesel.yonetmen }}</div>
-              <div class="detay-puan">⭐ {{ belgesel.puan }}/10</div>
+              <div class="detay-puan">{{ belgesel.puan }}/10</div>
               <div class="detay-ozellikler">
                 <div class="ozellik-item">{{ belgesel.yil }}</div>
                 <div class="ozellik-item">{{ belgesel.tur }}</div>
@@ -288,8 +289,7 @@
                     ng-click="yeniYorum.puan = i"
                     ng-class="{ 'secili': yeniYorum.puan >= i }"
                     class="puan-yildiz"
-                    >⭐</span
-                  >
+                  ></span>
                 </div>
                 <div class="puan-text">{{ yeniYorum.puan }}/10</div>
               </div>

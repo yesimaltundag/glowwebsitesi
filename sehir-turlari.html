@@ -9,13 +9,14 @@
     <script src="assets/js/app.js"></script>
     <style>
       .sehir-container {
-        max-width: 1200px;
+        max-width: 100%;
         margin: 40px auto;
-        padding: 32px;
+        padding: 32px 40px;
         background: rgba(255, 255, 255, 0.92);
         border-radius: 18px;
         box-shadow: 0 8px 32px rgba(124, 92, 74, 0.1);
         backdrop-filter: blur(10px);
+        width: 100%;
       }
 
       .page-header {
@@ -118,38 +119,24 @@
         margin-bottom: 20px;
       }
 
-      .destinasyon-ozellikler {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-        margin-bottom: 20px;
-      }
-
-      .ozellik-tag {
-        background: rgba(156, 39, 176, 0.2);
-        color: #4a148c;
-        padding: 4px 12px;
-        border-radius: 20px;
-        font-size: 0.8rem;
-        font-weight: 500;
-      }
-
       .detay-btn {
-        background: linear-gradient(135deg, #9c27b0, #e1bee7);
-        color: white;
-        border: none;
-        border-radius: 25px;
-        padding: 10px 20px;
-        font-size: 0.9rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s;
-        width: 100%;
+        background: linear-gradient(135deg, #9c27b0, #e1bee7) !important;
+        color: white !important;
+        border: none !important;
+        border-radius: 10px !important;
+        padding: 8px !important;
+        font-size: 0.8rem !important;
+        font-weight: 600 !important;
+        cursor: pointer !important;
+        transition: all 0.3s !important;
+        width: auto !important;
+        margin: 0 auto !important;
+        display: block !important;
       }
 
       .detay-btn:hover {
-        background: linear-gradient(135deg, #e1bee7, #9c27b0);
-        transform: scale(1.02);
+        background: linear-gradient(135deg, #e1bee7, #9c27b0) !important;
+        transform: scale(1.02) !important;
       }
 
       .destinasyon-icon {
@@ -177,6 +164,12 @@
           width: 40px;
           height: 40px;
           font-size: 16px;
+        }
+      }
+      @media (max-width: 600px) {
+        .sehir-container {
+          padding: 20px;
+          max-width: 100%;
         }
       }
     </style>
@@ -214,14 +207,6 @@
             <p class="destinasyon-sehir">{{destinasyon.sehir}}</p>
             <p class="destinasyon-aciklama">{{destinasyon.kisaAciklama}}</p>
 
-            <div class="destinasyon-ozellikler">
-              <span
-                class="ozellik-tag"
-                ng-repeat="ozellik in destinasyon.ozellikler"
-                >{{ozellik}}</span
-              >
-            </div>
-
             <button class="detay-btn">Detayları Gör</button>
           </div>
         </div>
@@ -246,7 +231,6 @@
               icon: "🗼",
               kisaAciklama:
                 "Aşkın şehri. Eiffel Kulesi, Louvre Müzesi, Notre-Dame ve Seine Nehri boyunca romantik yürüyüşler ile Paris'in en güzel yanlarını keşfedin.",
-              ozellikler: ["Tarih", "Kültür", "Sanat", "Romantik"],
               tarih:
                 "M.Ö. 3. yüzyılda kurulan Paris, Orta Çağ'dan günümüze Avrupa'nın kültür ve sanat başkenti. Dünyanın en romantik şehri olarak tanınıyor.",
               gorulecekYerler: [
@@ -281,7 +265,6 @@
               icon: "🏛️",
               kisaAciklama:
                 "Ebedi şehir. Colosseum, Vatikan, Trevi Çeşmesi ve antik Roma kalıntıları ile tarihin en büyük imparatorluğunun izlerini takip edin.",
-              ozellikler: ["Tarih", "Arkeoloji", "Din", "Mimari"],
               tarih:
                 "M.Ö. 753 yılında kurulan Roma, antik dünyanın en büyük imparatorluğunun başkenti. Günümüzde Hıristiyanlığın merkezi Vatikan'ı da barındırır.",
               gorulecekYerler: [
@@ -316,7 +299,6 @@
               icon: "🗾",
               kisaAciklama:
                 "Geleceğin şehri. Shibuya, Harajuku, Akihabara ve geleneksel tapınaklar ile geleneksel ve modern Japonya'nın mükemmel karışımını yaşayın.",
-              ozellikler: ["Teknoloji", "Kültür", "Alışveriş", "Gastronomi"],
               tarih:
                 "1603 yılında Edo adıyla kurulan Tokyo, 1868'de başkent oldu. Günümüzde dünyanın en büyük metropolü ve teknoloji merkezi.",
               gorulecekYerler: [
@@ -351,7 +333,6 @@
               icon: "🗽",
               kisaAciklama:
                 "Hiç uyumayan şehir. Times Square, Central Park, Broadway ve Manhattan'ın ikonik gökdelenleri ile dünyanın finans ve kültür başkentini keşfedin.",
-              ozellikler: ["Finans", "Kültür", "Eğlence", "Sanat"],
               tarih:
                 "1624 yılında Hollandalılar tarafından kurulan New York, 19. yüzyılda göçmen dalgası ile büyüdü. Günümüzde dünyanın finans merkezi.",
               gorulecekYerler: [
@@ -386,7 +367,6 @@
               icon: "🏰",
               kisaAciklama:
                 "Kraliyet şehri. Buckingham Sarayı, Big Ben, Tower Bridge ve British Museum ile İngiliz tarihinin ve kültürünün kalbini ziyaret edin.",
-              ozellikler: ["Kraliyet", "Tarih", "Kültür", "Mimari"],
               tarih:
                 "M.S. 43 yılında Romalılar tarafından kurulan Londra, Orta Çağ'dan günümüze İngiltere'nin başkenti. Dünya tarihinin en önemli şehirlerinden biri.",
               gorulecekYerler: [
@@ -421,7 +401,6 @@
               icon: "🏟️",
               kisaAciklama:
                 "Gaudi'nin şehri. Sagrada Familia, Park Güell, La Rambla ve Katalan kültürünün canlı atmosferi ile Akdeniz'in en güzel şehrini keşfedin.",
-              ozellikler: ["Mimari", "Kültür", "Sanat", "Gastronomi"],
               tarih:
                 "M.Ö. 1. yüzyılda Romalılar tarafından kurulan Barselona, Orta Çağ'da önemli bir deniz ticaret merkezi oldu. Gaudi'nin eserleri ile ünlü.",
               gorulecekYerler: [
@@ -456,7 +435,6 @@
               icon: "🕌",
               kisaAciklama:
                 "İki kıtanın şehri. Ayasofya, Topkapı Sarayı, Sultanahmet ve Boğaz manzarası ile Doğu ile Batı'nın buluştuğu eşsiz şehri keşfedin.",
-              ozellikler: ["Tarih", "Kültür", "Din", "Boğaz"],
               tarih:
                 "M.Ö. 660 yılında Bizans olarak kurulan İstanbul, Roma, Bizans ve Osmanlı imparatorluklarına başkentlik yaptı. Dünya tarihinin en önemli şehirlerinden.",
               gorulecekYerler: [
@@ -491,7 +469,6 @@
               icon: "🚲",
               kisaAciklama:
                 "Kanal şehri. Dam Meydanı, Van Gogh Müzesi, Anne Frank Evi ve bisiklet kültürü ile Hollanda'nın en güzel şehrini keşfedin.",
-              ozellikler: ["Kanallar", "Bisiklet", "Sanat", "Tarih"],
               tarih:
                 "12. yüzyılda balıkçı köyü olarak kurulan Amsterdam, 17. yüzyılda Altın Çağ'ını yaşadı. Günümüzde liberal kültürü ile tanınıyor.",
               gorulecekYerler: [
@@ -526,7 +503,6 @@
               icon: "🏰",
               kisaAciklama:
                 "Altın şehir. Prag Kalesi, Charles Köprüsü, Old Town Square ve Orta Çağ mimarisi ile Avrupa'nın en güzel şehirlerinden birini keşfedin.",
-              ozellikler: ["Kale", "Mimari", "Tarih", "Kültür"],
               tarih:
                 "9. yüzyılda kurulan Prag, Orta Çağ'da Bohemya Krallığı'nın başkenti oldu. Günümüzde UNESCO Dünya Mirası Listesi'nde.",
               gorulecekYerler: [
@@ -561,7 +537,6 @@
               icon: "🎭",
               kisaAciklama:
                 "Müzik şehri. Schönbrunn Sarayı, Belvedere, Viyana Operası ve Habsburg İmparatorluğu'nun ihtişamını keşfedin.",
-              ozellikler: ["Müzik", "Saray", "Kültür", "Tarih"],
               tarih:
                 "M.S. 1. yüzyılda Romalılar tarafından kurulan Viyana, Habsburg İmparatorluğu'nun başkenti oldu. Mozart, Beethoven gibi bestecilerin şehri.",
               gorulecekYerler: [

@@ -9,9 +9,10 @@
     <script src="assets/js/app.js"></script>
     <style>
       .amerika-container {
-        max-width: 1200px;
+        max-width: 100%;
         margin: 40px auto;
-        padding: 32px;
+        padding: 32px 40px;
+        width: 100%;
         background: rgba(255, 255, 255, 0.92);
         border-radius: 18px;
         box-shadow: 0 8px 32px rgba(124, 92, 74, 0.1);
@@ -90,13 +91,35 @@
       }
 
       .sehir-overlay {
+        position: absolute;
+        left: 18px;
+        bottom: 18px;
+        min-width: 160px;
+        max-width: 70%;
         background: linear-gradient(
           to top,
-          rgba(124, 92, 74, 0.95) 0%,
-          rgba(124, 92, 74, 0.8) 50%,
-          rgba(124, 92, 74, 0.3) 100%
+          rgba(124, 92, 74, 0.55) 0%,
+          rgba(124, 92, 74, 0.35) 50%,
+          rgba(124, 92, 74, 0.1) 100%
         );
         border-radius: 12px;
+        padding: 12px 18px 10px 18px;
+        box-shadow: 0 2px 12px rgba(124, 92, 74, 0.1);
+        backdrop-filter: blur(2px);
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        z-index: 2;
+        transition: background 0.3s, backdrop-filter 0.3s;
+      }
+      @media (max-width: 768px) {
+        .sehir-overlay {
+          left: 8px;
+          bottom: 8px;
+          padding: 8px 8px 6px 8px;
+          min-width: 90px;
+        }
+      }
         padding: 20px;
         width: 100%;
         backdrop-filter: blur(5px);
@@ -136,39 +159,24 @@
         margin-bottom: 20px;
       }
 
-      .sehir-ozellikler {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-        margin-bottom: 20px;
-      }
-
-      .ozellik-tag {
-        background: rgba(255, 255, 255, 0.2);
-        color: white;
-        padding: 4px 12px;
-        border-radius: 20px;
-        font-size: 0.8rem;
-        font-weight: 500;
-        backdrop-filter: blur(5px);
-      }
-
       .detay-btn {
-        background: linear-gradient(135deg, #b48a78, #e2d9d0);
-        color: white;
-        border: none;
-        border-radius: 25px;
-        padding: 10px 20px;
-        font-size: 0.9rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s;
-        width: 100%;
+        background: linear-gradient(135deg, #b48a78, #e2d9d0) !important;
+        color: white !important;
+        border: none !important;
+        border-radius: 10px !important;
+        padding: 8px !important;
+        font-size: 0.8rem !important;
+        font-weight: 600 !important;
+        cursor: pointer !important;
+        transition: all 0.3s !important;
+        width: auto !important;
+        margin: 0 auto !important;
+        display: block !important;
       }
 
       .detay-btn:hover {
-        background: linear-gradient(135deg, #e2d9d0, #b48a78);
-        transform: scale(1.02);
+        background: linear-gradient(135deg, #e2d9d0, #b48a78) !important;
+        transform: scale(1.02) !important;
       }
 
       .sehir-icon {
@@ -179,6 +187,7 @@
         .amerika-container {
           margin: 20px;
           padding: 20px;
+          max-width: 100%;
         }
 
         .page-title {
@@ -233,14 +242,6 @@
               <p class="sehir-ulke">{{sehir.ulke}}</p>
               <p class="sehir-aciklama">{{sehir.kisaAciklama}}</p>
 
-              <div class="sehir-ozellikler">
-                <span
-                  class="ozellik-tag"
-                  ng-repeat="ozellik in sehir.ozellikler"
-                  >{{ozellik}}</span
-                >
-              </div>
-
               <button class="detay-btn">Detayları Gör</button>
             </div>
           </div>
@@ -267,7 +268,7 @@
               foto: "https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?w=800&h=600&fit=crop",
               kisaAciklama:
                 "Dünyanın finansal başkenti. Times Square, Central Park ve Özgürlük Heykeli ile dünyanın en dinamik şehri.",
-              ozellikler: ["Finans", "Kültür", "Alışveriş", "Sanat"],
+
               tarih:
                 "1624 yılında Hollandalılar tarafından New Amsterdam olarak kurulan şehir, 1664'te İngilizler tarafından New York olarak yeniden adlandırıldı. Günümüzde dünyanın en önemli finans ve kültür merkezi.",
               gorulecekYerler: [
@@ -303,7 +304,7 @@
               foto: "https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=800&h=600&fit=crop",
               kisaAciklama:
                 "Hollywood'un merkezi, güneşli iklimi ve plajları ile eğlence dünyasının başkenti.",
-              ozellikler: ["Hollywood", "Plajlar", "Eğlence", "Teknoloji"],
+
               tarih:
                 "1781 yılında İspanyol misyonerler tarafından kurulan Los Angeles, 1848'de Meksika-Amerika Savaşı sonrası ABD'ye katıldı. 20. yüzyılda film endüstrisinin merkezi haline geldi.",
               gorulecekYerler: [
@@ -339,7 +340,7 @@
               foto: "https://content.r9cdn.net/rimg/dimg/77/c5/ecbd6c26-city-12514-1632c25b47a.jpg?width=1366&height=768&xhint=1828&yhint=1404&crop=true",
               kisaAciklama:
                 "Gökdelenlerin doğduğu şehir. Deep dish pizza, blues müziği ve güzel mimarisi ile Orta Batı'nın incisi.",
-              ozellikler: ["Mimari", "Müzik", "Gastronomi", "Spor"],
+
               tarih:
                 "1833 yılında kurulan Chicago, 1871'deki büyük yangından sonra yeniden inşa edildi. Gökdelen mimarisinin doğduğu yer olarak bilinir.",
               gorulecekYerler: [
@@ -375,7 +376,7 @@
               foto: "https://images.unsplash.com/photo-1535498730771-e735b998cd64?w=800&h=600&fit=crop",
               kisaAciklama:
                 "Tropikal iklim, Art Deco mimarisi ve Latin kültürü ile Florida'nın en canlı şehri.",
-              ozellikler: ["Plajlar", "Gece Hayatı", "Latin Kültürü", "Lüks"],
+
               tarih:
                 "1896 yılında kurulan Miami, 1920'lerde Art Deco mimarisi ile gelişti. Küba Devrimi sonrası büyük Latin göçü aldı ve günümüzde Latin kültürünün merkezi haline geldi.",
               gorulecekYerler: [
@@ -411,7 +412,7 @@
               foto: "https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=800&h=600&fit=crop",
               kisaAciklama:
                 "Golden Gate Köprüsü, Alcatraz ve teknoloji vadisi ile Kaliforniya'nın en kültürel şehri.",
-              ozellikler: ["Teknoloji", "Kültür", "Mimari", "Gastronomi"],
+
               tarih:
                 "1776 yılında İspanyol misyonerler tarafından kurulan San Francisco, 1849 Altına Hücum döneminde hızla büyüdü. 1960'larda hippi hareketinin merkezi oldu.",
               gorulecekYerler: [
@@ -447,7 +448,7 @@
               foto: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/17/01/00/2b/the-strip.jpg?w=900&h=500&s=1",
               kisaAciklama:
                 "Eğlencenin başkenti. Casino'lar, gösteriler ve gece hayatı ile dünyanın en canlı şehri.",
-              ozellikler: ["Eğlence", "Casino", "Gösteriler", "Gece Hayatı"],
+
               tarih:
                 "1905 yılında demiryolu istasyonu olarak kurulan Las Vegas, 1931'de kumarın yasallaşmasıyla hızla gelişti. Günümüzde dünyanın en büyük eğlence merkezi.",
               gorulecekYerler: [
@@ -483,7 +484,7 @@
               foto: "https://etichotels.com/journal/wp-content/uploads/2023/12/48-Hours-In-Washington_D.C.-ETIC-Hotels.jpg",
               kisaAciklama:
                 "Amerika'nın başkenti. Beyaz Saray, Capitol ve müzeleri ile siyasetin ve tarihin merkezi.",
-              ozellikler: ["Siyaset", "Tarih", "Müzeler", "Mimari"],
+
               tarih:
                 "1790 yılında başkent olarak planlanan Washington DC, 1800'de resmi olarak başkent oldu. Pierre L'Enfant tarafından özel olarak tasarlandı.",
               gorulecekYerler: [
@@ -519,7 +520,7 @@
               foto: "https://images.ctfassets.net/szez98lehkfm/1XqeoQ6D14BNVAFKJEAivK/3d2860ee7f59ef8adddacac20b159800/MyIC_Inline_37766",
               kisaAciklama:
                 "Amerikan Devrimi'nin beşiği. Harvard, MIT ve tarihi Freedom Trail ile eğitimin ve tarihin şehri.",
-              ozellikler: ["Eğitim", "Tarih", "Kültür", "Spor"],
+
               tarih:
                 "1630 yılında İngiliz kolonistler tarafından kurulan Boston, Amerikan Devrimi'nin merkezi oldu. Günümüzde dünyanın en önemli eğitim merkezlerinden biri.",
               gorulecekYerler: [
@@ -555,7 +556,7 @@
               foto: "https://ik.imgkit.net/3vlqs5axxjf/external/ik-seo/http://images.ntmllc.com/v4/destination/United-States/New-Orleans/112099_SCN_New-Orleans_iStock1047897858_ZA2A81/New-Orleans-Scenery.jpg?tr=w-656%2Ch-390%2Cfo-auto",
               kisaAciklama:
                 "Jazz'ın doğduğu şehir. Mardi Gras, Cajun mutfağı ve French Quarter ile Louisiana'nın ruhu.",
-              ozellikler: ["Jazz", "Mardi Gras", "Gastronomi", "Kültür"],
+
               tarih:
                 "1718 yılında Fransızlar tarafından kurulan New Orleans, 1803'te Louisiana Satın Alımı ile ABD'ye katıldı. Jazz müziğinin doğduğu yer olarak bilinir.",
               gorulecekYerler: [
@@ -591,7 +592,7 @@
               foto: "https://cms.inspirato.com/ImageGen.ashx?image=%2Fmedia%2F7195464%2FSeattle_Dest_42-52432475.jpg&width=1081.5",
               kisaAciklama:
                 "Starbucks'ın doğduğu şehir. Space Needle, Pike Place Market ve teknoloji şirketleri ile Pasifik Kuzeybatı'nın incisi.",
-              ozellikler: ["Teknoloji", "Kahve", "Doğa", "Kültür"],
+
               tarih:
                 "1851 yılında kurulan Seattle, 1897 Klondike Altına Hücum döneminde gelişti. Günümüzde Microsoft, Amazon gibi teknoloji şirketlerinin merkezi.",
               gorulecekYerler: [

@@ -9,14 +9,15 @@
     <script src="assets/js/app.js"></script>
     <style>
       .kategori-container {
-        max-width: 1200px;
+        max-width: 100%;
         margin: 40px auto;
-        padding: 32px;
+        padding: 32px 40px;
         background: rgba(255, 255, 255, 0.92);
         border-radius: 18px;
         box-shadow: 0 8px 32px rgba(124, 92, 74, 0.1);
         backdrop-filter: blur(10px);
         position: relative;
+        width: 100%;
       }
       .kategori-header {
         text-align: center;
@@ -91,9 +92,10 @@
         color: #7c5c4a;
         border: none;
         border-radius: 50%;
-        width: 50px;
-        height: 50px;
-        font-size: 20px;
+        width: 45px;
+        height: 45px;
+        padding: 0;
+        font-size: 18px;
         font-weight: 600;
         cursor: pointer;
         display: flex;
@@ -102,15 +104,15 @@
         transition: all 0.3s;
         position: absolute;
         top: 20px;
-        right: 20px;
-        z-index: 1000;
-        box-shadow: 0 4px 12px rgba(124, 92, 74, 0.2);
+        left: 20px;
+        margin: 0;
       }
       .geri-btn:hover {
         background: linear-gradient(135deg, #b48a78, #e2d9d0);
         color: #fff;
         transform: scale(1.1);
       }
+
       @media (max-width: 768px) {
         .kategori-container {
           padding: 20px;
@@ -127,6 +129,12 @@
           width: 45px;
           height: 45px;
           font-size: 18px;
+        }
+      }
+      @media (max-width: 600px) {
+        .kategori-container {
+          padding: 20px;
+          max-width: 100%;
         }
       }
     </style>
@@ -195,18 +203,7 @@
               aciklama:
                 "Üç boyutlu sanat eserleri, heykeltıraşlar ve teknikler",
             },
-            {
-              id: "sinema",
-              ad: "Sinema",
-              icon: "🎬",
-              aciklama: "Film sanatı, yönetmenler, oyuncular ve sinema tarihi",
-            },
-            {
-              id: "tiyatro",
-              ad: "Tiyatro",
-              icon: "🎭",
-              aciklama: "Sahne sanatları, oyunlar, yazarlar ve performanslar",
-            },
+
             {
               id: "mimari",
               ad: "Mimari",
@@ -225,12 +222,7 @@
               icon: "🖌️",
               aciklama: "Grafik tasarım, dijital sanat ve görsel iletişim",
             },
-            {
-              id: "edebiyat",
-              ad: "Edebiyat",
-              icon: "📚",
-              aciklama: "Şiir, roman, hikaye ve edebi eserler",
-            },
+
             {
               id: "dans",
               ad: "Dans",
@@ -240,10 +232,19 @@
           ];
 
           $scope.kategoriSec = function (kategori) {
-            // Kategori seçildiğinde yapılacak işlem
-            alert(
-              kategori.ad + " kategorisi seçildi! Bu özellik yakında eklenecek."
-            );
+            if (kategori.id === "resim") {
+              window.location.href = "resimler.html";
+            } else if (kategori.id === "muzik") {
+              window.location.href = "muzik-turleri.html";
+            } else if (kategori.id === "heykel") {
+              window.location.href = "heykeller.html";
+            } else {
+              // Diğer kategoriler için
+              alert(
+                kategori.ad +
+                  " kategorisi seçildi! Bu özellik yakında eklenecek."
+              );
+            }
           };
 
           $scope.geriDon = function () {

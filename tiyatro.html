@@ -9,14 +9,15 @@
     <script src="assets/js/app.js"></script>
     <style>
       .tiyatro-container {
-        max-width: 1200px;
+        max-width: 100%;
         margin: 40px auto;
-        padding: 32px;
+        padding: 32px 40px;
         background: rgba(255, 255, 255, 0.92);
         border-radius: 18px;
         box-shadow: 0 8px 32px rgba(124, 92, 74, 0.1);
         backdrop-filter: blur(10px);
         position: relative;
+        width: 100%;
       }
 
       .tiyatro-title {
@@ -95,8 +96,9 @@
         color: #7c5c4a;
         border: none;
         border-radius: 50%;
-        width: 40px;
-        height: 40px;
+        width: 45px;
+        height: 45px;
+        padding: 0;
         font-size: 18px;
         font-weight: 600;
         cursor: pointer;
@@ -106,7 +108,8 @@
         transition: all 0.3s;
         position: absolute;
         top: 20px;
-        right: 20px;
+        left: 20px;
+        margin: 0;
       }
 
       .geri-btn:hover {
@@ -127,6 +130,12 @@
         color: #f44336;
         font-size: 1.1rem;
         padding: 40px;
+      }
+      @media (max-width: 600px) {
+        .tiyatro-container {
+          padding: 20px;
+          max-width: 100%;
+        }
       }
     </style>
   </head>
@@ -163,7 +172,7 @@
             <div class="eser-content">
               <h3 class="eser-baslik">{{ eser.eser_adi }}</h3>
               <div class="eser-yazar">{{ eser.yazar }}</div>
-              <div class="eser-puan">⭐ {{ eser.puan }}/10</div>
+              <div class="eser-puan">{{ eser.puan }}/10</div>
               <div class="eser-detay">
                 <strong>Yıl:</strong> {{ eser.yil }} | <strong>Tür:</strong> {{
                 eser.tur }} | <strong>Süre:</strong> {{ eser.sure }}

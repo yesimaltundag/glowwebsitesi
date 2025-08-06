@@ -15,9 +15,10 @@
     <!-- Page Specific CSS -->
     <style>
       .homepage-container {
-        max-width: 1200px;
+        max-width: 100%;
         margin: 0 auto;
-        padding: 20px;
+        padding: 20px 40px;
+        width: 100%;
       }
 
       .login-message {
@@ -46,11 +47,12 @@
       .welcome-section {
         text-align: center;
         margin-bottom: 40px;
-        background: rgba(255, 255, 255, 0.9);
+        background: transparent;
         padding: 30px;
         border-radius: 16px;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-        backdrop-filter: blur(10px);
+        box-shadow: none;
+        backdrop-filter: none;
+        border: none;
       }
 
       .welcome-section h1 {
@@ -250,6 +252,282 @@
         font-size: 18px;
       }
 
+      /* Sanat Preview Stilleri */
+      .sanat-preview {
+        position: relative;
+        cursor: pointer;
+        overflow: hidden;
+        border-radius: 12px;
+        transition: all 0.3s ease;
+      }
+
+      .sanat-preview:hover {
+        transform: scale(1.02);
+      }
+
+      .sanat-preview img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        transition: all 0.3s ease;
+      }
+
+      .sanat-preview-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(
+          135deg,
+          rgba(180, 138, 120, 0.8),
+          rgba(124, 92, 74, 0.9)
+        );
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+
+      .sanat-preview:hover .sanat-preview-overlay {
+        opacity: 1;
+      }
+
+      .sanat-preview-icon {
+        font-size: 48px;
+        margin-bottom: 10px;
+      }
+
+      .sanat-preview-text {
+        color: white;
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 5px;
+      }
+
+      .sanat-preview-subtext {
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 14px;
+      }
+
+      /* Sanat Galerisi Modal Stilleri */
+      .sanat-galeri-modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.8);
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+      }
+
+      .sanat-galeri-modal-icerik {
+        background: white;
+        border-radius: 16px;
+        max-width: 1000px;
+        max-height: 90vh;
+        overflow-y: auto;
+        position: relative;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+      }
+
+      .sanat-galeri-modal-kapat {
+        position: absolute;
+        top: 15px;
+        right: 20px;
+        background: #b48a78;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 35px;
+        height: 35px;
+        font-size: 20px;
+        cursor: pointer;
+        z-index: 1000;
+        transition: background 0.3s ease;
+      }
+
+      .sanat-galeri-modal-kapat:hover {
+        background: #7c5c4a;
+      }
+
+      .sanat-galeri-header {
+        text-align: center;
+        padding: 30px 25px 20px 25px;
+        border-bottom: 2px solid #e2d9d0;
+      }
+
+      .sanat-galeri-header h2 {
+        color: #7c5c4a;
+        font-size: 28px;
+        margin-bottom: 10px;
+      }
+
+      .sanat-galeri-header p {
+        color: #b48a78;
+        font-size: 16px;
+      }
+
+      .sanat-galeri-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+        padding: 25px;
+      }
+
+      .sanat-galeri-item {
+        position: relative;
+        border-radius: 12px;
+        overflow: hidden;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        aspect-ratio: 1;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+
+      .sanat-galeri-item:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      }
+
+      .sanat-galeri-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: all 0.3s ease;
+      }
+
+      .sanat-galeri-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+        padding: 15px;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+
+      .sanat-galeri-item:hover .sanat-galeri-overlay {
+        opacity: 1;
+      }
+
+      .sanat-galeri-overlay h3 {
+        color: white;
+        font-size: 14px;
+        font-weight: bold;
+        margin-bottom: 5px;
+      }
+
+      .sanat-galeri-overlay p {
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 12px;
+      }
+
+      /* Sanat Modal Stilleri */
+      .sanat-modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.8);
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+      }
+
+      .sanat-modal-icerik {
+        background: white;
+        border-radius: 16px;
+        max-width: 800px;
+        max-height: 90vh;
+        overflow-y: auto;
+        position: relative;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+      }
+
+      .sanat-modal-kapat {
+        position: absolute;
+        top: 15px;
+        right: 20px;
+        background: #b48a78;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 35px;
+        height: 35px;
+        font-size: 20px;
+        cursor: pointer;
+        z-index: 1000;
+        transition: background 0.3s ease;
+      }
+
+      .sanat-modal-kapat:hover {
+        background: #7c5c4a;
+      }
+
+      .sanat-modal-resim {
+        width: 100%;
+        height: 300px;
+        overflow: hidden;
+        border-radius: 16px 16px 0 0;
+      }
+
+      .sanat-modal-resim img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .sanat-modal-bilgi {
+        padding: 25px;
+      }
+
+      .sanat-modal-bilgi h2 {
+        color: #7c5c4a;
+        font-size: 24px;
+        margin-bottom: 10px;
+        text-align: center;
+      }
+
+      .sanat-sanatci {
+        color: #b48a78;
+        font-size: 18px;
+        font-weight: bold;
+        text-align: center;
+        margin-bottom: 5px;
+      }
+
+      .sanat-tarih {
+        color: #666;
+        font-size: 14px;
+        text-align: center;
+        margin-bottom: 20px;
+      }
+
+      .sanat-tarihce h3 {
+        color: #7c5c4a;
+        font-size: 18px;
+        margin-bottom: 10px;
+        border-bottom: 2px solid #e2d9d0;
+        padding-bottom: 5px;
+      }
+
+      .sanat-tarihce p {
+        color: #666;
+        line-height: 1.6;
+        text-align: justify;
+      }
+
       /* Responsive */
       @media (max-width: 768px) {
         .yorumlar-grid {
@@ -262,6 +540,46 @@
 
         .bolum-baslik {
           font-size: 24px;
+        }
+
+        .sanat-galeri-grid {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 15px;
+          padding: 20px;
+        }
+
+        .sanat-galeri-modal-icerik {
+          margin: 10px;
+          max-height: 95vh;
+        }
+
+        .sanat-galeri-header {
+          padding: 20px 15px 15px 15px;
+        }
+
+        .sanat-galeri-header h2 {
+          font-size: 24px;
+        }
+
+        .sanat-modal-icerik {
+          margin: 10px;
+          max-height: 95vh;
+        }
+
+        .sanat-modal-resim {
+          height: 200px;
+        }
+
+        .sanat-modal-bilgi {
+          padding: 20px;
+        }
+
+        .sanat-modal-bilgi h2 {
+          font-size: 20px;
+        }
+
+        .sanat-sanatci {
+          font-size: 16px;
         }
       }
     </style>
@@ -276,10 +594,13 @@
         <div>
           <div class="welcome-section">
             <h1>Hoş Geldiniz!</h1>
-            <p>
-              GLOW'a hoş geldiniz. Aşağıdaki kategorilerden ilginizi çeken
-              içerikleri keşfedin.
-            </p>
+
+            <img
+              src="assets/images/logo.jpg"
+              alt="logo"
+              width="150px"
+              height="150px"
+            />
           </div>
 
           <div class="card-grid">
@@ -364,6 +685,121 @@
         .controller("MainController", function ($scope) {
           $scope.scrollToTop = function () {
             window.scrollTo({ top: 0, behavior: "smooth" });
+          };
+        })
+        .controller("AnasayfaController", function ($scope) {
+          // Sanat resimleri verisi
+          $scope.sanatResimleri = [
+            {
+              baslik: "Mona Lisa",
+              sanatci: "Leonardo da Vinci",
+              tarih: "1503-1519",
+              resim:
+                "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg/687px-Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg",
+              tarihce:
+                "Mona Lisa, Leonardo da Vinci'nin en ünlü eseridir. İtalyan Rönesans döneminde yapılan bu portre, dünya sanat tarihinin en değerli ve en çok tanınan eserlerinden biridir. Eserin gizemli gülümsemesi ve sfumato tekniği ile yapılan yumuşak geçişler, sanat tarihinde devrim yaratmıştır. Şu anda Paris'teki Louvre Müzesi'nde sergilenmektedir.",
+            },
+            {
+              baslik: "Yıldızlı Gece",
+              sanatci: "Vincent van Gogh",
+              tarih: "1889",
+              resim:
+                "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg/1280px-Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg",
+              tarihce:
+                "Yıldızlı Gece, Van Gogh'un en ünlü eserlerinden biridir. Sanatçının Saint-Rémy-de-Provence'daki akıl hastanesinde kaldığı dönemde yapılmıştır. Eser, gecenin dinamik ve hareketli bir yorumunu sunar. Dönen bulutlar ve parlayan yıldızlar, sanatçının iç dünyasının yoğun duygusal durumunu yansıtır. Modern sanatın en etkili eserlerinden biri olarak kabul edilir.",
+            },
+            {
+              baslik: "Guernica",
+              sanatci: "Pablo Picasso",
+              tarih: "1937",
+              resim:
+                "https://upload.wikimedia.org/wikipedia/en/7/74/PicassoGuernica.jpg",
+              tarihce:
+                "Guernica, Picasso'nun İspanya İç Savaşı sırasında Nazi Almanyası'nın Guernica şehrini bombalaması üzerine yaptığı güçlü bir anti-savaş eseridir. Siyah, beyaz ve gri tonlarında yapılan eser, savaşın dehşetini ve acısını dramatik bir şekilde yansıtır. Modern sanatın en önemli politik eserlerinden biri olarak kabul edilir ve barışın sembolü haline gelmiştir.",
+            },
+            {
+              baslik: "Çığlık",
+              sanatci: "Edvard Munch",
+              tarih: "1893",
+              resim:
+                "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Edvard_Munch%2C_1893%2C_The_Scream%2C_oil%2C_tempera_and_pastel_on_cardboard%2C_91_x_73_cm%2C_National_Gallery_of_Norway.jpg/1280px-Edvard_Munch%2C_1893%2C_The_Scream%2C_oil%2C_tempera_and_pastel_on_cardboard%2C_91_x_73_cm%2C_National_Gallery_of_Norway.jpg",
+              tarihce:
+                "Çığlık, Edvard Munch'un en ünlü eseridir ve ekspresyonist sanatın simgesi haline gelmiştir. Eser, modern insanın varoluşsal kaygısını ve yalnızlığını güçlü bir şekilde ifade eder. Dalgalı çizgiler ve yoğun renkler kullanılarak yapılan eser, sanatçının iç dünyasındaki huzursuzluğu ve toplumsal değişimlerin yarattığı stresi yansıtır.",
+            },
+            {
+              baslik: "Son Akşam Yemeği",
+              sanatci: "Leonardo da Vinci",
+              tarih: "1495-1498",
+              resim:
+                "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/%C3%9Altima_Cena_-_Da_Vinci_5.jpg/1280px-%C3%9Altima_Cena_-_Da_Vinci_5.jpg",
+              tarihce:
+                "Son Akşam Yemeği, Leonardo da Vinci'nin Milano'daki Santa Maria delle Grazie manastırının yemek salonunda yaptığı fresk eseridir. İsa'nın havarileriyle son akşam yemeğini yediği anı tasvir eder. Perspektif kullanımı ve karakterlerin duygusal ifadeleri ile Rönesans sanatının en önemli eserlerinden biri olarak kabul edilir.",
+            },
+            {
+              baslik: "Venüs'ün Doğuşu",
+              sanatci: "Sandro Botticelli",
+              tarih: "1485",
+              resim:
+                "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Sandro_Botticelli_-_La_nascita_di_Venere_-_Google_Art_Project.jpg/1280px-Sandro_Botticelli_-_La_nascita_di_Venere_-_Google_Art_Project.jpg",
+              tarihce:
+                "Venüs'ün Doğuşu, Botticelli'nin en ünlü eserlerinden biridir. Antik Yunan mitolojisinden esinlenen eser, güzellik tanrıçası Venüs'ün deniz köpüğünden doğuşunu tasvir eder. Rönesans döneminin en güzel eserlerinden biri olarak kabul edilir ve klasik mitolojinin yeniden canlandırılmasının simgesi haline gelmiştir.",
+            },
+          ];
+
+          // Modal durumları
+          $scope.sanatGaleriModalGoster = false;
+          $scope.sanatModalGoster = false;
+          $scope.seciliSanat = null;
+
+          // Sanat galerisi açma fonksiyonu
+          $scope.sanatGaleriAc = function () {
+            $scope.sanatGaleriModalGoster = true;
+            document.body.style.overflow = "hidden"; // Scroll'u engelle
+          };
+
+          // Sanat galerisi kapatma fonksiyonu
+          $scope.sanatGaleriModalKapat = function () {
+            $scope.sanatGaleriModalGoster = false;
+            document.body.style.overflow = "auto"; // Scroll'u geri aç
+          };
+
+          // Sanat tarihçesi gösterme fonksiyonu
+          $scope.sanatTarihcesiGoster = function (sanat) {
+            $scope.seciliSanat = sanat;
+            $scope.sanatModalGoster = true;
+            $scope.sanatGaleriModalGoster = false; // Galeri modal'ını kapat
+          };
+
+          // Sanat tarihçesi modal kapatma fonksiyonu
+          $scope.sanatModalKapat = function () {
+            $scope.sanatModalGoster = false;
+            $scope.seciliSanat = null;
+            $scope.sanatGaleriModalGoster = true; // Galeri modal'ını geri aç
+          };
+
+          // Sayfa yönlendirme fonksiyonları
+          $scope.gotoYazilar = function () {
+            window.location.href = "yazilar.html";
+          };
+
+          $scope.gotoSeyahat = function () {
+            window.location.href = "seyahat.html";
+          };
+
+          $scope.gotoShow = function () {
+            window.location.href = "show.html";
+          };
+
+          $scope.gotoSanat = function () {
+            window.location.href = "sanat-kategoriler.html";
+          };
+
+          $scope.gotoYemekler = function () {
+            window.location.href = "yemekler.html";
+          };
+
+          $scope.gotoSpor = function () {
+            window.location.href = "spor.html";
           };
         });
     </script>

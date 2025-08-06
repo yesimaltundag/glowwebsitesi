@@ -5,273 +5,97 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Dram Dizileri - GLOW</title>
     <link rel="stylesheet" href="assets/css/style.css" />
-    <link rel="stylesheet" href="assets/css/dizi-styles.css" />
+    <link rel="stylesheet" href="assets/css/film-styles.css" />
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
     <script src="assets/js/app.js"></script>
-    <style>
-      .dizi-container {
-        max-width: 1200px;
-        margin: 40px auto;
-        padding: 32px;
-        background: rgba(255, 255, 255, 0.92);
-        border-radius: 18px;
-        box-shadow: 0 8px 32px rgba(124, 92, 74, 0.1);
-        backdrop-filter: blur(10px);
-        position: relative;
-      }
-
-      .dizi-header {
-        text-align: center;
-        margin-bottom: 40px;
-      }
-
-      .dizi-title {
-        color: #7c5c4a;
-        font-size: 2.5rem;
-        font-weight: 700;
-        margin-bottom: 10px;
-      }
-
-      .dizi-subtitle {
-        color: #666;
-        font-size: 1.1rem;
-      }
-
-      .dizi-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-        gap: 24px;
-        margin-top: 32px;
-      }
-
-      .dizi-card {
-        background: linear-gradient(135deg, #f8e0e1 60%, #e2d9d0 100%);
-        border-radius: 16px;
-        box-shadow: 0 4px 16px rgba(180, 138, 120, 0.08);
-        overflow: hidden;
-        transition: all 0.3s ease;
-        cursor: pointer;
-      }
-
-      .dizi-card:hover {
-        box-shadow: 0 8px 32px rgba(180, 138, 120, 0.16);
-        transform: translateY(-5px) scale(1.02);
-      }
-
-      .dizi-poster {
-        width: 100%;
-        height: 200px;
-        background: linear-gradient(135deg, #7c5c4a, #b48a78);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        font-size: 3rem;
-        font-weight: bold;
-      }
-
-      .dizi-info {
-        padding: 20px;
-      }
-
-      .dizi-adi {
-        color: #7c5c4a;
-        font-size: 1.3rem;
-        font-weight: 600;
-        margin-bottom: 8px;
-        line-height: 1.3;
-      }
-
-      .dizi-detay {
-        color: #666;
-        font-size: 0.9rem;
-        margin-bottom: 4px;
-      }
-
-      .dizi-aciklama {
-        color: #7c5c4a;
-        font-size: 0.95rem;
-        line-height: 1.4;
-        margin-top: 12px;
-        display: -webkit-box;
-        -webkit-line-clamp: 3;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-      }
-
-      .dizi-puan {
-        background: linear-gradient(135deg, #ffd700, #ffed4e);
-        color: #7c5c4a;
-        padding: 4px 8px;
-        border-radius: 12px;
-        font-size: 0.8rem;
-        font-weight: 600;
-        display: inline-block;
-        margin-top: 8px;
-      }
-
-      .geri-btn {
-        position: absolute;
-        top: 20px;
-        left: 20px;
-        background: rgba(255, 255, 255, 0.9);
-        color: #7c5c4a;
-        border: none;
-        border-radius: 50%;
-        width: 48px;
-        height: 48px;
-        font-size: 28px;
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-        cursor: pointer;
-        transition: all 0.3s ease;
-        z-index: 10;
-        backdrop-filter: blur(10px);
-      }
-
-      .geri-btn:hover {
-        background: rgba(255, 255, 255, 1);
-        color: #b48a78;
-        transform: scale(1.08);
-        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-      }
-
-      .loading {
-        text-align: center;
-        padding: 40px;
-        color: #7c5c4a;
-        font-size: 1.2rem;
-      }
-
-      .error {
-        text-align: center;
-        padding: 40px;
-        color: #e74c3c;
-        font-size: 1.2rem;
-      }
-
-      .no-dizi {
-        text-align: center;
-        padding: 40px;
-        color: #666;
-        font-size: 1.1rem;
-      }
-
-      @media (max-width: 768px) {
-        .dizi-container {
-          margin: 20px;
-          padding: 20px;
-        }
-
-        .dizi-title {
-          font-size: 2rem;
-        }
-
-        .dizi-grid {
-          grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-          gap: 16px;
-        }
-
-        .geri-btn {
-          width: 40px;
-          height: 40px;
-          font-size: 24px;
-          top: 15px;
-          left: 15px;
-        }
-      }
-    </style>
   </head>
-  <body ng-controller="MainController">
-    <ng-include src="'components/header.html'"></ng-include>
-    <main class="main-content">
-      <div class="dizi-container" ng-controller="DramDizilerController">
-        <button
-          class="geri-btn"
-          onclick="window.history.back()"
-          title="Geri Dön"
+  <body ng-controller="DramDizilerController">
+    <div ng-include="'components/header.html'"></div>
+
+    <div class="filmler-container">
+      <button class="geri-btn" onclick="window.history.back()" title="Geri Dön">
+        ←
+      </button>
+      <h1 class="filmler-title">🎭 Dram Dizileri</h1>
+
+      <!-- Loading -->
+      <div class="loading" ng-if="loading">
+        <p>Diziler yükleniyor...</p>
+      </div>
+
+      <!-- Error -->
+      <div class="error" ng-if="error">
+        <p>{{ error }}</p>
+      </div>
+
+      <!-- Diziler Grid -->
+      <div class="filmler-grid" ng-if="!loading && !error">
+        <div
+          class="film-card"
+          ng-repeat="dizi in diziler"
+          ng-click="diziDetay(dizi.id)"
         >
-          ←
-        </button>
-
-        <div class="dizi-header">
-          <div class="dizi-title">🎭 Dram Dizileri</div>
-          <div class="dizi-subtitle">En iyi dram dizilerini keşfedin</div>
-        </div>
-
-        <div class="loading" ng-if="loading">Diziler yükleniyor...</div>
-
-        <div class="error" ng-if="error">{{ error }}</div>
-
-        <div class="no-dizi" ng-if="!loading && !error && diziler.length === 0">
-          Bu kategoride henüz dizi bulunmuyor.
-        </div>
-
-        <div class="dizi-grid" ng-if="!loading && !error && diziler.length > 0">
-          <div
-            class="dizi-card"
-            ng-repeat="dizi in diziler"
-            ng-click="diziDetay(dizi.id)"
-          >
-            <div class="dizi-poster">{{ dizi.dizi_adi.charAt(0) }}</div>
-            <div class="dizi-info">
-              <div class="dizi-adi">{{ dizi.dizi_adi }}</div>
-              <div class="dizi-detay">
-                {{ dizi.yil }} • {{ dizi.sezon_sayisi }} Sezon
-              </div>
-              <div class="dizi-detay">{{ dizi.bolum_sayisi }} Bölüm</div>
-              <div class="dizi-puan" ng-if="dizi.imdb_puani">
-                ⭐ {{ dizi.imdb_puani }}
-              </div>
-              <div class="dizi-aciklama">{{ dizi.aciklama }}</div>
+          <img
+            ng-src="{{ dizi.poster_url }}"
+            ng-alt="{{ dizi.dizi_adi }}"
+            class="film-poster"
+            onerror="this.src='assets/images/logo.jpg'"
+          />
+          <div class="film-icerik">
+            <div class="film-baslik">{{ dizi.dizi_adi }}</div>
+            <div class="film-yil">
+              {{ dizi.yil }} • {{ dizi.sezon_sayisi }} Sezon
             </div>
+            <div class="film-imdb">IMDb: {{ dizi.imdb_puani }}</div>
+            <div class="film-ozet">
+              {{ dizi.aciklama | limitTo: 100 }}{{ dizi.aciklama.length > 100 ?
+              '...' : '' }}
+            </div>
+            <button class="film-btn">Detayları Gör</button>
           </div>
         </div>
       </div>
-    </main>
-    <ng-include src="'components/footer.html'"></ng-include>
+    </div>
+
+    <div ng-include="'components/footer.html'"></div>
+
+    <!-- Scroll to Top Button -->
     <button id="scrollTopBtn" title="Yukarı Çık" ng-click="scrollToTop()">
       ↑
     </button>
-
-    <script>
-      angular
-        .module("GirisApp")
-        .controller("DramDizilerController", function ($scope, $http) {
-          $scope.loading = true;
-          $scope.error = null;
-          $scope.diziler = [];
-
-          // Dizileri yükle
-          $scope.dizileriYukle = function () {
-            $http
-              .get("dizi_api.php?kategori=dram")
-              .then(function (response) {
-                if (response.data.success) {
-                  $scope.diziler = response.data.diziler;
-                } else {
-                  $scope.error = response.data.message;
-                }
-                $scope.loading = false;
-              })
-              .catch(function (error) {
-                $scope.error =
-                  "Diziler yüklenirken hata oluştu: " + error.statusText;
-                $scope.loading = false;
-              });
-          };
-
-          // Dizi detay sayfasına git
-          $scope.diziDetay = function (diziId) {
-            window.location.href = "dizi-detay.html?id=" + diziId;
-          };
-
-          $scope.scrollToTop = function () {
-            window.scrollTo({ top: 0, behavior: "smooth" });
-          };
-
-          // Sayfa yüklendiğinde dizileri yükle
-          $scope.dizileriYukle();
-        });
-    </script>
   </body>
 </html>
+
+<script>
+  angular
+    .module("GirisApp")
+    .controller("DramDizilerController", function ($scope, $http) {
+      $scope.loading = true;
+      $scope.error = null;
+      $scope.diziler = [];
+
+      // Veritabanından dizileri çek
+      $http
+        .get("dizi_api.php?kategori=dram")
+        .then(function (response) {
+          if (response.data.success) {
+            $scope.diziler = response.data.diziler;
+          } else {
+            $scope.error = response.data.message;
+          }
+          $scope.loading = false;
+        })
+        .catch(function (error) {
+          $scope.error = "Diziler yüklenirken hata oluştu: " + error.statusText;
+          $scope.loading = false;
+        });
+
+      $scope.diziDetay = function (diziId) {
+        window.location.href = "dizi-detay.html?id=" + diziId;
+      };
+
+      $scope.scrollToTop = function () {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      };
+    });
+</script>

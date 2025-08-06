@@ -8,35 +8,7 @@
     <link rel="stylesheet" href="assets/css/film-styles.css" />
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
     <script src="assets/js/app.js"></script>
-        position: absolute;
-        top: 28px;
-        right: 28px;
-        cursor: pointer;
-        transition: all 0.3s;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 12px;
-      }
-      .geri-btn:hover {
-        background: linear-gradient(135deg, #c82333, #dc3545);
-        transform: scale(1.1);
-      }
-      .loading {
-        text-align: center;
-        padding: 40px;
-        color: #dc3545;
-        font-size: 1.2rem;
-      }
-      .error {
-        text-align: center;
-        padding: 40px;
-        color: #e74c3c;
-        font-size: 1.1rem;
-        background: rgba(231, 76, 60, 0.1);
-        border-radius: 10px;
-        margin: 20px 0;
-      }
+       
     </style>
   </head>
   <body ng-controller="DramFilmlerController">
@@ -72,7 +44,7 @@
             <div class="film-icerik">
               <div class="film-baslik">{{ film.film_adi }}</div>
               <div class="film-yil">{{ film.yil }}</div>
-              <div class="film-imdb">⭐ IMDb: {{ film.imdb_puani }}</div>
+              <div class="film-imdb">IMDb: {{ film.imdb_puani }}</div>
               <div class="film-ozet">{{ film.ozet }}</div>
               <button class="film-btn">Detayları Gör</button>
             </div>

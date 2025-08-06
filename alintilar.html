@@ -9,33 +9,38 @@
     <script src="assets/js/app.js"></script>
     <style>
       .kitap-container {
-        max-width: 900px;
-        margin: 40px auto;
-        padding: 32px;
+        max-width: 100%;
+        margin: 0;
+        padding: 20px;
         background: rgba(255, 255, 255, 0.92);
-        border-radius: 18px;
-        box-shadow: 0 8px 32px rgba(124, 92, 74, 0.1);
+        border-radius: 0;
+        box-shadow: none;
         backdrop-filter: blur(10px);
         position: relative;
+        width: 100%;
+        min-height: 100vh;
       }
       .geri-btn {
         background: linear-gradient(135deg, #e2d9d0, #b48a78);
         color: #7c5c4a;
         border: none;
         border-radius: 50%;
-        width: 22px;
-        height: 22px;
+        width: 45px;
+        height: 45px;
         padding: 0;
-        font-size: 13px;
+        font-size: 18px;
         font-weight: 600;
         cursor: pointer;
-        position: absolute;
-        top: 20px;
-        right: 20px;
         display: flex;
         align-items: center;
         justify-content: center;
         transition: all 0.3s;
+        position: fixed;
+        top: 80px;
+        left: 30px;
+        margin: 0;
+        z-index: 9999;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
       }
       .geri-btn:hover {
         background: linear-gradient(135deg, #b48a78, #e2d9d0);
@@ -45,17 +50,20 @@
       .kitap-header {
         display: flex;
         align-items: flex-start;
-        gap: 28px;
-        margin-bottom: 32px;
+        gap: 40px;
+        margin-bottom: 24px;
+        margin-left: 80px;
+        margin-right: 20px;
       }
       .kitap-foto {
-        width: 150px;
-        height: 220px;
+        width: 300px;
+        height: 420px;
         object-fit: cover;
         border-radius: 12px;
         box-shadow: 0 4px 20px rgba(124, 92, 74, 0.15);
         background: #eee;
         transition: transform 0.3s;
+        flex-shrink: 0;
       }
       .kitap-foto:hover {
         transform: scale(1.05);
@@ -80,8 +88,8 @@
       .kitap-detaylar {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
-        gap: 16px;
-        margin-bottom: 32px;
+        gap: 12px;
+        margin-top: 20px;
       }
       .detay-item {
         background: linear-gradient(135deg, #f8e0e1 60%, #e2d9d0 100%);
@@ -99,14 +107,16 @@
       }
       .detay-deger {
         color: #7c5c4a;
-        font-size: 1.1rem;
+        font-size: 1.5rem;
         font-weight: 500;
       }
       .kitap-tanitim {
         background: linear-gradient(135deg, #f8e0e1 60%, #e2d9d0 100%);
         border-radius: 16px;
-        padding: 28px;
+        padding: 24px;
         box-shadow: 0 4px 16px rgba(180, 138, 120, 0.08);
+        margin-left: 80px;
+        margin-right: 20px;
       }
       .tanitim-baslik {
         color: #7c5c4a;
@@ -118,43 +128,57 @@
       }
       .tanitim-metin {
         color: #7c5c4a;
-        font-size: 1.08rem;
+        font-size: 1.6rem;
         line-height: 1.7;
         white-space: pre-line;
       }
       @media (max-width: 768px) {
         .kitap-container {
-          margin: 20px;
-          padding: 24px;
+          margin: 0;
+          padding: 20px;
         }
         .kitap-header {
-          flex-direction: column;
-          align-items: center;
-          text-align: center;
-          gap: 20px;
+          flex-direction: row;
+          align-items: flex-start;
+          text-align: left;
+          gap: 15px;
+          margin-left: 60px;
+          margin-right: 10px;
         }
         .kitap-foto {
-          width: 120px;
-          height: 180px;
+          width: 160px;
+          height: 220px;
         }
         .kitap-baslik {
-          font-size: 1.8rem;
+          font-size: 1.4rem;
+          margin-bottom: 6px;
         }
         .kitap-yazar {
-          font-size: 1.1rem;
+          font-size: 0.95rem;
+          margin-bottom: 16px;
         }
         .kitap-detaylar {
           grid-template-columns: 1fr;
-          gap: 12px;
+          gap: 8px;
+          margin-top: 15px;
         }
         .kitap-tanitim {
           padding: 20px;
+          margin-left: 60px;
+          margin-right: 10px;
         }
         .tanitim-baslik {
           font-size: 1.3rem;
         }
         .tanitim-metin {
           font-size: 1rem;
+        }
+        .geri-btn {
+          width: 40px;
+          height: 40px;
+          font-size: 16px;
+          top: 70px;
+          left: 20px;
         }
       }
     </style>
@@ -172,33 +196,33 @@
           <div class="kitap-bilgi">
             <h1 class="kitap-baslik">{{kitap.ad}}</h1>
             <div class="kitap-yazar">{{kitap.yazar}}</div>
-          </div>
-        </div>
 
-        <div class="kitap-detaylar">
-          <div class="detay-item">
-            <div class="detay-label">Yazar</div>
-            <div class="detay-deger">{{kitap.yazar}}</div>
-          </div>
-          <div class="detay-item">
-            <div class="detay-label">Sayfa Sayısı</div>
-            <div class="detay-deger">{{kitap.sayfa}}</div>
-          </div>
-          <div class="detay-item">
-            <div class="detay-label">Basım Yılı</div>
-            <div class="detay-deger">{{kitap.yil}}</div>
-          </div>
-          <div class="detay-item">
-            <div class="detay-label">Basım Yeri</div>
-            <div class="detay-deger">{{kitap.basimYeri}}</div>
-          </div>
-          <div class="detay-item">
-            <div class="detay-label">Kategori</div>
-            <div class="detay-deger">{{kitap.kategori}}</div>
-          </div>
-          <div class="detay-item">
-            <div class="detay-label">ISBN</div>
-            <div class="detay-deger">{{kitap.isbn}}</div>
+            <div class="kitap-detaylar">
+              <div class="detay-item">
+                <div class="detay-label">Yazar</div>
+                <div class="detay-deger">{{kitap.yazar}}</div>
+              </div>
+              <div class="detay-item">
+                <div class="detay-label">Sayfa Sayısı</div>
+                <div class="detay-deger">{{kitap.sayfa}}</div>
+              </div>
+              <div class="detay-item">
+                <div class="detay-label">Basım Yılı</div>
+                <div class="detay-deger">{{kitap.yil}}</div>
+              </div>
+              <div class="detay-item">
+                <div class="detay-label">Basım Yeri</div>
+                <div class="detay-deger">{{kitap.basimYeri}}</div>
+              </div>
+              <div class="detay-item">
+                <div class="detay-label">Kategori</div>
+                <div class="detay-deger">{{kitap.kategori}}</div>
+              </div>
+              <div class="detay-item">
+                <div class="detay-label">ISBN</div>
+                <div class="detay-deger">{{kitap.isbn}}</div>
+              </div>
+            </div>
           </div>
         </div>
 

@@ -11,19 +11,19 @@ angular
       var yildizlar = "";
       var tamYildiz = Math.floor(puan);
 
-      // Sarı yıldızlar (verilen puan kadar)
+      // Mavi yıldızlar (verilen puan kadar)
       for (var i = 0; i < tamYildiz; i++) {
-        yildizlar += '<span class="yildiz sari"></span>';
+        yildizlar += '<span class="yildiz mavi"></span>';
       }
 
-      // Beyaz yıldızlar (kalan)
+      // Gri yıldızlar (kalan)
       for (var i = tamYildiz; i < 10; i++) {
-        yildizlar += '<span class="yildiz beyaz"></span>';
+        yildizlar += '<span class="yildiz gri"></span>';
       }
 
       return $sce.trustAsHtml(
         yildizlar +
-          ' <span style="margin-left: 5px; font-size: 0.9rem;">(' +
+          ' <span style="margin-left: 5px; font-size: 0.9rem; color: #e67e22;">(' +
           puan +
           "/10)</span>"
       );
@@ -83,31 +83,53 @@ angular
     };
 
     $scope.girisYap = function () {
+      console.log("🔐 Giriş yapılıyor...");
+      console.log("📤 Gönderilen veri:", {
+        username: $scope.formData.username,
+        sifre: $scope.formData.password,
+      });
+
       $http
         .post("api.php?login=1", {
           username: $scope.formData.username,
           sifre: $scope.formData.password,
         })
         .then(function (response) {
+          console.log("📥 API yanıtı:", response);
+          console.log("📊 Response data:", response.data);
+
           if (response.data.success) {
+            console.log("✅ Giriş başarılı!");
             localStorage.setItem(
               "girisYapan",
               JSON.stringify(response.data.kullanici)
             );
+            console.log("👤 Kullanıcı bilgileri:", response.data.kullanici);
+
             if (
               response.data.kullanici.rol === "admin" ||
               response.data.kullanici.rol === "Yönetici"
             ) {
+              console.log("👑 Admin olarak yönlendiriliyor...");
               window.location.href = "liste.html";
             } else {
+              console.log("👤 Normal kullanıcı olarak yönlendiriliyor...");
               window.location.href = "anasayfa.html";
             }
           } else {
+            console.log("❌ Giriş başarısız:", response.data.message);
             alert("Giriş başarısız: " + response.data.message);
           }
         })
         .catch(function (error) {
-          console.error("Giriş hatası:", error);
+          console.error("❌ Giriş hatası:", error);
+          console.error("🔍 Error details:", {
+            status: error.status,
+            statusText: error.statusText,
+            data: error.data,
+            config: error.config,
+          });
+
           if (error.data && error.data.message) {
             alert("Bir hata oluştu: " + error.data.message);
           } else {
@@ -130,6 +152,7 @@ angular
           username: $scope.username,
           adsoyad: $scope.adsoyad,
           sifre: $scope.sifre,
+          eposta: $scope.eposta,
           rol: "kullanici",
         })
         .then(function (response) {
@@ -1243,12 +1266,67 @@ angular
 
   // ===== LIST CONTROLLER =====
   .controller("ListeController", function ($scope, $http) {
+    $scope.kullanici = JSON.parse(localStorage.getItem("girisYapan") || "null");
     $scope.kisiler = [];
     $scope.currentPage = 1;
     $scope.itemsPerPage = 5;
+    $scope.aramaMetni = "";
     $scope.modalAcik = false;
-    $scope.kullanici = JSON.parse(localStorage.getItem("girisYapan") || "null");
+    $scope.duzenlenecekKisi = null;
 
+    console.log("🔍 ListeController başlatıldı");
+    console.log("👤 Kullanıcı:", $scope.kullanici);
+
+    // Kullanıcı kontrolü
+    if (
+      !$scope.kullanici ||
+      ($scope.kullanici.rol !== "admin" && $scope.kullanici.rol !== "Yönetici")
+    ) {
+      console.log("❌ Yetki hatası - Kullanıcı:", $scope.kullanici);
+      alert("Bu sayfaya erişim yetkiniz yok!");
+      window.location.href = "index.html";
+      return;
+    }
+
+    console.log("✅ Yetki kontrolü geçildi");
+
+    // Kullanıcıları getir
+    $scope.kisileriGetir = function () {
+      console.log("🔍 Kullanıcılar getiriliyor...");
+      console.log("📡 API çağrısı: api.php?kisiler=1");
+
+      $http
+        .get("api.php?kisiler=1")
+        .then(function (response) {
+          console.log("✅ API yanıtı başarılı");
+          console.log("📊 Gelen veri:", response.data);
+          console.log("📈 Veri tipi:", typeof response.data);
+          console.log(
+            "📊 Veri uzunluğu:",
+            response.data ? response.data.length : "null"
+          );
+
+          if (Array.isArray(response.data)) {
+            $scope.kisiler = response.data;
+            console.log(
+              "✅ Kullanıcılar yüklendi. Toplam:",
+              $scope.kisiler.length
+            );
+            console.log("📋 İlk kullanıcı:", $scope.kisiler[0]);
+          } else {
+            console.error("❌ Gelen veri array değil:", response.data);
+            $scope.kisiler = [];
+          }
+        })
+        .catch(function (error) {
+          console.error("❌ API hatası:", error);
+          console.error("❌ Hata detayı:", error.status, error.statusText);
+          console.error("❌ Hata mesajı:", error.data);
+          $scope.kisiler = [];
+        });
+    };
+
+    // Modal fonksiyonları
     $scope.notuModalIleAc = function (kisi) {
       $scope.duzenlenecekKisi = angular.copy(kisi);
       $scope.modalAcik = true;
@@ -1278,17 +1356,7 @@ angular
         });
     };
 
-    $scope.kisileriGetir = function () {
-      $http
-        .get("api.php")
-        .then(function (response) {
-          $scope.kisiler = response.data;
-        })
-        .catch(function (error) {
-          showMessage("Kullanıcılar yüklenirken hata oluştu", "error");
-        });
-    };
-
+    // Kullanıcı sil
     $scope.kisiSil = function (id) {
       if (confirm("Bu kullanıcıyı silmek istediğinizden emin misiniz?")) {
         $http({
@@ -1309,6 +1377,7 @@ angular
       }
     };
 
+    // Kullanıcı güncelle
     $scope.kisiNotuGuncelle = function (kisi) {
       $http
         .put("api.php", kisi)
@@ -1328,6 +1397,7 @@ angular
         });
     };
 
+    // Sayfalama fonksiyonları
     $scope.pageCount = function () {
       if (!$scope.kisiler) return 0;
       return Math.ceil(($scope.kisiler.length || 0) / $scope.itemsPerPage);
@@ -1355,7 +1425,13 @@ angular
       window.location.href = "yorum-yonetimi.html";
     };
 
+    // Mesaj yönetimi sayfasına git
+    $scope.mesajYonetimiGit = function () {
+      window.location.href = "mesaj-yonetimi.html";
+    };
+
     // Sayfa yüklendiğinde kullanıcıları getir
+    console.log("🚀 Sayfa yüklendi, kullanıcılar getiriliyor...");
     $scope.kisileriGetir();
   })
 
@@ -1904,6 +1980,154 @@ angular
 
     // Sayfa yüklendiğinde yorumları getir
     $scope.yorumlariGetir();
+
+    // İçerik sayfasına git
+    $scope.icerikSayfasinaGit = function (icerikAdi, tur, icerikId) {
+      console.log("🔗 İçerik sayfasına gitme:", icerikAdi, tur, icerikId);
+
+      // İçerik ID'si varsa doğrudan detay sayfasına git
+      if (icerikId) {
+        switch (tur.toLowerCase()) {
+          case "film":
+            window.location.href = "film-detay.html?id=" + icerikId;
+            break;
+          case "dizi":
+            window.location.href = "dizi-detay.html?id=" + icerikId;
+            break;
+          case "tiyatro":
+            window.location.href = "tiyatro-detay.html?id=" + icerikId;
+            break;
+          case "belgesel":
+            window.location.href = "belgesel-detay.html?id=" + icerikId;
+            break;
+          case "anime":
+            window.location.href = "anime-detay.html?id=" + icerikId;
+            break;
+          default:
+            window.location.href = "anasayfa.html";
+            break;
+        }
+      } else {
+        // İçerik ID yoksa ana kategori sayfasına git
+        switch (tur.toLowerCase()) {
+          case "film":
+            window.location.href = "film-kategoriler.html";
+            break;
+          case "dizi":
+            window.location.href = "dizi-kategoriler.html";
+            break;
+          case "tiyatro":
+            window.location.href = "tiyatro.html";
+            break;
+          case "belgesel":
+            window.location.href = "belgesel.html";
+            break;
+          case "anime":
+            window.location.href = "anime.html";
+            break;
+          default:
+            window.location.href = "anasayfa.html";
+            break;
+        }
+      }
+    };
+  });
+
+// ===== MESAJ YÖNETİMİ CONTROLLER =====
+angular
+  .module("GirisApp")
+  .controller("MesajYonetimiController", function ($scope, $http) {
+    $scope.kullanici = JSON.parse(localStorage.getItem("girisYapan") || "null");
+    $scope.mesajlar = [];
+    $scope.currentPage = 1;
+    $scope.itemsPerPage = 10;
+    $scope.aramaMetni = "";
+
+    // Kullanıcı kontrolü
+    if (
+      !$scope.kullanici ||
+      ($scope.kullanici.rol !== "admin" && $scope.kullanici.rol !== "Yönetici")
+    ) {
+      alert("Bu sayfaya erişim yetkiniz yok!");
+      window.location.href = "index.html";
+      return;
+    }
+
+    // Mesajları getir
+    $scope.mesajlariGetir = function () {
+      console.log("🔍 Mesajlar getiriliyor...");
+      $http
+        .get("api.php?mesajlar=1")
+        .then(function (response) {
+          console.log("📊 API yanıtı:", response.data);
+          if (response.data && !response.data.error) {
+            $scope.mesajlar = response.data;
+            console.log(
+              "✅ Mesajlar yüklendi. Toplam:",
+              $scope.mesajlar.length
+            );
+            console.log("📋 Mesaj listesi:", $scope.mesajlar);
+          } else {
+            $scope.mesajlar = [];
+            console.error("❌ Mesajlar yüklenirken hata:", response.data.error);
+          }
+        })
+        .catch(function (error) {
+          console.error("❌ Mesajlar yüklenirken hata:", error);
+          $scope.mesajlar = [];
+        });
+    };
+
+    // Sayfalama fonksiyonları
+    $scope.paginatedMesajlar = function () {
+      var start = ($scope.currentPage - 1) * $scope.itemsPerPage;
+      var end = start + $scope.itemsPerPage;
+      return $scope.mesajlar.slice(start, end);
+    };
+
+    $scope.pageCount = function () {
+      return Math.ceil($scope.mesajlar.length / $scope.itemsPerPage);
+    };
+
+    $scope.oncekiSayfa = function () {
+      if ($scope.currentPage > 1) {
+        $scope.currentPage--;
+      }
+    };
+
+    $scope.sonrakiSayfa = function () {
+      if ($scope.currentPage < $scope.pageCount()) {
+        $scope.currentPage++;
+      }
+    };
+
+    // Mesaj sil
+    $scope.mesajSil = function (mesajId) {
+      if (confirm("Bu mesajı silmek istediğinizden emin misiniz?")) {
+        $http
+          .delete("api.php?id=" + mesajId + "&mesaj=1")
+          .then(function (response) {
+            if (response.data && response.data.success) {
+              showMessage("Mesaj başarıyla silindi!", "success");
+              $scope.mesajlariGetir();
+            } else {
+              showMessage("Mesaj silinirken hata oluştu!", "error");
+            }
+          })
+          .catch(function (error) {
+            console.error("Mesaj silme hatası:", error);
+            showMessage("Mesaj silinirken hata oluştu!", "error");
+          });
+      }
+    };
+
+    // Liste sayfasına git
+    $scope.listeSayfasinaGit = function () {
+      window.location.href = "liste.html";
+    };
+
+    // Sayfa yüklendiğinde mesajları getir
+    $scope.mesajlariGetir();
   });
 
 // ===== UTILITY FUNCTIONS =====

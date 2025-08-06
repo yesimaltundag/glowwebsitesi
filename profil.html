@@ -15,7 +15,7 @@
     <!-- Page Specific CSS -->
     <style>
       .profile-container {
-        max-width: 500px;
+        max-width: 800px;
         margin: 60px auto;
         background: rgba(255, 255, 255, 0.9);
         border-radius: 16px;
@@ -23,6 +23,7 @@
         padding: 40px;
         backdrop-filter: blur(10px);
         position: relative;
+        width: 100%;
       }
 
       .profile-header {
@@ -58,6 +59,27 @@
       .close-btn:hover {
         background: #7c5c4a;
         transform: scale(1.1);
+      }
+
+      .geri-btn {
+        background: linear-gradient(135deg, #e2d9d0, #b48a78);
+        color: #7c5c4a;
+        border: none;
+        border-radius: 50%;
+        width: 45px;
+        height: 45px;
+        padding: 0;
+        font-size: 18px;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s;
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        margin: 0;
       }
 
       .form-group {

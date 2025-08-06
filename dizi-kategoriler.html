@@ -23,8 +23,8 @@
         background: rgba(255, 255, 255, 0.85);
         box-shadow: 0 8px 32px rgba(124, 92, 74, 0.1);
         border-radius: 22px;
-        padding: 48px 32px 32px 32px;
-        max-width: 900px;
+        padding: 48px 40px 32px 40px;
+        max-width: 100%;
         margin: 40px auto;
         width: 100%;
         position: relative;
@@ -96,8 +96,8 @@
         color: #7c5c4a;
         border: none;
         border-radius: 50%;
-        width: 36px;
-        height: 36px;
+        width: 45px;
+        height: 45px;
         font-size: 18px;
         font-weight: 600;
         cursor: pointer;
@@ -130,6 +130,12 @@
         .kategori-grid {
           grid-template-columns: 1fr;
           gap: 18px;
+        }
+      }
+      @media (max-width: 600px) {
+        .kategori-wrapper {
+          padding: 20px;
+          max-width: 100%;
         }
       }
     </style>

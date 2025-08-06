@@ -15,7 +15,7 @@
     <script src="assets/js/app.js"></script>
     <style>
       .detay-container {
-        max-width: 1200px;
+        max-width: 100%;
         margin: 40px auto;
         padding: 40px;
         background: rgba(255, 255, 255, 0.95);
@@ -23,15 +23,16 @@
         box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
         backdrop-filter: blur(15px);
         position: relative;
+        width: 100%;
       }
       .geri-btn {
-        background: linear-gradient(135deg, #e74c3c, #c0392b);
-        color: white;
+        background: linear-gradient(135deg, #e2d9d0, #b48a78);
+        color: #7c5c4a;
         border: none;
         border-radius: 50%;
-        width: 50px;
-        height: 50px;
-        font-size: 20px;
+        width: 45px;
+        height: 45px;
+        font-size: 18px;
         font-weight: 600;
         cursor: pointer;
         display: flex;
@@ -44,7 +45,8 @@
         margin: 0;
       }
       .geri-btn:hover {
-        background: linear-gradient(135deg, #c0392b, #a93226);
+        background: linear-gradient(135deg, #b48a78, #e2d9d0);
+        color: #fff;
         transform: scale(1.1);
       }
       .film-header {
@@ -341,18 +343,29 @@
         color: #6c757d;
       }
 
-      .yorum-sil-btn {
-        background: none;
-        border: none;
-        font-size: 1.2rem;
-        cursor: pointer;
-        padding: 5px;
-        border-radius: 5px;
-        transition: background-color 0.3s;
+      button.delete-btn {
+        background: linear-gradient(135deg, #e2d9d0, #f8e0e1) !important;
+        color: #7c5c4a !important;
+        border: none !important;
+        padding: 4px 8px !important;
+        border-radius: 6px !important;
+        font-size: 12px !important;
+        font-weight: 500 !important;
+        cursor: pointer !important;
+        transition: all 0.3s ease !important;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+        width: auto !important;
       }
 
-      .yorum-sil-btn:hover {
-        background-color: #f8f9fa;
+      button.delete-btn:hover {
+        background: linear-gradient(135deg, #f8e0e1, #e2d9d0) !important;
+        transform: scale(1.05) !important;
+      }
+
+      .yorum-actions {
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: 15px;
       }
 
       .yorum-icerik {
@@ -512,19 +525,20 @@
         bottom: 32px;
         right: 32px;
         z-index: 9999;
-        background: linear-gradient(135deg, #dc3545, #c82333);
-        color: #fff;
+        background: linear-gradient(135deg, #e2d9d0, #b48a78);
+        color: #7c5c4a;
         border: none;
         border-radius: 50%;
         width: 48px;
         height: 48px;
         font-size: 28px;
-        box-shadow: 0 4px 16px rgba(220, 53, 69, 0.15);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
         cursor: pointer;
         transition: background 0.3s, transform 0.2s;
       }
       #scrollTopBtn:hover {
-        background: linear-gradient(135deg, #c82333, #dc3545);
+        background: linear-gradient(135deg, #b48a78, #e2d9d0);
+        color: #fff;
         transform: scale(1.08);
       }
     </style>
@@ -670,15 +684,19 @@
                     class="yorum-puan"
                     ng-bind-html="yorum.puan | yildizSistemi"
                   ></div>
-                  <button
-                    class="yorum-sil-btn"
-                    ng-if="kullanici && kullanici.id == yorum.kullanici_id"
-                    ng-click="yorumSil(yorum.id)"
-                    title="Yorumu Sil"
-                  >
-                    🗑️
-                  </button>
                 </div>
+              </div>
+              <div
+                class="yorum-actions"
+                ng-if="kullanici && kullanici.id == yorum.kullanici_id"
+              >
+                <button
+                  class="delete-btn"
+                  ng-click="yorumSil(yorum.id)"
+                  title="Yorumu Sil"
+                >
+                  🗑️ Sil
+                </button>
               </div>
               <div class="yorum-icerik">{{ yorum.yorum }}</div>
             </div>

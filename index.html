@@ -1,129 +1,139 @@
 <!DOCTYPE html>
 <html lang="tr" ng-app="GirisApp">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Giriş - GLOW</title>
-  
-  <!-- CSS -->
-  <link rel="stylesheet" href="assets/css/style.css">
-  
-  <!-- AngularJS -->
-  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
-  <script src="assets/js/app.js"></script>
-  
-  <!-- Page Specific CSS -->
-  <style>
-    .login-container {
-      max-width: 400px;
-      margin: 60px auto;
-      padding: 40px;
-      background: rgba(255, 255, 255, 0.9);
-      border-radius: 16px;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-      backdrop-filter: blur(10px);
-    }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Giriş - GLOW</title>
 
-    .login-container h2 {
-      color: #7c5c4a;
-      text-align: center;
-      margin-bottom: 30px;
-      font-size: 28px;
-    }
+    <!-- CSS -->
+    <link rel="stylesheet" href="assets/css/style.css" />
 
-    .form-group {
-      margin-bottom: 20px;
-    }
+    <!-- AngularJS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="assets/js/app.js"></script>
 
-    .form-group input {
-      width: 100%;
-      padding: 12px 16px;
-      border: 2px solid #e0e0e0;
-      border-radius: 8px;
-      font-size: 16px;
-      transition: border-color 0.3s ease;
-      background: rgba(255, 255, 255, 0.9);
-    }
+    <!-- Page Specific CSS -->
+    <style>
+      .login-container {
+        max-width: 400px;
+        margin: 60px auto;
+        padding: 40px 40px;
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 16px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(10px);
+        width: 100%;
+      }
 
-    .form-group input:focus {
-      outline: none;
-      border-color: #b48a78;
-      box-shadow: 0 0 0 3px rgba(180, 138, 120, 0.1);
-    }
+      .login-container h2 {
+        color: #7c5c4a;
+        text-align: center;
+        margin-bottom: 30px;
+        font-size: 28px;
+      }
 
-    .login-btn {
-      width: 100%;
-      padding: 12px 24px;
-      background: linear-gradient(135deg, #e2d9d0, #d1c6b1, #f8e0e1, #c0b2b0);
-      color: #7c5c4a;
-      border: none;
-      border-radius: 8px;
-      font-size: 16px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
+      .form-group {
+        margin-bottom: 20px;
+      }
 
-    .login-btn:hover {
-      background: linear-gradient(135deg, #f8e0e1, #d1c6b1, #e2d9d0, #c0b2b0);
-      transform: translateY(-2px);
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
-    }
+      .form-group input {
+        width: 100%;
+        padding: 12px 16px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 16px;
+        transition: border-color 0.3s ease;
+        background: rgba(255, 255, 255, 0.9);
+      }
 
-    .register-link {
-      text-align: center;
-      margin-top: 20px;
-      color: #7c5c4a;
-    }
+      .form-group input:focus {
+        outline: none;
+        border-color: #b48a78;
+        box-shadow: 0 0 0 3px rgba(180, 138, 120, 0.1);
+      }
 
-    .register-link a {
-      color: #b48a78;
-      text-decoration: none;
-      font-weight: 600;
-    }
+      .login-btn {
+        width: 100%;
+        padding: 12px 24px;
+        background: linear-gradient(135deg, #e2d9d0, #d1c6b1, #f8e0e1, #c0b2b0);
+        color: #7c5c4a;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
 
-    .register-link a:hover {
-      text-decoration: underline;
-    }
-  </style>
-</head>
-<body ng-controller="MainController">
-  <!-- Header Component -->
-  <ng-include src="'components/header.html'"></ng-include>
-  
-  <!-- Main Content -->
-  <main class="main-content">
-    <div class="login-container" ng-controller="GirisController">
-      <h2>Giriş Yap</h2>
-      <form ng-submit="girisYap()">
-        <div class="form-group">
-          <input
-            type="text"
-            ng-model="formData.username"
-            placeholder="Kullanıcı Adı"
-            required
-          />
+      .login-btn:hover {
+        background: linear-gradient(135deg, #f8e0e1, #d1c6b1, #e2d9d0, #c0b2b0);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+      }
+
+      .register-link {
+        text-align: center;
+        margin-top: 20px;
+        color: #7c5c4a;
+      }
+
+      .register-link a {
+        color: #b48a78;
+        text-decoration: none;
+        font-weight: 600;
+      }
+
+      .register-link a:hover {
+        text-decoration: underline;
+      }
+
+      @media (max-width: 600px) {
+        .login-container {
+          padding: 20px;
+          max-width: 90%;
+        }
+      }
+    </style>
+  </head>
+  <body ng-controller="MainController">
+    <!-- Header Component -->
+    <ng-include src="'components/header.html'"></ng-include>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <div class="login-container" ng-controller="GirisController">
+        <h2>Giriş Yap</h2>
+        <form ng-submit="girisYap()">
+          <div class="form-group">
+            <input
+              type="text"
+              ng-model="formData.username"
+              placeholder="Kullanıcı Adı"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <input
+              type="password"
+              ng-model="formData.password"
+              placeholder="Şifre"
+              required
+            />
+          </div>
+          <button type="submit" class="login-btn">Giriş Yap</button>
+        </form>
+        <div class="register-link">
+          Hesabınız yok mu? <a href="kayit.html">Kayıt Ol</a>
         </div>
-        <div class="form-group">
-          <input
-            type="password"
-            ng-model="formData.password"
-            placeholder="Şifre"
-            required
-          />
-        </div>
-        <button type="submit" class="login-btn">Giriş Yap</button>
-      </form>
-      <div class="register-link">
-        Hesabınız yok mu? <a href="kayit.html">Kayıt Ol</a>
       </div>
-    </div>
-  </main>
-  
-  <!-- Footer Component -->
-  <ng-include src="'components/footer.html'"></ng-include>
-  
-  <!-- Scroll to Top Button -->
-  <button id="scrollTopBtn" title="Yukarı Çık" ng-click="scrollToTop()">↑</button>
-</body>
+    </main>
+
+    <!-- Footer Component -->
+    <ng-include src="'components/footer.html'"></ng-include>
+
+    <!-- Scroll to Top Button -->
+    <button id="scrollTopBtn" title="Yukarı Çık" ng-click="scrollToTop()">
+      ↑
+    </button>
+  </body>
 </html>

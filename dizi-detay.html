@@ -16,7 +16,7 @@
       }
 
       .detay-container {
-        max-width: 1200px;
+        max-width: 100%;
         margin: 40px auto;
         padding: 32px;
         background: rgba(255, 255, 255, 0.92);
@@ -30,23 +30,24 @@
         position: absolute;
         top: 20px;
         right: 20px;
-        background: linear-gradient(135deg, #dc3545, #c82333);
-        color: white;
+        background: linear-gradient(135deg, #e2d9d0, #b48a78);
+        color: #7c5c4a;
         border: none;
-        width: 50px;
-        height: 50px;
+        width: 45px;
+        height: 45px;
         border-radius: 50%;
         cursor: pointer;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 1.2rem;
+        font-size: 18px;
         transition: all 0.3s ease;
         z-index: 1000;
       }
 
       .geri-btn:hover {
-        background: linear-gradient(135deg, #c82333, #a71e2a);
+        background: linear-gradient(135deg, #b48a78, #e2d9d0);
+        color: #fff;
         transform: scale(1.1);
       }
 
@@ -87,6 +88,17 @@
         font-weight: bold;
         border-radius: 15px;
         flex-shrink: 0;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .dizi-poster img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        object-position: center;
+        border-radius: 15px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       }
 
       .dizi-info {
@@ -96,8 +108,9 @@
       .dizi-title {
         font-size: 2.5rem;
         font-weight: 700;
-        color: #2c3e50;
+        color: #e74c3c !important;
         margin-bottom: 15px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
       }
 
       .dizi-meta {
@@ -414,20 +427,21 @@
         bottom: 32px;
         right: 32px;
         z-index: 9999;
-        background: linear-gradient(135deg, #dc3545, #c82333);
-        color: #fff;
+        background: linear-gradient(135deg, #e2d9d0, #b48a78);
+        color: #7c5c4a;
         border: none;
         border-radius: 50%;
         width: 48px;
         height: 48px;
         font-size: 28px;
-        box-shadow: 0 4px 16px rgba(220, 53, 69, 0.15);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
         cursor: pointer;
         transition: background 0.3s, transform 0.2s;
       }
 
       #scrollTopBtn:hover {
-        background: linear-gradient(135deg, #c82333, #dc3545);
+        background: linear-gradient(135deg, #b48a78, #e2d9d0);
+        color: #fff;
         transform: scale(1.08);
       }
 
@@ -512,7 +526,29 @@
 
       <div ng-if="!loading && !error && dizi">
         <div class="dizi-header">
-          <div class="dizi-poster">{{ dizi.dizi_adi.charAt(0) }}</div>
+          <div class="dizi-poster">
+            <img
+              ng-if="dizi.poster_url"
+              ng-src="{{ dizi.poster_url }}"
+              alt="{{ dizi.dizi_adi }}"
+              onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+            />
+            <div
+              ng-if="!dizi.poster_url"
+              style="
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 100%;
+                height: 100%;
+                font-size: 4rem;
+                font-weight: bold;
+                color: white;
+              "
+            >
+              {{ dizi.dizi_adi.charAt(0) }}
+            </div>
+          </div>
           <div class="dizi-info">
             <h1 class="dizi-title">{{ dizi.dizi_adi }}</h1>
             <div class="dizi-meta">
@@ -522,7 +558,7 @@
                 >{{ dizi.durum | uppercase }}</span
               >
               <span class="imdb-rating" ng-if="dizi.imdb_puani">
-                ⭐ IMDb: {{ dizi.imdb_puani }}
+                IMDb: {{ dizi.imdb_puani }}
               </span>
             </div>
             <p class="dizi-description">{{ dizi.aciklama }}</p>
@@ -620,8 +656,7 @@
                   ng-click="yeniYorum.puan = i"
                   ng-class="{ 'secili': yeniYorum.puan >= i }"
                   class="puan-yildiz"
-                  >⭐</span
-                >
+                ></span>
               </div>
               <div class="puan-text">{{ yeniYorum.puan }}/10</div>
             </div>

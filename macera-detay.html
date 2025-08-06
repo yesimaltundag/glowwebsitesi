@@ -9,14 +9,15 @@
     <script src="assets/js/app.js"></script>
     <style>
       .macera-container {
-        max-width: 1200px;
+        max-width: 100%;
         margin: 40px auto;
-        padding: 40px;
+        padding: 40px 40px;
         background: rgba(255, 255, 255, 0.95);
         border-radius: 20px;
         box-shadow: 0 10px 40px rgba(124, 92, 74, 0.1);
         backdrop-filter: blur(10px);
         position: relative;
+        width: 100%;
       }
 
       .macera-baslik {
@@ -155,6 +156,12 @@
           padding: 20px;
         }
       }
+      @media (max-width: 600px) {
+        .macera-container {
+          padding: 20px;
+          max-width: 100%;
+        }
+      }
     </style>
   </head>
   <body ng-controller="MainController">
@@ -189,7 +196,7 @@
               <div class="film-meta">
                 <span class="film-yil">1981</span>
                 <span class="film-sure">115 dk</span>
-                <span class="film-imdb">⭐ 8.4</span>
+                <span class="film-imdb">8.4</span>
               </div>
               <div class="film-ozet">
                 Arkeolog Indiana Jones, Ahit Sandığı'nı bulmak için Nazi'lerle
@@ -216,7 +223,7 @@
               <div class="film-meta">
                 <span class="film-yil">2001</span>
                 <span class="film-sure">178 dk</span>
-                <span class="film-imdb">⭐ 8.8</span>
+                <span class="film-imdb">8.8</span>
               </div>
               <div class="film-ozet">
                 Hobbit Frodo Baggins, Yüzük'ü yok etmek için tehlikeli bir
@@ -237,7 +244,7 @@
               <div class="film-meta">
                 <span class="film-yil">1993</span>
                 <span class="film-sure">127 dk</span>
-                <span class="film-imdb">⭐ 8.5</span>
+                <span class="film-imdb">8.5</span>
               </div>
               <div class="film-ozet">
                 Dinozorların yeniden canlandırıldığı bir tema parkında, sistem
@@ -266,7 +273,7 @@
               <div class="film-meta">
                 <span class="film-yil">2003</span>
                 <span class="film-sure">143 dk</span>
-                <span class="film-imdb">⭐ 8.0</span>
+                <span class="film-imdb">8.0</span>
               </div>
               <div class="film-ozet">
                 Kaptan Jack Sparrow, Elizabeth Swann'ı kurtarmak için lanetli
@@ -288,7 +295,7 @@
               <div class="film-meta">
                 <span class="film-yil">1999</span>
                 <span class="film-sure">125 dk</span>
-                <span class="film-imdb">⭐ 7.1</span>
+                <span class="film-imdb">7.1</span>
               </div>
               <div class="film-ozet">
                 Antik Mısır'da mumya laneti uyandırılır. Rick O'Connell ve
@@ -309,7 +316,7 @@
               <div class="film-meta">
                 <span class="film-yil">2004</span>
                 <span class="film-sure">131 dk</span>
-                <span class="film-imdb">⭐ 6.9</span>
+                <span class="film-imdb">6.9</span>
               </div>
               <div class="film-ozet">
                 Benjamin Gates, gizli hazine haritasını bulmak için ABD'nin en

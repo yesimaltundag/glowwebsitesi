@@ -318,6 +318,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_GET["iletisim"])) {
         exit;
     }
 
+    if (!isset($girdi["konu"]) || empty($girdi["konu"])) {
+        http_response_code(400);
+        echo json_encode(["success" => false, "message" => "Konu alanı boş bırakılamaz."]);
+        exit;
+    }
+
     if (!isset($girdi["message"]) || empty($girdi["message"])) {
         http_response_code(400);
         echo json_encode(["success" => false, "message" => "Mesaj alanı boş bırakılamaz."]);
@@ -332,6 +338,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_GET["iletisim"])) {
 
     $username = $baglanti->real_escape_string($girdi["username"]);
     $email = $baglanti->real_escape_string($girdi["email"]);
+    $konu = $baglanti->real_escape_string($girdi["konu"]);
     $message = $baglanti->real_escape_string($girdi["message"]);
 
     // Önce tablonun var olup olmadığını kontrol et
@@ -372,7 +379,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_GET["iletisim"])) {
 
     // iletisim_formu tablosuna kayıt
     $insert_sql = "INSERT INTO iletisim_formu (adisoyadi, eposta, mesaj, konu) 
-                    VALUES ('$username', '$email', '$message', 'İletişim Formu')";
+                    VALUES ('$username', '$email', '$message', '$konu')";
     
     if ($baglanti->query($insert_sql)) {
         echo json_encode(["success" => true, "message" => "Mesaj başarıyla gönderildi."]);

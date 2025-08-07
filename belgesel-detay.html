@@ -195,6 +195,32 @@
           font-size: 2rem;
         }
       }
+
+      /* Yorum Silme Butonu Stilleri */
+      button.delete-btn {
+        background: linear-gradient(135deg, #e2d9d0, #f8e0e1) !important;
+        color: #7c5c4a !important;
+        border: none !important;
+        padding: 4px 8px !important;
+        border-radius: 6px !important;
+        font-size: 12px !important;
+        font-weight: 500 !important;
+        cursor: pointer !important;
+        transition: all 0.3s ease !important;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+        width: auto !important;
+      }
+
+      button.delete-btn:hover {
+        background: linear-gradient(135deg, #f8e0e1, #e2d9d0) !important;
+        transform: scale(1.05) !important;
+      }
+
+      .yorum-actions {
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: 15px;
+      }
     </style>
   </head>
   <body ng-controller="MainController">
@@ -320,18 +346,22 @@
                       class="yorum-puan"
                       ng-bind-html="yorum.puan | yildizSistemi"
                     ></div>
-                    <button
-                      class="yorum-sil-btn"
-                      ng-if="kullanici && kullanici.id == yorum.kullanici_id"
-                      ng-click="yorumSil(yorum.id)"
-                      title="Yorumu Sil"
-                    >
-                      🗑️
-                    </button>
                   </div>
                   <div class="yorum-tarih">
                     {{ yorum.created_at | date:'dd.MM.yyyy HH:mm' }}
                   </div>
+                </div>
+                <div
+                  class="yorum-actions"
+                  ng-if="kullanici && kullanici.id == yorum.kullanici_id"
+                >
+                  <button
+                    class="delete-btn"
+                    ng-click="yorumSil(yorum.id)"
+                    title="Yorumu Sil"
+                  >
+                    🗑️ Sil
+                  </button>
                 </div>
                 <div class="yorum-icerik">{{ yorum.yorum }}</div>
               </div>

@@ -37,41 +37,78 @@
               const popup = document.getElementById('messagePopup');
               const popupContent = document.getElementById('popupContent');
               
-              popupContent.innerHTML = `
-                <div class="message-details">
-                  <h4>📧 Gelen Mesaj</h4>
-                  <div class="message-info">
-                    <div>
-                      <label>Konu:</label>
-                      <span>${data.message.konu}</span>
+              // Eğer cevap varsa sadece cevabı göster
+              if (data.replies && data.replies.length > 0) {
+                popupContent.innerHTML = `
+                  <div class="message-details">
+                    <h4>📧 Gelen Mesaj</h4>
+                    <div class="message-info">
+                      <div>
+                        <label>Konu:</label>
+                        <span>${data.message.konu}</span>
+                      </div>
+                      <div>
+                        <label>Gönderen:</label>
+                        <span>${data.message.adisoyadi}</span>
+                      </div>
                     </div>
-                    <div>
-                      <label>Gönderen:</label>
-                      <span>${data.message.adisoyadi}</span>
+                    <div class="message-text">
+                      <label>Mesaj:</label>
+                      <p>${data.message.mesaj}</p>
                     </div>
                   </div>
-                  <div class="message-text">
-                    <label>Mesaj:</label>
-                    <p>${data.message.mesaj}</p>
-                  </div>
-                </div>
 
-                <div class="reply-section">
-                  <h4>✍️ Cevap Yaz</h4>
-                  <div class="reply-form">
-                    <textarea 
-                      id="replyText" 
-                      class="reply-textarea" 
-                      placeholder="Cevabınızı buraya yazın..."
-                      rows="4"
-                    ></textarea>
-                    <div class="reply-actions">
-                      <button class="cancel-btn" onclick="closeMessagePopup()">❌ İptal</button>
-                      <button class="reply-btn" onclick="sendReply(${messageId})">📤 Cevap Gönder</button>
+                  <div class="reply-section">
+                    <h4>💬 Gönderilen Cevap</h4>
+                    <div class="reply-form">
+                      <div class="sent-reply">
+                        <div class="reply-header">
+                          <span class="reply-author">👤 ${data.replies[0].yonetici_adi || 'Admin'}</span>
+                          <span class="reply-date">📅 ${data.replies[0].created_at}</span>
+                        </div>
+                        <div class="reply-text">${data.replies[0].cevap_mesaji}</div>
+                      </div>
+
                     </div>
                   </div>
-                </div>
-              `;
+                `;
+              } else {
+                // Cevap yoksa cevap formu göster
+                popupContent.innerHTML = `
+                  <div class="message-details">
+                    <h4>📧 Gelen Mesaj</h4>
+                    <div class="message-info">
+                      <div>
+                        <label>Konu:</label>
+                        <span>${data.message.konu}</span>
+                      </div>
+                      <div>
+                        <label>Gönderen:</label>
+                        <span>${data.message.adisoyadi}</span>
+                      </div>
+                    </div>
+                    <div class="message-text">
+                      <label>Mesaj:</label>
+                      <p>${data.message.mesaj}</p>
+                    </div>
+                  </div>
+
+                  <div class="reply-section">
+                    <h4>✍️ Cevap Yaz</h4>
+                    <div class="reply-form">
+                      <textarea 
+                        id="replyText" 
+                        class="reply-textarea" 
+                        placeholder="Cevabınızı buraya yazın..."
+                        rows="4"
+                      ></textarea>
+                      <div class="reply-actions">
+                        <button class="reply-btn" onclick="sendReply(${messageId})">📤 Cevap Gönder</button>
+                      </div>
+                    </div>
+                  </div>
+                `;
+              }
               
               popup.style.display = 'flex';
             } else {
@@ -305,27 +342,46 @@
         align-items: center;
         gap: 20px;
         margin-top: 30px;
+        background: rgba(255, 255, 255, 0.9);
+        padding: 20px;
+        border-radius: 16px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(10px);
       }
 
       .pagination button {
         background: linear-gradient(135deg, #e2d9d0, #b48a78);
         color: #7c5c4a;
         border: none;
-        padding: 10px 20px;
+        padding: 12px 24px;
         border-radius: 8px;
         cursor: pointer;
         transition: all 0.3s ease;
+        font-weight: 600;
+        font-size: 14px;
       }
 
       .pagination button:hover:not(:disabled) {
         background: linear-gradient(135deg, #b48a78, #e2d9d0);
         color: white;
         transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(180, 138, 120, 0.3);
       }
 
       .pagination button:disabled {
         opacity: 0.5;
         cursor: not-allowed;
+      }
+
+      .page-info {
+        color: #7c5c4a;
+        font-weight: 600;
+        font-size: 14px;
+        text-align: center;
+        padding: 10px 20px;
+        background: rgba(226, 217, 208, 0.3);
+        border-radius: 8px;
+        border: 1px solid #e2d9d0;
       }
 
       .message-content {
@@ -335,6 +391,46 @@
         text-overflow: ellipsis;
         white-space: nowrap;
         position: relative;
+      }
+
+      /* Konu sütunu vurgulama */
+      .table-container td:nth-child(4) {
+        font-weight: 700 !important;
+        color: #7c5c4a !important;
+        background: rgba(226, 217, 208, 0.4) !important;
+        border-left: 4px solid #b48a78 !important;
+        border-right: 4px solid #b48a78 !important;
+        font-size: 14px !important;
+        text-align: center !important;
+        min-width: 120px !important;
+      }
+
+      .table-container th:nth-child(4) {
+        background: linear-gradient(135deg, #b48a78, #7c5c4a) !important;
+        color: white !important;
+        font-weight: 700 !important;
+        font-size: 16px !important;
+        text-align: center !important;
+      }
+
+      /* Tarih sütunu vurgulama */
+      .table-container td:nth-child(6) {
+        font-weight: 600 !important;
+        color: #7c5c4a !important;
+        background: rgba(226, 217, 208, 0.3) !important;
+        border-left: 3px solid #b48a78 !important;
+        border-right: 3px solid #b48a78 !important;
+        font-size: 13px !important;
+        text-align: center !important;
+        min-width: 120px !important;
+      }
+
+      .table-container th:nth-child(6) {
+        background: linear-gradient(135deg, #b48a78, #7c5c4a) !important;
+        color: white !important;
+        font-weight: 700 !important;
+        font-size: 14px !important;
+        text-align: center !important;
       }
 
       /* Mini Popup Styles */
@@ -379,18 +475,18 @@
       }
 
       .close-popup {
-        background: linear-gradient(135deg, #ffebee, #f44336);
-        color: white;
-        border: none;
-        border-radius: 50%;
-        width: 30px;
-        height: 30px;
-        font-size: 16px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        background: linear-gradient(135deg, #e2d9d0, #b48a78) !important;
+        color: #7c5c4a !important;
+        border: none !important;
+        border-radius: 4px !important;
+        width: 20px !important;
+        height: 20px !important;
+        font-size: 12px !important;
+        cursor: pointer !important;
+        transition: all 0.3s ease !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
       }
 
       .close-popup:hover {
@@ -502,19 +598,21 @@
         display: flex;
         gap: 10px;
         margin-top: 15px;
-        justify-content: flex-end;
+        justify-content: center;
       }
 
       .reply-btn {
         background: linear-gradient(135deg, #4caf50, #45a049);
         color: white;
         border: none;
-        padding: 10px 20px;
-        border-radius: 6px;
-        font-size: 13px;
+        padding: 15px 30px;
+        border-radius: 8px;
+        font-size: 15px;
         font-weight: 600;
         cursor: pointer;
         transition: all 0.3s ease;
+        width: 100%;
+        margin-top: 10px;
       }
 
       .reply-btn:hover {
@@ -584,6 +682,42 @@
         color: #333;
         line-height: 1.4;
         font-size: 12px;
+      }
+
+      .sent-reply {
+        background: rgba(76, 175, 80, 0.1);
+        padding: 15px;
+        border-radius: 8px;
+        border: 2px solid #4caf50;
+        margin-bottom: 15px;
+      }
+
+      .sent-reply .reply-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+
+      .sent-reply .reply-author {
+        font-weight: 600;
+        color: #2e7d32;
+        font-size: 13px;
+      }
+
+      .sent-reply .reply-date {
+        color: #4caf50;
+        font-size: 11px;
+      }
+
+      .sent-reply .reply-text {
+        color: #1b5e20;
+        line-height: 1.5;
+        font-size: 13px;
+        background: rgba(255, 255, 255, 0.8);
+        padding: 10px;
+        border-radius: 6px;
+        border: 1px solid #c8e6c9;
       }
 
       /* Durum Badge'leri */
@@ -678,6 +812,7 @@
                   <th>E-posta</th>
                   <th>Konu</th>
                   <th>Mesaj</th>
+                  <th>Gönderilme Tarihi</th>
                   <th>Durum</th>
                 </tr>
               </thead>
@@ -689,6 +824,17 @@
                 if ($baglanti->connect_error) {
                     echo "<tr><td colspan='6' style='text-align: center; color: red;'>Veritabanı bağlantı hatası</td></tr>";
                 } else {
+                    // Sayfalama ayarları
+                    $sayfa_basina = 30; // Her sayfada 30 mesaj
+                    $sayfa = isset($_GET['sayfa']) ? (int)$_GET['sayfa'] : 1;
+                    $baslangic = ($sayfa - 1) * $sayfa_basina;
+                    
+                    // Toplam mesaj sayısını al
+                    $toplam_sql = "SELECT COUNT(*) as toplam FROM iletisim_formu";
+                    $toplam_sonuc = $baglanti->query($toplam_sql);
+                    $toplam_mesaj = $toplam_sonuc->fetch_assoc()['toplam'];
+                    $toplam_sayfa = ceil($toplam_mesaj / $sayfa_basina);
+                    
                     // iletisim_formu tablosundan verileri getir ve cevap durumunu kontrol et
                     $sql = "SELECT iletisim_formu.*, 
                                    CASE WHEN mc.id IS NOT NULL THEN 'Cevaplandı' ELSE 'Bekliyor' END as durum,
@@ -696,7 +842,8 @@
                             FROM iletisim_formu 
                             LEFT JOIN mesaj_cevaplari mc ON iletisim_formu.id = mc.iletisim_formu_id 
                             GROUP BY iletisim_formu.id 
-                            ORDER BY iletisim_formu.id DESC";
+                            ORDER BY iletisim_formu.id DESC
+                            LIMIT $baslangic, $sayfa_basina";
                     $sonuc = $baglanti->query($sql);
                     
                     if ($sonuc && $sonuc->num_rows > 0) {
@@ -710,6 +857,7 @@
                             echo "<td class='message-content' title='" . htmlspecialchars($mesaj['mesaj']) . "'>";
                             echo htmlspecialchars($mesaj['mesaj']);
                             echo "</td>";
+                            echo "<td>" . date('d.m.Y H:i', strtotime($mesaj['created_at'])) . "</td>";
                             echo "<td class='durum-" . $durum_class . "'>";
                             echo "<span class='durum-badge " . $durum_class . "'>" . $mesaj['durum'] . "</span>";
                             if ($mesaj['cevap_sayisi'] > 0) {
@@ -719,7 +867,7 @@
                             echo "</tr>";
                         }
                     } else {
-                        echo "<tr><td colspan='6' style='text-align: center; color: #666;'>Henüz hiç mesaj yok</td></tr>";
+                        echo "<tr><td colspan='7' style='text-align: center; color: #666;'>Henüz hiç mesaj yok</td></tr>";
                     }
                     
                     $baglanti->close();
@@ -728,6 +876,28 @@
               </tbody>
             </table>
           </div>
+          
+          <!-- Sayfalama -->
+          <?php if (isset($toplam_sayfa) && $toplam_sayfa > 1): ?>
+          <div class="pagination">
+            <?php if ($sayfa > 1): ?>
+              <button onclick="window.location.href='?sayfa=<?php echo $sayfa - 1; ?>'">
+                ← Önceki
+              </button>
+            <?php endif; ?>
+            
+            <span class="page-info">
+              Sayfa <?php echo $sayfa; ?> / <?php echo $toplam_sayfa; ?>
+              (Toplam <?php echo $toplam_mesaj; ?> mesaj)
+            </span>
+            
+            <?php if ($sayfa < $toplam_sayfa): ?>
+              <button onclick="window.location.href='?sayfa=<?php echo $sayfa + 1; ?>'">
+                Sonraki →
+              </button>
+            <?php endif; ?>
+          </div>
+          <?php endif; ?>
         </div>
       </div>
     </main>

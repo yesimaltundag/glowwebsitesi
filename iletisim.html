@@ -428,11 +428,21 @@
                 </div>
               </div>
               <div class="form-group">
+                <label for="konu">Konu</label>
+                <input
+                  type="text"
+                  id="konu"
+                  ng-model="mesajForm.konu"
+                  placeholder="Mesajınızın konusu"
+                  required
+                />
+              </div>
+              <div class="form-group">
                 <label for="message">Mesajınız</label>
                 <textarea
                   id="message"
                   ng-model="mesajForm.message"
-                  placeholder="Mesajınızı yazın (maksimum 300 karakter)"
+                  placeholder="Mesajınızı yazın (en az 10 karakter)"
                   rows="5"
                   maxlength="300"
                   required
@@ -444,8 +454,8 @@
               <button
                 type="submit"
                 class="submit-btn"
-                ng-disabled="!mesajForm.username || !mesajForm.email || !mesajForm.message || mesajForm.message.length < 10"
-                title="Ad Soyad: {{ mesajForm.username ? 'Dolu' : 'Boş' }}, E-posta: {{ mesajForm.email ? 'Dolu' : 'Boş' }}, Mesaj: {{ mesajForm.message ? mesajForm.message.length + ' karakter' : 'Boş' }}"
+                ng-disabled="false"
+                title="Ad Soyad: {{ mesajForm.username ? 'Dolu' : 'Boş' }}, E-posta: {{ mesajForm.email ? 'Dolu' : 'Boş' }}, Konu: {{ mesajForm.konu ? 'Dolu' : 'Boş' }}, Mesaj: {{ mesajForm.message ? mesajForm.message.length + ' karakter' : 'Boş' }}"
                 style="position: relative"
               >
                 Mesaj Gönder
@@ -475,6 +485,7 @@
           $scope.mesajForm = {
             username: "",
             email: "",
+            konu: "",
             message: "",
           };
 
@@ -486,6 +497,11 @@
 
             if (!$scope.mesajForm.email) {
               alert("Lütfen e-posta adresinizi girin!");
+              return;
+            }
+
+            if (!$scope.mesajForm.konu) {
+              alert("Lütfen mesaj konusunu girin!");
               return;
             }
 
@@ -503,6 +519,7 @@
             var mesajData = {
               username: $scope.mesajForm.username,
               email: $scope.mesajForm.email,
+              konu: $scope.mesajForm.konu,
               message: $scope.mesajForm.message,
             };
 
@@ -516,6 +533,7 @@
                   $scope.mesajForm = {
                     username: "",
                     email: "",
+                    konu: "",
                     message: "",
                   };
                 } else {

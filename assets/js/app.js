@@ -1427,7 +1427,7 @@ angular
 
     // Mesaj yönetimi sayfasına git
     $scope.mesajYonetimiGit = function () {
-      window.location.href = "mesaj-yonetimi.html";
+      window.location.href = "mesaj-yonetimi.php";
     };
 
     // Sayfa yüklendiğinde kullanıcıları getir
@@ -2039,9 +2039,10 @@ angular
   .controller("MesajYonetimiController", function ($scope, $http) {
     $scope.kullanici = JSON.parse(localStorage.getItem("girisYapan") || "null");
     $scope.mesajlar = [];
+    $scope.filteredMesajlar = [];
     $scope.currentPage = 1;
     $scope.itemsPerPage = 10;
-    $scope.aramaMetni = "";
+    $scope.searchText = "";
 
     // Kullanıcı kontrolü
     if (
@@ -2062,6 +2063,7 @@ angular
           console.log("📊 API yanıtı:", response.data);
           if (response.data && !response.data.error) {
             $scope.mesajlar = response.data;
+            $scope.filteredMesajlar = response.data;
             console.log(
               "✅ Mesajlar yüklendi. Toplam:",
               $scope.mesajlar.length
@@ -2069,6 +2071,7 @@ angular
             console.log("📋 Mesaj listesi:", $scope.mesajlar);
           } else {
             $scope.mesajlar = [];
+            $scope.filteredMesajlar = [];
             console.error("❌ Mesajlar yüklenirken hata:", response.data.error);
           }
         })
@@ -2078,25 +2081,38 @@ angular
         });
     };
 
+    // Arama ve filtreleme
+    $scope.filterMessages = function () {
+      if (!$scope.searchText || $scope.searchText.trim() === "") {
+        $scope.filteredMesajlar = $scope.mesajlar;
+      } else {
+        var searchTerm = $scope.searchText.toLowerCase();
+        $scope.filteredMesajlar = $scope.mesajlar.filter(function (mesaj) {
+          return (
+            (mesaj.adisoyadi &&
+              mesaj.adisoyadi.toLowerCase().includes(searchTerm)) ||
+            (mesaj.eposta && mesaj.eposta.toLowerCase().includes(searchTerm)) ||
+            (mesaj.konu && mesaj.konu.toLowerCase().includes(searchTerm)) ||
+            (mesaj.mesaj && mesaj.mesaj.toLowerCase().includes(searchTerm))
+          );
+        });
+      }
+      $scope.currentPage = 1; // Arama yapıldığında ilk sayfaya dön
+    };
+
     // Sayfalama fonksiyonları
-    $scope.paginatedMesajlar = function () {
-      var start = ($scope.currentPage - 1) * $scope.itemsPerPage;
-      var end = start + $scope.itemsPerPage;
-      return $scope.mesajlar.slice(start, end);
+    $scope.totalPages = function () {
+      return Math.ceil($scope.filteredMesajlar.length / $scope.itemsPerPage);
     };
 
-    $scope.pageCount = function () {
-      return Math.ceil($scope.mesajlar.length / $scope.itemsPerPage);
-    };
-
-    $scope.oncekiSayfa = function () {
+    $scope.previousPage = function () {
       if ($scope.currentPage > 1) {
         $scope.currentPage--;
       }
     };
 
-    $scope.sonrakiSayfa = function () {
-      if ($scope.currentPage < $scope.pageCount()) {
+    $scope.nextPage = function () {
+      if ($scope.currentPage < $scope.totalPages()) {
         $scope.currentPage++;
       }
     };

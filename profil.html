@@ -38,29 +38,6 @@
         font-weight: 600;
       }
 
-      .close-btn {
-        position: absolute;
-        top: 20px;
-        right: 20px;
-        background: #b48a78;
-        color: #fff;
-        border: none;
-        border-radius: 50%;
-        font-size: 20px;
-        width: 40px;
-        height: 40px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-
-      .close-btn:hover {
-        background: #7c5c4a;
-        transform: scale(1.1);
-      }
-
       .geri-btn {
         background: linear-gradient(135deg, #e2d9d0, #b48a78);
         color: #7c5c4a;
@@ -185,8 +162,6 @@
     <!-- Main Content -->
     <main class="main-content">
       <div class="profile-container" ng-controller="ProfilController">
-        <button type="button" ng-click="geriGit()" class="close-btn">×</button>
-
         <div class="profile-header">
           <h1>Profil Bilgileriniz</h1>
         </div>

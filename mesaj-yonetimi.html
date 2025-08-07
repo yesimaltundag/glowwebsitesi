@@ -180,18 +180,10 @@
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+        position: relative;
       }
 
-      .message-content:hover {
-        white-space: normal;
-        overflow: visible;
-        position: relative;
-        z-index: 10;
-        background: white;
-        padding: 5px;
-        border-radius: 5px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-      }
+
 
       @media (max-width: 768px) {
         .admin-container {
@@ -232,10 +224,54 @@
             </button>
             <h1>📧 Mesaj Yönetimi</h1>
             <p>İletişim formundan gelen mesajları yönetin</p>
-            <div style="text-align: center; margin-top: 50px; padding: 30px; background: rgba(255, 255, 255, 0.8); border-radius: 16px;">
-              <h2 style="color: #7c5c4a; margin-bottom: 20px;">✅ Tablo Kaldırıldı</h2>
-              <p style="color: #666; font-size: 18px;">Mesaj yönetimi tablosu başarıyla kaldırıldı.</p>
-              <p style="color: #888; font-size: 16px; margin-top: 10px;">Artık bu sayfa sadece başlık ve açıklama içeriyor.</p>
+
+          </div>
+
+          <!-- Mesajlar Tablosu -->
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Ad Soyad</th>
+                  <th>E-posta</th>
+                  <th>Konu</th>
+                  <th>Mesaj</th>
+                </tr>
+              </thead>
+              <tbody>
+                <?php
+                // Veritabanı bağlantısı
+                $baglanti = new mysqli("localhost", "root", "", "basit_sistem");
+                
+                if ($baglanti->connect_error) {
+                    echo "<tr><td colspan='5' style='text-align: center; color: red;'>Veritabanı bağlantı hatası</td></tr>";
+                } else {
+                    // iletisim_formu tablosundan verileri getir
+                    $sql = "SELECT * FROM iletisim_formu ORDER BY id DESC";
+                    $sonuc = $baglanti->query($sql);
+                    
+                    if ($sonuc && $sonuc->num_rows > 0) {
+                        while ($mesaj = $sonuc->fetch_assoc()) {
+                            echo "<tr>";
+                            echo "<td>" . $mesaj['id'] . "</td>";
+                            echo "<td>" . htmlspecialchars($mesaj['adisoyadi']) . "</td>";
+                            echo "<td>" . htmlspecialchars($mesaj['eposta']) . "</td>";
+                            echo "<td>" . htmlspecialchars($mesaj['konu']) . "</td>";
+                            echo "<td class='message-content' title='" . htmlspecialchars($mesaj['mesaj']) . "'>";
+                            echo htmlspecialchars($mesaj['mesaj']);
+                            echo "</td>";
+                            echo "</tr>";
+                        }
+                    } else {
+                        echo "<tr><td colspan='5' style='text-align: center; color: #666;'>Henüz hiç mesaj yok</td></tr>";
+                    }
+                    
+                    $baglanti->close();
+                }
+                ?>
+              </tbody>
+            </table>
             </div>
           </div>
 

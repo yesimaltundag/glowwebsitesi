@@ -15,10 +15,10 @@
     <!-- Page Specific CSS -->
     <style>
       .homepage-container {
-        max-width: 100%;
+        max-width: 70%;
         margin: 0 auto;
-        padding: 20px 40px;
-        width: 100%;
+        padding: 0;
+        width: 70%;
       }
 
       .login-message {
@@ -26,7 +26,6 @@
         color: #7c5c4a;
         margin: 100px 0;
         font-size: 20px;
-        background: rgba(255, 255, 255, 0.9);
         padding: 40px;
         border-radius: 16px;
         box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
@@ -44,26 +43,257 @@
         text-decoration: underline;
       }
 
-      .welcome-section {
+      .logo-section {
         text-align: center;
-        margin-bottom: 40px;
-        background: transparent;
-        padding: 30px;
+        margin-bottom: 30px;
+        padding: 20px;
+      }
+
+      /* Ana Slider CSS */
+      .ana-slider-container {
+        position: relative;
+        width: 80%;
+        height: 700px;
         border-radius: 16px;
-        box-shadow: none;
-        backdrop-filter: none;
-        border: none;
+        overflow: hidden;
+        box-shadow: 0 6px 20px rgba(180, 138, 120, 0.2);
+        margin: 0 auto 40px auto;
       }
 
-      .welcome-section h1 {
-        color: #7c5c4a;
-        font-size: 32px;
+      .ana-slider {
+        display: flex;
+        width: 100%;
+        height: 100%;
+        transition: transform 0.5s ease;
+      }
+
+      .ana-slide {
+        min-width: 100%;
+        height: 100%;
+        position: relative;
+        cursor: pointer;
+        transition: transform 0.3s ease;
+      }
+
+      .ana-slide:hover {
+        transform: scale(1.02);
+      }
+
+      .ana-slide img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .ana-slide-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
+        color: white;
+        padding: 30px;
+        text-align: center;
+      }
+
+      .ana-slide-title {
+        font-size: 2rem;
+        font-weight: 700;
         margin-bottom: 10px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
       }
 
-      .welcome-section p {
-        color: #666;
-        font-size: 18px;
+      .ana-slide-desc {
+        font-size: 1.1rem;
+        opacity: 0.9;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+      }
+
+      .ana-slider-nav {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        font-size: 80px;
+        font-weight: bold;
+        color: rgba(255, 255, 255, 0.9);
+        cursor: pointer;
+        z-index: 10;
+        text-shadow: 2px 2px 15px rgba(0, 0, 0, 0.9);
+        transition: all 0.3s ease;
+      }
+
+      .ana-slider-nav:hover {
+        color: rgba(255, 255, 255, 1);
+        text-shadow: 3px 3px 20px rgba(0, 0, 0, 1);
+        transform: translateY(-50%) scale(1.1);
+      }
+
+      .ana-slider-nav.prev {
+        left: 20px;
+      }
+
+      .ana-slider-nav.next {
+        right: 20px;
+      }
+
+      .ana-slider-dots {
+        position: absolute;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 12px;
+        z-index: 10;
+      }
+
+      .ana-slider-dot {
+        width: 15px;
+        height: 15px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.5);
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+
+      .ana-slider-dot.active {
+        background: rgba(255, 255, 255, 1);
+        transform: scale(1.3);
+      }
+
+      /* Alt Carousel CSS */
+      .alt-carousel-container {
+        margin: 60px auto 60px auto;
+        padding: 20px;
+        border-radius: 0;
+        box-shadow: none;
+        width: 60%;
+        max-width: 60%;
+        text-align: center;
+      }
+
+      .carousel-baslik {
+        color: #7c5c4a;
+        font-size: 2rem;
+        font-weight: 700;
+        text-align: center;
+        margin-top: 60px;
+        margin-bottom: 30px;
+      }
+
+      .carousel-wrapper {
+        position: relative;
+        max-width: 100%;
+        margin: 0 auto;
+        padding: 0;
+        height: 350px;
+        border-radius: 0;
+        overflow: hidden;
+        box-shadow: none !important;
+        border: none !important;
+      }
+
+      .carousel {
+        display: flex;
+        width: 100%;
+        height: 100%;
+        transition: transform 0.5s ease;
+      }
+
+      .carousel-slide {
+        min-width: 100%;
+        height: 100%;
+        position: relative;
+        cursor: pointer;
+        transition: transform 0.3s ease;
+      }
+
+      .carousel-slide:hover {
+        transform: scale(1.02);
+      }
+
+      .carousel-slide img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .carousel-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+        color: white;
+        padding: 20px;
+        text-align: center;
+      }
+
+      .carousel-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-bottom: 8px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+      }
+
+      .carousel-desc {
+        font-size: 1rem;
+        opacity: 0.9;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+      }
+
+      .carousel-nav {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        font-size: 50px;
+        font-weight: bold;
+        color: rgba(255, 255, 255, 0.9);
+        cursor: pointer;
+        z-index: 10;
+        text-shadow: 2px 2px 15px rgba(0, 0, 0, 0.9);
+        transition: all 0.3s ease;
+      }
+
+      .carousel-nav:hover {
+        color: rgba(255, 255, 255, 1);
+        text-shadow: 3px 3px 20px rgba(0, 0, 0, 1);
+        transform: translateY(-50%) scale(1.1);
+      }
+
+      .carousel-nav.prev {
+        left: 15px;
+      }
+
+      .carousel-nav.next {
+        right: 15px;
+      }
+
+      .carousel-dots {
+        position: absolute;
+        bottom: 15px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 10px;
+        z-index: 10;
+      }
+
+      .carousel-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.5);
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+
+      .carousel-dot.active {
+        background: rgba(255, 255, 255, 1);
+        transform: scale(1.2);
       }
 
       .uyari-modal {
@@ -126,7 +356,6 @@
       /* Son Yorumlar Bölümü */
       .son-yorumlar-bolum {
         margin-top: 40px;
-        background: rgba(255, 255, 255, 0.9);
         padding: 30px;
         border-radius: 16px;
         box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
@@ -173,7 +402,6 @@
       }
 
       .yorum-card {
-        background: rgba(255, 255, 255, 0.8);
         border-radius: 12px;
         padding: 20px;
         box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
@@ -328,7 +556,6 @@
       }
 
       .sanat-galeri-modal-icerik {
-        background: white;
         border-radius: 16px;
         max-width: 1000px;
         max-height: 90vh;
@@ -446,7 +673,6 @@
       }
 
       .sanat-modal-icerik {
-        background: white;
         border-radius: 16px;
         max-width: 800px;
         max-height: 90vh;
@@ -530,6 +756,63 @@
 
       /* Responsive */
       @media (max-width: 768px) {
+        .ana-slider-container {
+          height: 400px;
+        }
+
+        .ana-slide-title {
+          font-size: 1.5rem;
+        }
+
+        .ana-slide-desc {
+          font-size: 1rem;
+        }
+
+        .ana-slider-nav {
+          font-size: 60px;
+        }
+
+        .ana-slide-overlay {
+          padding: 20px;
+        }
+
+        .alt-carousel-container {
+          margin: 40px auto 40px auto;
+          padding: 15px;
+          width: 85%;
+          max-width: 85%;
+        }
+
+        .carousel-wrapper {
+          width: 100%;
+        }
+
+        .carousel-baslik {
+          font-size: 1.5rem;
+        }
+
+        .carousel-wrapper {
+          height: 300px;
+        }
+
+        @media (max-width: 480px) {
+          .carousel-wrapper {
+            height: 250px;
+          }
+        }
+
+        .carousel-title {
+          font-size: 1.2rem;
+        }
+
+        .carousel-desc {
+          font-size: 0.9rem;
+        }
+
+        .carousel-nav {
+          font-size: 40px;
+        }
+
         .yorumlar-grid {
           grid-template-columns: 1fr;
         }
@@ -592,21 +875,46 @@
     <main class="main-content">
       <div class="homepage-container" ng-controller="AnasayfaController">
         <div>
-          <div class="welcome-section">
-            <h1>Hoş Geldiniz!</h1>
+          <!-- Logo Section -->
 
-            <img
-              src="assets/images/logo.jpg"
-              alt="logo"
-              width="150px"
-              height="150px"
-            />
+          <!-- Ana Slider Section -->
+          <div class="ana-slider-container">
+            <div
+              class="ana-slider"
+              ng-style="{'transform': 'translateX(-' + (currentAnaSlide * 100) + '%)'}"
+            >
+              <div
+                class="ana-slide"
+                ng-repeat="slide in anaSliderFotograflari"
+                ng-click="slideClick(slide)"
+              >
+                <img ng-src="{{slide.url}}" alt="{{slide.baslik}}" />
+                <div class="ana-slide-overlay">
+                  <div class="ana-slide-title">{{slide.baslik}}</div>
+                  <div class="ana-slide-desc">{{slide.aciklama}}</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Navigation Buttons -->
+            <span class="ana-slider-nav prev" ng-click="prevAnaSlide()">ᐊ</span>
+            <span class="ana-slider-nav next" ng-click="nextAnaSlide()">ᐅ</span>
+
+            <!-- Dots -->
+            <div class="ana-slider-dots">
+              <div
+                class="ana-slider-dot"
+                ng-repeat="(index, slide) in anaSliderFotograflari"
+                ng-class="{'active': index === currentAnaSlide}"
+                ng-click="goToAnaSlide(index)"
+              ></div>
+            </div>
           </div>
 
           <div class="card-grid">
             <!-- Yazılar -->
             <div class="card">
-              <img src="assets/images/yazilar.jpg" alt="Yazılar" />
+              <img src="assets/images/yazilar.webp" alt="Yazılar" />
               <div class="card-content">
                 <h3>Yazılar</h3>
                 <p>En yeni yazılarımızı keşfedin ve ilham alın.</p>
@@ -636,7 +944,7 @@
 
             <!-- Sanat -->
             <div class="card">
-              <img src="assets/images/sanat.jpg.jpg" alt="Sanat" />
+              <img src="assets/images/sanat.jpg" alt="Sanat" />
               <div class="card-content">
                 <h3>Sanat</h3>
                 <p>Sanatın farklı dallarını keşfet ve ilham al!</p>
@@ -668,6 +976,45 @@
               </div>
             </div>
           </div>
+
+          <!-- Alt Carousel Section -->
+          <h2 class="carousel-baslik">Öne Çıkan İçerikler</h2>
+          <div class="carousel-wrapper">
+            <div
+              class="carousel"
+              ng-style="{'transform': 'translateX(-' + (currentCarouselSlide * 100) + '%)'}"
+            >
+              <div
+                class="carousel-slide"
+                ng-repeat="slide in carouselFotograflari"
+                ng-click="carouselClick(slide)"
+              >
+                <img ng-src="{{slide.url}}" alt="{{slide.baslik}}" />
+                <div class="carousel-overlay">
+                  <div class="carousel-title">{{slide.baslik}}</div>
+                  <div class="carousel-desc">{{slide.aciklama}}</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Carousel Navigation -->
+            <span class="carousel-nav prev" ng-click="prevCarouselSlide()"
+              >ᐊ</span
+            >
+            <span class="carousel-nav next" ng-click="nextCarouselSlide()"
+              >ᐅ</span
+            >
+
+            <!-- Carousel Dots -->
+            <div class="carousel-dots">
+              <div
+                class="carousel-dot"
+                ng-repeat="(index, slide) in carouselFotograflari"
+                ng-class="{'active': index === currentCarouselSlide}"
+                ng-click="goToCarouselSlide(index)"
+              ></div>
+            </div>
+          </div>
         </div>
       </div>
     </main>
@@ -687,7 +1034,303 @@
             window.scrollTo({ top: 0, behavior: "smooth" });
           };
         })
-        .controller("AnasayfaController", function ($scope) {
+        .controller("AnasayfaController", function ($scope, $http) {
+          // Ana slider değişkenleri
+          $scope.currentAnaSlide = 0;
+          $scope.anaSliderFotograflari = [
+            {
+              url: "assets/images/yazilar1.jpg",
+              baslik: "Yazılar",
+              aciklama: "En yeni yazılarımızı keşfedin ve ilham alın",
+              sayfa: "yazilar.html",
+            },
+            {
+              url: "assets/images/show1.jpg",
+              baslik: "Show",
+              aciklama: "Gösteri ve etkinliklere dair içerikler burada",
+              sayfa: "show.html",
+            },
+            {
+              url: "assets/images/seyahat1.jpg",
+              baslik: "Seyahat",
+              aciklama:
+                "Gezdiğimiz yerlerden ilham alın ve yeni rotalar keşfedin",
+              sayfa: "seyahat.html",
+            },
+            {
+              url: "assets/images/yemekler1.jpg",
+              baslik: "Yemekler",
+              aciklama:
+                "Dünya mutfağından lezzetli tarifler ve yemek önerileri",
+              sayfa: "yemekler.html",
+            },
+            {
+              url: "assets/images/spor1.jpg",
+              baslik: "Spor",
+              aciklama:
+                "Sağlıklı yaşam ve sporla ilgili motivasyon dolu içerikler",
+              sayfa: "spor.html",
+            },
+            {
+              url: "assets/images/sanat1.jpg",
+              baslik: "Sanat",
+              aciklama: "Sanatın farklı dallarını keşfet ve ilham al!",
+              sayfa: "sanat-kategoriler.html",
+            },
+          ];
+
+          // Ana slider fonksiyonları - Sonsuz döngü
+          $scope.nextAnaSlide = function () {
+            $scope.currentAnaSlide++;
+            if ($scope.currentAnaSlide >= $scope.anaSliderFotograflari.length) {
+              $scope.currentAnaSlide = 0; // Başa dön
+            }
+          };
+
+          $scope.prevAnaSlide = function () {
+            $scope.currentAnaSlide--;
+            if ($scope.currentAnaSlide < 0) {
+              $scope.currentAnaSlide = $scope.anaSliderFotograflari.length - 1; // Sona git
+            }
+          };
+
+          $scope.goToAnaSlide = function (index) {
+            $scope.currentAnaSlide = index;
+          };
+
+          // Slider fotoğrafına tıklama fonksiyonu
+          $scope.slideClick = function (slide) {
+            if (slide.sayfa) {
+              window.location.href = slide.sayfa;
+            }
+          };
+
+          // Otomatik slider - 5 saniyede bir değiş
+          setInterval(function () {
+            $scope.$apply(function () {
+              $scope.nextAnaSlide();
+            });
+          }, 5000);
+
+          // Otomatik alt carousel - 3 saniyede bir değiş
+          setInterval(function () {
+            $scope.$apply(function () {
+              $scope.nextCarouselSlide();
+            });
+          }, 3000);
+
+          // Alt Carousel değişkenleri
+          $scope.currentCarouselSlide = 0;
+          $scope.carouselClickCount = 0;
+          // Carousel için rastgele içerik sistemi
+          $scope.carouselFotograflari = [];
+          $scope.sayfaYenilemeSayisi = parseInt(
+            localStorage.getItem("sayfaYenilemeSayisi") || "0"
+          );
+          $scope.sayfaYenilemeSayisi++;
+          localStorage.setItem(
+            "sayfaYenilemeSayisi",
+            $scope.sayfaYenilemeSayisi.toString()
+          );
+
+          // Sabit içerikler (varsayılan) - Poster URL'leri API'den çekilecek
+          $scope.carouselFotograflari = [
+            {
+              url: "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=800&h=400&fit=crop",
+              baslik: "Die Hard",
+              aciklama: "Aksiyon klasiği - John McClane'in mücadelesi",
+              sayfa: "film-detay.html?id=12",
+              film_id: 12,
+            },
+            {
+              url: "https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?w=800&h=400&fit=crop",
+              baslik: "Hamlet",
+              aciklama: "Shakespeare'in başyapıtı",
+              sayfa: "tiyatro-detay.html?id=1",
+              tiyatro_id: 1,
+            },
+            {
+              url: "https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=800&h=400&fit=crop",
+              baslik: "Inception",
+              aciklama: "Zihin bükücü bilim kurgu",
+              sayfa: "film-detay.html?id=54",
+              film_id: 54,
+            },
+            {
+              url: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&h=400&fit=crop",
+              baslik: "Romeo ve Juliet",
+              aciklama: "Klasik tiyatro oyunu",
+              sayfa: "tiyatro-detay.html?id=2",
+              tiyatro_id: 2,
+            },
+            {
+              url: "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=800&h=400&fit=crop",
+              baslik: "The Shawshank Redemption",
+              aciklama: "Umut ve dostluk hikayesi",
+              sayfa: "film-detay.html?id=24",
+              film_id: 24,
+            },
+            {
+              url: "https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?w=800&h=400&fit=crop",
+              baslik: "Macbeth",
+              aciklama: "İktidar ve ihanet oyunu",
+              sayfa: "tiyatro-detay.html?id=3",
+              tiyatro_id: 3,
+            },
+          ];
+
+          // Sabit içerikler için poster URL'lerini güncelle
+          $scope.sabitIceriklerPosterGuncelle = function () {
+            // Film posterlerini güncelle
+            $scope.carouselFotograflari.forEach(function (item, index) {
+              if (item.film_id) {
+                $http
+                  .get("api.php?films=1&id=" + item.film_id)
+                  .then(function (response) {
+                    if (response.data && response.data.poster_url) {
+                      $scope.carouselFotograflari[index].url =
+                        response.data.poster_url;
+                    }
+                  });
+              }
+            });
+          };
+
+          // Sayfa yüklendiğinde poster URL'lerini güncelle
+          $scope.sabitIceriklerPosterGuncelle();
+
+          // Rastgele seçim fonksiyonu
+          $scope.rastgeleSec = function (dizi, adet) {
+            var sonuc = [];
+            var kopya = dizi.slice();
+
+            for (var i = 0; i < adet && kopya.length > 0; i++) {
+              var rastgeleIndex = Math.floor(Math.random() * kopya.length);
+              sonuc.push(kopya.splice(rastgeleIndex, 1)[0]);
+            }
+
+            return sonuc;
+          };
+
+          // Rastgele carousel içerikleri yükleme fonksiyonu
+          $scope.rastgeleCarouselIcerikleriYukle = function () {
+            console.log("API'den filmler çekiliyor...");
+            $http.get("api.php?films=1").then(function (response) {
+              var filmler = response.data;
+              console.log("Filmler:", filmler);
+              var rastgeleFilmler = $scope.rastgeleSec(filmler, 3);
+              console.log("Rastgele filmler:", rastgeleFilmler);
+
+              console.log("API'den tiyatro eserleri çekiliyor...");
+              $http.get("api.php?tiyatro=1").then(function (response) {
+                var tiyatroEserleri = response.data;
+                console.log("Tiyatro eserleri:", tiyatroEserleri);
+                var rastgeleTiyatro = $scope.rastgeleSec(tiyatroEserleri, 3);
+                console.log("Rastgele tiyatro:", rastgeleTiyatro);
+
+                // $scope.$apply() kaldırıldı çünkü $http zaten digest cycle tetikliyor
+                $scope.carouselFotograflari = [];
+                console.log("Carousel temizlendi");
+
+                // Rastgele filmler
+                rastgeleFilmler.forEach(function (film) {
+                  $scope.carouselFotograflari.push({
+                    url:
+                      film.poster_url ||
+                      "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=800&h=400&fit=crop",
+                    baslik: film.film_adi,
+                    aciklama: film.ozet
+                      ? film.ozet.substring(0, 50) + "..."
+                      : "Harika bir film",
+                    sayfa: "film-detay.html?id=" + film.id,
+                  });
+                  console.log("Film poster URL:", film.poster_url);
+                });
+
+                // Rastgele tiyatro eserleri
+                rastgeleTiyatro.forEach(function (eser) {
+                  $scope.carouselFotograflari.push({
+                    url: "https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?w=800&h=400&fit=crop",
+                    baslik: eser.eser_adi,
+                    aciklama: eser.aciklama
+                      ? eser.aciklama.substring(0, 50) + "..."
+                      : "Muhteşem bir tiyatro eseri",
+                    sayfa: "tiyatro-detay.html?id=" + eser.id,
+                  });
+                  console.log("Tiyatro eseri:", eser.eser_adi);
+                });
+
+                console.log(
+                  "Yeni carousel içerikleri:",
+                  $scope.carouselFotograflari
+                );
+              });
+            });
+          };
+
+          // Her 5 yenilemede rastgele içerik seç
+          console.log("Sayfa yenileme sayısı:", $scope.sayfaYenilemeSayisi);
+          if ($scope.sayfaYenilemeSayisi % 5 === 0) {
+            console.log("Rastgele içerik yükleniyor...");
+            $scope.rastgeleCarouselIcerikleriYukle();
+          } else {
+            console.log("Sabit içerikler kullanılıyor");
+          }
+
+          // Carousel fonksiyonları
+          $scope.nextCarouselSlide = function () {
+            $scope.currentCarouselSlide++;
+            $scope.carouselClickCount++;
+
+            // 10 kez tıklandıktan sonra başa dön
+            if ($scope.carouselClickCount >= 10) {
+              $scope.currentCarouselSlide = 0;
+              $scope.carouselClickCount = 0;
+            }
+
+            // Son slide'dan sonra başa dön
+            if (
+              $scope.currentCarouselSlide >= $scope.carouselFotograflari.length
+            ) {
+              $scope.currentCarouselSlide = 0;
+            }
+          };
+
+          $scope.prevCarouselSlide = function () {
+            $scope.currentCarouselSlide--;
+            $scope.carouselClickCount++;
+
+            // 10 kez tıklandıktan sonra başa dön
+            if ($scope.carouselClickCount >= 10) {
+              $scope.currentCarouselSlide = 0;
+              $scope.carouselClickCount = 0;
+            }
+
+            // İlk slide'dan önce sona git
+            if ($scope.currentCarouselSlide < 0) {
+              $scope.currentCarouselSlide =
+                $scope.carouselFotograflari.length - 1;
+            }
+          };
+
+          $scope.goToCarouselSlide = function (index) {
+            $scope.currentCarouselSlide = index;
+            $scope.carouselClickCount++;
+
+            // 10 kez tıklandıktan sonra başa dön
+            if ($scope.carouselClickCount >= 10) {
+              $scope.currentCarouselSlide = 0;
+              $scope.carouselClickCount = 0;
+            }
+          };
+
+          // Carousel fotoğrafına tıklama fonksiyonu
+          $scope.carouselClick = function (slide) {
+            if (slide.sayfa) {
+              window.location.href = slide.sayfa;
+            }
+          };
+
           // Sanat resimleri verisi
           $scope.sanatResimleri = [
             {

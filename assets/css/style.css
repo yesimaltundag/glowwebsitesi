@@ -12,34 +12,13 @@ body {
 }
 
 body {
-  background: linear-gradient(
-    135deg,
-    #f1f1f1,
-    #e2d9d0,
-    #d1c6b1,
-    #f8e0e1,
-    #c0b2b0
-  );
-  background-size: 400% 400%;
-  animation: gradientAnimation 15s ease infinite;
+  background: #f8e0e1;
   color: #333;
   padding-top: 80px;
   padding-bottom: 60px;
   min-height: 100vh;
   width: 100%;
   overflow-x: hidden;
-}
-
-@keyframes gradientAnimation {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
 }
 
 /* ===== HEADER STYLES ===== */
@@ -150,6 +129,7 @@ body {
   padding: 20px 40px;
   min-height: calc(100vh - 140px);
   width: 100%;
+  background: transparent !important;
 }
 
 /* ===== CONTAINER STYLES ===== */
@@ -388,7 +368,7 @@ tr:hover {
 /* ===== FOOTER STYLES ===== */
 .site-footer {
   position: static;
-  background: linear-gradient(135deg, #f8e0e1 60%, #e2d9d0 100%);
+  background: transparent;
   box-shadow: none;
   padding: 0;
   margin: 0;
@@ -402,7 +382,7 @@ tr:hover {
 .footer-content {
   max-width: 100%;
   margin: 0 auto;
-  padding: 8px 40px;
+  padding: 4px 20px;
   text-align: center;
 }
 
@@ -410,8 +390,8 @@ tr:hover {
   color: #b48a78;
   font-weight: 500;
   margin: 0;
-  font-size: 15px;
-  letter-spacing: 0.5px;
+  font-size: 13px;
+  letter-spacing: 0.3px;
 }
 
 /* ===== SCROLL TO TOP BUTTON ===== */
@@ -972,5 +952,193 @@ tr:hover {
     align-self: flex-start;
     font-size: 0.8rem;
     padding: 2px 5px;
+  }
+}
+
+/* ===== FILM POSTER CAROUSEL STYLES ===== */
+
+.film-poster-baslik {
+  text-align: center;
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-top: 60px;
+  margin-bottom: 40px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.film-poster-wrapper {
+  position: relative;
+  max-width: 1200px;
+  margin: 0 auto 80px auto;
+  padding: 0 60px;
+  overflow: hidden;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.film-poster-carousel {
+  display: flex;
+  transition: transform 0.5s ease-in-out;
+  gap: 20px;
+  width: 100%;
+}
+
+.film-poster-slide {
+  flex: 0 0 280px;
+  cursor: pointer;
+  min-width: 280px;
+}
+
+.film-poster-card {
+  position: relative;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+  background: #fff;
+}
+
+.film-poster-card:hover {
+  transform: translateY(-10px) scale(1.05);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+}
+
+.film-poster-card img {
+  width: 100%;
+  height: 400px;
+  object-fit: cover;
+  display: block;
+}
+
+.film-poster-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+  padding: 20px;
+  color: white;
+  transform: translateY(100%);
+  transition: transform 0.3s ease;
+}
+
+.film-poster-card:hover .film-poster-overlay {
+  transform: translateY(0);
+}
+
+.film-poster-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 5px;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.film-poster-year {
+  font-size: 0.9rem;
+  opacity: 0.9;
+  margin-bottom: 5px;
+}
+
+.film-poster-rating {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #ffd700;
+}
+
+.film-poster-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 50px;
+  height: 50px;
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  border-radius: 50%;
+  font-size: 1.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+}
+
+.film-poster-nav:hover {
+  background: rgba(255, 255, 255, 1);
+  transform: translateY(-50%) scale(1.1);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.film-poster-nav.prev {
+  left: 10px;
+}
+
+.film-poster-nav.next {
+  right: 10px;
+}
+
+/* Film Poster Carousel Responsive */
+@media (max-width: 768px) {
+  .film-poster-carousel-container {
+    margin-top: 40px;
+    padding: 30px 0;
+  }
+
+  .film-poster-baslik {
+    font-size: 1.8rem;
+    margin-bottom: 30px;
+  }
+
+  .film-poster-wrapper {
+    padding: 0 40px;
+    margin: 0 auto 60px auto;
+  }
+
+  .film-poster-slide {
+    flex: 0 0 220px;
+  }
+
+  .film-poster-card img {
+    height: 320px;
+  }
+
+  .film-poster-nav {
+    width: 40px;
+    height: 40px;
+    font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .film-poster-carousel-container {
+    margin-top: 30px;
+    padding: 20px 0;
+  }
+
+  .film-poster-baslik {
+    font-size: 1.5rem;
+    margin-bottom: 25px;
+  }
+
+  .film-poster-wrapper {
+    padding: 0 30px;
+    margin: 0 auto 50px auto;
+  }
+
+  .film-poster-slide {
+    flex: 0 0 180px;
+  }
+
+  .film-poster-card img {
+    height: 260px;
+  }
+
+  .film-poster-nav {
+    width: 35px;
+    height: 35px;
+    font-size: 1rem;
   }
 }

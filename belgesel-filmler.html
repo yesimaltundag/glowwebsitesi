@@ -34,7 +34,7 @@
             ng-click="filmDetay(film.id)"
           >
             <img
-              ng-src="{{ film.poster_url }}"
+              ng-src="{{ film.kapak_url || 'assets/images/logo.jpg' }}"
               ng-alt="{{ film.film_adi }}"
               class="film-poster"
             />

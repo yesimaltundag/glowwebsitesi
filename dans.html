@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="tr" ng-app="GirisApp">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dans Sanatı - GLOW</title>
+    <link rel="stylesheet" href="assets/css/style.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="assets/js/app.js"></script>
+    <style>
+      .dans-container {
+        max-width: 100%;
+        margin: 40px auto;
+        padding: 32px 40px;
+        background: rgba(255, 255, 255, 0.92);
+        border-radius: 18px;
+        box-shadow: 0 8px 32px rgba(124, 92, 74, 0.1);
+        backdrop-filter: blur(10px);
+        position: relative;
+        width: 100%;
+      }
+
+      .dans-header {
+        text-align: center;
+        margin-bottom: 40px;
+      }
+
+      .dans-baslik {
+        color: #7c5c4a;
+        font-size: 2.5rem;
+        font-weight: 700;
+        letter-spacing: 2px;
+        margin-bottom: 16px;
+        text-shadow: 0 2px 4px rgba(124, 92, 74, 0.1);
+      }
+
+      .dans-aciklama {
+        color: #b48a78;
+        font-size: 1.1rem;
+        font-weight: 500;
+        max-width: 600px;
+        margin: 0 auto;
+        line-height: 1.6;
+      }
+
+      .dans-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 40px;
+        margin-top: 40px;
+      }
+
+      .dans-card {
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 8px 24px rgba(180, 138, 120, 0.15);
+        overflow: hidden;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        position: relative;
+      }
+
+      .dans-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 16px 40px rgba(180, 138, 120, 0.25);
+      }
+
+      .dans-card-img {
+        width: 100%;
+        height: 350px;
+        overflow: hidden;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f8f8f8;
+      }
+
+      .dans-card-img img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+        background: #f8f8f8;
+      }
+
+      .dans-card:hover .dans-card-img img {
+        transform: scale(1.05);
+      }
+
+      .dans-card-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+        padding: 20px;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+
+      .dans-card:hover .dans-card-overlay {
+        opacity: 1;
+      }
+
+      .dans-card-overlay h3 {
+        color: white;
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 8px;
+      }
+
+      .dans-card-overlay p {
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 14px;
+        margin-bottom: 5px;
+      }
+
+      .dans-card-bilgi {
+        padding: 30px;
+      }
+
+      .dans-card-baslik {
+        color: #7c5c4a;
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin-bottom: 12px;
+        line-height: 1.3;
+      }
+
+      .dans-card-koreograf {
+        color: #b48a78;
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin-bottom: 8px;
+      }
+
+      .dans-card-tarih {
+        color: #999;
+        font-size: 1rem;
+        margin-bottom: 20px;
+      }
+
+      .dans-card-aciklama {
+        color: #666;
+        font-size: 1.1rem;
+        line-height: 1.6;
+        display: -webkit-box;
+        -webkit-line-clamp: 4;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+
+      .dans-card-tur {
+        display: inline-block;
+        background: linear-gradient(135deg, #e2d9d0, #b48a78);
+        color: #7c5c4a;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        margin-top: 15px;
+      }
+
+      .geri-btn {
+        background: linear-gradient(135deg, #e2d9d0, #b48a78);
+        color: #7c5c4a;
+        border: none;
+        border-radius: 50%;
+        width: 45px;
+        height: 45px;
+        padding: 0;
+        font-size: 18px;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s;
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        margin: 0;
+      }
+
+      .geri-btn:hover {
+        background: linear-gradient(135deg, #b48a78, #e2d9d0);
+        color: #fff;
+        transform: scale(1.1);
+      }
+
+      @media (max-width: 768px) {
+        .dans-container {
+          padding: 20px;
+          margin: 20px;
+        }
+
+        .dans-baslik {
+          font-size: 2rem;
+        }
+
+        .dans-grid {
+          grid-template-columns: 1fr;
+          gap: 30px;
+        }
+
+        .geri-btn {
+          width: 45px;
+          height: 45px;
+          font-size: 18px;
+        }
+      }
+
+      @media (max-width: 1024px) {
+        .dans-grid {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 30px;
+        }
+      }
+
+      @media (max-width: 600px) {
+        .dans-container {
+          padding: 20px;
+          max-width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <ng-include src="'components/header.html'"></ng-include>
+    <main class="main-content">
+      <div class="dans-container" ng-controller="DansController">
+        <button
+          class="geri-btn"
+          ng-click="geriDon()"
+          title="Sanat Kategorileri'ne Dön"
+        >
+          ←
+        </button>
+        <div class="dans-header">
+          <h1 class="dans-baslik">Dans Sanatı</h1>
+          <p class="dans-aciklama">
+            Dünyanın en etkileyici dans türlerini keşfet! Klasik baleden modern
+            dansa, geleneksel halk danslarından çağdaş koreografilere kadar.
+            Hareketin şiirini yaşa.
+          </p>
+        </div>
+        <div class="dans-grid">
+          <div
+            class="dans-card"
+            ng-repeat="dans in dansEserler"
+            ng-click="dansDetay(dans)"
+          >
+            <div class="dans-card-img">
+              <img ng-src="{{dans.resim}}" alt="{{dans.ad}}" />
+              <div class="dans-card-overlay">
+                <h3>{{dans.ad}}</h3>
+                <p>{{dans.koreograf}}</p>
+                <p>{{dans.yer}}</p>
+              </div>
+            </div>
+            <div class="dans-card-bilgi">
+              <h3 class="dans-card-baslik">{{dans.ad}}</h3>
+              <p class="dans-card-koreograf">{{dans.koreograf}}</p>
+              <p class="dans-card-tarih">{{dans.tarih}}</p>
+              <p class="dans-card-aciklama">{{dans.aciklama}}</p>
+              <span class="dans-card-tur">{{dans.tur}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <ng-include src="'components/footer.html'"></ng-include>
+    <button id="scrollTopBtn" title="Yukarı Çık" ng-click="scrollToTop()">
+      ↑
+    </button>
+    <script>
+      angular
+        .module("GirisApp")
+        .controller("DansController", function ($scope) {
+          $scope.kullanici = JSON.parse(
+            localStorage.getItem("girisYapan") || "null"
+          );
+
+          $scope.dansEserler = [
+            {
+              id: 1,
+              ad: "Kuğu Gölü",
+              koreograf: "Marius Petipa & Lev Ivanov",
+              tarih: "1895",
+              yer: "St. Petersburg, Rusya",
+              tur: "Klasik Bale",
+              aciklama:
+                "Tchaikovsky'nin müziğiyle Petipa ve Ivanov'un koreografisini birleştiren bu bale, klasik balenin en önemli eserlerinden biridir. Odette ve Odile karakterlerinin ikili rolü, balerinlerin teknik becerilerini sergiler.",
+              resim:
+                "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop",
+            },
+            {
+              id: 2,
+              ad: "Giselle",
+              koreograf: "Jean Coralli & Jules Perrot",
+              tarih: "1841",
+              yer: "Paris, Fransa",
+              tur: "Romantik Bale",
+              aciklama:
+                "Romantik balenin başyapıtı olan Giselle, aşk, ihanet ve ölüm temalarını işler. İkinci perdedeki Wilis'lerin dansı, beyaz tütü ve pointe tekniğiyle romantik balenin özelliklerini yansıtır.",
+              resim:
+                "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop",
+            },
+            {
+              id: 3,
+              ad: "Uyuyan Güzel",
+              koreograf: "Marius Petipa",
+              tarih: "1890",
+              yer: "St. Petersburg, Rusya",
+              tur: "Klasik Bale",
+              aciklama:
+                "Tchaikovsky'nin müziğiyle Petipa'nın koreografisini birleştiren bu bale, peri masalının bale sahnesine uyarlanmış halidir. Grand pas de two ve solo varyasyonları klasik balenin teknik zirvesini temsil eder.",
+              resim:
+                "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop",
+            },
+            {
+              id: 4,
+              ad: "Fındıkkıran",
+              koreograf: "Marius Petipa & Lev Ivanov",
+              tarih: "1892",
+              yer: "St. Petersburg, Rusya",
+              tur: "Klasik Bale",
+              aciklama:
+                "Tchaikovsky'nin en sevilen bale müziğiyle Petipa ve Ivanov'un koreografisini birleştiren bu eser, Noel atmosferini bale sahnesine taşır. Şeker Perisi'nin pas de two'su klasik balenin en güzel örneklerindendir.",
+              resim:
+                "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop",
+            },
+            {
+              id: 5,
+              ad: "Romeo ve Juliet",
+              koreograf: "Kenneth MacMillan",
+              tarih: "1965",
+              yer: "Londra, İngiltere",
+              tur: "Neo-Klasik Bale",
+              aciklama:
+                "Prokofiev'in müziğiyle MacMillan'ın koreografisini birleştiren bu bale, Shakespeare'in trajik aşk hikayesini dans diliyle anlatır. Dramatik koreografi ve duygusal yoğunlukla öne çıkar.",
+              resim:
+                "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop",
+            },
+            {
+              id: 6,
+              ad: "Don Quixote",
+              koreograf: "Marius Petipa",
+              tarih: "1869",
+              yer: "Moskova, Rusya",
+              tur: "Klasik Bale",
+              aciklama:
+                "Cervantes'in romanından esinlenen bu bale, İspanya'nın renkli atmosferini bale sahnesine taşır. Kitri'nin solo varyasyonları ve Grand pas de two'su teknik zorluklarıyla ünlüdür.",
+              resim:
+                "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop",
+            },
+            {
+              id: 7,
+              ad: "La Bayadère",
+              koreograf: "Marius Petipa",
+              tarih: "1877",
+              yer: "St. Petersburg, Rusya",
+              tur: "Klasik Bale",
+              aciklama:
+                "Hindistan'da geçen bu bale, egzotik atmosferi ve teknik zorluklarıyla öne çıkar. 'Gölgeler Sahnesi' klasik balenin en etkileyici toplu dans sahnelerinden biridir.",
+              resim:
+                "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop",
+            },
+            {
+              id: 8,
+              ad: "Coppélia",
+              koreograf: "Arthur Saint-Léon",
+              tarih: "1870",
+              yer: "Paris, Fransa",
+              tur: "Klasik Bale",
+              aciklama:
+                "Léo Delibes'in müziğiyle Saint-Léon'un koreografisini birleştiren bu bale, komik bir hikaye anlatır. Franz ve Swanilda'nın dansları klasik balenin neşeli yönünü yansıtır.",
+              resim:
+                "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop",
+            },
+            {
+              id: 9,
+              ad: "La Sylphide",
+              koreograf: "August Bournonville",
+              tarih: "1836",
+              yer: "Kopenhag, Danimarka",
+              tur: "Romantik Bale",
+              aciklama:
+                "Romantik balenin ilk örneklerinden biri olan La Sylphide, doğaüstü varlıklarla insan aşkını konu alır. Bournonville tekniği ve zarif koreografisiyle Danimarka balesinin temelini oluşturur.",
+              resim:
+                "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop",
+            },
+          ];
+
+          $scope.dansDetay = function (dans) {
+            // Dans detay sayfasına yönlendirme
+            alert(dans.ad + " hakkında detaylı bilgi yakında eklenecek!");
+          };
+
+          $scope.geriDon = function () {
+            window.location.href = "sanat-kategoriler.html";
+          };
+
+          $scope.scrollToTop = function () {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          };
+        });
+    </script>
+  </body>
+</html>

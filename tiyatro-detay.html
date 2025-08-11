@@ -33,12 +33,12 @@
         height: 450px;
         border-radius: 15px;
         box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-        background: linear-gradient(135deg, #f8e0e1, #e2d9d0);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 4rem;
-        color: #7c5c4a;
+        overflow: hidden;
+        transition: transform 0.3s ease;
+      }
+
+      .detay-poster:hover {
+        transform: scale(1.02);
       }
 
       .detay-bilgiler {
@@ -118,19 +118,6 @@
         font-weight: 700;
         margin-bottom: 16px;
         text-align: center;
-      }
-
-      .tiyatro-gorsel {
-        width: 100%;
-        height: 300px;
-        background: linear-gradient(135deg, #f8e0e1, #e2d9d0);
-        border-radius: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 3rem;
-        color: #7c5c4a;
-        margin-bottom: 16px;
       }
 
       .geri-btn {
@@ -253,7 +240,18 @@
         <!-- Detay İçeriği -->
         <div ng-if="!loading && !error && tiyatroEseri">
           <div class="detay-header">
-            <div class="detay-poster">🎭</div>
+            <div class="detay-poster">
+              <img
+                ng-src="{{tiyatroEseri.kapak_url || 'assets/images/logo.jpg'}}"
+                alt="{{tiyatroEseri.eser_adi}}"
+                style="
+                  width: 100%;
+                  height: 100%;
+                  object-fit: cover;
+                  border-radius: 15px;
+                "
+              />
+            </div>
             <div class="detay-bilgiler">
               <h1 class="detay-baslik">{{ tiyatroEseri.eser_adi }}</h1>
               <div class="detay-yazar">{{ tiyatroEseri.yazar }}</div>
@@ -273,14 +271,6 @@
           <div class="detay-aciklama">{{ tiyatroEseri.aciklama }}</div>
 
           <div class="detay-icerik">
-            <div class="detay-bolum">
-              <h3 class="bolum-baslik">🎭 Sahne Görselleri</h3>
-              <div class="tiyatro-gorsel">🎪</div>
-              <p style="text-align: center; color: #7f8c8d; font-style: italic">
-                Bu tiyatro eserinin sahne görselleri ve performans fotoğrafları
-                burada yer alacak
-              </p>
-            </div>
             <div class="detay-bolum">
               <h3 class="bolum-baslik">📖 Eser Detayları</h3>
               <div style="color: #34495e; line-height: 1.6">

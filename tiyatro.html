@@ -169,6 +169,13 @@
             ng-click="eserDetayGit(eser.id)"
             style="cursor: pointer"
           >
+            <div class="eser-poster">
+              <img
+                ng-src="{{eser.kapak_url || 'assets/images/logo.jpg'}}"
+                alt="{{eser.eser_adi}}"
+                style="width: 100%; height: 200px; object-fit: cover"
+              />
+            </div>
             <div class="eser-content">
               <h3 class="eser-baslik">{{ eser.eser_adi }}</h3>
               <div class="eser-yazar">{{ eser.yazar }}</div>

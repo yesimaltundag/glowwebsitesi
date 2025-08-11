@@ -31,14 +31,21 @@
       .detay-poster {
         width: 200px;
         height: 280px;
-        background: linear-gradient(135deg, #ff6b6b, #ee5a24);
         border-radius: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 80px;
-        color: white;
+        overflow: hidden;
         box-shadow: 0 4px 16px rgba(255, 107, 107, 0.3);
+        position: relative;
+      }
+
+      .detay-poster img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+      }
+
+      .detay-poster:hover img {
+        transform: scale(1.05);
       }
 
       .detay-bilgiler {
@@ -391,7 +398,6 @@
           width: 150px;
           height: 210px;
           margin: 0 auto;
-          font-size: 60px;
         }
 
         .detay-icerik {
@@ -454,7 +460,18 @@
 
         <div ng-if="!loading && !error && anime">
           <div class="detay-header">
-            <div class="detay-poster">🎌</div>
+            <div class="detay-poster">
+              <img
+                ng-src="{{anime.kapak_url || 'assets/images/logo.jpg'}}"
+                alt="{{anime.anime_adi}}"
+                style="
+                  width: 100%;
+                  height: 100%;
+                  object-fit: cover;
+                  border-radius: 12px;
+                "
+              />
+            </div>
             <div class="detay-bilgiler">
               <h1 class="detay-baslik">{{ anime.anime_adi }}</h1>
               <div class="detay-yonetmen">{{ anime.yonetmen }}</div>
@@ -491,8 +508,8 @@
                 <p ng-if="anime.sure">
                   <strong>Bölüm Süresi:</strong> {{ anime.sure }}
                 </p>
-                <p ng-if="anime.stüdyo">
-                  <strong>Stüdyo:</strong> {{ anime.stüdyo }}
+                <p ng-if="anime.studio">
+                  <strong>Stüdyo:</strong> {{ anime.studio }}
                 </p>
                 <p ng-if="anime.durum">
                   <strong>Durum:</strong> {{ anime.durum }}

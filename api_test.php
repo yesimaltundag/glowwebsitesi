@@ -1,46 +1,53 @@
 <?php
-// API test dosyası
-echo "<h2>🔍 Filmler API Testi</h2>";
+// Veritabanı bağlantısı
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "basit_sistem";
 
-// API'yi çağır
-$apiUrl = "http://localhost/test2/filmler_api.php";
-echo "<p>API URL: $apiUrl</p>";
+$conn = new mysqli($servername, $username, $password, $dbname);
 
-try {
-    $response = file_get_contents($apiUrl);
-    $data = json_decode($response, true);
-    
-    echo "<h3>✅ API Response:</h3>";
-    echo "<pre>" . print_r($data, true) . "</pre>";
-    
-    if ($data && $data['success']) {
-        echo "<h3>✅ Başarılı! " . count($data['filmler']) . " film bulundu.</h3>";
-        
-        echo "<h4>📋 Filmler:</h4>";
-        foreach ($data['filmler'] as $index => $film) {
-            echo "<div style='border: 1px solid #ccc; margin: 10px; padding: 10px;'>";
-            echo "<strong>Film " . ($index + 1) . ":</strong><br>";
-            echo "Ad: " . $film['film_adi'] . "<br>";
-            echo "Yönetmen: " . $film['yonetmen'] . "<br>";
-            echo "Yıl: " . $film['yil'] . "<br>";
-            echo "IMDB: " . $film['imdb_puani'] . "<br>";
-            echo "Kategori: " . $film['kategori'] . "<br>";
-            echo "Poster: " . substr($film['poster_url'], 0, 50) . "...<br>";
-            echo "</div>";
-        }
-    } else {
-        echo "<h3>❌ API Hatası:</h3>";
-        echo "<p>" . ($data['error'] ?? 'Bilinmeyen hata') . "</p>";
-    }
-    
-} catch (Exception $e) {
-    echo "<h3>❌ Bağlantı Hatası:</h3>";
-    echo "<p>" . $e->getMessage() . "</p>";
+if ($conn->connect_error) {
+    die("Bağlantı hatası: " . $conn->connect_error);
 }
 
-echo "<hr>";
-echo "<h3>🔧 Debug Bilgileri:</h3>";
-echo "<p>PHP Version: " . phpversion() . "</p>";
-echo "<p>allow_url_fopen: " . (ini_get('allow_url_fopen') ? 'Açık' : 'Kapalı') . "</p>";
-echo "<p>cURL: " . (function_exists('curl_init') ? 'Mevcut' : 'Yok') . "</p>";
+echo "<h2>🎭 API Test - Anime ID 1</h2>";
+
+// API'den gelen veriyi simüle et
+$id = 1;
+$sonuc = $conn->query("SELECT * FROM animeler WHERE id = $id");
+
+if ($sonuc && $sonuc->num_rows > 0) {
+    $anime = $sonuc->fetch_assoc();
+    
+    echo "<h3>📋 Anime Verisi:</h3>";
+    echo "<pre>";
+    print_r($anime);
+    echo "</pre>";
+    
+    echo "<h3>🖼️ Kapak URL Test:</h3>";
+    if (!empty($anime['kapak_url'])) {
+        echo "<p><strong>URL:</strong> " . $anime['kapak_url'] . "</p>";
+        
+        // Resmi göster
+        echo "<h4>📸 Resim Önizleme:</h4>";
+        echo "<img src='" . $anime['kapak_url'] . "' alt='" . $anime['anime_adi'] . "' style='max-width: 200px; border: 2px solid #ccc;' />";
+        
+        // URL'yi test et
+        echo "<h4>🔗 URL Durumu:</h4>";
+        $headers = @get_headers($anime['kapak_url']);
+        if ($headers && strpos($headers[0], '200') !== false) {
+            echo "<p style='color: green;'>✅ URL çalışıyor</p>";
+        } else {
+            echo "<p style='color: red;'>❌ URL çalışmıyor (404 hatası)</p>";
+            echo "<p><strong>Hata:</strong> " . ($headers ? $headers[0] : 'Bağlantı hatası') . "</p>";
+        }
+    } else {
+        echo "<p style='color: red;'>❌ kapak_url boş!</p>";
+    }
+} else {
+    echo "<p style='color: red;'>❌ Anime bulunamadı!</p>";
+}
+
+$conn->close();
 ?>

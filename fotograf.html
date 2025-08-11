@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="tr" ng-app="GirisApp">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fotoğraf Sanatı - GLOW</title>
+    <link rel="stylesheet" href="assets/css/style.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="assets/js/app.js"></script>
+    <style>
+      .fotograf-container {
+        max-width: 100%;
+        margin: 40px auto;
+        padding: 32px 40px;
+        background: rgba(255, 255, 255, 0.92);
+        border-radius: 18px;
+        box-shadow: 0 8px 32px rgba(124, 92, 74, 0.1);
+        backdrop-filter: blur(10px);
+        position: relative;
+        width: 100%;
+      }
+
+      .fotograf-header {
+        text-align: center;
+        margin-bottom: 40px;
+      }
+
+      .fotograf-baslik {
+        color: #7c5c4a;
+        font-size: 2.5rem;
+        font-weight: 700;
+        letter-spacing: 2px;
+        margin-bottom: 16px;
+        text-shadow: 0 2px 4px rgba(124, 92, 74, 0.1);
+      }
+
+      .fotograf-aciklama {
+        color: #b48a78;
+        font-size: 1.1rem;
+        font-weight: 500;
+        max-width: 600px;
+        margin: 0 auto;
+        line-height: 1.6;
+      }
+
+      .fotograf-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 40px;
+        margin-top: 40px;
+      }
+
+      .fotograf-card {
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 8px 24px rgba(180, 138, 120, 0.15);
+        overflow: hidden;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        position: relative;
+      }
+
+      .fotograf-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 16px 40px rgba(180, 138, 120, 0.25);
+      }
+
+      .fotograf-card-img {
+        width: 100%;
+        height: 350px;
+        overflow: hidden;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f8f8f8;
+      }
+
+      .fotograf-card-img img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+        background: #f8f8f8;
+      }
+
+      .fotograf-card:hover .fotograf-card-img img {
+        transform: scale(1.05);
+      }
+
+      .fotograf-card-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+        padding: 20px;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+
+      .fotograf-card:hover .fotograf-card-overlay {
+        opacity: 1;
+      }
+
+      .fotograf-card-overlay h3 {
+        color: white;
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 8px;
+      }
+
+      .fotograf-card-overlay p {
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 14px;
+        margin-bottom: 5px;
+      }
+
+      .fotograf-card-bilgi {
+        padding: 30px;
+      }
+
+      .fotograf-card-baslik {
+        color: #7c5c4a;
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin-bottom: 12px;
+        line-height: 1.3;
+      }
+
+      .fotograf-card-fotografci {
+        color: #b48a78;
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin-bottom: 8px;
+      }
+
+      .fotograf-card-tarih {
+        color: #999;
+        font-size: 1rem;
+        margin-bottom: 20px;
+      }
+
+      .fotograf-card-aciklama {
+        color: #666;
+        font-size: 1.1rem;
+        line-height: 1.6;
+        display: -webkit-box;
+        -webkit-line-clamp: 4;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+
+      .fotograf-card-tur {
+        display: inline-block;
+        background: linear-gradient(135deg, #e2d9d0, #b48a78);
+        color: #7c5c4a;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        margin-top: 15px;
+      }
+
+      .geri-btn {
+        background: linear-gradient(135deg, #e2d9d0, #b48a78);
+        color: #7c5c4a;
+        border: none;
+        border-radius: 50%;
+        width: 45px;
+        height: 45px;
+        padding: 0;
+        font-size: 18px;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s;
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        margin: 0;
+      }
+
+      .geri-btn:hover {
+        background: linear-gradient(135deg, #b48a78, #e2d9d0);
+        color: #fff;
+        transform: scale(1.1);
+      }
+
+      @media (max-width: 768px) {
+        .fotograf-container {
+          padding: 20px;
+          margin: 20px;
+        }
+
+        .fotograf-baslik {
+          font-size: 2rem;
+        }
+
+        .fotograf-grid {
+          grid-template-columns: 1fr;
+          gap: 30px;
+        }
+
+        .geri-btn {
+          width: 45px;
+          height: 45px;
+          font-size: 18px;
+        }
+      }
+
+      @media (max-width: 1024px) {
+        .fotograf-grid {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 30px;
+        }
+      }
+
+      @media (max-width: 600px) {
+        .fotograf-container {
+          padding: 20px;
+          max-width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <ng-include src="'components/header.html'"></ng-include>
+    <main class="main-content">
+      <div class="fotograf-container" ng-controller="FotografController">
+        <button
+          class="geri-btn"
+          ng-click="geriDon()"
+          title="Sanat Kategorileri'ne Dön"
+        >
+          ←
+        </button>
+        <div class="fotograf-header">
+          <h1 class="fotograf-baslik">Fotoğraf Sanatı</h1>
+          <p class="fotograf-aciklama">
+            Dünyanın en etkileyici fotoğraflarını keşfet! Portre, manzara, sokak
+            fotoğrafçılığı ve daha fazlası. Her kare bir hikaye anlatır.
+          </p>
+        </div>
+        <div class="fotograf-grid">
+          <div
+            class="fotograf-card"
+            ng-repeat="fotograf in fotografEserler"
+            ng-click="fotografDetay(fotograf)"
+          >
+            <div class="fotograf-card-img">
+              <img ng-src="{{fotograf.resim}}" alt="{{fotograf.ad}}" />
+              <div class="fotograf-card-overlay">
+                <h3>{{fotograf.ad}}</h3>
+                <p>{{fotograf.fotografci}}</p>
+                <p>{{fotograf.yer}}</p>
+              </div>
+            </div>
+            <div class="fotograf-card-bilgi">
+              <h3 class="fotograf-card-baslik">{{fotograf.ad}}</h3>
+              <p class="fotograf-card-fotografci">{{fotograf.fotografci}}</p>
+              <p class="fotograf-card-tarih">{{fotograf.tarih}}</p>
+              <p class="fotograf-card-aciklama">{{fotograf.aciklama}}</p>
+              <span class="fotograf-card-tur">{{fotograf.tur}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <ng-include src="'components/footer.html'"></ng-include>
+    <button id="scrollTopBtn" title="Yukarı Çık" ng-click="scrollToTop()">
+      ↑
+    </button>
+    <script>
+      angular
+        .module("GirisApp")
+        .controller("FotografController", function ($scope) {
+          $scope.kullanici = JSON.parse(
+            localStorage.getItem("girisYapan") || "null"
+          );
+
+          $scope.fotografEserler = [
+            {
+              id: 1,
+              ad: "Afghan Girl",
+              fotografci: "Steve McCurry",
+              tarih: "1984",
+              yer: "Pakistan",
+              tur: "Portre",
+              aciklama:
+                "National Geographic'in en ikonik fotoğraflarından biri. Yeşil gözleriyle dünyayı büyüleyen Afgan kızı Sharbat Gula'nın hikayesi, savaşın masum kurbanlarını simgeler.",
+              resim:
+                "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&h=600&fit=crop",
+            },
+            {
+              id: 2,
+              ad: "Migrant Mother",
+              fotografci: "Dorothea Lange",
+              tarih: "1936",
+              yer: "Kaliforniya, ABD",
+              tur: "Belgesel",
+              aciklama:
+                "Büyük Buhran döneminin en etkileyici fotoğraflarından biri. Florence Owens Thompson'ın endişeli yüzü, o dönemin zorluklarını mükemmel şekilde yansıtır.",
+              resim:
+                "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop",
+            },
+            {
+              id: 3,
+              ad: "The Kiss",
+              fotografci: "Alfred Eisenstaedt",
+              tarih: "1945",
+              yer: "New York, ABD",
+              tur: "Sokak",
+              aciklama:
+                "II. Dünya Savaşı'nın sona erdiği gün Times Square'de çekilen bu fotoğraf, zaferin ve sevincin en güzel anlarından birini ölümsüzleştirir.",
+              resim:
+                "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=800&h=600&fit=crop",
+            },
+            {
+              id: 4,
+              ad: "Earthrise",
+              fotografci: "William Anders",
+              tarih: "1968",
+              yer: "Ay Yörüngesi",
+              tur: "Uzay",
+              aciklama:
+                "Apollo 8 görevi sırasında çekilen bu fotoğraf, insanlığın Dünya'yı uzaydan ilk kez gördüğü anı yakalar. Çevre bilincinin doğuşuna katkı sağlamıştır.",
+              resim:
+                "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?w=800&h=600&fit=crop",
+            },
+            {
+              id: 5,
+              ad: "V-J Day in Times Square",
+              fotografci: "Alfred Eisenstaedt",
+              tarih: "1945",
+              yer: "New York, ABD",
+              tur: "Sokak",
+              aciklama:
+                "Japonya'nın teslim olduğu gün Times Square'de çekilen bu fotoğraf, savaşın sona ermesinin verdiği sevinci ve özgürlüğü simgeler.",
+              resim:
+                "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=800&h=600&fit=crop",
+            },
+            {
+              id: 6,
+              ad: "The Falling Man",
+              fotografci: "Richard Drew",
+              tarih: "2001",
+              yer: "New York, ABD",
+              tur: "Gazetecilik",
+              aciklama:
+                "11 Eylül saldırıları sırasında çekilen bu fotoğraf, o günün trajedisini en çarpıcı şekilde yansıtır. Tarihin en acı anlarından birini belgeler.",
+              resim:
+                "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop",
+            },
+            {
+              id: 7,
+              ad: "Tank Man",
+              fotografci: "Jeff Widener",
+              tarih: "1989",
+              yer: "Pekin, Çin",
+              tur: "Gazetecilik",
+              aciklama:
+                "Tiananmen Meydanı protestoları sırasında çekilen bu fotoğraf, bir adamın tank kolonunu durdurmaya çalıştığı anı yakalar. Cesaretin ve direnişin simgesi haline gelmiştir.",
+              resim:
+                "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop",
+            },
+            {
+              id: 8,
+              ad: "The Blue Marble",
+              fotografci: "Apollo 17 Mürettebatı",
+              tarih: "1972",
+              yer: "Uzay",
+              tur: "Uzay",
+              aciklama:
+                "Dünya'nın tam güneş ışığında çekilen ilk fotoğrafı. Mavi gezegenimizin güzelliğini ve kırılganlığını gösteren bu görüntü, çevre hareketinin sembolü haline gelmiştir.",
+              resim:
+                "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?w=800&h=600&fit=crop",
+            },
+            {
+              id: 9,
+              ad: "Lunch Atop a Skyscraper",
+              fotografci: "Charles C. Ebbets",
+              tarih: "1932",
+              yer: "New York, ABD",
+              tur: "Endüstriyel",
+              aciklama:
+                "Rockefeller Center inşaatı sırasında çekilen bu fotoğraf, işçilerin cesaretini ve o dönemin çalışma koşullarını gösterir. İkonik bir görüntü haline gelmiştir.",
+              resim:
+                "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop",
+            },
+          ];
+
+          $scope.fotografDetay = function (fotograf) {
+            // Fotoğraf detay sayfasına yönlendirme
+            alert(fotograf.ad + " hakkında detaylı bilgi yakında eklenecek!");
+          };
+
+          $scope.geriDon = function () {
+            window.location.href = "sanat-kategoriler.html";
+          };
+
+          $scope.scrollToTop = function () {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          };
+        });
+    </script>
+  </body>
+</html>

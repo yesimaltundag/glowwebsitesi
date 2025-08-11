@@ -129,6 +129,17 @@
         font-weight: 600;
         border: 1px solid rgba(180, 138, 120, 0.2);
       }
+      .heykel-puan {
+        background: linear-gradient(135deg, #f39c12, #e67e22);
+        color: white;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        display: inline-block;
+        margin-bottom: 12px;
+      }
+
       .heykel-tarihce {
         color: #b48a78;
         font-size: 0.95rem;
@@ -161,6 +172,20 @@
         background: linear-gradient(135deg, #b48a78, #e2d9d0);
         color: #fff;
         transform: scale(1.1);
+      }
+
+      .loading {
+        text-align: center;
+        color: #7c5c4a;
+        font-size: 1.1rem;
+        padding: 40px;
+      }
+
+      .error {
+        text-align: center;
+        color: #f44336;
+        font-size: 1.1rem;
+        padding: 40px;
       }
 
       @media (max-width: 768px) {
@@ -209,30 +234,37 @@
             kendine özgü hikayesi ve sanatsal değeriyle tarihe damga vurmuş.
           </p>
         </div>
-        <div class="heykel-grid">
+        <!-- Loading -->
+        <div class="loading" ng-if="loading">
+          <p>Heykeller yükleniyor...</p>
+        </div>
+
+        <!-- Error -->
+        <div class="error" ng-if="error">
+          <p>{{ error }}</p>
+        </div>
+
+        <!-- Heykeller -->
+        <div class="heykel-grid" ng-if="!loading && !error">
           <div
             class="heykel-card"
-            ng-repeat="heykel in heykeller"
+            ng-repeat="heykel in heykeller track by $index"
             ng-click="heykelSec(heykel)"
           >
             <img
               class="heykel-fotograf"
-              ng-src="{{heykel.fotograf}}"
-              alt="{{heykel.baslik}}"
+              ng-src="{{heykel.heykel_url}}"
+              alt="{{heykel.heykel_adi}}"
               onerror="this.src='https://via.placeholder.com/400x200/7c5c4a/ffffff?text=🗿'"
             />
             <div class="heykel-bilgi">
-              <h3 class="heykel-baslik-card">{{heykel.baslik}}</h3>
-              <p class="heykel-sanatci">{{heykel.sanatci}}</p>
-              <p class="heykel-yil">{{heykel.yil}}</p>
+              <h3 class="heykel-baslik-card">{{heykel.heykel_adi}}</h3>
+              <p class="heykel-sanatci">{{heykel.sanatcisi}}</p>
+              <p class="heykel-yil">{{heykel.yapim_yili}}</p>
               <div class="heykel-ozellikler">
-                <span
-                  class="heykel-tag"
-                  ng-repeat="ozellik in heykel.ozellikler"
-                  >{{ozellik}}</span
-                >
+                <span class="heykel-tag">Heykel</span>
               </div>
-              <p class="heykel-tarihce">{{heykel.tarihce}}</p>
+              <p class="heykel-tarihce">{{heykel.aciklama}}</p>
             </div>
           </div>
         </div>
@@ -245,80 +277,36 @@
     <script>
       angular
         .module("GirisApp")
-        .controller("HeykellerController", function ($scope) {
+        .controller("HeykellerController", function ($scope, $http) {
           $scope.kullanici = JSON.parse(
             localStorage.getItem("girisYapan") || "null"
           );
 
-          $scope.heykeller = [
-            {
-              baslik: "David",
-              sanatci: "Michelangelo",
-              yil: "1501-1504",
-              ozellikler: ["Mermer", "Rönesans", "İtalya"],
-              fotograf:
-                "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=200&fit=crop&crop=center",
-              tarihce:
-                "Michelangelo'nun en ünlü eseri olan David heykeli, İncil'deki Davut ve Golyat hikayesinden esinlenilmiştir. 5.17 metre yüksekliğindeki bu mermer heykel, Rönesans sanatının en önemli başarılarından biri olarak kabul edilir. Heykel, Davut'un Golyat'ı taşla vurmadan önceki anını, yoğun konsantrasyon ve kararlılık haliyle tasvir eder.",
-            },
-            {
-              baslik: "Venüs de Milo",
-              sanatci: "Aleksandros",
-              yil: "MÖ 130-100",
-              ozellikler: ["Mermer", "Antik Yunan", "Louvre"],
-              fotograf:
-                "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=200&fit=crop&crop=center",
-              tarihce:
-                "Antik Yunan'ın en ünlü heykellerinden biri olan Venüs de Milo, 1820'de Yunanistan'ın Milos adasında keşfedilmiştir. Heykel, güzellik ve aşk tanrıçası Afrodit'i tasvir eder. Kolları eksik olmasına rağmen, zarif duruşu ve idealize edilmiş güzelliği ile dünya sanat tarihinin en değerli eserlerinden biri haline gelmiştir.",
-            },
-            {
-              baslik: "Düşünen Adam",
-              sanatci: "Auguste Rodin",
-              yil: "1880",
-              ozellikler: ["Bronz", "Modern", "Fransa"],
-              fotograf:
-                "https://images.unsplash.com/photo-1516280440614-37939bbacd81?w=400&h=200&fit=crop&crop=center",
-              tarihce:
-                "Auguste Rodin'in en tanınmış eseri olan Düşünen Adam, derin düşünce halindeki çıplak bir adamı tasvir eder. Heykel, Dante'nin İlahi Komedya'sındaki 'Cehennem Kapısı' adlı büyük projesinin bir parçası olarak tasarlanmıştır. Modern heykel sanatının en önemli örneklerinden biri olarak kabul edilir ve insan düşüncesinin evrensel sembolü haline gelmiştir.",
-            },
-            {
-              baslik: "Özgürlük Heykeli",
-              sanatci: "Frédéric Auguste Bartholdi",
-              yil: "1886",
-              ozellikler: ["Bakır", "Neoklasik", "ABD"],
-              fotograf:
-                "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&h=200&fit=crop&crop=center",
-              tarihce:
-                "Fransa tarafından ABD'ye hediye edilen Özgürlük Heykeli, 1886'da New York Limanı'nda açılmıştır. 93 metre yüksekliğindeki heykel, özgürlük tanrıçası Libertas'ı tasvir eder. Sağ elinde meşale, sol elinde ise ABD Bağımsızlık Bildirgesi'ni tutar. Dünya çapında özgürlük ve demokrasinin sembolü haline gelmiştir.",
-            },
-            {
-              baslik: "Pieta",
-              sanatci: "Michelangelo",
-              yil: "1498-1499",
-              ozellikler: ["Mermer", "Rönesans", "Vatikan"],
-              fotograf:
-                "https://images.unsplash.com/photo-1516280440614-37939bbacd81?w=400&h=200&fit=crop&crop=center",
-              tarihce:
-                "Michelangelo'nun 24 yaşında tamamladığı Pieta, Hz. İsa'nın çarmıhtan indirildikten sonra annesi Meryem'in kucağında yatışını tasvir eder. Vatikan'daki Aziz Petrus Bazilikası'nda bulunan bu eser, Rönesans sanatının en etkileyici örneklerinden biridir. Mermerin yumuşak dokusu ve detaylı işçiliği ile dikkat çeker.",
-            },
-            {
-              baslik: "Nike (Zafer Tanrıçası)",
-              sanatci: "Bilinmeyen",
-              yil: "MÖ 190",
-              ozellikler: ["Mermer", "Helenistik", "Louvre"],
-              fotograf:
-                "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=200&fit=crop&crop=center",
-              tarihce:
-                "Helenistik dönemin en önemli heykellerinden biri olan Nike (Zafer Tanrıçası), 1863'te Yunanistan'ın Samothrace adasında keşfedilmiştir. Heykel, zafer tanrıçası Nike'yi kanatları açık, geminin pruvasında dururken tasvir eder. Dinamik duruşu ve zarif kanatları ile Helenistik sanatın en etkileyici örneklerinden biridir.",
-            },
-          ];
+          $scope.loading = true;
+          $scope.error = null;
+          $scope.heykeller = [];
+
+          // Veritabanından heykelleri çek
+          $http
+            .get("api.php?heykel=1")
+            .then(function (response) {
+              $scope.heykeller = response.data;
+              $scope.loading = false;
+            })
+            .catch(function (error) {
+              console.error("API hatası:", error);
+              $scope.error =
+                "Heykeller yüklenirken hata oluştu: " +
+                (error.data ? error.data.message : error.statusText);
+              $scope.loading = false;
+            });
 
           $scope.heykelSec = function (heykel) {
             // Heykel seçildiğinde yapılacak işlemler
             alert(
-              heykel.baslik +
+              heykel.heykel_adi +
                 " - " +
-                heykel.sanatci +
+                heykel.sanatcisi +
                 " seçildi! Bu özellik yakında eklenecek."
             );
           };

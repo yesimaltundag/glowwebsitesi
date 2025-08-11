@@ -907,6 +907,161 @@
         font-weight: 500;
       }
 
+      /* Diğer Carousel CSS */
+      .diger-carousel-baslik {
+        color: #7c5c4a;
+        font-size: 2rem;
+        font-weight: 700;
+        text-align: center;
+        margin-top: 60px;
+        margin-bottom: 30px;
+      }
+
+      .diger-carousel-wrapper {
+        position: relative;
+        max-width: 100%;
+        margin: 0 auto;
+        padding: 0;
+        height: 400px;
+        border-radius: 0;
+        overflow: hidden;
+        box-shadow: none !important;
+        border: none !important;
+      }
+
+      .diger-carousel {
+        display: flex;
+        width: 100%;
+        height: 100%;
+        transition: transform 0.5s ease;
+      }
+
+      .diger-carousel-slide {
+        min-width: 280px;
+        height: 100%;
+        position: relative;
+        cursor: pointer;
+        transition: transform 0.3s ease;
+        margin-right: 20px;
+      }
+
+      .diger-carousel-slide:hover {
+        transform: scale(1.02);
+      }
+
+      .diger-carousel-card {
+        width: 100%;
+        height: 100%;
+        position: relative;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+      }
+
+      .diger-carousel-card img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .diger-carousel-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(transparent, rgba(0, 0, 0, 0.9));
+        color: white;
+        padding: 20px;
+        text-align: center;
+      }
+
+      .diger-carousel-title {
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin-bottom: 8px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+      }
+
+      .diger-carousel-subtitle {
+        font-size: 1rem;
+        margin-bottom: 8px;
+        opacity: 0.9;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+      }
+
+      .diger-carousel-rating {
+        font-size: 0.9rem;
+        margin-bottom: 6px;
+        opacity: 0.9;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+      }
+
+      .diger-carousel-type {
+        font-size: 0.8rem;
+        opacity: 0.8;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+        background: rgba(180, 138, 120, 0.8);
+        padding: 2px 8px;
+        border-radius: 12px;
+        display: inline-block;
+        margin-top: 4px;
+      }
+
+      .diger-carousel-nav {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        font-size: 50px;
+        font-weight: bold;
+        color: rgba(255, 255, 255, 0.9);
+        cursor: pointer;
+        z-index: 10;
+        text-shadow: 2px 2px 15px rgba(0, 0, 0, 0.9);
+        transition: all 0.3s ease;
+      }
+
+      .diger-carousel-nav:hover {
+        color: rgba(255, 255, 255, 1);
+        text-shadow: 3px 3px 20px rgba(0, 0, 0, 1);
+        transform: translateY(-50%) scale(1.1);
+      }
+
+      .diger-carousel-nav.prev {
+        left: 15px;
+      }
+
+      .diger-carousel-nav.next {
+        right: 15px;
+      }
+
+      /* Diğer Loading CSS */
+      .diger-loading {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        color: #7c5c4a;
+        font-size: 18px;
+      }
+
+      .diger-loading .loading-spinner {
+        width: 40px;
+        height: 40px;
+        border: 4px solid #e2d9d0;
+        border-top: 4px solid #b48a78;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin-bottom: 15px;
+      }
+
+      .diger-loading p {
+        margin: 0;
+        font-weight: 500;
+      }
+
       /* Responsive */
       @media (max-width: 768px) {
         .ana-slider-container {
@@ -1217,6 +1372,65 @@
               class="film-carousel-nav next"
               ng-if="filmlerCarousel.length > 0"
               ng-click="nextFilmSlide()"
+              >ᐅ</span
+            >
+          </div>
+
+          <!-- Diğer Carousel Section -->
+          <h2 class="diger-carousel-baslik">Diğer</h2>
+          <div class="diger-carousel-wrapper">
+            <!-- Loading durumu -->
+            <div ng-if="digerCarousel.length === 0" class="diger-loading">
+              <div class="loading-spinner"></div>
+              <p>İçerikler yükleniyor...</p>
+            </div>
+
+            <!-- Diğer carousel -->
+            <div
+              class="diger-carousel"
+              ng-if="digerCarousel.length > 0"
+              ng-style="{'transform': 'translateX(-' + (currentDigerSlide * 280) + 'px)'}"
+            >
+              <div
+                class="diger-carousel-slide"
+                ng-repeat="item in digerCarousel"
+                ng-click="digerCarouselClick(item)"
+              >
+                <div class="diger-carousel-card">
+                  <img
+                    ng-src="{{item.foto || item.kapak_url || 'assets/images/logo.jpg'}}"
+                    alt="{{item.ad || item.eser_adi || item.anime_adi}}"
+                  />
+                  <div class="diger-carousel-overlay">
+                    <div class="diger-carousel-title">
+                      {{item.ad || item.eser_adi || item.anime_adi}}
+                    </div>
+                    <div class="diger-carousel-subtitle">
+                      {{item.yazar || item.yonetmen || item.yayin_evi}}
+                    </div>
+                    <div
+                      class="diger-carousel-rating"
+                      ng-if="item.puan || item.imdb_puani"
+                    >
+                      ⭐ {{item.puan || item.imdb_puani}}
+                    </div>
+                    <div class="diger-carousel-type">{{item.tip}}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Diğer Carousel Navigation -->
+            <span
+              class="diger-carousel-nav prev"
+              ng-if="digerCarousel.length > 0"
+              ng-click="prevDigerSlide()"
+              >ᐊ</span
+            >
+            <span
+              class="diger-carousel-nav next"
+              ng-if="digerCarousel.length > 0"
+              ng-click="nextDigerSlide()"
               >ᐅ</span
             >
           </div>
@@ -1605,6 +1819,144 @@
               $scope.nextFilmSlide();
             });
           }, 3000);
+
+          // Diğer Carousel değişkenleri
+          $scope.currentDigerSlide = 0;
+          $scope.digerCarousel = [];
+
+          // Diğer içerikleri veritabanından yükle (tiyatro, anime, belgesel)
+          var digerTimestamp = Date.now();
+          console.log(
+            "Diğer içerikler API çağrısı yapılıyor, timestamp:",
+            digerTimestamp
+          );
+
+          // Tiyatro eserlerini getir
+          $http
+            .get("api.php?tiyatro=1&limit=3")
+            .then(function (tiyatroResponse) {
+              var tiyatroItems = tiyatroResponse.data.map(function (eser) {
+                return {
+                  id: eser.id,
+                  ad: eser.eser_adi,
+                  yazar: eser.yazar,
+                  foto: eser.kapak_url || "assets/images/logo.jpg",
+                  puan: eser.puan,
+                  tip: "Tiyatro",
+                  sayfa: "tiyatro-detay.html",
+                };
+              });
+
+              // Animeleri getir
+              $http
+                .get("api.php?anime=1&limit=3")
+                .then(function (animeResponse) {
+                  var animeItems = animeResponse.data.map(function (anime) {
+                    return {
+                      id: anime.id,
+                      ad: anime.anime_adi,
+                      yazar: anime.yonetmen,
+                      foto: anime.kapak_url || "assets/images/logo.jpg",
+                      puan: anime.puan,
+                      tip: "Anime",
+                      sayfa: "anime-detay.html",
+                    };
+                  });
+
+                  // Belgeselleri getir
+                  $http
+                    .get("api.php?belgesel=1&limit=2")
+                    .then(function (belgeselResponse) {
+                      var belgeselItems = belgeselResponse.data.map(function (
+                        belgesel
+                      ) {
+                        return {
+                          id: belgesel.id,
+                          ad: belgesel.belgesel_adi,
+                          yazar: belgesel.yonetmen,
+                          foto: belgesel.kapak_url || "assets/images/logo.jpg",
+                          puan: belgesel.puan,
+                          tip: "Belgesel",
+                          sayfa: "belgesel-detay.html",
+                        };
+                      });
+
+                      // Tüm içerikleri birleştir ve karıştır
+                      $scope.digerCarousel = tiyatroItems
+                        .concat(animeItems)
+                        .concat(belgeselItems);
+
+                      // Array'i karıştır
+                      for (
+                        var i = $scope.digerCarousel.length - 1;
+                        i > 0;
+                        i--
+                      ) {
+                        var j = Math.floor(Math.random() * (i + 1));
+                        var temp = $scope.digerCarousel[i];
+                        $scope.digerCarousel[i] = $scope.digerCarousel[j];
+                        $scope.digerCarousel[j] = temp;
+                      }
+
+                      console.log(
+                        "✅ Diğer içerikler yüklendi:",
+                        $scope.digerCarousel.length
+                      );
+                      console.log("🎭 Tiyatro:", tiyatroItems.length);
+                      console.log("🎬 Anime:", animeItems.length);
+                      console.log("📺 Belgesel:", belgeselItems.length);
+                    })
+                    .catch(function (error) {
+                      console.error("❌ Belgeseller yüklenirken hata:", error);
+                    });
+                })
+                .catch(function (error) {
+                  console.error("❌ Animeler yüklenirken hata:", error);
+                });
+            })
+            .catch(function (error) {
+              console.error("❌ Tiyatro eserleri yüklenirken hata:", error);
+            });
+
+          // Diğer carousel fonksiyonları
+          $scope.nextDigerSlide = function () {
+            var maxSlide = Math.max(0, $scope.digerCarousel.length - 4);
+
+            // Eğer son slide'daysak, baştan başla
+            if ($scope.currentDigerSlide >= maxSlide) {
+              $scope.currentDigerSlide = 0;
+            } else {
+              $scope.currentDigerSlide = Math.min(
+                $scope.currentDigerSlide + 1,
+                maxSlide
+              );
+            }
+          };
+
+          $scope.prevDigerSlide = function () {
+            // Eğer ilk slide'daysak, sona git
+            if ($scope.currentDigerSlide <= 0) {
+              var maxSlide = Math.max(0, $scope.digerCarousel.length - 4);
+              $scope.currentDigerSlide = maxSlide;
+            } else {
+              $scope.currentDigerSlide = Math.max(
+                $scope.currentDigerSlide - 1,
+                0
+              );
+            }
+          };
+
+          // Diğer carousel'a tıklama fonksiyonu
+          $scope.digerCarouselClick = function (item) {
+            window.location.href = item.sayfa + "?id=" + item.id;
+          };
+
+          // Diğer carousel otomatik kaydırma - 4 saniyede bir
+          setInterval(function () {
+            $scope.$apply(function () {
+              $scope.nextDigerSlide();
+            });
+          }, 4000);
         });
     </script>
   </body>

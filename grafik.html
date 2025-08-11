@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="tr" ng-app="GirisApp">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Grafik Tasarım - GLOW</title>
+    <link rel="stylesheet" href="assets/css/style.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="assets/js/app.js"></script>
+    <style>
+      .grafik-container {
+        max-width: 100%;
+        margin: 40px auto;
+        padding: 32px 40px;
+        background: rgba(255, 255, 255, 0.92);
+        border-radius: 18px;
+        box-shadow: 0 8px 32px rgba(124, 92, 74, 0.1);
+        backdrop-filter: blur(10px);
+        position: relative;
+        width: 100%;
+      }
+
+      .grafik-header {
+        text-align: center;
+        margin-bottom: 40px;
+      }
+
+      .grafik-baslik {
+        color: #7c5c4a;
+        font-size: 2.5rem;
+        font-weight: 700;
+        letter-spacing: 2px;
+        margin-bottom: 16px;
+        text-shadow: 0 2px 4px rgba(124, 92, 74, 0.1);
+      }
+
+      .grafik-aciklama {
+        color: #b48a78;
+        font-size: 1.1rem;
+        font-weight: 500;
+        max-width: 600px;
+        margin: 0 auto;
+        line-height: 1.6;
+      }
+
+      .grafik-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 40px;
+        margin-top: 40px;
+      }
+
+      .grafik-card {
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 8px 24px rgba(180, 138, 120, 0.15);
+        overflow: hidden;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        position: relative;
+      }
+
+      .grafik-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 16px 40px rgba(180, 138, 120, 0.25);
+      }
+
+      .grafik-card-img {
+        width: 100%;
+        height: 350px;
+        overflow: hidden;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f8f8f8;
+      }
+
+      .grafik-card-img img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+        background: #f8f8f8;
+      }
+
+      .grafik-card:hover .grafik-card-img img {
+        transform: scale(1.05);
+      }
+
+      .grafik-card-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+        padding: 20px;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+
+      .grafik-card:hover .grafik-card-overlay {
+        opacity: 1;
+      }
+
+      .grafik-card-overlay h3 {
+        color: white;
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 8px;
+      }
+
+      .grafik-card-overlay p {
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 14px;
+        margin-bottom: 5px;
+      }
+
+      .grafik-card-bilgi {
+        padding: 30px;
+      }
+
+      .grafik-card-baslik {
+        color: #7c5c4a;
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin-bottom: 12px;
+        line-height: 1.3;
+      }
+
+      .grafik-card-tasarimci {
+        color: #b48a78;
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin-bottom: 8px;
+      }
+
+      .grafik-card-tarih {
+        color: #999;
+        font-size: 1rem;
+        margin-bottom: 20px;
+      }
+
+      .grafik-card-aciklama {
+        color: #666;
+        font-size: 1.1rem;
+        line-height: 1.6;
+        display: -webkit-box;
+        -webkit-line-clamp: 4;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+
+      .grafik-card-tur {
+        display: inline-block;
+        background: linear-gradient(135deg, #e2d9d0, #b48a78);
+        color: #7c5c4a;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        margin-top: 15px;
+      }
+
+      .geri-btn {
+        background: linear-gradient(135deg, #e2d9d0, #b48a78);
+        color: #7c5c4a;
+        border: none;
+        border-radius: 50%;
+        width: 45px;
+        height: 45px;
+        padding: 0;
+        font-size: 18px;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s;
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        margin: 0;
+      }
+
+      .geri-btn:hover {
+        background: linear-gradient(135deg, #b48a78, #e2d9d0);
+        color: #fff;
+        transform: scale(1.1);
+      }
+
+      @media (max-width: 768px) {
+        .grafik-container {
+          padding: 20px;
+          margin: 20px;
+        }
+
+        .grafik-baslik {
+          font-size: 2rem;
+        }
+
+        .grafik-grid {
+          grid-template-columns: 1fr;
+          gap: 30px;
+        }
+
+        .geri-btn {
+          width: 45px;
+          height: 45px;
+          font-size: 18px;
+        }
+      }
+
+      @media (max-width: 1024px) {
+        .grafik-grid {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 30px;
+        }
+      }
+
+      @media (max-width: 600px) {
+        .grafik-container {
+          padding: 20px;
+          max-width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <ng-include src="'components/header.html'"></ng-include>
+    <main class="main-content">
+      <div class="grafik-container" ng-controller="GrafikController">
+        <button
+          class="geri-btn"
+          ng-click="geriDon()"
+          title="Sanat Kategorileri'ne Dön"
+        >
+          ←
+        </button>
+        <div class="grafik-header">
+          <h1 class="grafik-baslik">Grafik Tasarım</h1>
+          <p class="grafik-aciklama">
+            Modern grafik tasarımın en etkileyici örneklerini keşfet! Logo
+            tasarımı, poster sanatı, dijital illüstrasyonlar ve daha fazlası.
+            Görsel iletişimin gücünü keşfet.
+          </p>
+        </div>
+        <div class="grafik-grid">
+          <div
+            class="grafik-card"
+            ng-repeat="eser in grafikEserler"
+            ng-click="eserDetay(eser)"
+          >
+            <div class="grafik-card-img">
+              <img ng-src="{{eser.resim}}" alt="{{eser.ad}}" />
+              <div class="grafik-card-overlay">
+                <h3>{{eser.ad}}</h3>
+                <p>{{eser.tasarimci}}</p>
+                <p>{{eser.yer}}</p>
+              </div>
+            </div>
+            <div class="grafik-card-bilgi">
+              <h3 class="grafik-card-baslik">{{eser.ad}}</h3>
+              <p class="grafik-card-tasarimci">{{eser.tasarimci}}</p>
+              <p class="grafik-card-tarih">{{eser.tarih}}</p>
+              <p class="grafik-card-aciklama">{{eser.aciklama}}</p>
+              <span class="grafik-card-tur">{{eser.tur}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <ng-include src="'components/footer.html'"></ng-include>
+    <button id="scrollTopBtn" title="Yukarı Çık" ng-click="scrollToTop()">
+      ↑
+    </button>
+    <script>
+      angular
+        .module("GirisApp")
+        .controller("GrafikController", function ($scope) {
+          $scope.kullanici = JSON.parse(
+            localStorage.getItem("girisYapan") || "null"
+          );
+
+          $scope.grafikEserler = [
+            {
+              id: 1,
+              ad: "Nike Swoosh",
+              tasarimci: "Carolyn Davidson",
+              tarih: "1971",
+              yer: "Portland, ABD",
+              tur: "Logo Tasarımı",
+              aciklama:
+                "Dünyanın en tanınmış logolarından biri. Basit ama etkili tasarımıyla Nike'ın başarısının simgesi haline gelmiştir. Sadece 35$ karşılığında tasarlanan logo, bugün milyarlarca dolarlık değere sahiptir.",
+              resim:
+                "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=800&h=600&fit=crop",
+            },
+            {
+              id: 2,
+              ad: "Apple Logo",
+              tasarimci: "Rob Janoff",
+              tarih: "1977",
+              yer: "Kaliforniya, ABD",
+              tur: "Logo Tasarımı",
+              aciklama:
+                "Elma ısırığı ile bilgisayar 'byte' kelimesi arasındaki kelime oyunu. Minimalist tasarımı ve evrensel tanınırlığıyla modern teknoloji çağının simgesi haline gelmiştir.",
+              resim:
+                "https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?w=800&h=600&fit=crop",
+            },
+            {
+              id: 3,
+              ad: "Coca-Cola Yazı Tipi",
+              tasarimci: "Frank Mason Robinson",
+              tarih: "1886",
+              yer: "Atlanta, ABD",
+              tur: "Tipografi",
+              aciklama:
+                "Spencerian script yazı tipinden esinlenen bu ikonik logo, 130 yılı aşkın süredir neredeyse hiç değişmeden kullanılmaktadır. Dünya çapında tanınan en eski marka kimliklerinden biridir.",
+              resim:
+                "https://images.unsplash.com/photo-1629203851122-3726ecdf080e?w=800&h=600&fit=crop",
+            },
+            {
+              id: 4,
+              ad: "I Love NY",
+              tasarimci: "Milton Glaser",
+              tarih: "1977",
+              yer: "New York, ABD",
+              tur: "Poster Tasarımı",
+              aciklama:
+                "New York'un turizm kampanyası için tasarlanan bu basit ama etkili poster, şehrin ruhunu mükemmel şekilde yansıtır. Dünya çapında taklit edilen en ünlü tasarımlardan biridir.",
+              resim:
+                "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop",
+            },
+            {
+              id: 5,
+              ad: "Google Logo",
+              tasarimci: "Ruth Kedar",
+              tarih: "1999",
+              yer: "Kaliforniya, ABD",
+              tur: "Logo Tasarımı",
+              aciklama:
+                "Renkli ve oyuncu tasarımıyla Google'ın yenilikçi yaklaşımını yansıtır. Her renk farklı bir anlam taşır ve tasarım sürekli evrim geçirerek güncel kalır.",
+              resim:
+                "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=800&h=600&fit=crop",
+            },
+            {
+              id: 6,
+              ad: "Obama Hope Poster",
+              tasarimci: "Shepard Fairey",
+              tarih: "2008",
+              yer: "ABD",
+              tur: "Politik Poster",
+              aciklama:
+                "Barack Obama'nın başkanlık kampanyası için tasarlanan bu poster, 'Hope' (Umut) temasını güçlü bir şekilde vurgular. Politik sanatın modern dönemdeki en etkili örneklerinden biridir.",
+              resim:
+                "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop",
+            },
+            {
+              id: 7,
+              ad: "McDonald's Golden Arches",
+              tasarimci: "Jim Schindler",
+              tarih: "1962",
+              yer: "Chicago, ABD",
+              tur: "Logo Tasarımı",
+              aciklama:
+                "M harfinden esinlenen bu ikonik logo, fast food endüstrisinin simgesi haline gelmiştir. Basit ama akılda kalıcı tasarımıyla dünya çapında tanınırlık kazanmıştır.",
+              resim:
+                "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=800&h=600&fit=crop",
+            },
+            {
+              id: 8,
+              ad: "WWF Panda Logo",
+              tasarimci: "Sir Peter Scott",
+              tarih: "1961",
+              yer: "İsviçre",
+              tur: "Kurumsal Kimlik",
+              aciklama:
+                "Dünya Doğayı Koruma Vakfı'nın simgesi olan panda, çevre koruma hareketinin en tanınmış sembollerinden biridir. Siyah-beyaz tasarımı basit ama etkili bir mesaj verir.",
+              resim:
+                "https://images.unsplash.com/photo-1564349683136-77e08dba1ef7?w=800&h=600&fit=crop",
+            },
+            {
+              id: 9,
+              ad: "FedEx Logo",
+              tasarimci: "Lindon Leader",
+              tarih: "1994",
+              yer: "Memphis, ABD",
+              tur: "Logo Tasarımı",
+              aciklama:
+                "E ve x harfleri arasındaki gizli ok işareti, tasarımın en dikkat çekici özelliğidir. Bu subliminal mesaj, şirketin hız ve hareket vurgusunu mükemmel şekilde yansıtır.",
+              resim:
+                "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=800&h=600&fit=crop",
+            },
+          ];
+
+          $scope.eserDetay = function (eser) {
+            // Eser detay sayfasına yönlendirme
+            alert(eser.ad + " hakkında detaylı bilgi yakında eklenecek!");
+          };
+
+          $scope.geriDon = function () {
+            window.location.href = "sanat-kategoriler.html";
+          };
+
+          $scope.scrollToTop = function () {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          };
+        });
+    </script>
+  </body>
+</html>

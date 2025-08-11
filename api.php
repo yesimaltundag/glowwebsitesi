@@ -9,7 +9,58 @@ header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Methods: POST, GET, DELETE, PUT");
 header("Access-Control-Allow-Headers: Content-Type");
+/*
 
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+require 'C:\Users\Fatih BEKDAS\Desktop\WORKSPACE\PHP\test2\PHPMailer\src\Exception.php';
+require 'C:\Users\Fatih BEKDAS\Desktop\WORKSPACE\PHP\test2\PHPMailer\src\PHPMailer.php';
+require 'C:\Users\Fatih BEKDAS\Desktop\WORKSPACE\PHP\test2\PHPMailer\src\SMTP.php';
+
+require 'vendor/autoload.php';
+
+//Create an instance; passing `true` enables exceptions
+$mail = new PHPMailer(true);
+
+
+
+try {
+    //Server settings
+   
+    $mail->SMTPDebug = SMTP::DEBUG_SERVER;                      //Enable verbose debug output
+    $mail->isSMTP();                                            //Send using SMTP
+    $mail->Host       = 'smtp.gmail.com';                     //Set the SMTP server to send through
+    $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
+    $mail->Username   = 'yesim.altundag00@gmail.com';                     //SMTP username
+    $mail->Password   = 'secret';                               //SMTP password
+    $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;            //Enable implicit TLS encryption
+    $mail->Port       = 465;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
+
+    //Recipients
+    $mail->setFrom('from@example.com', 'Mailer');
+    $mail->addAddress('joe@example.net', 'Joe User');     //Add a recipient
+    $mail->addAddress('ellen@example.com');               //Name is optional
+    $mail->addReplyTo('info@example.com', 'Information');
+    $mail->addCC('cc@example.com');
+    $mail->addBCC('bcc@example.com');
+
+    //Attachments
+    $mail->addAttachment('/var/tmp/file.tar.gz');         //Add attachments
+    $mail->addAttachment('/tmp/image.jpg', 'new.jpg');    //Optional name
+
+    //Content
+    $mail->isHTML(true);                                  //Set email format to HTML
+    $mail->Subject = 'Here is the subject';
+    $mail->Body    = 'This is the HTML message body <b>in bold!</b>';
+    $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
+
+    //$mail->send();
+    echo 'Message has been sent';
+} catch (Exception $e) {
+    echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+}
+    */
 $baglanti = new mysqli("localhost", "root", "", "basit_sistem");
 
 if ($baglanti->connect_error) {
@@ -89,8 +140,13 @@ if (isset($_GET["tiyatro"])) {
         }
         exit;
     } else {
-        // Tüm tiyatro eserlerini getir
-        $sonuc = $baglanti->query("SELECT * FROM tiyatro_eserleri ORDER BY puan DESC");
+        // Tüm tiyatro eserlerini getir (limit desteği ile)
+        $limit = isset($_GET["limit"]) ? (int)$_GET["limit"] : 0;
+        $query = "SELECT * FROM tiyatro_eserleri ORDER BY puan DESC";
+        if ($limit > 0) {
+            $query .= " LIMIT $limit";
+        }
+        $sonuc = $baglanti->query($query);
         $tiyatro_eserleri = [];
         while ($satir = $sonuc->fetch_assoc()) {
             $tiyatro_eserleri[] = $satir;
@@ -143,8 +199,13 @@ if ($_SERVER["REQUEST_METHOD"] === "GET" && isset($_GET["belgesel"])) {
         }
         exit;
     } else {
-        // Tüm belgeselleri getir
-        $sonuc = $baglanti->query("SELECT * FROM belgeseller ORDER BY puan DESC");
+        // Tüm belgeselleri getir (limit desteği ile)
+        $limit = isset($_GET["limit"]) ? (int)$_GET["limit"] : 0;
+        $query = "SELECT * FROM belgeseller ORDER BY puan DESC";
+        if ($limit > 0) {
+            $query .= " LIMIT $limit";
+        }
+        $sonuc = $baglanti->query($query);
         $belgeseller = [];
         while ($satir = $sonuc->fetch_assoc()) {
             $belgeseller[] = $satir;
@@ -191,8 +252,13 @@ if ($_SERVER["REQUEST_METHOD"] === "GET" && isset($_GET["anime"])) {
         }
         exit;
     } else {
-        // Tüm animeleri getir
-        $sonuc = $baglanti->query("SELECT * FROM animeler ORDER BY puan DESC");
+        // Tüm animeleri getir (limit desteği ile)
+        $limit = isset($_GET["limit"]) ? (int)$_GET["limit"] : 0;
+        $query = "SELECT * FROM animeler ORDER BY puan DESC";
+        if ($limit > 0) {
+            $query .= " LIMIT $limit";
+        }
+        $sonuc = $baglanti->query($query);
         $animeler = [];
         while ($satir = $sonuc->fetch_assoc()) {
             $animeler[] = $satir;
@@ -218,7 +284,7 @@ if ($_SERVER["REQUEST_METHOD"] === "GET" && isset($_GET["kisiler"])) {
 }
 
 // GET: Listeleme (varsayılan) - Sadece belirli parametreler yoksa
-if ($_SERVER["REQUEST_METHOD"] === "GET" && !isset($_GET["yorum"]) && !isset($_GET["films"]) && !isset($_GET["tiyatro"]) && !isset($_GET["belgesel"]) && !isset($_GET["anime"]) && !isset($_GET["son_yorumlar"]) && !isset($_GET["tum_yorumlar"]) && !isset($_GET["kisiler"])) {
+if ($_SERVER["REQUEST_METHOD"] === "GET" && !isset($_GET["yorum"]) && !isset($_GET["films"]) && !isset($_GET["tiyatro"]) && !isset($_GET["belgesel"]) && !isset($_GET["anime"]) && !isset($_GET["son_yorumlar"]) && !isset($_GET["tum_yorumlar"]) && !isset($_GET["kisiler"]) && !isset($_GET["heykel"])) {
     $sonuc = $baglanti->query("SELECT id, username, adsoyad, e_posta, rol FROM kisiler ORDER BY id ASC");
     $kisiler = [];
     while ($satir = $sonuc->fetch_assoc()) {
@@ -946,6 +1012,54 @@ if ($_SERVER["REQUEST_METHOD"] === "GET" && isset($_GET["mesajlar"])) {
     echo json_encode($mesajlar);
     error_log("=== MESAJLAR ENDPOINT BİTTİ ===");
     exit;
+}
+
+// HEYKELLER ENDPOINT'LERİ
+if (isset($_GET["heykel"])) {
+    error_log("=== HEYKELLER ENDPOINT BAŞLADI ===");
+    error_log("Heykeller endpoint çağrıldı");
+    if (isset($_GET["id"])) {
+        // Belirli heykeli getir
+        $id = (int)$_GET["id"];
+        $sonuc = $baglanti->query("SELECT * FROM heykeller WHERE id = $id");
+        if ($sonuc && $sonuc->num_rows > 0) {
+            $heykel = $sonuc->fetch_assoc();
+            echo json_encode($heykel);
+        } else {
+            echo json_encode(["error" => "Heykel bulunamadı"]);
+        }
+        exit;
+    } else {
+        // Tüm heykelleri getir (limit desteği ile)
+        $limit = isset($_GET["limit"]) ? (int)$_GET["limit"] : 0;
+        $query = "SELECT * FROM heykeller ORDER BY id DESC";
+        if ($limit > 0) {
+            $query .= " LIMIT $limit";
+        }
+        error_log("SQL sorgusu: " . $query);
+        $sonuc = $baglanti->query($query);
+        
+        if (!$sonuc) {
+            error_log("❌ SQL hatası: " . $baglanti->error);
+            echo json_encode([]);
+            exit;
+        }
+        
+        error_log("✅ SQL sorgusu başarılı");
+        error_log("📊 Bulunan satır sayısı: " . $sonuc->num_rows);
+        
+        $heykeller = [];
+        while ($satir = $sonuc->fetch_assoc()) {
+            $heykeller[] = $satir;
+            error_log("🗿 Heykel verisi: " . json_encode($satir));
+        }
+        
+        error_log("✅ Bulunan heykel sayısı: " . count($heykeller));
+        error_log("📤 JSON yanıtı: " . json_encode($heykeller));
+        echo json_encode($heykeller);
+        error_log("=== HEYKELLER ENDPOINT BİTTİ ===");
+        exit;
+    }
 }
 
 // DELETE: Mesaj sil

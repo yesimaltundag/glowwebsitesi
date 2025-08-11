@@ -41,7 +41,7 @@ switch($method) {
             
             if ($filmAd) {
                 // Belirli bir film ara
-                $stmt = $pdo->prepare("SELECT film_adi, yonetmen, poster_url, imdb_puani, yil, tur as kategori, ozet as tanitim FROM filmler WHERE film_adi = ?");
+                $stmt = $pdo->prepare("SELECT id, film_adi, yonetmen, poster_url, imdb_puani, yil, tur as kategori, ozet as tanitim FROM filmler WHERE film_adi = ?");
                 $stmt->execute([$filmAd]);
                 $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 
@@ -54,7 +54,7 @@ switch($method) {
                 // Kategoriye göre filmler ara
                 $cleanKategori = trim($kategori);
                 
-                $stmt = $pdo->prepare("SELECT film_adi, yonetmen, poster_url, imdb_puani, yil, tur as kategori, ozet as tanitim FROM filmler WHERE tur = ?");
+                $stmt = $pdo->prepare("SELECT id, film_adi, yonetmen, poster_url, imdb_puani, yil, tur as kategori, ozet as tanitim FROM filmler WHERE tur = ?");
                 $stmt->execute([$cleanKategori]);
                 $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 
@@ -68,7 +68,7 @@ switch($method) {
                 $randomSeed = time() . rand(1, 10000);
                 
                 // Debug: SQL sorgusunu logla
-                $sql = "SELECT film_adi, yonetmen, poster_url, imdb_puani, yil, tur as kategori, ozet as tanitim FROM filmler ORDER BY RAND($randomSeed) LIMIT 8";
+                $sql = "SELECT id, film_adi, yonetmen, poster_url, imdb_puani, yil, tur as kategori, ozet as tanitim FROM filmler ORDER BY RAND($randomSeed) LIMIT 8";
                 
                 $stmt = $pdo->query($sql);
                 $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);

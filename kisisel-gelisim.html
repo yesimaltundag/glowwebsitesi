@@ -223,7 +223,11 @@
             değiştirecek güçlü fikirler ve pratik stratejiler sunar.
           </p>
         </div>
-        <div class="kitap-grid">
+        <div ng-if="loading" class="loading">📚 Kitaplar yükleniyor...</div>
+
+        <div ng-if="error" class="error">❌ {{error}}</div>
+
+        <div class="kitap-grid" ng-if="!loading && !error">
           <div class="kitap-card" ng-repeat="kitap in kitaplar">
             <div class="kitap-header">
               <img
@@ -234,6 +238,7 @@
               <div class="kitap-bilgi">
                 <h3 class="kitap-baslik">{{kitap.ad}}</h3>
                 <p class="kitap-yazar">{{kitap.yazar}}</p>
+                <p class="kitap-aciklama">{{kitap.tanitim}}</p>
               </div>
             </div>
             <div class="kitap-footer">
@@ -253,93 +258,33 @@
     <script>
       angular
         .module("GirisApp")
-        .controller("KisiselGelisimController", function ($scope) {
+        .controller("KisiselGelisimController", function ($scope, $http) {
           $scope.kullanici = JSON.parse(
             localStorage.getItem("girisYapan") || "null"
           );
 
-          $scope.kitaplar = [
-            {
-              id: "kisisel_1",
-              ad: "Düşün ve Zengin Ol",
-              yazar: "Napoleon Hill",
-              foto: "https://covers.openlibrary.org/b/id/12279669-M.jpg",
-              aciklama:
-                "Başarı ve zenginlik için zihinsel prensipler. Dünyanın en etkili kişisel gelişim kitaplarından biri. Bu kitap, başarılı insanların ortak özelliklerini araştırarak, okuyuculara zenginlik ve başarıya ulaşmanın yolunu gösterir. Zihinsel güç ve pozitif düşüncenin önemini vurgular.",
-            },
-            {
-              id: "kisisel_2",
-              ad: "İnsan Mühendisliği",
-              yazar: "Nüvit Osmay",
-              foto: "https://covers.openlibrary.org/b/id/12277777-M.jpg",
-              aciklama:
-                "Türkiye'nin en çok okunan kişisel gelişim kitabı. İnsan ilişkileri ve başarı stratejileri. Bu kitap, insanlarla etkili iletişim kurma, liderlik becerileri geliştirme ve kişisel başarıya ulaşma konularında pratik öneriler sunar.",
-            },
-            {
-              id: "kisisel_3",
-              ad: "7 Alışkanlık",
-              yazar: "Stephen Covey",
-              foto: "https://covers.openlibrary.org/b/id/14646922-M.jpg",
-              aciklama:
-                "Yüksek etkili insanların 7 alışkanlığı. Kişisel ve profesyonel başarı için temel prensipler. Bu kitap, etkili insanların sahip olduğu yedi temel alışkanlığı açıklar ve okuyuculara bu alışkanlıkları nasıl geliştireceklerini öğretir.",
-            },
-            {
-              id: "kisisel_4",
-              ad: "Zengin Baba Yoksul Baba",
-              yazar: "Robert Kiyosaki",
-              foto: "https://covers.openlibrary.org/w/id/12315818-M.jpg",
-              aciklama:
-                "Finansal okuryazarlık ve zenginlik zihniyeti. Para ve yatırım konusunda devrim yaratan kitap. Bu kitap, zengin ve fakir insanların para konusundaki farklı düşünce tarzlarını karşılaştırarak, finansal bağımsızlığa ulaşmanın yollarını gösterir.",
-            },
-            {
-              id: "kisisel_5",
-              ad: "İkna Sanatı",
-              yazar: "Dale Carnegie",
-              foto: "https://covers.openlibrary.org/b/id/9960835-M.jpg",
-              aciklama:
-                "İnsanları etkileme ve ikna etme sanatı. İletişim ve liderlik becerileri. Bu kitap, insanlarla etkili iletişim kurma, onları ikna etme ve liderlik etme konularında zaman testinden geçmiş teknikler sunar.",
-            },
-            {
-              id: "kisisel_6",
-              ad: "Sıfırdan Bire",
-              yazar: "Peter Thiel",
-              foto: "https://covers.openlibrary.org/b/id/15091674-M.jpg",
-              aciklama:
-                "Yenilikçi düşünce ve girişimcilik. Geleceği şekillendiren fikirler. Bu kitap, girişimcilik ve yenilikçilik konularında derinlemesine analizler sunar ve okuyuculara geleceği şekillendiren fikirler geliştirmenin yollarını gösterir.",
-            },
-            {
-              id: "kisisel_7",
-              ad: "Güç",
-              yazar: "Robert Greene",
-              foto: "https://covers.openlibrary.org/b/id/12301794-M.jpg",
-              aciklama:
-                "Güç ve etki stratejileri. Tarihten alınan derslerle güç sanatı. Bu kitap, tarih boyunca güçlü insanların kullandığı stratejileri analiz eder ve okuyuculara güç ve etki kazanmanın yollarını öğretir.",
-            },
-            {
-              id: "kisisel_8",
-              ad: "Mindset",
-              yazar: "Carol Dweck",
-              foto: "https://covers.openlibrary.org/b/id/15088599-M.jpg",
-              aciklama:
-                "Büyüme zihniyeti vs sabit zihniyet. Başarı için doğru düşünce tarzı. Bu kitap, büyüme zihniyeti ve sabit zihniyet arasındaki farkları açıklar ve okuyuculara başarı için doğru düşünce tarzını geliştirmenin yollarını gösterir.",
-            },
-            {
-              id: "kisisel_9",
-              ad: "Atomic Habits",
-              yazar: "James Clear",
-              foto: "https://covers.openlibrary.org/b/id/13326873-M.jpg",
-              aciklama:
-                "Küçük alışkanlıkların büyük etkisi. Alışkanlık oluşturma ve değiştirme. Bu kitap, küçük alışkanlıkların hayatımızda nasıl büyük değişikliklere yol açtığını açıklar ve etkili alışkanlıklar geliştirmenin yollarını öğretir.",
-            },
-            {
-              id: "kisisel_10",
-              ad: "Deep Work",
-              yazar: "Cal Newport",
-              foto: "https://covers.openlibrary.org/b/id/14859612-M.jpg",
-              aciklama:
-                "Odaklanmış çalışma ve verimlilik. Dikkat dağınıklığı çağında başarı. Bu kitap, dikkat dağınıklığı çağında odaklanmış çalışmanın önemini vurgular ve derinlemesine çalışma becerilerini geliştirmenin yollarını gösterir.",
-            },
-          ];
+          $scope.kitaplar = [];
+          $scope.loading = true;
+          $scope.error = null;
+
+          // Kişisel gelişim kitaplarını API'den yükle
+          $http
+            .get("kitaplar_yazilar_api.php?kategori=Kişisel Gelişim")
+            .then(function (response) {
+              if (response.data.success) {
+                $scope.kitaplar = response.data.kitaplar;
+                $scope.loading = false;
+              } else {
+                $scope.error =
+                  response.data.error || "Kitaplar yüklenirken hata oluştu";
+                $scope.loading = false;
+              }
+            })
+            .catch(function (error) {
+              $scope.error = "API bağlantı hatası: " + error.statusText;
+              $scope.loading = false;
+              console.error("API Hatası:", error);
+            });
 
           $scope.kitabaGit = function (kitap) {
             // Kitap detay sayfasına yönlendirme

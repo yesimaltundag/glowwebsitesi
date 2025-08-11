@@ -3,6 +3,12 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      http-equiv="Cache-Control"
+      content="no-cache, no-store, must-revalidate"
+    />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
     <title>Ana Sayfa - GLOW</title>
 
     <!-- CSS -->
@@ -160,140 +166,6 @@
       .ana-slider-dot.active {
         background: rgba(255, 255, 255, 1);
         transform: scale(1.3);
-      }
-
-      /* Alt Carousel CSS */
-      .alt-carousel-container {
-        margin: 60px auto 60px auto;
-        padding: 20px;
-        border-radius: 0;
-        box-shadow: none;
-        width: 60%;
-        max-width: 60%;
-        text-align: center;
-      }
-
-      .carousel-baslik {
-        color: #7c5c4a;
-        font-size: 2rem;
-        font-weight: 700;
-        text-align: center;
-        margin-top: 60px;
-        margin-bottom: 30px;
-      }
-
-      .carousel-wrapper {
-        position: relative;
-        max-width: 100%;
-        margin: 0 auto;
-        padding: 0;
-        height: 350px;
-        border-radius: 0;
-        overflow: hidden;
-        box-shadow: none !important;
-        border: none !important;
-      }
-
-      .carousel {
-        display: flex;
-        width: 100%;
-        height: 100%;
-        transition: transform 0.5s ease;
-      }
-
-      .carousel-slide {
-        min-width: 100%;
-        height: 100%;
-        position: relative;
-        cursor: pointer;
-        transition: transform 0.3s ease;
-      }
-
-      .carousel-slide:hover {
-        transform: scale(1.02);
-      }
-
-      .carousel-slide img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-      }
-
-      .carousel-overlay {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
-        color: white;
-        padding: 20px;
-        text-align: center;
-      }
-
-      .carousel-title {
-        font-size: 1.5rem;
-        font-weight: 600;
-        margin-bottom: 8px;
-        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
-      }
-
-      .carousel-desc {
-        font-size: 1rem;
-        opacity: 0.9;
-        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
-      }
-
-      .carousel-nav {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        background: none;
-        border: none;
-        font-size: 50px;
-        font-weight: bold;
-        color: rgba(255, 255, 255, 0.9);
-        cursor: pointer;
-        z-index: 10;
-        text-shadow: 2px 2px 15px rgba(0, 0, 0, 0.9);
-        transition: all 0.3s ease;
-      }
-
-      .carousel-nav:hover {
-        color: rgba(255, 255, 255, 1);
-        text-shadow: 3px 3px 20px rgba(0, 0, 0, 1);
-        transform: translateY(-50%) scale(1.1);
-      }
-
-      .carousel-nav.prev {
-        left: 15px;
-      }
-
-      .carousel-nav.next {
-        right: 15px;
-      }
-
-      .carousel-dots {
-        position: absolute;
-        bottom: 15px;
-        left: 50%;
-        transform: translateX(-50%);
-        display: flex;
-        gap: 10px;
-        z-index: 10;
-      }
-
-      .carousel-dot {
-        width: 12px;
-        height: 12px;
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.5);
-        cursor: pointer;
-        transition: all 0.3s;
-      }
-
-      .carousel-dot.active {
-        background: rgba(255, 255, 255, 1);
-        transform: scale(1.2);
       }
 
       .uyari-modal {
@@ -754,6 +626,137 @@
         text-align: justify;
       }
 
+      /* Kitaplar Carousel CSS */
+      .kitaplar-carousel-baslik {
+        color: #7c5c4a;
+        font-size: 2rem;
+        font-weight: 700;
+        text-align: center;
+        margin-top: 60px;
+        margin-bottom: 30px;
+      }
+
+      .kitaplar-carousel-wrapper {
+        position: relative;
+        max-width: 100%;
+        margin: 0 auto;
+        padding: 0;
+        height: 400px;
+        border-radius: 0;
+        overflow: hidden;
+        box-shadow: none !important;
+        border: none !important;
+      }
+
+      .kitaplar-carousel {
+        display: flex;
+        width: 100%;
+        height: 100%;
+        transition: transform 0.5s ease;
+      }
+
+      .kitap-carousel-slide {
+        min-width: 280px;
+        height: 100%;
+        position: relative;
+        cursor: pointer;
+        transition: transform 0.3s ease;
+        margin-right: 20px;
+      }
+
+      .kitap-carousel-slide:hover {
+        transform: scale(1.02);
+      }
+
+      .kitap-carousel-card {
+        width: 100%;
+        height: 100%;
+        position: relative;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+      }
+
+      .kitap-carousel-card img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .kitap-carousel-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(transparent, rgba(0, 0, 0, 0.9));
+        color: white;
+        padding: 20px;
+        text-align: center;
+      }
+
+      .kitap-carousel-title {
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin-bottom: 8px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+      }
+
+      .kitap-carousel-author {
+        font-size: 1rem;
+        margin-bottom: 8px;
+        opacity: 0.9;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+      }
+
+      .kitap-carousel-rating {
+        font-size: 0.9rem;
+        margin-bottom: 6px;
+        opacity: 0.9;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+      }
+
+      .kitap-carousel-favorites {
+        font-size: 0.9rem;
+        margin-bottom: 6px;
+        opacity: 0.9;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+      }
+
+      .kitap-carousel-publisher {
+        font-size: 0.8rem;
+        opacity: 0.8;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+      }
+
+      .kitap-carousel-nav {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        font-size: 50px;
+        font-weight: bold;
+        color: rgba(255, 255, 255, 0.9);
+        cursor: pointer;
+        z-index: 10;
+        text-shadow: 2px 2px 15px rgba(0, 0, 0, 0.9);
+        transition: all 0.3s ease;
+      }
+
+      .kitap-carousel-nav:hover {
+        color: rgba(255, 255, 255, 1);
+        text-shadow: 3px 3px 20px rgba(0, 0, 0, 1);
+        transform: translateY(-50%) scale(1.1);
+      }
+
+      .kitap-carousel-nav.prev {
+        left: 15px;
+      }
+
+      .kitap-carousel-nav.next {
+        right: 15px;
+      }
+
       /* Responsive */
       @media (max-width: 768px) {
         .ana-slider-container {
@@ -774,43 +777,6 @@
 
         .ana-slide-overlay {
           padding: 20px;
-        }
-
-        .alt-carousel-container {
-          margin: 40px auto 40px auto;
-          padding: 15px;
-          width: 85%;
-          max-width: 85%;
-        }
-
-        .carousel-wrapper {
-          width: 100%;
-        }
-
-        .carousel-baslik {
-          font-size: 1.5rem;
-        }
-
-        .carousel-wrapper {
-          height: 300px;
-        }
-
-        @media (max-width: 480px) {
-          .carousel-wrapper {
-            height: 250px;
-          }
-        }
-
-        .carousel-title {
-          font-size: 1.2rem;
-        }
-
-        .carousel-desc {
-          font-size: 0.9rem;
-        }
-
-        .carousel-nav {
-          font-size: 40px;
         }
 
         .yorumlar-grid {
@@ -863,6 +829,30 @@
 
         .sanat-sanatci {
           font-size: 16px;
+        }
+
+        .kitaplar-carousel-baslik {
+          font-size: 1.5rem;
+        }
+
+        .kitaplar-carousel-wrapper {
+          height: 300px;
+        }
+
+        .kitap-carousel-slide {
+          min-width: 250px;
+        }
+
+        .kitap-carousel-title {
+          font-size: 1rem;
+        }
+
+        .kitap-carousel-author {
+          font-size: 0.9rem;
+        }
+
+        .kitap-carousel-nav {
+          font-size: 40px;
         }
       }
     </style>
@@ -977,43 +967,35 @@
             </div>
           </div>
 
-          <!-- Alt Carousel Section -->
-          <h2 class="carousel-baslik">Öne Çıkan İçerikler</h2>
-          <div class="carousel-wrapper">
+          <!-- Kitaplar Carousel Section -->
+          <h2 class="kitaplar-carousel-baslik">Kitaplar</h2>
+          <div class="kitaplar-carousel-wrapper">
             <div
-              class="carousel"
-              ng-style="{'transform': 'translateX(-' + (currentCarouselSlide * 100) + '%)'}"
+              class="kitaplar-carousel"
+              ng-style="{'transform': 'translateX(-' + (currentKitapSlide * 280) + 'px)'}"
             >
               <div
-                class="carousel-slide"
-                ng-repeat="slide in carouselFotograflari"
-                ng-click="carouselClick(slide)"
+                class="kitap-carousel-slide"
+                ng-repeat="kitap in kitaplarCarousel"
+                ng-click="kitapCarouselClick(kitap)"
               >
-                <img ng-src="{{slide.url}}" alt="{{slide.baslik}}" />
-                <div class="carousel-overlay">
-                  <div class="carousel-title">{{slide.baslik}}</div>
-                  <div class="carousel-desc">{{slide.aciklama}}</div>
+                <div class="kitap-carousel-card">
+                  <img ng-src="{{kitap.foto}}" alt="{{kitap.ad}}" />
+                  <div class="kitap-carousel-overlay">
+                    <div class="kitap-carousel-title">{{kitap.ad}}</div>
+                    <div class="kitap-carousel-author">{{kitap.yazar}}</div>
+                  </div>
                 </div>
               </div>
             </div>
 
-            <!-- Carousel Navigation -->
-            <span class="carousel-nav prev" ng-click="prevCarouselSlide()"
+            <!-- Kitaplar Carousel Navigation -->
+            <span class="kitap-carousel-nav prev" ng-click="prevKitapSlide()"
               >ᐊ</span
             >
-            <span class="carousel-nav next" ng-click="nextCarouselSlide()"
+            <span class="kitap-carousel-nav next" ng-click="nextKitapSlide()"
               >ᐅ</span
             >
-
-            <!-- Carousel Dots -->
-            <div class="carousel-dots">
-              <div
-                class="carousel-dot"
-                ng-repeat="(index, slide) in carouselFotograflari"
-                ng-class="{'active': index === currentCarouselSlide}"
-                ng-click="goToCarouselSlide(index)"
-              ></div>
-            </div>
           </div>
         </div>
       </div>
@@ -1111,225 +1093,6 @@
               $scope.nextAnaSlide();
             });
           }, 5000);
-
-          // Otomatik alt carousel - 3 saniyede bir değiş
-          setInterval(function () {
-            $scope.$apply(function () {
-              $scope.nextCarouselSlide();
-            });
-          }, 3000);
-
-          // Alt Carousel değişkenleri
-          $scope.currentCarouselSlide = 0;
-          $scope.carouselClickCount = 0;
-          // Carousel için rastgele içerik sistemi
-          $scope.carouselFotograflari = [];
-          $scope.sayfaYenilemeSayisi = parseInt(
-            localStorage.getItem("sayfaYenilemeSayisi") || "0"
-          );
-          $scope.sayfaYenilemeSayisi++;
-          localStorage.setItem(
-            "sayfaYenilemeSayisi",
-            $scope.sayfaYenilemeSayisi.toString()
-          );
-
-          // Sabit içerikler (varsayılan) - Poster URL'leri API'den çekilecek
-          $scope.carouselFotograflari = [
-            {
-              url: "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=800&h=400&fit=crop",
-              baslik: "Die Hard",
-              aciklama: "Aksiyon klasiği - John McClane'in mücadelesi",
-              sayfa: "film-detay.html?id=12",
-              film_id: 12,
-            },
-            {
-              url: "https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?w=800&h=400&fit=crop",
-              baslik: "Hamlet",
-              aciklama: "Shakespeare'in başyapıtı",
-              sayfa: "tiyatro-detay.html?id=1",
-              tiyatro_id: 1,
-            },
-            {
-              url: "https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=800&h=400&fit=crop",
-              baslik: "Inception",
-              aciklama: "Zihin bükücü bilim kurgu",
-              sayfa: "film-detay.html?id=54",
-              film_id: 54,
-            },
-            {
-              url: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&h=400&fit=crop",
-              baslik: "Romeo ve Juliet",
-              aciklama: "Klasik tiyatro oyunu",
-              sayfa: "tiyatro-detay.html?id=2",
-              tiyatro_id: 2,
-            },
-            {
-              url: "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=800&h=400&fit=crop",
-              baslik: "The Shawshank Redemption",
-              aciklama: "Umut ve dostluk hikayesi",
-              sayfa: "film-detay.html?id=24",
-              film_id: 24,
-            },
-            {
-              url: "https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?w=800&h=400&fit=crop",
-              baslik: "Macbeth",
-              aciklama: "İktidar ve ihanet oyunu",
-              sayfa: "tiyatro-detay.html?id=3",
-              tiyatro_id: 3,
-            },
-          ];
-
-          // Sabit içerikler için poster URL'lerini güncelle
-          $scope.sabitIceriklerPosterGuncelle = function () {
-            // Film posterlerini güncelle
-            $scope.carouselFotograflari.forEach(function (item, index) {
-              if (item.film_id) {
-                $http
-                  .get("api.php?films=1&id=" + item.film_id)
-                  .then(function (response) {
-                    if (response.data && response.data.poster_url) {
-                      $scope.carouselFotograflari[index].url =
-                        response.data.poster_url;
-                    }
-                  });
-              }
-            });
-          };
-
-          // Sayfa yüklendiğinde poster URL'lerini güncelle
-          $scope.sabitIceriklerPosterGuncelle();
-
-          // Rastgele seçim fonksiyonu
-          $scope.rastgeleSec = function (dizi, adet) {
-            var sonuc = [];
-            var kopya = dizi.slice();
-
-            for (var i = 0; i < adet && kopya.length > 0; i++) {
-              var rastgeleIndex = Math.floor(Math.random() * kopya.length);
-              sonuc.push(kopya.splice(rastgeleIndex, 1)[0]);
-            }
-
-            return sonuc;
-          };
-
-          // Rastgele carousel içerikleri yükleme fonksiyonu
-          $scope.rastgeleCarouselIcerikleriYukle = function () {
-            console.log("API'den filmler çekiliyor...");
-            $http.get("api.php?films=1").then(function (response) {
-              var filmler = response.data;
-              console.log("Filmler:", filmler);
-              var rastgeleFilmler = $scope.rastgeleSec(filmler, 3);
-              console.log("Rastgele filmler:", rastgeleFilmler);
-
-              console.log("API'den tiyatro eserleri çekiliyor...");
-              $http.get("api.php?tiyatro=1").then(function (response) {
-                var tiyatroEserleri = response.data;
-                console.log("Tiyatro eserleri:", tiyatroEserleri);
-                var rastgeleTiyatro = $scope.rastgeleSec(tiyatroEserleri, 3);
-                console.log("Rastgele tiyatro:", rastgeleTiyatro);
-
-                // $scope.$apply() kaldırıldı çünkü $http zaten digest cycle tetikliyor
-                $scope.carouselFotograflari = [];
-                console.log("Carousel temizlendi");
-
-                // Rastgele filmler
-                rastgeleFilmler.forEach(function (film) {
-                  $scope.carouselFotograflari.push({
-                    url:
-                      film.poster_url ||
-                      "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=800&h=400&fit=crop",
-                    baslik: film.film_adi,
-                    aciklama: film.ozet
-                      ? film.ozet.substring(0, 50) + "..."
-                      : "Harika bir film",
-                    sayfa: "film-detay.html?id=" + film.id,
-                  });
-                  console.log("Film poster URL:", film.poster_url);
-                });
-
-                // Rastgele tiyatro eserleri
-                rastgeleTiyatro.forEach(function (eser) {
-                  $scope.carouselFotograflari.push({
-                    url: "https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?w=800&h=400&fit=crop",
-                    baslik: eser.eser_adi,
-                    aciklama: eser.aciklama
-                      ? eser.aciklama.substring(0, 50) + "..."
-                      : "Muhteşem bir tiyatro eseri",
-                    sayfa: "tiyatro-detay.html?id=" + eser.id,
-                  });
-                  console.log("Tiyatro eseri:", eser.eser_adi);
-                });
-
-                console.log(
-                  "Yeni carousel içerikleri:",
-                  $scope.carouselFotograflari
-                );
-              });
-            });
-          };
-
-          // Her 5 yenilemede rastgele içerik seç
-          console.log("Sayfa yenileme sayısı:", $scope.sayfaYenilemeSayisi);
-          if ($scope.sayfaYenilemeSayisi % 5 === 0) {
-            console.log("Rastgele içerik yükleniyor...");
-            $scope.rastgeleCarouselIcerikleriYukle();
-          } else {
-            console.log("Sabit içerikler kullanılıyor");
-          }
-
-          // Carousel fonksiyonları
-          $scope.nextCarouselSlide = function () {
-            $scope.currentCarouselSlide++;
-            $scope.carouselClickCount++;
-
-            // 10 kez tıklandıktan sonra başa dön
-            if ($scope.carouselClickCount >= 10) {
-              $scope.currentCarouselSlide = 0;
-              $scope.carouselClickCount = 0;
-            }
-
-            // Son slide'dan sonra başa dön
-            if (
-              $scope.currentCarouselSlide >= $scope.carouselFotograflari.length
-            ) {
-              $scope.currentCarouselSlide = 0;
-            }
-          };
-
-          $scope.prevCarouselSlide = function () {
-            $scope.currentCarouselSlide--;
-            $scope.carouselClickCount++;
-
-            // 10 kez tıklandıktan sonra başa dön
-            if ($scope.carouselClickCount >= 10) {
-              $scope.currentCarouselSlide = 0;
-              $scope.carouselClickCount = 0;
-            }
-
-            // İlk slide'dan önce sona git
-            if ($scope.currentCarouselSlide < 0) {
-              $scope.currentCarouselSlide =
-                $scope.carouselFotograflari.length - 1;
-            }
-          };
-
-          $scope.goToCarouselSlide = function (index) {
-            $scope.currentCarouselSlide = index;
-            $scope.carouselClickCount++;
-
-            // 10 kez tıklandıktan sonra başa dön
-            if ($scope.carouselClickCount >= 10) {
-              $scope.currentCarouselSlide = 0;
-              $scope.carouselClickCount = 0;
-            }
-          };
-
-          // Carousel fotoğrafına tıklama fonksiyonu
-          $scope.carouselClick = function (slide) {
-            if (slide.sayfa) {
-              window.location.href = slide.sayfa;
-            }
-          };
 
           // Sanat resimleri verisi
           $scope.sanatResimleri = [
@@ -1443,6 +1206,210 @@
 
           $scope.gotoSpor = function () {
             window.location.href = "spor.html";
+          };
+
+          // Kitaplar Carousel değişkenleri
+          $scope.currentKitapSlide = 0;
+          $scope.kitaplarCarousel = [];
+
+          // Kitapları veritabanından yükle (her yenilemede rastgele)
+          var timestamp = Date.now();
+          console.log("API çağrısı yapılıyor, timestamp:", timestamp);
+          $http
+            .get("kitaplar_api.php?t=" + timestamp + "&r=" + Math.random())
+            .then(function (response) {
+              console.log("API Response:", response.data);
+              if (response.data.success) {
+                // Veritabanından gelen verileri carousel formatına dönüştür
+                $scope.kitaplarCarousel = response.data.kitaplar.map(function (
+                  kitap
+                ) {
+                  return {
+                    ad: kitap.kitap_adi,
+                    yazar: kitap.yazar,
+                    foto: kitap.kapak_url,
+                    rating: Math.floor(Math.random() * 3) + 3, // Rastgele rating (3-5)
+                    favorites: Math.floor(Math.random() * 1000) + 50, // Rastgele favori sayısı
+                    publisher: "GLOW Yayınları", // Varsayılan yayınevi
+                  };
+                });
+              } else {
+                console.error(
+                  "Kitaplar yüklenirken hata:",
+                  response.data.error
+                );
+                // Hata durumunda varsayılan kitapları göster
+                $scope.kitaplarCarousel = [
+                  {
+                    ad: "Sarı Yüz",
+                    yazar: "R. F. Kuang",
+                    foto: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400&h=600&fit=crop",
+                    rating: 3,
+                    favorites: 992,
+                    publisher: "İthaki Yayınları",
+                  },
+                  {
+                    ad: "Bırak Yapsınlar Teorisi",
+                    yazar: "Mel Robbins",
+                    foto: "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=400&h=600&fit=crop",
+                    rating: 5,
+                    favorites: 680,
+                    publisher: "Nepal Kitap",
+                  },
+                  {
+                    ad: "Değişiyorum",
+                    yazar: "Caner Yaman",
+                    foto: "https://images.unsplash.com/photo-1512820790803-83ca734da794?w=400&h=600&fit=crop",
+                    rating: 4,
+                    favorites: 340,
+                    publisher: "İndigo Kitap",
+                  },
+                  {
+                    ad: "Yaşanmamış Hayatlar",
+                    yazar: "Sarah Jio",
+                    foto: "https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=400&h=600&fit=crop",
+                    rating: 4,
+                    favorites: 43,
+                    publisher: "Epsilon Yayınevi",
+                  },
+                  {
+                    ad: "Sen Yeter ki İste",
+                    yazar: "Pierre Franckh",
+                    foto: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=600&fit=crop",
+                    rating: 5,
+                    favorites: 196,
+                    publisher: "Koridor Yayıncılık",
+                  },
+                  {
+                    ad: "Suç ve Ceza",
+                    yazar: "Fyodor Dostoyevski",
+                    foto: "https://covers.openlibrary.org/b/id/12315028-M.jpg",
+                    rating: 5,
+                    favorites: 1250,
+                    publisher: "İş Bankası Kültür Yayınları",
+                  },
+                  {
+                    ad: "Sefiller",
+                    yazar: "Victor Hugo",
+                    foto: "https://covers.openlibrary.org/b/id/12218285-M.jpg",
+                    rating: 4,
+                    favorites: 890,
+                    publisher: "Can Yayınları",
+                  },
+                  {
+                    ad: "Anna Karenina",
+                    yazar: "Lev Tolstoy",
+                    foto: "https://covers.openlibrary.org/b/id/12639895-M.jpg",
+                    rating: 5,
+                    favorites: 756,
+                    publisher: "İletişim Yayınları",
+                  },
+                ];
+              }
+            })
+            .catch(function (error) {
+              console.error("Kitaplar yüklenirken hata:", error);
+              // Hata durumunda varsayılan kitapları göster
+              $scope.kitaplarCarousel = [
+                {
+                  ad: "Sarı Yüz",
+                  yazar: "R. F. Kuang",
+                  foto: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400&h=600&fit=crop",
+                  rating: 3,
+                  favorites: 992,
+                  publisher: "İthaki Yayınları",
+                },
+                {
+                  ad: "Bırak Yapsınlar Teorisi",
+                  yazar: "Mel Robbins",
+                  foto: "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=400&h=600&fit=crop",
+                  rating: 5,
+                  favorites: 680,
+                  publisher: "Nepal Kitap",
+                },
+                {
+                  ad: "Değişiyorum",
+                  yazar: "Caner Yaman",
+                  foto: "https://images.unsplash.com/photo-1512820790803-83ca734da794?w=400&h=600&fit=crop",
+                  rating: 4,
+                  favorites: 340,
+                  publisher: "İndigo Kitap",
+                },
+                {
+                  ad: "Yaşanmamış Hayatlar",
+                  yazar: "Sarah Jio",
+                  foto: "https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=400&h=600&fit=crop",
+                  rating: 4,
+                  favorites: 43,
+                  publisher: "Epsilon Yayınevi",
+                },
+                {
+                  ad: "Sen Yeter ki İste",
+                  yazar: "Pierre Franckh",
+                  foto: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=600&fit=crop",
+                  rating: 5,
+                  favorites: 196,
+                  publisher: "Koridor Yayıncılık",
+                },
+                {
+                  ad: "Suç ve Ceza",
+                  yazar: "Fyodor Dostoyevski",
+                  foto: "https://covers.openlibrary.org/b/id/12315028-M.jpg",
+                  rating: 5,
+                  favorites: 1250,
+                  publisher: "İş Bankası Kültür Yayınları",
+                },
+                {
+                  ad: "Sefiller",
+                  yazar: "Victor Hugo",
+                  foto: "https://covers.openlibrary.org/b/id/12218285-M.jpg",
+                  rating: 4,
+                  favorites: 890,
+                  publisher: "Can Yayınları",
+                },
+                {
+                  ad: "Anna Karenina",
+                  yazar: "Lev Tolstoy",
+                  foto: "https://covers.openlibrary.org/b/id/12639895-M.jpg",
+                  rating: 5,
+                  favorites: 756,
+                  publisher: "İletişim Yayınları",
+                },
+              ];
+            });
+
+          // Kitaplar carousel fonksiyonları
+          $scope.nextKitapSlide = function () {
+            var maxSlide = Math.max(0, $scope.kitaplarCarousel.length - 4);
+
+            // Eğer son slide'daysak, baştan başla
+            if ($scope.currentKitapSlide >= maxSlide) {
+              $scope.currentKitapSlide = 0;
+            } else {
+              $scope.currentKitapSlide = Math.min(
+                $scope.currentKitapSlide + 1,
+                maxSlide
+              );
+            }
+          };
+
+          $scope.prevKitapSlide = function () {
+            // Eğer ilk slide'daysak, sona git
+            if ($scope.currentKitapSlide <= 0) {
+              var maxSlide = Math.max(0, $scope.kitaplarCarousel.length - 4);
+              $scope.currentKitapSlide = maxSlide;
+            } else {
+              $scope.currentKitapSlide = Math.max(
+                $scope.currentKitapSlide - 1,
+                0
+              );
+            }
+          };
+
+          // Kitap carousel'a tıklama fonksiyonu
+          $scope.kitapCarouselClick = function (kitap) {
+            window.location.href =
+              "alintilar.html?kitap=" + encodeURIComponent(kitap.ad);
           };
         });
     </script>

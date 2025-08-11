@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="tr" ng-app="TestApp">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kitaplar Carousel Test</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <style>
+      .test-container {
+        max-width: 800px;
+        margin: 50px auto;
+        padding: 20px;
+        font-family: Arial, sans-serif;
+      }
+      .kitap-card {
+        border: 1px solid #ddd;
+        padding: 15px;
+        margin: 10px 0;
+        border-radius: 8px;
+        background: #f9f9f9;
+      }
+      .kitap-title {
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 5px;
+      }
+      .kitap-author {
+        color: #666;
+        font-style: italic;
+      }
+      .kitap-image {
+        max-width: 100px;
+        height: auto;
+        border-radius: 4px;
+        margin-top: 10px;
+      }
+      .loading {
+        color: #666;
+        font-style: italic;
+      }
+      .error {
+        color: red;
+        font-weight: bold;
+      }
+      .success {
+        color: green;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body ng-controller="TestController">
+    <div class="test-container">
+      <h1>📚 Kitaplar Carousel Test</h1>
+
+      <div ng-if="loading" class="loading">🔄 Kitaplar yükleniyor...</div>
+
+      <div ng-if="error" class="error">❌ Hata: {{error}}</div>
+
+      <div ng-if="success" class="success">
+        ✅ {{kitaplar.length}} kitap başarıyla yüklendi!
+        <div
+          ng-if="responseData.from_cache"
+          style="margin-top: 10px; font-size: 14px"
+        >
+          📦 Cache'den yüklendi ({{responseData.cache_info.remaining_hours}}
+          saat kaldı)
+        </div>
+        <div
+          ng-if="!responseData.from_cache"
+          style="margin-top: 10px; font-size: 14px"
+        >
+          🆕 Yeni veriler yüklendi
+        </div>
+      </div>
+
+      <div ng-if="kitaplar.length > 0">
+        <h2>📖 Yüklenen Kitaplar:</h2>
+        <div ng-repeat="kitap in kitaplar" class="kitap-card">
+          <div class="kitap-title">{{kitap.ad}}</div>
+          <div class="kitap-author">{{kitap.yazar}}</div>
+          <div>⭐ Rating: {{kitap.rating}}</div>
+          <div>❤️ Favoriler: {{kitap.favorites}}</div>
+          <div>📚 Yayınevi: {{kitap.publisher}}</div>
+          <img
+            ng-src="{{kitap.foto}}"
+            alt="{{kitap.ad}}"
+            class="kitap-image"
+            ng-if="kitap.foto"
+          />
+        </div>
+      </div>
+
+      <div ng-if="!loading && !error && kitaplar.length === 0" class="loading">
+        📚 Henüz kitap yüklenmedi...
+      </div>
+    </div>
+
+    <script>
+      angular
+        .module("TestApp", [])
+        .controller("TestController", function ($scope, $http) {
+          $scope.loading = true;
+          $scope.error = null;
+          $scope.success = false;
+          $scope.kitaplar = [];
+          $scope.responseData = {};
+
+          // Kitapları API'den yükle
+          $http
+            .get("kitaplar_api.php")
+            .then(function (response) {
+              $scope.loading = false;
+
+              if (response.data.success) {
+                // Veritabanından gelen verileri carousel formatına dönüştür
+                $scope.kitaplar = response.data.kitaplar.map(function (kitap) {
+                  return {
+                    ad: kitap.kitap_adi,
+                    yazar: kitap.yazar,
+                    foto: kitap.kapak_url,
+                    rating: Math.floor(Math.random() * 3) + 3, // Rastgele rating (3-5)
+                    favorites: Math.floor(Math.random() * 1000) + 50, // Rastgele favori sayısı
+                    publisher: "GLOW Yayınları", // Varsayılan yayınevi
+                  };
+                });
+                $scope.responseData = response.data;
+                $scope.success = true;
+              } else {
+                $scope.error = response.data.error || "Bilinmeyen hata";
+              }
+            })
+            .catch(function (error) {
+              $scope.loading = false;
+              $scope.error = "API bağlantı hatası: " + error.statusText;
+              console.error("API Hatası:", error);
+            });
+        });
+    </script>
+  </body>
+</html>

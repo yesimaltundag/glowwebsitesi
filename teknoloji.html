@@ -101,6 +101,13 @@
         font-weight: 600;
         margin-bottom: 18px;
       }
+      .kitap-aciklama {
+        color: #7c5c4a;
+        font-size: 1.1rem;
+        line-height: 1.6;
+        margin-bottom: 20px;
+        opacity: 0.95;
+      }
       .kitap-footer {
         display: flex;
         align-items: center;
@@ -153,6 +160,21 @@
         background: linear-gradient(135deg, #b48a78, #e2d9d0);
         color: #fff;
         transform: scale(1.1);
+      }
+      .loading {
+        text-align: center;
+        padding: 40px;
+        color: #7c5c4a;
+        font-size: 1.2rem;
+      }
+      .error {
+        text-align: center;
+        padding: 40px;
+        color: #dc3545;
+        font-size: 1.2rem;
+        background: rgba(220, 53, 69, 0.1);
+        border-radius: 12px;
+        margin: 20px 0;
       }
       @media (max-width: 768px) {
         .kategori-container {
@@ -214,7 +236,11 @@
             derinlemesine analiz eder.
           </p>
         </div>
-        <div class="kitap-grid">
+        <div ng-if="loading" class="loading">📚 Kitaplar yükleniyor...</div>
+
+        <div ng-if="error" class="error">❌ {{error}}</div>
+
+        <div class="kitap-grid" ng-if="!loading && !error">
           <div class="kitap-card" ng-repeat="kitap in kitaplar">
             <div class="kitap-header">
               <img
@@ -225,6 +251,7 @@
               <div class="kitap-bilgi">
                 <h3 class="kitap-baslik">{{kitap.ad}}</h3>
                 <p class="kitap-yazar">{{kitap.yazar}}</p>
+                <p class="kitap-aciklama">{{kitap.tanitim}}</p>
               </div>
             </div>
             <div class="kitap-footer">
@@ -244,73 +271,33 @@
     <script>
       angular
         .module("GirisApp")
-        .controller("TeknolojiController", function ($scope) {
+        .controller("TeknolojiController", function ($scope, $http) {
           $scope.kullanici = JSON.parse(
             localStorage.getItem("girisYapan") || "null"
           );
 
-          $scope.kitaplar = [
-            {
-              id: "teknoloji_1",
-              ad: "Dijital Çağda İnsan",
-              yazar: "Prof. Dr. Ufuk Tarhan",
-              foto: "",
-            },
-            {
-              id: "teknoloji_2",
-              ad: "Siber Güvenlik",
-              yazar: "Prof. Dr. Şeref Sağıroğlu",
-              foto: "",
-            },
-            {
-              id: "teknoloji_3",
-              ad: "Yapay Zeka ve Gelecek",
-              yazar: "Dr. Cem Say",
-              foto: "https://covers.openlibrary.org/b/id/10838611-M.jpg",
-            },
-            {
-              id: "teknoloji_4",
-              ad: "Dijital Dönüşüm",
-              yazar: "Prof. Dr. Erkan Türe",
-              foto: "",
-            },
-            {
-              id: "teknoloji_5",
-              ad: "Teknoloji ve Toplum",
-              yazar: "Dr. Ahmet Çakır",
-              foto: "",
-            },
-            {
-              id: "teknoloji_6",
-              ad: "The Innovators",
-              yazar: "Walter Isaacson",
-              foto: "https://covers.openlibrary.org/b/id/10668813-M.jpg",
-            },
-            {
-              id: "teknoloji_7",
-              ad: "Hooked",
-              yazar: "Nir Eyal",
-              foto: "https://covers.openlibrary.org/b/id/12511799-M.jpg",
-            },
-            {
-              id: "teknoloji_8",
-              ad: "The Singularity is Near",
-              yazar: "Ray Kurzweil",
-              foto: "https://covers.openlibrary.org/b/id/6412672-M.jpg",
-            },
-            {
-              id: "teknoloji_9",
-              ad: "The Second Machine Age",
-              yazar: "Erik Brynjolfsson",
-              foto: "https://covers.openlibrary.org/b/id/7288934-M.jpg",
-            },
-            {
-              id: "teknoloji_10",
-              ad: "The Future of the Mind",
-              yazar: "Michio Kaku",
-              foto: "https://covers.openlibrary.org/b/id/13350562-M.jpg",
-            },
-          ];
+          $scope.kitaplar = [];
+          $scope.loading = true;
+          $scope.error = null;
+
+          // Teknoloji kitaplarını API'den yükle
+          $http
+            .get("kitaplar_yazilar_api.php?kategori=Teknoloji")
+            .then(function (response) {
+              if (response.data.success) {
+                $scope.kitaplar = response.data.kitaplar;
+                $scope.loading = false;
+              } else {
+                $scope.error =
+                  response.data.error || "Kitaplar yüklenirken hata oluştu";
+                $scope.loading = false;
+              }
+            })
+            .catch(function (error) {
+              $scope.error = "API bağlantı hatası: " + error.statusText;
+              $scope.loading = false;
+              console.error("API Hatası:", error);
+            });
 
           $scope.kitabaGit = function (kitap) {
             // Kitap detay sayfasına yönlendirme

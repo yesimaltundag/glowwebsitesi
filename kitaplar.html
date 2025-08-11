@@ -122,6 +122,83 @@
         color: #fff;
         transform: scale(1.08);
       }
+      .loading {
+        text-align: center;
+        padding: 40px;
+        color: #7c5c4a;
+        font-size: 1.2rem;
+      }
+      .error {
+        text-align: center;
+        padding: 40px;
+        color: #dc3545;
+        font-size: 1.2rem;
+        background: rgba(220, 53, 69, 0.1);
+        border-radius: 12px;
+        margin: 20px 0;
+      }
+
+      /* Alt Kategori Kartları */
+      .alt-kategori-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 30px;
+        margin-top: 40px;
+      }
+
+      .alt-kategori-card {
+        background: linear-gradient(135deg, #f8e0e1 60%, #e2d9d0 100%);
+        border-radius: 20px;
+        box-shadow: 0 8px 25px rgba(180, 138, 120, 0.15);
+        padding: 40px 30px;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        min-height: 200px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        border: 2px solid rgba(180, 138, 120, 0.1);
+      }
+
+      .alt-kategori-card:hover {
+        box-shadow: 0 8px 32px rgba(180, 138, 120, 0.16);
+        transform: translateY(-3px) scale(1.02);
+      }
+
+      .alt-kategori-baslik {
+        color: #b48a78;
+        font-size: 1.6rem;
+        font-weight: 600;
+        margin-bottom: 15px;
+        text-align: center;
+      }
+
+      .alt-kategori-ozet {
+        color: #7c5c4a;
+        font-size: 1rem;
+        margin-bottom: 25px;
+        line-height: 1.6;
+        text-align: center;
+      }
+
+      .alt-kategori-btn {
+        background: linear-gradient(135deg, #e2d9d0, #b48a78);
+        color: #7c5c4a;
+        border: none;
+        border-radius: 12px;
+        padding: 12px 24px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        align-self: center;
+      }
+
+      .alt-kategori-btn:hover {
+        background: linear-gradient(135deg, #b48a78, #e2d9d0);
+        color: #fff;
+        transform: scale(1.05);
+      }
       @media (max-width: 768px) {
         .kitaplar-container {
           padding: 30px;
@@ -166,6 +243,29 @@
           top: 70px;
           right: 20px;
         }
+
+        .alt-kategori-grid {
+          grid-template-columns: 1fr;
+          gap: 20px;
+        }
+
+        .alt-kategori-card {
+          padding: 30px 20px;
+          min-height: 150px;
+        }
+
+        .alt-kategori-baslik {
+          font-size: 1.4rem;
+        }
+
+        .alt-kategori-ozet {
+          font-size: 0.9rem;
+        }
+
+        .alt-kategori-btn {
+          padding: 10px 20px;
+          font-size: 13px;
+        }
       }
     </style>
   </head>
@@ -194,19 +294,55 @@
             class="kitaplar-title"
             style="line-height: 1; vertical-align: middle"
           >
-            Klasik Kitaplar
+            {{kategori || 'Klasik Kitaplar'}}
           </div>
         </div>
-        <div class="kitaplar-grid">
+        <div ng-if="loading" class="loading">📚 Kitaplar yükleniyor...</div>
+
+        <div ng-if="error" class="error">❌ {{error}}</div>
+
+        <!-- Edebiyat Alt Kategorileri -->
+        <div
+          class="alt-kategori-grid"
+          ng-if="kategori === 'Edebiyat' && !loading && !error"
+        >
+          <div
+            class="alt-kategori-card"
+            ng-click="gotoAltKategori('Türk Edebiyatı')"
+          >
+            <div class="alt-kategori-baslik">Türk Edebiyatı</div>
+            <div class="alt-kategori-ozet">
+              Türk edebiyatının zengin mirasından seçme eserler. Klasik ve
+              modern Türk yazarlarını tanıyın.
+            </div>
+            <button class="alt-kategori-btn">Kitapları Gör</button>
+          </div>
+          <div
+            class="alt-kategori-card"
+            ng-click="gotoAltKategori('Klasik Edebiyat')"
+          >
+            <div class="alt-kategori-baslik">Yabancı Edebiyat</div>
+            <div class="alt-kategori-ozet">
+              Dünya klasiklerinden seçme kitaplar ve yazarlar. Farklı
+              kültürlerin edebi mirasını keşfedin.
+            </div>
+            <button class="alt-kategori-btn">Kitapları Gör</button>
+          </div>
+        </div>
+
+        <div
+          class="kitaplar-grid"
+          ng-if="kategori !== 'Edebiyat' && !loading && !error"
+        >
           <div class="kitaplar-card" ng-repeat="kitap in kitaplar">
             <div class="kitaplar-header">
               <img
                 class="kitap-foto"
-                ng-src="{{kitap.foto}}"
-                alt="{{kitap.ad}}"
+                ng-src="{{kitap.kapak_url}}"
+                alt="{{kitap.kitap_adi}}"
               />
               <div>
-                <div class="kitap-bilgi">{{kitap.ad}}</div>
+                <div class="kitap-bilgi">{{kitap.kitap_adi}}</div>
                 <div class="kitap-yazar">{{kitap.yazar}}</div>
               </div>
             </div>
@@ -224,47 +360,71 @@
     <script>
       angular
         .module("GirisApp")
-        .controller("KitaplarController", function ($scope) {
-          $scope.kitaplar = [
-            {
-              ad: "Suç ve Ceza",
-              yazar: "Fyodor Dostoyevski",
-              foto: "https://covers.openlibrary.org/b/id/12315028-M.jpg",
-            },
-            {
-              ad: "Sefiller",
-              yazar: "Victor Hugo",
-              foto: "https://covers.openlibrary.org/b/id/12218285-M.jpg",
-            },
-            {
-              ad: "Anna Karenina",
-              yazar: "Lev Tolstoy",
-              foto: "https://covers.openlibrary.org/b/id/12639895-M.jpg",
-            },
-            {
-              ad: "Büyük Umutlar",
-              yazar: "Charles Dickens",
-              foto: "https://covers.openlibrary.org/b/id/12310271-M.jpg",
-            },
-            {
-              ad: "Karamazov Kardeşler",
-              yazar: "Fyodor Dostoyevski",
-              foto: "https://covers.openlibrary.org/b/id/10848852-M.jpg",
-            },
-          ];
+        .controller("KitaplarController", function ($scope, $http) {
+          $scope.kitaplar = [];
+          $scope.loading = true;
+          $scope.error = null;
+
+          // URL'den kategori parametresini al
+          var urlParams = new URLSearchParams(window.location.search);
+          var kategori = urlParams.get("kategori");
+
+          // Debug için kategori bilgisini logla
+          console.log("URL'den gelen kategori:", kategori);
+          console.log("Decoded kategori:", decodeURIComponent(kategori || ""));
+
+          // Kategori başlığını scope'a ekle
+          $scope.kategori = kategori;
+
+          // Kitapları API'den yükle
+          var apiUrl = "kitaplar_api.php";
+          if (kategori) {
+            // Kategoriyi decode et ve tekrar encode et
+            var decodedKategori = decodeURIComponent(kategori);
+            console.log("Decoded kategori:", decodedKategori);
+            apiUrl += "?kategori=" + encodeURIComponent(decodedKategori);
+          }
+
+          console.log("API URL:", apiUrl); // Debug için
+          $http
+            .get(apiUrl)
+            .then(function (response) {
+              console.log("API Response:", response.data); // Debug için
+              if (response.data.success) {
+                $scope.kitaplar = response.data.kitaplar;
+                console.log("Bulunan kitaplar:", $scope.kitaplar); // Debug için
+                console.log("Bulunan kitap sayısı:", $scope.kitaplar.length); // Debug için
+                $scope.loading = false;
+              } else {
+                $scope.error =
+                  response.data.error || "Kitaplar yüklenirken hata oluştu";
+                $scope.loading = false;
+              }
+            })
+            .catch(function (error) {
+              $scope.error = "API bağlantı hatası: " + error.statusText;
+              $scope.loading = false;
+              console.error("API Hatası:", error);
+            });
           $scope.oku = function (kitap) {
             window.location.href =
-              "alintilar.html?kitap=" + encodeURIComponent(kitap.ad);
+              "alintilar.html?kitap=" + encodeURIComponent(kitap.kitap_adi);
           };
+
+          $scope.gotoAltKategori = function (altKategori) {
+            window.location.href =
+              "kitaplar.html?kategori=" + encodeURIComponent(altKategori);
+          };
+
           $scope.scrollToTop = function () {
             window.scrollTo({ top: 0, behavior: "smooth" });
           };
         });
-      // Controller'ı sayfaya bağla
-      angular.element(document).ready(function () {
-        var el = document.querySelector(".kitaplar-container");
-        if (el) angular.bootstrap(el, ["GirisApp"]);
-      });
+      // Controller'ı sayfaya bağla - sadece gerekirse
+      // angular.element(document).ready(function () {
+      //   var el = document.querySelector(".kitaplar-container");
+      //   if (el) angular.bootstrap(el, ["GirisApp"]);
+      // });
     </script>
   </body>
 </html>

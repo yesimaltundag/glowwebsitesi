@@ -101,6 +101,13 @@
         font-weight: 600;
         margin-bottom: 18px;
       }
+      .kitap-aciklama {
+        color: #7c5c4a;
+        font-size: 1.1rem;
+        line-height: 1.6;
+        margin-bottom: 20px;
+        opacity: 0.95;
+      }
       .kitap-footer {
         display: flex;
         align-items: center;
@@ -153,6 +160,21 @@
         background: linear-gradient(135deg, #b48a78, #e2d9d0);
         color: #fff;
         transform: scale(1.1);
+      }
+      .loading {
+        text-align: center;
+        padding: 40px;
+        color: #7c5c4a;
+        font-size: 1.2rem;
+      }
+      .error {
+        text-align: center;
+        padding: 40px;
+        color: #dc3545;
+        font-size: 1.2rem;
+        background: rgba(220, 53, 69, 0.1);
+        border-radius: 12px;
+        margin: 20px 0;
       }
       @media (max-width: 768px) {
         .kategori-container {
@@ -213,7 +235,11 @@
             farklı boyutlarını ve etkili öğrenme yöntemlerini analiz eder.
           </p>
         </div>
-        <div class="kitap-grid">
+        <div ng-if="loading" class="loading">📚 Kitaplar yükleniyor...</div>
+
+        <div ng-if="error" class="error">❌ {{error}}</div>
+
+        <div class="kitap-grid" ng-if="!loading && !error">
           <div class="kitap-card" ng-repeat="kitap in kitaplar">
             <div class="kitap-header">
               <img
@@ -224,6 +250,7 @@
               <div class="kitap-bilgi">
                 <h3 class="kitap-baslik">{{kitap.ad}}</h3>
                 <p class="kitap-yazar">{{kitap.yazar}}</p>
+                <p class="kitap-aciklama">{{kitap.tanitim}}</p>
               </div>
             </div>
             <div class="kitap-footer">
@@ -243,73 +270,33 @@
     <script>
       angular
         .module("GirisApp")
-        .controller("EgitimController", function ($scope) {
+        .controller("EgitimController", function ($scope, $http) {
           $scope.kullanici = JSON.parse(
             localStorage.getItem("girisYapan") || "null"
           );
 
-          $scope.kitaplar = [
-            {
-              id: "egitim_1",
-              ad: "Eğitim Psikolojisi",
-              yazar: "Prof. Dr. Ziya Selçuk",
-              foto: "https://covers.openlibrary.org/b/id/10523296-L.jpg",
-            },
-            {
-              id: "egitim_2",
-              ad: "Öğretim İlke ve Yöntemleri",
-              yazar: "Prof. Dr. Mehmet Taşpınar",
-              foto: "",
-            },
-            {
-              id: "egitim_3",
-              ad: "Eğitimde Program Geliştirme",
-              yazar: "Prof. Dr. Özcan Demirel",
-              foto: "",
-            },
-            {
-              id: "egitim_4",
-              ad: "Öğrenme ve Öğretme",
-              yazar: "Prof. Dr. Ayşe Sibel Türküm",
-              foto: "",
-            },
-            {
-              id: "egitim_5",
-              ad: "Eğitim Yönetimi",
-              yazar: "Prof. Dr. İrfan Erdoğan",
-              foto: "https://covers.openlibrary.org/b/id/12307185-M.jpg",
-            },
-            {
-              id: "egitim_6",
-              ad: "Pedagogy of the Oppressed",
-              yazar: "Paulo Freire",
-              foto: "https://covers.openlibrary.org/b/id/3946026-M.jpg",
-            },
-            {
-              id: "egitim_7",
-              ad: "The Art of Learning",
-              yazar: "Josh Waitzkin",
-              foto: "https://covers.openlibrary.org/b/id/7890970-M.jpg",
-            },
-            {
-              id: "egitim_8",
-              ad: "Mindset: The New Psychology of Success",
-              yazar: "Carol S. Dweck",
-              foto: "https://covers.openlibrary.org/b/id/15088599-M.jpg",
-            },
-            {
-              id: "egitim_9",
-              ad: "How Children Learn",
-              yazar: "John Holt",
-              foto: "https://covers.openlibrary.org/b/id/14476370-M.jpg",
-            },
-            {
-              id: "egitim_10",
-              ad: "The Montessori Method",
-              yazar: "Maria Montessori",
-              foto: "https://archive.org/download/bwb_S0-AKI-495/page/cover_w180_h360.jpg",
-            },
-          ];
+          $scope.kitaplar = [];
+          $scope.loading = true;
+          $scope.error = null;
+
+          // Eğitim kitaplarını API'den yükle
+          $http
+            .get("kitaplar_yazilar_api.php?kategori=Eğitim")
+            .then(function (response) {
+              if (response.data.success) {
+                $scope.kitaplar = response.data.kitaplar;
+                $scope.loading = false;
+              } else {
+                $scope.error =
+                  response.data.error || "Kitaplar yüklenirken hata oluştu";
+                $scope.loading = false;
+              }
+            })
+            .catch(function (error) {
+              $scope.error = "API bağlantı hatası: " + error.statusText;
+              $scope.loading = false;
+              console.error("API Hatası:", error);
+            });
 
           $scope.kitabaGit = function (kitap) {
             // Kitap detay sayfasına yönlendirme

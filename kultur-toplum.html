@@ -101,6 +101,13 @@
         font-weight: 600;
         margin-bottom: 18px;
       }
+      .kitap-aciklama {
+        color: #7c5c4a;
+        font-size: 1.1rem;
+        line-height: 1.6;
+        margin-bottom: 20px;
+        opacity: 0.95;
+      }
       .kitap-footer {
         display: flex;
         align-items: center;
@@ -153,6 +160,21 @@
         background: linear-gradient(135deg, #b48a78, #e2d9d0);
         color: #fff;
         transform: scale(1.1);
+      }
+      .loading {
+        text-align: center;
+        padding: 40px;
+        color: #7c5c4a;
+        font-size: 1.2rem;
+      }
+      .error {
+        text-align: center;
+        padding: 40px;
+        color: #dc3545;
+        font-size: 1.2rem;
+        background: rgba(220, 53, 69, 0.1);
+        border-radius: 12px;
+        margin: 20px 0;
       }
       @media (max-width: 768px) {
         .kategori-container {
@@ -215,7 +237,11 @@
             eder.
           </p>
         </div>
-        <div class="kitap-grid">
+        <div ng-if="loading" class="loading">📚 Kitaplar yükleniyor...</div>
+
+        <div ng-if="error" class="error">❌ {{error}}</div>
+
+        <div class="kitap-grid" ng-if="!loading && !error">
           <div class="kitap-card" ng-repeat="kitap in kitaplar">
             <div class="kitap-header">
               <img
@@ -223,9 +249,10 @@
                 ng-src="{{kitap.foto}}"
                 alt="{{kitap.ad}}"
               />
-              <div>
-                <div class="kitap-baslik">{{kitap.ad}}</div>
-                <div class="kitap-yazar">{{kitap.yazar}}</div>
+              <div class="kitap-bilgi">
+                <h3 class="kitap-baslik">{{kitap.ad}}</h3>
+                <p class="kitap-yazar">{{kitap.yazar}}</p>
+                <p class="kitap-aciklama">{{kitap.tanitim}}</p>
               </div>
             </div>
             <div class="kitap-footer">
@@ -244,73 +271,54 @@
     <script>
       angular
         .module("GirisApp")
-        .controller("KulturToplumController", function ($scope) {
+        .controller("KulturToplumController", function ($scope, $http) {
           $scope.kullanici = JSON.parse(
             localStorage.getItem("girisYapan") || "null"
           );
 
+          $scope.kitaplar = [];
+          $scope.loading = true;
+          $scope.error = null;
+
+          // Kültür & Toplum kitaplarını statik olarak yükle
           $scope.kitaplar = [
             {
-              id: "kultur_1",
-              ad: "Türklerin Tarihi",
-              yazar: "İlber Ortaylı",
-              foto: "https://covers.openlibrary.org/b/id/11139473-M.jpg",
+              ad: "Sapiens",
+              yazar: "Yuval Noah Harari",
+              foto: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400&h=600&fit=crop",
+              tanitim:
+                "İnsanlığın kısa tarihini anlatan bu kitap, Homo sapiens'in dünyayı nasıl ele geçirdiğini ve modern toplumları nasıl şekillendirdiğini anlatır.",
             },
             {
-              id: "kultur_2",
-              ad: "Osmanlı İmparatorluğu",
-              yazar: "Halil İnalcık",
-              foto: "https://covers.openlibrary.org/b/id/12241667-M.jpg",
+              ad: "Homo Deus",
+              yazar: "Yuval Noah Harari",
+              foto: "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=400&h=600&fit=crop",
+              tanitim:
+                "Gelecekte insanlığın nasıl evrileceğini ve yapay zeka çağında insanın rolünü inceleyen bu kitap, gelecek vizyonları sunar.",
             },
             {
-              id: "kultur_3",
-              ad: "Türk Kültür Tarihi",
-              yazar: "Bahaeddin Ögel",
-              foto: "https://openlibrary.org/images/icons/avatar_book-sm.png",
+              ad: "Guns, Germs, and Steel",
+              yazar: "Jared Diamond",
+              foto: "https://images.unsplash.com/photo-1512820790803-83ca734da794?w=400&h=600&fit=crop",
+              tanitim:
+                "İnsan toplumlarının neden farklı şekillerde geliştiğini açıklayan bu kitap, coğrafya, biyoloji ve kültürün etkileşimini inceler.",
             },
             {
-              id: "kultur_4",
-              ad: "Anadolu Kültürü",
-              yazar: "Sedat Veyis Örnek",
-              foto: "https://covers.openlibrary.org/b/id/10739454-M.jpg",
+              ad: "The Tipping Point",
+              yazar: "Malcolm Gladwell",
+              foto: "https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=400&h=600&fit=crop",
+              tanitim:
+                "Küçük değişikliklerin nasıl büyük etkiler yaratabileceğini anlatan bu kitap, sosyal epidemilerin nasıl yayıldığını inceler.",
             },
             {
-              id: "kultur_5",
-              ad: "Türk Toplumu",
-              yazar: "Mümtaz Turhan",
-              foto: "https://covers.openlibrary.org/b/id/12212819-M.jpg",
-            },
-            {
-              id: "kultur_6",
-              ad: "Sosyoloji",
-              yazar: "Emile Durkheim",
-              foto: "https://covers.openlibrary.org/b/id/14316554-M.jpg",
-            },
-            {
-              id: "kultur_7",
-              ad: "Toplum Sözleşmesi",
-              yazar: "Jean-Jacques Rousseau",
-              foto: "https://covers.openlibrary.org/b/id/12267856-M.jpg",
-            },
-            {
-              id: "kultur_8",
-              ad: "Kültür ve İmperyalizm",
-              yazar: "Edward Said",
-              foto: "https://covers.openlibrary.org/b/id/913965-M.jpg",
-            },
-            {
-              id: "kultur_9",
-              ad: "Medeniyetler Çatışması",
-              yazar: "Samuel Huntington",
-              foto: "https://covers.openlibrary.org/b/id/12285114-M.jpg",
-            },
-            {
-              id: "kultur_10",
-              ad: "Kültür ve Toplum",
-              yazar: "Raymond Williams",
-              foto: "https://covers.openlibrary.org/b/id/12294922-M.jpg",
+              ad: "Outliers",
+              yazar: "Malcolm Gladwell",
+              foto: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=600&fit=crop",
+              tanitim:
+                "Başarılı insanların hikayelerini inceleyen bu kitap, başarının arkasındaki gizli faktörleri ortaya çıkarır.",
             },
           ];
+          $scope.loading = false;
 
           $scope.kitabaGit = function (kitap) {
             // Kitap detay sayfasına yönlendirme

@@ -1212,7 +1212,7 @@
           $scope.currentKitapSlide = 0;
           $scope.kitaplarCarousel = [];
 
-          // Kitapları veritabanından yükle (her yenilemede rastgele)
+          // Kitapları veritabanından yükle (her yenilemede rastgele 8 kitap)
           var timestamp = Date.now();
           console.log("API çağrısı yapılıyor, timestamp:", timestamp);
           $http
@@ -1233,149 +1233,19 @@
                     publisher: "GLOW Yayınları", // Varsayılan yayınevi
                   };
                 });
+                console.log(
+                  "Rastgele 8 kitap yüklendi:",
+                  $scope.kitaplarCarousel.length
+                );
               } else {
                 console.error(
                   "Kitaplar yüklenirken hata:",
                   response.data.error
                 );
-                // Hata durumunda varsayılan kitapları göster
-                $scope.kitaplarCarousel = [
-                  {
-                    ad: "Sarı Yüz",
-                    yazar: "R. F. Kuang",
-                    foto: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400&h=600&fit=crop",
-                    rating: 3,
-                    favorites: 992,
-                    publisher: "İthaki Yayınları",
-                  },
-                  {
-                    ad: "Bırak Yapsınlar Teorisi",
-                    yazar: "Mel Robbins",
-                    foto: "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=400&h=600&fit=crop",
-                    rating: 5,
-                    favorites: 680,
-                    publisher: "Nepal Kitap",
-                  },
-                  {
-                    ad: "Değişiyorum",
-                    yazar: "Caner Yaman",
-                    foto: "https://images.unsplash.com/photo-1512820790803-83ca734da794?w=400&h=600&fit=crop",
-                    rating: 4,
-                    favorites: 340,
-                    publisher: "İndigo Kitap",
-                  },
-                  {
-                    ad: "Yaşanmamış Hayatlar",
-                    yazar: "Sarah Jio",
-                    foto: "https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=400&h=600&fit=crop",
-                    rating: 4,
-                    favorites: 43,
-                    publisher: "Epsilon Yayınevi",
-                  },
-                  {
-                    ad: "Sen Yeter ki İste",
-                    yazar: "Pierre Franckh",
-                    foto: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=600&fit=crop",
-                    rating: 5,
-                    favorites: 196,
-                    publisher: "Koridor Yayıncılık",
-                  },
-                  {
-                    ad: "Suç ve Ceza",
-                    yazar: "Fyodor Dostoyevski",
-                    foto: "https://covers.openlibrary.org/b/id/12315028-M.jpg",
-                    rating: 5,
-                    favorites: 1250,
-                    publisher: "İş Bankası Kültür Yayınları",
-                  },
-                  {
-                    ad: "Sefiller",
-                    yazar: "Victor Hugo",
-                    foto: "https://covers.openlibrary.org/b/id/12218285-M.jpg",
-                    rating: 4,
-                    favorites: 890,
-                    publisher: "Can Yayınları",
-                  },
-                  {
-                    ad: "Anna Karenina",
-                    yazar: "Lev Tolstoy",
-                    foto: "https://covers.openlibrary.org/b/id/12639895-M.jpg",
-                    rating: 5,
-                    favorites: 756,
-                    publisher: "İletişim Yayınları",
-                  },
-                ];
               }
             })
             .catch(function (error) {
               console.error("Kitaplar yüklenirken hata:", error);
-              // Hata durumunda varsayılan kitapları göster
-              $scope.kitaplarCarousel = [
-                {
-                  ad: "Sarı Yüz",
-                  yazar: "R. F. Kuang",
-                  foto: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400&h=600&fit=crop",
-                  rating: 3,
-                  favorites: 992,
-                  publisher: "İthaki Yayınları",
-                },
-                {
-                  ad: "Bırak Yapsınlar Teorisi",
-                  yazar: "Mel Robbins",
-                  foto: "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=400&h=600&fit=crop",
-                  rating: 5,
-                  favorites: 680,
-                  publisher: "Nepal Kitap",
-                },
-                {
-                  ad: "Değişiyorum",
-                  yazar: "Caner Yaman",
-                  foto: "https://images.unsplash.com/photo-1512820790803-83ca734da794?w=400&h=600&fit=crop",
-                  rating: 4,
-                  favorites: 340,
-                  publisher: "İndigo Kitap",
-                },
-                {
-                  ad: "Yaşanmamış Hayatlar",
-                  yazar: "Sarah Jio",
-                  foto: "https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=400&h=600&fit=crop",
-                  rating: 4,
-                  favorites: 43,
-                  publisher: "Epsilon Yayınevi",
-                },
-                {
-                  ad: "Sen Yeter ki İste",
-                  yazar: "Pierre Franckh",
-                  foto: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=600&fit=crop",
-                  rating: 5,
-                  favorites: 196,
-                  publisher: "Koridor Yayıncılık",
-                },
-                {
-                  ad: "Suç ve Ceza",
-                  yazar: "Fyodor Dostoyevski",
-                  foto: "https://covers.openlibrary.org/b/id/12315028-M.jpg",
-                  rating: 5,
-                  favorites: 1250,
-                  publisher: "İş Bankası Kültür Yayınları",
-                },
-                {
-                  ad: "Sefiller",
-                  yazar: "Victor Hugo",
-                  foto: "https://covers.openlibrary.org/b/id/12218285-M.jpg",
-                  rating: 4,
-                  favorites: 890,
-                  publisher: "Can Yayınları",
-                },
-                {
-                  ad: "Anna Karenina",
-                  yazar: "Lev Tolstoy",
-                  foto: "https://covers.openlibrary.org/b/id/12639895-M.jpg",
-                  rating: 5,
-                  favorites: 756,
-                  publisher: "İletişim Yayınları",
-                },
-              ];
             });
 
           // Kitaplar carousel fonksiyonları

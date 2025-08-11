@@ -74,15 +74,17 @@ switch($method) {
                     'searched_for_category' => $kategori
                 ]);
             } else {
-                // Her çağrıda rastgele kitaplar getir
-                $stmt = $pdo->query("SELECT kitap_adi, yazar, kapak_url FROM kitaplar ORDER BY RAND(NOW()) LIMIT 8");
+                // Her çağrıda rastgele 8 kitap getir
+                $randomSeed = time() . rand(1, 10000); // Daha güçlü rastgele seçim
+                $stmt = $pdo->query("SELECT kitap_adi, yazar, kapak_url FROM kitaplar ORDER BY RAND($randomSeed) LIMIT 8");
                 $kitaplar = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 
                 echo json_encode([
                     'success' => true,
                     'kitaplar' => $kitaplar,
                     'timestamp' => time(),
-                    'random_seed' => rand(1, 10000)
+                    'random_seed' => $randomSeed,
+                    'count' => count($kitaplar)
                 ]);
             }
         } catch(PDOException $e) {

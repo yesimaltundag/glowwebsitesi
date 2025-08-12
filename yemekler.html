@@ -138,9 +138,21 @@
           );
 
           $scope.kategoriSec = function (kategori) {
-            alert(
-              kategori + " kategorisi seçildi! Bu özellik yakında eklenecek."
-            );
+            if (kategori === "Yöresel Yemekler") {
+              window.location.href = "yoresel-yemekler.html";
+            } else if (kategori === "Dünya Mutfağı") {
+              window.location.href = "dunya-mutfagi.html";
+            } else if (kategori === "Tatlılar ve Hamur İşleri") {
+              window.location.href = "tatlilar-hamur.html";
+            } else if (kategori === "Pratik Tarifler") {
+              window.location.href = "pratik-tarifler.html";
+            } else if (kategori === "Sağlıklı Besinler") {
+              window.location.href = "saglikli-besinler.html";
+            } else {
+              alert(
+                kategori + " kategorisi seçildi! Bu özellik yakında eklenecek."
+              );
+            }
           };
 
           $scope.scrollToTop = function () {

@@ -72,6 +72,150 @@ if ($baglanti->connect_error) {
 
 error_log("Veritabanı bağlantısı başarılı");
 
+// MİMARİ ENDPOINT'LERİ - EN BAŞA TAŞI
+if (isset($_GET["mimari"])) {
+    error_log("=== MİMARİ ENDPOINT BAŞLADI ===");
+    error_log("Mimari endpoint çağrıldı");
+    if (isset($_GET["id"])) {
+        // Belirli mimari eseri getir
+        $id = (int)$_GET["id"];
+        $sonuc = $baglanti->query("SELECT * FROM mimari WHERE id = $id");
+        if ($sonuc && $sonuc->num_rows > 0) {
+            $eser = $sonuc->fetch_assoc();
+            echo json_encode($eser);
+        } else {
+            echo json_encode(["error" => "Mimari eser bulunamadı"]);
+        }
+        exit;
+    } else {
+        // Tüm mimari eserleri getir (limit desteği ile)
+        $limit = isset($_GET["limit"]) ? (int)$_GET["limit"] : 0;
+        $query = "SELECT * FROM mimari ORDER BY id DESC";
+        if ($limit > 0) {
+            $query .= " LIMIT $limit";
+        }
+        error_log("SQL sorgusu: " . $query);
+        $sonuc = $baglanti->query($query);
+        
+        if (!$sonuc) {
+            error_log("❌ SQL hatası: " . $baglanti->error);
+            echo json_encode([]);
+            exit;
+        }
+        
+        error_log("✅ SQL sorgusu başarılı");
+        error_log("📊 Bulunan satır sayısı: " . $sonuc->num_rows);
+        
+        $eserler = [];
+        while ($satir = $sonuc->fetch_assoc()) {
+            $eserler[] = $satir;
+            error_log("🏗️ Mimari eser verisi: " . json_encode($satir));
+        }
+        
+        error_log("✅ Bulunan eser sayısı: " . count($eserler));
+        error_log("📤 JSON yanıtı: " . json_encode($eserler));
+        echo json_encode($eserler);
+        error_log("=== MİMARİ ENDPOINT BİTTİ ===");
+        exit;
+    }
+}
+
+// MÜZİK ENDPOINT'LERİ - EN BAŞA TAŞI
+if (isset($_GET["muzik"])) {
+    error_log("=== MÜZİK ENDPOINT BAŞLADI ===");
+    error_log("Müzik endpoint çağrıldı");
+    error_log("GET parametreleri: " . json_encode($_GET));
+    
+    if (isset($_GET["tur"])) {
+        // Belirli türdeki şarkıları getir
+        $tur = $baglanti->real_escape_string($_GET["tur"]);
+        $query = "SELECT * FROM muzikler WHERE tur = '$tur' ORDER BY yayin_yili DESC";
+        error_log("SQL sorgusu: " . $query);
+        $sonuc = $baglanti->query($query);
+        
+        if (!$sonuc) {
+            error_log("❌ SQL hatası: " . $baglanti->error);
+            echo json_encode([]);
+            exit;
+        }
+        
+        error_log("✅ SQL sorgusu başarılı");
+        error_log("📊 Bulunan satır sayısı: " . $sonuc->num_rows);
+        
+        $sarkilar = [];
+        while ($satir = $sonuc->fetch_assoc()) {
+            $sarkilar[] = $satir;
+            error_log("🎵 Şarkı verisi: " . json_encode($satir));
+        }
+        
+        error_log("✅ Bulunan şarkı sayısı: " . count($sarkilar));
+        error_log("📤 JSON yanıtı: " . json_encode($sarkilar));
+        echo json_encode($sarkilar);
+        error_log("=== MÜZİK ENDPOINT BİTTİ ===");
+        exit;
+    } elseif (isset($_GET["id"])) {
+        // Belirli şarkıyı getir (ID veya başlık ile)
+        $id = $baglanti->real_escape_string($_GET["id"]);
+        
+        // Önce ID ile ara
+        $sonuc = $baglanti->query("SELECT * FROM muzikler WHERE id = '$id'");
+        
+        // ID ile bulunamazsa başlık ile ara
+        if (!$sonuc || $sonuc->num_rows == 0) {
+            $baslik = str_replace('-', ' ', $id); // URL'deki tireleri boşluğa çevir
+            $sonuc = $baglanti->query("SELECT * FROM muzikler WHERE LOWER(muzik_adi) LIKE LOWER('%$baslik%')");
+        }
+        
+        if ($sonuc && $sonuc->num_rows > 0) {
+            $sarki = $sonuc->fetch_assoc();
+            echo json_encode($sarki);
+        } else {
+            echo json_encode(["error" => "Şarkı bulunamadı"]);
+        }
+        exit;
+    } else {
+        // Tüm şarkıları getir
+        $sonuc = $baglanti->query("SELECT * FROM muzikler ORDER BY yayin_yili DESC");
+        $sarkilar = [];
+        while ($satir = $sonuc->fetch_assoc()) {
+            $sarkilar[] = $satir;
+        }
+        echo json_encode($sarkilar);
+        exit;
+    }
+}
+
+// MÜZİK TÜRLERİ ENDPOINT'İ
+if (isset($_GET["muzik_turleri"])) {
+    error_log("=== MÜZİK TÜRLERİ ENDPOINT BAŞLADI ===");
+    error_log("Müzik türleri endpoint çağrıldı");
+    
+    $query = "SELECT DISTINCT tur, COUNT(*) as sarki_sayisi FROM muzikler GROUP BY tur ORDER BY sarki_sayisi DESC";
+    error_log("SQL sorgusu: " . $query);
+    $sonuc = $baglanti->query($query);
+    
+    if (!$sonuc) {
+        error_log("❌ SQL hatası: " . $baglanti->error);
+        echo json_encode([]);
+        exit;
+    }
+    
+    error_log("✅ SQL sorgusu başarılı");
+    error_log("📊 Bulunan satır sayısı: " . $sonuc->num_rows);
+    
+    $turler = [];
+    while ($satir = $sonuc->fetch_assoc()) {
+        $turler[] = $satir;
+        error_log("🎼 Tür verisi: " . json_encode($satir));
+    }
+    
+    error_log("✅ Bulunan tür sayısı: " . count($turler));
+    error_log("📤 JSON yanıtı: " . json_encode($turler));
+    echo json_encode($turler);
+    error_log("=== MÜZİK TÜRLERİ ENDPOINT BİTTİ ===");
+    exit;
+}
+
 // Film API endpoint'leri
 if (isset($_GET["films"])) {
     if (isset($_GET["kategori"])) {
@@ -283,8 +427,8 @@ if ($_SERVER["REQUEST_METHOD"] === "GET" && isset($_GET["kisiler"])) {
     exit;
 }
 
-// GET: Listeleme (varsayılan) - Sadece belirli parametreler yoksa
-if ($_SERVER["REQUEST_METHOD"] === "GET" && !isset($_GET["yorum"]) && !isset($_GET["films"]) && !isset($_GET["tiyatro"]) && !isset($_GET["belgesel"]) && !isset($_GET["anime"]) && !isset($_GET["son_yorumlar"]) && !isset($_GET["tum_yorumlar"]) && !isset($_GET["kisiler"]) && !isset($_GET["heykel"])) {
+        // GET: Listeleme (varsayılan) - Sadece belirli parametreler yoksa
+        if ($_SERVER["REQUEST_METHOD"] === "GET" && !isset($_GET["yorum"]) && !isset($_GET["films"]) && !isset($_GET["tiyatro"]) && !isset($_GET["belgesel"]) && !isset($_GET["anime"]) && !isset($_GET["son_yorumlar"]) && !isset($_GET["tum_yorumlar"]) && !isset($_GET["kisiler"]) && !isset($_GET["heykel"]) && !isset($_GET["muzik"]) && !isset($_GET["muzik_turleri"]) && !isset($_GET["mimari"]) && !isset($_GET["fotograf"]) && !isset($_GET["dans"]) && !isset($_GET["yemek"]) && !isset($_GET["dunya_mutfagi"]) && !isset($_GET["tatlilar_hamur"]) && !isset($_GET["pratik_tarifler"]) && !isset($_GET["saglikli_besinler"])) {
     $sonuc = $baglanti->query("SELECT id, username, adsoyad, e_posta, rol FROM kisiler ORDER BY id ASC");
     $kisiler = [];
     while ($satir = $sonuc->fetch_assoc()) {
@@ -1014,6 +1158,102 @@ if ($_SERVER["REQUEST_METHOD"] === "GET" && isset($_GET["mesajlar"])) {
     exit;
 }
 
+// MÜZİK ENDPOINT'LERİ
+if (isset($_GET["muzik"])) {
+    error_log("=== MÜZİK ENDPOINT BAŞLADI ===");
+    error_log("Müzik endpoint çağrıldı");
+    error_log("GET parametreleri: " . json_encode($_GET));
+    
+    if (isset($_GET["tur"])) {
+        // Belirli türdeki şarkıları getir
+        $tur = $baglanti->real_escape_string($_GET["tur"]);
+        $query = "SELECT * FROM muzikler WHERE tur = '$tur' ORDER BY yayin_yili DESC";
+        error_log("SQL sorgusu: " . $query);
+        $sonuc = $baglanti->query($query);
+        
+        if (!$sonuc) {
+            error_log("❌ SQL hatası: " . $baglanti->error);
+            echo json_encode([]);
+            exit;
+        }
+        
+        error_log("✅ SQL sorgusu başarılı");
+        error_log("📊 Bulunan satır sayısı: " . $sonuc->num_rows);
+        
+        $sarkilar = [];
+        while ($satir = $sonuc->fetch_assoc()) {
+            $sarkilar[] = $satir;
+            error_log("🎵 Şarkı verisi: " . json_encode($satir));
+        }
+        
+        error_log("✅ Bulunan şarkı sayısı: " . count($sarkilar));
+        error_log("📤 JSON yanıtı: " . json_encode($sarkilar));
+        echo json_encode($sarkilar);
+        error_log("=== MÜZİK ENDPOINT BİTTİ ===");
+        exit;
+    } elseif (isset($_GET["id"])) {
+        // Belirli şarkıyı getir (ID veya başlık ile)
+        $id = $baglanti->real_escape_string($_GET["id"]);
+        
+        // Önce ID ile ara
+        $sonuc = $baglanti->query("SELECT * FROM muzikler WHERE id = '$id'");
+        
+        // ID ile bulunamazsa başlık ile ara
+        if (!$sonuc || $sonuc->num_rows == 0) {
+            $baslik = str_replace('-', ' ', $id); // URL'deki tireleri boşluğa çevir
+            $sonuc = $baglanti->query("SELECT * FROM muzikler WHERE LOWER(muzik_adi) LIKE LOWER('%$baslik%')");
+        }
+        
+        if ($sonuc && $sonuc->num_rows > 0) {
+            $sarki = $sonuc->fetch_assoc();
+            echo json_encode($sarki);
+        } else {
+            echo json_encode(["error" => "Şarkı bulunamadı"]);
+        }
+        exit;
+    } else {
+        // Tüm şarkıları getir
+        $sonuc = $baglanti->query("SELECT * FROM muzikler ORDER BY yayin_yili DESC");
+        $sarkilar = [];
+        while ($satir = $sonuc->fetch_assoc()) {
+            $sarkilar[] = $satir;
+        }
+        echo json_encode($sarkilar);
+        exit;
+    }
+}
+
+// MÜZİK TÜRLERİ ENDPOINT'İ
+if (isset($_GET["muzik_turleri"])) {
+    error_log("=== MÜZİK TÜRLERİ ENDPOINT BAŞLADI ===");
+    error_log("Müzik türleri endpoint çağrıldı");
+    
+    $query = "SELECT DISTINCT tur, COUNT(*) as sarki_sayisi FROM muzikler GROUP BY tur ORDER BY sarki_sayisi DESC";
+    error_log("SQL sorgusu: " . $query);
+    $sonuc = $baglanti->query($query);
+    
+    if (!$sonuc) {
+        error_log("❌ SQL hatası: " . $baglanti->error);
+        echo json_encode([]);
+        exit;
+    }
+    
+    error_log("✅ SQL sorgusu başarılı");
+    error_log("📊 Bulunan satır sayısı: " . $sonuc->num_rows);
+    
+    $turler = [];
+    while ($satir = $sonuc->fetch_assoc()) {
+        $turler[] = $satir;
+        error_log("🎼 Tür verisi: " . json_encode($satir));
+    }
+    
+    error_log("✅ Bulunan tür sayısı: " . count($turler));
+    error_log("📤 JSON yanıtı: " . json_encode($turler));
+    echo json_encode($turler);
+    error_log("=== MÜZİK TÜRLERİ ENDPOINT BİTTİ ===");
+    exit;
+}
+
 // HEYKELLER ENDPOINT'LERİ
 if (isset($_GET["heykel"])) {
     error_log("=== HEYKELLER ENDPOINT BAŞLADI ===");
@@ -1061,6 +1301,344 @@ if (isset($_GET["heykel"])) {
         exit;
     }
 }
+
+// FOTOĞRAFLAR ENDPOINT'LERİ
+if (isset($_GET["fotograf"])) {
+    error_log("=== FOTOĞRAFLAR ENDPOINT BAŞLADI ===");
+    error_log("Fotoğraflar endpoint çağrıldı");
+    if (isset($_GET["id"])) {
+        // Belirli fotoğrafı getir
+        $id = (int)$_GET["id"];
+        $sonuc = $baglanti->query("SELECT * FROM fotograflar WHERE id = $id");
+        if ($sonuc && $sonuc->num_rows > 0) {
+            $fotograf = $sonuc->fetch_assoc();
+            echo json_encode($fotograf);
+        } else {
+            echo json_encode(["error" => "Fotoğraf bulunamadı"]);
+        }
+        exit;
+    } else {
+        // Tüm fotoğrafları getir (limit desteği ile)
+        $limit = isset($_GET["limit"]) ? (int)$_GET["limit"] : 0;
+        $query = "SELECT * FROM fotograflar ORDER BY id DESC";
+        if ($limit > 0) {
+            $query .= " LIMIT $limit";
+        }
+        error_log("SQL sorgusu: " . $query);
+        $sonuc = $baglanti->query($query);
+        
+        if (!$sonuc) {
+            error_log("❌ SQL hatası: " . $baglanti->error);
+            echo json_encode([]);
+            exit;
+        }
+        
+        error_log("✅ SQL sorgusu başarılı");
+        error_log("📊 Bulunan satır sayısı: " . $sonuc->num_rows);
+        
+        $fotograflar = [];
+        while ($satir = $sonuc->fetch_assoc()) {
+            $fotograflar[] = $satir;
+            error_log("📸 Fotoğraf verisi: " . json_encode($satir));
+        }
+        
+        error_log("✅ Bulunan fotoğraf sayısı: " . count($fotograflar));
+        error_log("📤 JSON yanıtı: " . json_encode($fotograflar));
+        echo json_encode($fotograflar);
+        error_log("=== FOTOĞRAFLAR ENDPOINT BİTTİ ===");
+        exit;
+    }
+}
+
+        // DANSLAR ENDPOINT'LERİ
+        if (isset($_GET["dans"])) {
+            error_log("=== DANSLAR ENDPOINT BAŞLADI ===");
+            error_log("Danslar endpoint çağrıldı");
+            if (isset($_GET["id"])) {
+                // Belirli dansı getir
+                $id = (int)$_GET["id"];
+                $sonuc = $baglanti->query("SELECT * FROM danslar WHERE id = $id");
+                if ($sonuc && $sonuc->num_rows > 0) {
+                    $dans = $sonuc->fetch_assoc();
+                    echo json_encode($dans);
+                } else {
+                    echo json_encode(["error" => "Dans bulunamadı"]);
+                }
+                exit;
+            } else {
+                // Tüm dansları getir (limit desteği ile)
+                $limit = isset($_GET["limit"]) ? (int)$_GET["limit"] : 0;
+                $query = "SELECT * FROM danslar ORDER BY id DESC";
+                if ($limit > 0) {
+                    $query .= " LIMIT $limit";
+                }
+                error_log("SQL sorgusu: " . $query);
+                $sonuc = $baglanti->query($query);
+                
+                if (!$sonuc) {
+                    error_log("❌ SQL hatası: " . $baglanti->error);
+                    echo json_encode([]);
+                    exit;
+                }
+                
+                error_log("✅ SQL sorgusu başarılı");
+                error_log("📊 Bulunan satır sayısı: " . $sonuc->num_rows);
+                
+                $danslar = [];
+                while ($satir = $sonuc->fetch_assoc()) {
+                    $danslar[] = $satir;
+                    error_log("💃 Dans verisi: " . json_encode($satir));
+                }
+                
+                error_log("✅ Bulunan dans sayısı: " . count($danslar));
+                error_log("📤 JSON yanıtı: " . json_encode($danslar));
+                echo json_encode($danslar);
+                error_log("=== DANSLAR ENDPOINT BİTTİ ===");
+                exit;
+            }
+        }
+
+        // YEMEKLER ENDPOINT'LERİ
+        if (isset($_GET["yemek"])) {
+            error_log("=== YEMEKLER ENDPOINT BAŞLADI ===");
+            error_log("Yemekler endpoint çağrıldı");
+            if (isset($_GET["id"])) {
+                // Belirli yemeği getir
+                $id = (int)$_GET["id"];
+                $sonuc = $baglanti->query("SELECT * FROM yemekler WHERE id = $id");
+                if ($sonuc && $sonuc->num_rows > 0) {
+                    $yemek = $sonuc->fetch_assoc();
+                    echo json_encode($yemek);
+                } else {
+                    echo json_encode(["error" => "Yemek bulunamadı"]);
+                }
+                exit;
+            } else {
+                // Tüm yemekleri getir (limit desteği ile)
+                $limit = isset($_GET["limit"]) ? (int)$_GET["limit"] : 0;
+                $query = "SELECT * FROM yemekler ORDER BY id DESC";
+                if ($limit > 0) {
+                    $query .= " LIMIT $limit";
+                }
+                error_log("SQL sorgusu: " . $query);
+                $sonuc = $baglanti->query($query);
+                
+                if (!$sonuc) {
+                    error_log("❌ SQL hatası: " . $baglanti->error);
+                    echo json_encode([]);
+                    exit;
+                }
+                
+                error_log("✅ SQL sorgusu başarılı");
+                error_log("📊 Bulunan satır sayısı: " . $sonuc->num_rows);
+                
+                $yemekler = [];
+                while ($satir = $sonuc->fetch_assoc()) {
+                    $yemekler[] = $satir;
+                    error_log("🍽️ Yemek verisi: " . json_encode($satir));
+                }
+                
+                error_log("✅ Bulunan yemek sayısı: " . count($yemekler));
+                error_log("📤 JSON yanıtı: " . json_encode($yemekler));
+                echo json_encode($yemekler);
+                error_log("=== YEMEKLER ENDPOINT BİTTİ ===");
+                exit;
+            }
+        }
+
+        // DÜNYA MUTFAĞI ENDPOINT'LERİ
+        if (isset($_GET["dunya_mutfagi"])) {
+            error_log("=== DÜNYA MUTFAĞI ENDPOINT BAŞLADI ===");
+            error_log("Dünya mutfağı endpoint çağrıldı");
+            if (isset($_GET["id"])) {
+                // Belirli yemeği getir
+                $id = (int)$_GET["id"];
+                $sonuc = $baglanti->query("SELECT * FROM dunya_mutfagi WHERE id = $id");
+                if ($sonuc && $sonuc->num_rows > 0) {
+                    $yemek = $sonuc->fetch_assoc();
+                    echo json_encode($yemek);
+                } else {
+                    echo json_encode(["error" => "Yemek bulunamadı"]);
+                }
+                exit;
+            } else {
+                // Tüm yemekleri getir (limit desteği ile)
+                $limit = isset($_GET["limit"]) ? (int)$_GET["limit"] : 0;
+                $query = "SELECT * FROM dunya_mutfagi ORDER BY id DESC";
+                if ($limit > 0) {
+                    $query .= " LIMIT $limit";
+                }
+                error_log("SQL sorgusu: " . $query);
+                $sonuc = $baglanti->query($query);
+                
+                if (!$sonuc) {
+                    error_log("❌ SQL hatası: " . $baglanti->error);
+                    echo json_encode([]);
+                    exit;
+                }
+                
+                error_log("✅ SQL sorgusu başarılı");
+                error_log("📊 Bulunan satır sayısı: " . $sonuc->num_rows);
+                
+                $yemekler = [];
+                while ($satir = $sonuc->fetch_assoc()) {
+                    $yemekler[] = $satir;
+                    error_log("🌍 Dünya mutfağı verisi: " . json_encode($satir));
+                }
+                
+                error_log("✅ Bulunan yemek sayısı: " . count($yemekler));
+                error_log("📤 JSON yanıtı: " . json_encode($yemekler));
+                echo json_encode($yemekler);
+                error_log("=== DÜNYA MUTFAĞI ENDPOINT BİTTİ ===");
+                exit;
+            }
+        }
+
+        // TATLILAR VE HAMUR İŞLERİ ENDPOINT'LERİ
+        if (isset($_GET["tatlilar_hamur"])) {
+            error_log("=== TATLILAR VE HAMUR İŞLERİ ENDPOINT BAŞLADI ===");
+            error_log("Tatlılar ve hamur işleri endpoint çağrıldı");
+            if (isset($_GET["id"])) {
+                // Belirli tatlıyı getir
+                $id = (int)$_GET["id"];
+                $sonuc = $baglanti->query("SELECT * FROM tatlilar_hamur WHERE id = $id");
+                if ($sonuc && $sonuc->num_rows > 0) {
+                    $tatli = $sonuc->fetch_assoc();
+                    echo json_encode($tatli);
+                } else {
+                    echo json_encode(["error" => "Tatlı bulunamadı"]);
+                }
+                exit;
+            } else {
+                // Tüm tatlıları getir (limit desteği ile)
+                $limit = isset($_GET["limit"]) ? (int)$_GET["limit"] : 0;
+                $query = "SELECT * FROM tatlilar_hamur ORDER BY id DESC";
+                if ($limit > 0) {
+                    $query .= " LIMIT $limit";
+                }
+                error_log("SQL sorgusu: " . $query);
+                $sonuc = $baglanti->query($query);
+                
+                if (!$sonuc) {
+                    error_log("❌ SQL hatası: " . $baglanti->error);
+                    echo json_encode([]);
+                    exit;
+                }
+                
+                error_log("✅ SQL sorgusu başarılı");
+                error_log("📊 Bulunan satır sayısı: " . $sonuc->num_rows);
+                
+                $tatlilar = [];
+                while ($satir = $sonuc->fetch_assoc()) {
+                    $tatlilar[] = $satir;
+                    error_log("🍰 Tatlı verisi: " . json_encode($satir));
+                }
+                
+                error_log("✅ Bulunan tatlı sayısı: " . count($tatlilar));
+                error_log("📤 JSON yanıtı: " . json_encode($tatlilar));
+                echo json_encode($tatlilar);
+                error_log("=== TATLILAR VE HAMUR İŞLERİ ENDPOINT BİTTİ ===");
+                exit;
+            }
+        }
+
+        // PRATİK TARİFLER ENDPOINT'LERİ
+        if (isset($_GET["pratik_tarifler"])) {
+            error_log("=== PRATİK TARİFLER ENDPOINT BAŞLADI ===");
+            error_log("Pratik tarifler endpoint çağrıldı");
+            if (isset($_GET["id"])) {
+                // Belirli tarifi getir
+                $id = (int)$_GET["id"];
+                $sonuc = $baglanti->query("SELECT * FROM pratik_tarifler WHERE id = $id");
+                if ($sonuc && $sonuc->num_rows > 0) {
+                    $tarif = $sonuc->fetch_assoc();
+                    echo json_encode($tarif);
+                } else {
+                    echo json_encode(["error" => "Tarif bulunamadı"]);
+                }
+                exit;
+            } else {
+                // Tüm tarifleri getir (limit desteği ile)
+                $limit = isset($_GET["limit"]) ? (int)$_GET["limit"] : 0;
+                $query = "SELECT * FROM pratik_tarifler ORDER BY id DESC";
+                if ($limit > 0) {
+                    $query .= " LIMIT $limit";
+                }
+                error_log("SQL sorgusu: " . $query);
+                $sonuc = $baglanti->query($query);
+                
+                if (!$sonuc) {
+                    error_log("❌ SQL hatası: " . $baglanti->error);
+                    echo json_encode([]);
+                    exit;
+                }
+                
+                error_log("✅ SQL sorgusu başarılı");
+                error_log("📊 Bulunan satır sayısı: " . $sonuc->num_rows);
+                
+                $tarifler = [];
+                while ($satir = $sonuc->fetch_assoc()) {
+                    $tarifler[] = $satir;
+                    error_log("⚡ Pratik tarif verisi: " . json_encode($satir));
+                }
+                
+                error_log("✅ Bulunan tarif sayısı: " . count($tarifler));
+                error_log("📤 JSON yanıtı: " . json_encode($tarifler));
+                echo json_encode($tarifler);
+                error_log("=== PRATİK TARİFLER ENDPOINT BİTTİ ===");
+                exit;
+            }
+        }
+
+        // SAĞLIKLI BESİNLER ENDPOINT'LERİ
+        if (isset($_GET["saglikli_besinler"])) {
+            error_log("=== SAĞLIKLI BESİNLER ENDPOINT BAŞLADI ===");
+            error_log("Sağlıklı besinler endpoint çağrıldı");
+            if (isset($_GET["id"])) {
+                // Belirli besini getir
+                $id = (int)$_GET["id"];
+                $sonuc = $baglanti->query("SELECT * FROM saglikli_besinler WHERE id = $id");
+                if ($sonuc && $sonuc->num_rows > 0) {
+                    $besin = $sonuc->fetch_assoc();
+                    echo json_encode($besin);
+                } else {
+                    echo json_encode(["error" => "Besin bulunamadı"]);
+                }
+                exit;
+            } else {
+                // Tüm besinleri getir (limit desteği ile)
+                $limit = isset($_GET["limit"]) ? (int)$_GET["limit"] : 0;
+                $query = "SELECT * FROM saglikli_besinler ORDER BY id DESC";
+                if ($limit > 0) {
+                    $query .= " LIMIT $limit";
+                }
+                error_log("SQL sorgusu: " . $query);
+                $sonuc = $baglanti->query($query);
+                
+                if (!$sonuc) {
+                    error_log("❌ SQL hatası: " . $baglanti->error);
+                    echo json_encode([]);
+                    exit;
+                }
+                
+                error_log("✅ SQL sorgusu başarılı");
+                error_log("📊 Bulunan satır sayısı: " . $sonuc->num_rows);
+                
+                $besinler = [];
+                while ($satir = $sonuc->fetch_assoc()) {
+                    $besinler[] = $satir;
+                    error_log("🥗 Sağlıklı besin verisi: " . json_encode($satir));
+                }
+                
+                error_log("✅ Bulunan besin sayısı: " . count($besinler));
+                error_log("📤 JSON yanıtı: " . json_encode($besinler));
+                echo json_encode($besinler);
+                error_log("=== SAĞLIKLI BESİNLER ENDPOINT BİTTİ ===");
+                exit;
+            }
+        }
+
+
 
 // DELETE: Mesaj sil
 if ($_SERVER["REQUEST_METHOD"] === "DELETE" && isset($_GET["mesaj"])) {

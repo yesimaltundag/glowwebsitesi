@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="tr" ng-app="GirisApp">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sağlıklı Besinler - GLOW</title>
+    <link rel="stylesheet" href="assets/css/style.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="assets/js/app.js"></script>
+    <style>
+      .saglikli-besinler-container {
+        max-width: 1200px;
+        margin: 40px auto;
+        padding: 32px 20px;
+        background: rgba(255, 255, 255, 0.92);
+        border-radius: 18px;
+        box-shadow: 0 8px 32px rgba(124, 92, 74, 0.1);
+        backdrop-filter: blur(10px);
+        position: relative;
+        width: calc(100% - 40px);
+        box-sizing: border-box;
+      }
+
+      .saglikli-besinler-header {
+        text-align: center;
+        margin-bottom: 40px;
+      }
+
+      .saglikli-besinler-baslik {
+        color: #7c5c4a;
+        font-size: 2.5rem;
+        font-weight: 700;
+        letter-spacing: 2px;
+        margin-bottom: 16px;
+        text-shadow: 0 2px 4px rgba(124, 92, 74, 0.1);
+      }
+
+      .saglikli-besinler-aciklama {
+        color: #b48a78;
+        font-size: 1.1rem;
+        font-weight: 500;
+        max-width: 600px;
+        margin: 0 auto;
+        line-height: 1.6;
+      }
+
+      .saglikli-besinler-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 30px;
+        margin-top: 40px;
+      }
+
+      .saglikli-besinler-card {
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 8px 24px rgba(180, 138, 120, 0.15);
+        overflow: hidden;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        position: relative;
+      }
+
+      .saglikli-besinler-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 16px 40px rgba(180, 138, 120, 0.25);
+      }
+
+      .saglikli-besinler-card-img {
+        width: 100%;
+        height: 250px;
+        overflow: hidden;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f8f8f8;
+      }
+
+      .saglikli-besinler-card-img img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+        background: #f8f8f8;
+      }
+
+      .saglikli-besinler-card:hover .saglikli-besinler-card-img img {
+        transform: scale(1.05);
+      }
+
+      .saglikli-besinler-card-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+        padding: 20px;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+
+      .saglikli-besinler-card:hover .saglikli-besinler-card-overlay {
+        opacity: 1;
+      }
+
+      .saglikli-besinler-card-overlay h3 {
+        color: white;
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 8px;
+      }
+
+      .saglikli-besinler-card-overlay p {
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 14px;
+        margin-bottom: 5px;
+      }
+
+      .saglikli-besinler-card-bilgi {
+        padding: 24px;
+      }
+
+      .saglikli-besinler-card-baslik {
+        color: #7c5c4a;
+        font-size: 1.6rem;
+        font-weight: 700;
+        margin-bottom: 8px;
+        line-height: 1.3;
+      }
+
+      .saglikli-besinler-card-kategori {
+        color: #b48a78;
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 12px;
+      }
+
+      .saglikli-besinler-card-detaylar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .saglikli-besinler-card-sure {
+        color: #666;
+        font-size: 0.9rem;
+        background: #f5f5f5;
+        padding: 4px 8px;
+        border-radius: 12px;
+      }
+
+      .saglikli-besinler-card-zorluk {
+        color: #666;
+        font-size: 0.9rem;
+        background: #f5f5f5;
+        padding: 4px 8px;
+        border-radius: 12px;
+      }
+
+      .saglikli-besinler-card-porsiyon {
+        color: #666;
+        font-size: 0.9rem;
+        background: #f5f5f5;
+        padding: 4px 8px;
+        border-radius: 12px;
+      }
+
+      .saglikli-besinler-card-aciklama {
+        color: #666;
+        font-size: 1rem;
+        line-height: 1.5;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        margin-bottom: 15px;
+      }
+
+      .saglikli-besinler-card-besin-degerleri {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 15px;
+      }
+
+      .besin-degeri {
+        background: linear-gradient(135deg, #e8f5e8, #c8e6c9);
+        color: #2e7d32;
+        padding: 4px 8px;
+        border-radius: 12px;
+        font-size: 0.8rem;
+        font-weight: 600;
+      }
+
+      .saglikli-besinler-card-kalori {
+        display: inline-block;
+        background: linear-gradient(135deg, #e2d9d0, #b48a78);
+        color: #7c5c4a;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        font-weight: 600;
+      }
+
+      .geri-btn {
+        background: linear-gradient(135deg, #e2d9d0, #b48a78);
+        color: #7c5c4a;
+        border: none;
+        border-radius: 50%;
+        width: 45px;
+        height: 45px;
+        padding: 0;
+        font-size: 18px;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s;
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        margin: 0;
+        z-index: 1000;
+      }
+
+      .geri-btn:hover {
+        background: linear-gradient(135deg, #b48a78, #e2d9d0);
+        color: #fff;
+        transform: scale(1.1);
+      }
+
+      /* Loading göstergesi */
+      .loading-container {
+        text-align: center;
+        padding: 60px 20px;
+      }
+
+      .loading-spinner {
+        width: 50px;
+        height: 50px;
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid #b48a78;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 20px;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      .loading-container p {
+        color: #b48a78;
+        font-size: 1.1rem;
+        font-weight: 500;
+      }
+
+      /* Responsive tasarım */
+      @media (max-width: 1024px) {
+        .saglikli-besinler-container {
+          max-width: 95%;
+          padding: 24px 16px;
+          width: calc(100% - 32px);
+        }
+
+        .saglikli-besinler-grid {
+          grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+          gap: 24px;
+        }
+
+        .saglikli-besinler-baslik {
+          font-size: 2rem;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .saglikli-besinler-container {
+          max-width: 100%;
+          margin: 20px 10px;
+          padding: 20px 16px;
+          width: calc(100% - 20px);
+        }
+
+        .saglikli-besinler-grid {
+          grid-template-columns: 1fr;
+          gap: 20px;
+        }
+
+        .saglikli-besinler-baslik {
+          font-size: 1.8rem;
+        }
+
+        .geri-btn {
+          width: 40px;
+          height: 40px;
+          font-size: 16px;
+        }
+
+        .saglikli-besinler-card-img {
+          height: 200px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .saglikli-besinler-container {
+          margin: 15px 8px;
+          padding: 16px 12px;
+          width: calc(100% - 16px);
+        }
+
+        .saglikli-besinler-baslik {
+          font-size: 1.5rem;
+        }
+
+        .saglikli-besinler-card-bilgi {
+          padding: 20px;
+        }
+
+        .saglikli-besinler-card-detaylar {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <ng-include src="'components/header.html'"></ng-include>
+    <main class="main-content">
+      <div
+        class="saglikli-besinler-container"
+        ng-controller="SaglikliBesinlerController"
+      >
+        <button
+          class="geri-btn"
+          ng-click="geriDon()"
+          title="Yemekler Sayfasına Dön"
+        >
+          ←
+        </button>
+
+        <div class="saglikli-besinler-header">
+          <h1 class="saglikli-besinler-baslik">Sağlıklı Besinler</h1>
+          <p class="saglikli-besinler-aciklama">
+            Besleyici ve sağlıklı tariflerle vücudunuza iyi bakın! Vitamin,
+            mineral ve protein açısından zengin lezzetli yemekler keşfedin.
+          </p>
+        </div>
+
+        <!-- Loading göstergesi -->
+        <div class="loading-container" ng-if="loading">
+          <div class="loading-spinner"></div>
+          <p>Sağlıklı besinler yükleniyor...</p>
+        </div>
+
+        <!-- Hata göstergesi -->
+        <div class="loading-container" ng-if="error && !loading">
+          <h2 style="color: #ff4444; margin-bottom: 15px">❌ Yükleme Hatası</h2>
+          <p style="color: #666">{{error}}</p>
+          <button
+            ng-click="loadSaglikliBesinler()"
+            style="
+              background: #b48a78;
+              color: white;
+              border: none;
+              padding: 10px 20px;
+              border-radius: 8px;
+              cursor: pointer;
+              margin-top: 15px;
+            "
+          >
+            🔄 Tekrar Dene
+          </button>
+        </div>
+
+        <div class="saglikli-besinler-grid" ng-if="!loading && !error">
+          <div
+            class="saglikli-besinler-card"
+            ng-repeat="besin in saglikliBesinlerListesi"
+            ng-click="besinDetay(besin)"
+          >
+            <div class="saglikli-besinler-card-img">
+              <img ng-src="{{besin.resim}}" alt="{{besin.ad}}" />
+              <div class="saglikli-besinler-card-overlay">
+                <h3>{{besin.ad}}</h3>
+                <p>{{besin.kategori}}</p>
+                <p>{{besin.sure}} • {{besin.zorluk}}</p>
+              </div>
+            </div>
+            <div class="saglikli-besinler-card-bilgi">
+              <h3 class="saglikli-besinler-card-baslik">{{besin.ad}}</h3>
+              <p class="saglikli-besinler-card-kategori">
+                🥗 {{besin.kategori}}
+              </p>
+
+              <div class="saglikli-besinler-card-detaylar">
+                <span class="saglikli-besinler-card-sure"
+                  >⏱️ {{besin.sure}}</span
+                >
+                <span class="saglikli-besinler-card-zorluk"
+                  >🎯 {{besin.zorluk}}</span
+                >
+                <span class="saglikli-besinler-card-porsiyon"
+                  >👥 {{besin.porsiyon}}</span
+                >
+              </div>
+
+              <p class="saglikli-besinler-card-aciklama">{{besin.aciklama}}</p>
+
+              <div class="saglikli-besinler-card-besin-degerleri">
+                <span class="besin-degeri" ng-if="besin.protein"
+                  >🥩 {{besin.protein}}</span
+                >
+                <span class="besin-degeri" ng-if="besin.karbonhidrat"
+                  >🌾 {{besin.karbonhidrat}}</span
+                >
+                <span class="besin-degeri" ng-if="besin.yag"
+                  >🥑 {{besin.yag}}</span
+                >
+                <span class="besin-degeri" ng-if="besin.lif"
+                  >🌿 {{besin.lif}}</span
+                >
+              </div>
+
+              <span class="saglikli-besinler-card-kalori" ng-if="besin.kalori"
+                >{{besin.kalori}}</span
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <ng-include src="'components/footer.html'"></ng-include>
+    <button id="scrollTopBtn" title="Yukarı Çık" ng-click="scrollToTop()">
+      ↑
+    </button>
+    <script>
+      angular
+        .module("GirisApp")
+        .controller("SaglikliBesinlerController", function ($scope, $http) {
+          $scope.kullanici = JSON.parse(
+            localStorage.getItem("girisYapan") || "null"
+          );
+
+          $scope.loading = true;
+          $scope.error = null;
+          $scope.saglikliBesinlerListesi = [];
+
+          // Sağlıklı besinleri yükle fonksiyonu
+          $scope.loadSaglikliBesinler = function () {
+            $scope.loading = true;
+            $scope.error = null;
+
+            console.log("🔄 Sağlıklı besinler yükleniyor...");
+            console.log("📡 API URL: api.php?saglikli_besinler=1");
+
+            $http
+              .get("api.php?saglikli_besinler=1")
+              .then(function (response) {
+                console.log("✅ API yanıtı:", response);
+                console.log("📊 Gelen veri:", response.data);
+                $scope.saglikliBesinlerListesi = response.data;
+                $scope.loading = false;
+                console.log(
+                  "🥗 Yüklenen besin sayısı:",
+                  $scope.saglikliBesinlerListesi.length
+                );
+              })
+              .catch(function (error) {
+                console.error("❌ API hatası:", error);
+                console.error("🔍 Hata detayları:", error.data);
+                $scope.error =
+                  "Sağlıklı besinler yüklenirken hata oluştu: " +
+                  (error.data ? error.data.message : error.statusText);
+                $scope.loading = false;
+              });
+          };
+
+          // İlk yükleme
+          $scope.loadSaglikliBesinler();
+
+          $scope.besinDetay = function (besin) {
+            // Besin detay sayfasına yönlendirme
+            window.location.href =
+              "saglikli-besinler-detay.html?id=" + besin.id;
+          };
+
+          $scope.geriDon = function () {
+            window.location.href = "yemekler.html";
+          };
+
+          $scope.scrollToTop = function () {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          };
+        });
+    </script>
+  </body>
+</html>

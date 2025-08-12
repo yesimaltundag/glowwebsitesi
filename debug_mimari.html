@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="tr" ng-app="GirisApp">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mimari Debug - GLOW</title>
+    <link rel="stylesheet" href="assets/css/style.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="assets/js/app.js"></script>
+    <style>
+      .debug-container {
+        max-width: 1200px;
+        margin: 40px auto;
+        padding: 32px 40px;
+        background: rgba(255, 255, 255, 0.92);
+        border-radius: 18px;
+        box-shadow: 0 8px 32px rgba(124, 92, 74, 0.1);
+        backdrop-filter: blur(10px);
+      }
+
+      .debug-section {
+        margin-bottom: 30px;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        background: #f9f9f9;
+      }
+
+      .debug-title {
+        color: #7c5c4a;
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 15px;
+      }
+
+      .debug-info {
+        background: white;
+        padding: 15px;
+        border-radius: 5px;
+        margin: 10px 0;
+        border-left: 4px solid #b48a78;
+      }
+
+      .debug-error {
+        background: #ffe6e6;
+        padding: 15px;
+        border-radius: 5px;
+        margin: 10px 0;
+        border-left: 4px solid #ff4444;
+        color: #cc0000;
+      }
+
+      .debug-success {
+        background: #e6ffe6;
+        padding: 15px;
+        border-radius: 5px;
+        margin: 10px 0;
+        border-left: 4px solid #44ff44;
+        color: #006600;
+      }
+
+      .data-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+      }
+
+      .data-table th,
+      .data-table td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+      }
+
+      .data-table th {
+        background-color: #f2f2f2;
+        font-weight: bold;
+      }
+
+      .data-table tr:nth-child(even) {
+        background-color: #f9f9f9;
+      }
+
+      .data-table tr:hover {
+        background-color: #f5f5f5;
+      }
+
+      .loading-spinner {
+        width: 30px;
+        height: 30px;
+        border: 3px solid #f3f3f3;
+        border-top: 3px solid #b48a78;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        display: inline-block;
+        margin-right: 10px;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <ng-include src="'components/header.html'"></ng-include>
+    <main class="main-content">
+      <div class="debug-container" ng-controller="MimariController">
+        <h1 style="text-align: center; color: #7c5c4a; margin-bottom: 30px">
+          🔍 Mimari Debug Sayfası
+        </h1>
+
+        <!-- Controller Durumu -->
+        <div class="debug-section">
+          <h2 class="debug-title">📊 Controller Durumu</h2>
+          <div class="debug-info">
+            <strong>Loading Durumu:</strong>
+            <span ng-if="loading" style="color: #ff6600">
+              <div class="loading-spinner"></div>
+              Yükleniyor...
+            </span>
+            <span ng-if="!loading" style="color: #006600">✅ Tamamlandı</span>
+          </div>
+          <div class="debug-info">
+            <strong>Veri Sayısı:</strong> {{mimariEserler.length}} adet eser
+          </div>
+          <div class="debug-info">
+            <strong>Kullanıcı Durumu:</strong> {{kullanici ? 'Giriş yapılmış' :
+            'Giriş yapılmamış'}}
+          </div>
+        </div>
+
+        <!-- API Test -->
+        <div class="debug-section">
+          <h2 class="debug-title">🔧 API Test</h2>
+          <div class="debug-info">
+            <strong>API URL:</strong> api.php?mimari=1
+          </div>
+          <button
+            ng-click="loadMimariEserler()"
+            style="
+              background: #b48a78;
+              color: white;
+              border: none;
+              padding: 10px 20px;
+              border-radius: 5px;
+              cursor: pointer;
+              margin: 10px 0;
+            "
+          >
+            🔄 Verileri Yeniden Yükle
+          </button>
+          <div ng-if="apiError" class="debug-error">
+            <strong>❌ API Hatası:</strong> {{apiError}}
+          </div>
+        </div>
+
+        <!-- Veri Detayları -->
+        <div class="debug-section">
+          <h2 class="debug-title">📋 Veri Detayları</h2>
+          <div ng-if="mimariEserler.length > 0" class="debug-success">
+            <strong>✅ Veriler başarıyla yüklendi!</strong>
+          </div>
+          <div
+            ng-if="mimariEserler.length === 0 && !loading"
+            class="debug-error"
+          >
+            <strong>❌ Veri bulunamadı!</strong>
+          </div>
+
+          <table class="data-table" ng-if="mimariEserler.length > 0">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Ad</th>
+                <th>Mimar</th>
+                <th>Tarih</th>
+                <th>Yer</th>
+                <th>Stil</th>
+                <th>Resim URL</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="eser in mimariEserler">
+                <td>{{eser.id}}</td>
+                <td>{{eser.ad}}</td>
+                <td>{{eser.mimar}}</td>
+                <td>{{eser.tarih}}</td>
+                <td>{{eser.yer}}</td>
+                <td>{{eser.stil}}</td>
+                <td style="max-width: 200px; word-break: break-all">
+                  {{eser.resim}}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Ham Veri -->
+        <div class="debug-section">
+          <h2 class="debug-title">📄 Ham Veri (JSON)</h2>
+          <pre
+            style="
+              background: #f5f5f5;
+              padding: 15px;
+              border-radius: 5px;
+              overflow-x: auto;
+              max-height: 400px;
+            "
+          >
+{{mimariEserler | json}}</pre
+          >
+        </div>
+
+        <!-- Test Linkleri -->
+        <div class="debug-section">
+          <h2 class="debug-title">🔗 Test Linkleri</h2>
+          <div class="debug-info">
+            <a
+              href="mimari.html"
+              target="_blank"
+              style="color: #b48a78; text-decoration: none; font-weight: bold"
+              >🏗️ Ana Mimari Sayfası</a
+            >
+          </div>
+          <div class="debug-info">
+            <a
+              href="api.php?mimari=1"
+              target="_blank"
+              style="color: #b48a78; text-decoration: none; font-weight: bold"
+              >🔧 API Endpoint</a
+            >
+          </div>
+          <div class="debug-info">
+            <a
+              href="test_mimari_api.php"
+              target="_blank"
+              style="color: #b48a78; text-decoration: none; font-weight: bold"
+              >🧪 API Test Sayfası</a
+            >
+          </div>
+        </div>
+      </div>
+    </main>
+    <ng-include src="'components/footer.html'"></ng-include>
+  </body>
+</html>

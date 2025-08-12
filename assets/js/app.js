@@ -29,6 +29,25 @@ angular
       );
     };
   })
+  .filter("saniyeToDakika", function () {
+    return function (saniye) {
+      if (!saniye) return "N/A";
+
+      // Eğer zaten dakika:saniye formatındaysa (örn: "3:45")
+      if (typeof saniye === "string" && saniye.includes(":")) {
+        return saniye;
+      }
+
+      // Eğer sayıysa saniye olarak kabul et
+      if (!isNaN(saniye)) {
+        var dakika = Math.floor(saniye / 60);
+        var kalanSaniye = saniye % 60;
+        return dakika + ":" + (kalanSaniye < 10 ? "0" : "") + kalanSaniye;
+      }
+
+      return "N/A";
+    };
+  })
 
   // ===== MAIN CONTROLLER =====
   .controller("MainController", function ($scope, $http) {
@@ -2144,6 +2163,131 @@ angular
 
     // Sayfa yüklendiğinde mesajları getir
     $scope.mesajlariGetir();
+  })
+
+  // ===== MİMARİ CONTROLLER =====
+  .controller("MimariController", function ($scope, $http) {
+    $scope.kullanici = JSON.parse(localStorage.getItem("girisYapan") || "null");
+
+    $scope.mimariEserler = [];
+    $scope.loading = true;
+    $scope.apiError = null;
+
+    // Veritabanından mimari eserleri yükle
+    $scope.loadMimariEserler = function () {
+      $scope.loading = true;
+      $scope.apiError = null;
+
+      console.log("🔄 Mimari eserler yükleniyor...");
+      console.log("📡 API URL: api.php?mimari=1");
+
+      $http
+        .get("api.php?mimari=1")
+        .then(function (response) {
+          console.log("📥 API yanıtı alındı:", response);
+          console.log("📊 Response data:", response.data);
+
+          if (response.data && Array.isArray(response.data)) {
+            $scope.mimariEserler = response.data;
+            console.log("✅ Mimari eserler yüklendi:", $scope.mimariEserler);
+            console.log(
+              "📈 Yüklenen eser sayısı:",
+              $scope.mimariEserler.length
+            );
+          } else {
+            console.warn("⚠️ API yanıtı array değil:", response.data);
+            $scope.mimariEserler = [];
+          }
+
+          $scope.loading = false;
+        })
+        .catch(function (error) {
+          console.error("❌ Mimari eserler yüklenirken hata:", error);
+          console.error("🔍 Hata detayları:", {
+            status: error.status,
+            statusText: error.statusText,
+            data: error.data,
+            config: error.config,
+          });
+
+          $scope.loading = false;
+          $scope.apiError = error.statusText || "API bağlantı hatası";
+
+          // Hata durumunda varsayılan verileri kullan
+          $scope.mimariEserler = [
+            {
+              id: 1,
+              ad: "Tac Mahal",
+              mimar: "Ustad Ahmad Lahauri",
+              tarih: "1632-1653",
+              yer: "Agra, Hindistan",
+              stil: "Mughal Mimari",
+              aciklama:
+                "Beyaz mermerden inşa edilmiş bu muhteşem anıt mezar, dünya mimarisinin en güzel örneklerinden biridir.",
+              resim:
+                "https://images.unsplash.com/photo-1564507592333-c60657eea523?w=800&h=600&fit=crop",
+            },
+          ];
+        });
+    };
+
+    // Sayfa yüklendiğinde verileri yükle
+    $scope.loadMimariEserler();
+
+    $scope.eserDetay = function (eser) {
+      // Eser detay sayfasına yönlendirme
+      window.location.href = "mimari-detay.html?id=" + eser.id;
+    };
+
+    $scope.geriDon = function () {
+      window.location.href = "sanat-kategoriler.html";
+    };
+
+    $scope.scrollToTop = function () {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    };
+  })
+
+  // ===== MİMARİ DETAY CONTROLLER =====
+  .controller("MimariDetayController", function ($scope, $http, $location) {
+    $scope.kullanici = JSON.parse(localStorage.getItem("girisYapan") || "null");
+
+    $scope.eser = null;
+    $scope.loading = true;
+
+    // URL'den eser ID'sini al
+    var urlParams = new URLSearchParams(window.location.search);
+    var eserId = urlParams.get("id");
+
+    if (eserId) {
+      // Veritabanından eser detayını yükle
+      $http
+        .get("api.php?mimari=1&id=" + eserId)
+        .then(function (response) {
+          $scope.eser = response.data;
+          $scope.loading = false;
+          console.log("✅ Eser detayı yüklendi:", $scope.eser);
+
+          // Sayfa başlığını güncelle
+          document.title = $scope.eser.ad + " - Mimari Detay - GLOW";
+        })
+        .catch(function (error) {
+          console.error("❌ Eser detayı yüklenirken hata:", error);
+          $scope.loading = false;
+          $scope.eser = null;
+        });
+    } else {
+      $scope.loading = false;
+      $scope.eser = null;
+    }
+
+    $scope.geriDon = function () {
+      window.location.href = "mimari.html";
+    };
+
+    $scope.scrollToTop = function () {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    };
   });
 
 // ===== UTILITY FUNCTIONS =====

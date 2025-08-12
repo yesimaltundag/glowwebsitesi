@@ -224,6 +224,37 @@
           max-width: 100%;
         }
       }
+
+      /* Loading göstergesi */
+      .loading-container {
+        text-align: center;
+        padding: 60px 20px;
+      }
+
+      .loading-spinner {
+        width: 50px;
+        height: 50px;
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid #b48a78;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 20px;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      .loading-container p {
+        color: #b48a78;
+        font-size: 1.1rem;
+        font-weight: 500;
+      }
     </style>
   </head>
   <body>
@@ -245,7 +276,33 @@
             incele.
           </p>
         </div>
-        <div class="mimari-grid">
+        <!-- Loading göstergesi -->
+        <div class="loading-container" ng-if="loading">
+          <div class="loading-spinner"></div>
+          <p>Mimari eserler yükleniyor...</p>
+        </div>
+
+        <!-- Hata göstergesi -->
+        <div class="loading-container" ng-if="apiError && !loading">
+          <h2 style="color: #ff4444; margin-bottom: 15px">❌ Yükleme Hatası</h2>
+          <p style="color: #666">{{apiError}}</p>
+          <button
+            ng-click="loadMimariEserler()"
+            style="
+              background: #b48a78;
+              color: white;
+              border: none;
+              padding: 10px 20px;
+              border-radius: 8px;
+              cursor: pointer;
+              margin-top: 15px;
+            "
+          >
+            🔄 Tekrar Dene
+          </button>
+        </div>
+
+        <div class="mimari-grid" ng-if="!loading && !apiError">
           <div
             class="mimari-card"
             ng-repeat="eser in mimariEserler"
@@ -274,138 +331,5 @@
     <button id="scrollTopBtn" title="Yukarı Çık" ng-click="scrollToTop()">
       ↑
     </button>
-    <script>
-      angular
-        .module("GirisApp")
-        .controller("MimariController", function ($scope) {
-          $scope.kullanici = JSON.parse(
-            localStorage.getItem("girisYapan") || "null"
-          );
-
-          $scope.mimariEserler = [
-            {
-              id: 1,
-              ad: "Tac Mahal",
-              mimar: "Ustad Ahmad Lahauri",
-              tarih: "1632-1653",
-              yer: "Agra, Hindistan",
-              stil: "Mughal Mimari",
-              aciklama:
-                "Beyaz mermerden inşa edilmiş bu muhteşem anıt mezar, dünya mimarisinin en güzel örneklerinden biridir. Şah Cihan'ın eşi Mümtaz Mahal için yaptırdığı bu eser, aşkın ve sanatın mükemmel birleşimidir.",
-              resim:
-                "https://images.unsplash.com/photo-1564507592333-c60657eea523?w=800&h=600&fit=crop",
-            },
-            {
-              id: 2,
-              ad: "Sagrada Familia",
-              mimar: "Antoni Gaudí",
-              tarih: "1882-günümüz",
-              yer: "Barselona, İspanya",
-              stil: "Art Nouveau",
-              aciklama:
-                "Gaudí'nin en büyük eseri olan bu katedral, doğal formlardan ilham alan organik mimarinin en etkileyici örneğidir. Hala inşaat halinde olan yapı, modern mimarinin başyapıtlarından biridir.",
-              resim:
-                "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=600&fit=crop",
-            },
-            {
-              id: 3,
-              ad: "Parthenon",
-              mimar: "Iktinos ve Kallikrates",
-              tarih: "MÖ 447-432",
-              yer: "Atina, Yunanistan",
-              stil: "Klasik Yunan",
-              aciklama:
-                "Antik Yunan mimarisinin en mükemmel örneği olan Parthenon, orantı ve simetri prensiplerinin en güzel uygulamasıdır. Athena Parthenos tapınağı olarak inşa edilmiştir.",
-              resim:
-                "https://images.unsplash.com/photo-1555992336-03a23c7b20ee?w=800&h=600&fit=crop",
-            },
-            {
-              id: 4,
-              ad: "Notre-Dame Katedrali",
-              mimar: "Bilinmeyen",
-              tarih: "1163-1345",
-              yer: "Paris, Fransa",
-              stil: "Gotik",
-              aciklama:
-                "Fransız Gotik mimarisinin en önemli örneği olan Notre-Dame, Paris'in kalbinde yükselen muhteşem bir dini yapıdır. Gül pencereleri ve uçan payandalarıyla ünlüdür.",
-              resim:
-                "https://images.unsplash.com/photo-1502602898534-8610c9d0b1a3?w=800&h=600&fit=crop",
-            },
-            {
-              id: 5,
-              ad: "Sydney Opera House",
-              mimar: "Jørn Utzon",
-              tarih: "1959-1973",
-              yer: "Sydney, Avustralya",
-              stil: "Modern Ekspresyonist",
-              aciklama:
-                "Deniz kabuklarından ilham alan bu ikonik yapı, modern mimarinin en tanınmış örneklerinden biridir. UNESCO Dünya Mirası Listesi'nde yer alan opera binası, Sydney'in simgesi haline gelmiştir.",
-              resim:
-                "https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?w=800&h=600&fit=crop",
-            },
-            {
-              id: 6,
-              ad: "Petra Antik Kenti",
-              mimar: "Nabateanlar",
-              tarih: "MÖ 4. yüzyıl",
-              yer: "Ürdün",
-              stil: "Nabatean",
-              aciklama:
-                "Kaya içine oyulmuş bu antik kent, ticaret yollarının kesişim noktasında kurulmuştur. El-Khazneh (Hazine) binası, kentin en etkileyici yapısıdır ve Helenistik mimari özellikler taşır.",
-              resim:
-                "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=600&fit=crop",
-            },
-            {
-              id: 7,
-              ad: "Colosseum",
-              mimar: "Bilinmeyen",
-              tarih: "MS 70-80",
-              yer: "Roma, İtalya",
-              stil: "Roma İmparatorluk",
-              aciklama:
-                "Antik Roma'nın en büyük amfitiyatrosu olan Colosseum, gladyatör dövüşleri ve halk gösterileri için inşa edilmiştir. Roma mimarisinin mühendislik harikasıdır.",
-              resim:
-                "https://images.unsplash.com/photo-1552832230-c0197dd311b5?w=800&h=600&fit=crop",
-            },
-            {
-              id: 8,
-              ad: "Angkor Wat",
-              mimar: "Suryavarman II",
-              tarih: "12. yüzyıl",
-              yer: "Siem Reap, Kamboçya",
-              stil: "Khmer",
-              aciklama:
-                "Dünyanın en büyük dini yapısı olan Angkor Wat, Hindu tanrısı Vishnu'ya adanmıştır. Karmaşık kabartmaları ve kuleleriyle Khmer mimarisinin en mükemmel örneğidir.",
-              resim:
-                "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=600&fit=crop",
-            },
-            {
-              id: 9,
-              ad: "Burj Khalifa",
-              mimar: "Adrian Smith",
-              tarih: "2004-2010",
-              yer: "Dubai, BAE",
-              stil: "Modern",
-              aciklama:
-                "828 metre yüksekliğindeki Burj Khalifa, dünyanın en yüksek binasıdır. İslami geometrik desenlerden ilham alan tasarımı, modern teknoloji ile geleneksel estetiği birleştirir.",
-              resim:
-                "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=800&h=600&fit=crop",
-            },
-          ];
-
-          $scope.eserDetay = function (eser) {
-            // Eser detay sayfasına yönlendirme
-            alert(eser.ad + " hakkında detaylı bilgi yakında eklenecek!");
-          };
-
-          $scope.geriDon = function () {
-            window.location.href = "sanat-kategoriler.html";
-          };
-
-          $scope.scrollToTop = function () {
-            window.scrollTo({ top: 0, behavior: "smooth" });
-          };
-        });
-    </script>
   </body>
 </html>

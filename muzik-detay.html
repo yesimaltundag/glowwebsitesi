@@ -109,7 +109,28 @@
         color: #b48a78;
         font-size: 0.9rem;
         font-weight: 500;
+        margin-bottom: 8px;
+      }
+      .sarki-aciklama {
+        color: #7c5c4a;
+        font-size: 0.9rem;
+        font-weight: 400;
+        line-height: 1.4;
         margin-bottom: 12px;
+        font-style: italic;
+      }
+      .sarki-detaylar {
+        margin-top: 12px;
+        padding-top: 12px;
+        border-top: 1px solid rgba(180, 138, 120, 0.2);
+      }
+      .sarki-enstrumanlar,
+      .sarki-album {
+        color: #b48a78;
+        font-size: 0.8rem;
+        font-weight: 500;
+        margin-bottom: 4px;
+        line-height: 1.3;
       }
       .sarki-ozellikler {
         display: flex;
@@ -198,7 +219,7 @@
             {{seciliTur.ad}} türünün en popüler ve güncel şarkılarını keşfet!
           </p>
         </div>
-        <div class="sarki-grid">
+        <div class="sarki-grid" ng-if="!loading && !error">
           <div
             class="sarki-card"
             ng-repeat="sarki in sarkilar"
@@ -206,20 +227,39 @@
           >
             <img
               class="sarki-icon"
-              ng-src="{{sarki.fotograf}}"
-              alt="{{sarki.baslik}}"
+              ng-src="{{sarki.foto_url}}"
+              alt="{{sarki.muzik_adi}}"
               onerror="this.src='https://via.placeholder.com/80x80/7c5c4a/ffffff?text=🎵'"
             />
             <div class="sarki-bilgi">
-              <h3 class="sarki-baslik">{{sarki.baslik}}</h3>
+              <h3 class="sarki-baslik">{{sarki.muzik_adi}}</h3>
               <p class="sarki-sanatci">{{sarki.sanatci}}</p>
-              <p class="sarki-yil">{{sarki.yil}}</p>
-              <div class="sarki-ozellikler">
-                <span class="sarki-tag" ng-repeat="ozellik in sarki.ozellikler"
-                  >{{ozellik}}</span
-                >
-              </div>
+              <p class="sarki-yil">
+                {{sarki.yayin_yili}} • {{sarki.sure | saniyeToDakika}}
+              </p>
+              <p class="sarki-aciklama" ng-if="sarki.aciklama">
+                {{sarki.aciklama}}
+              </p>
             </div>
+          </div>
+        </div>
+
+        <!-- Loading göstergesi -->
+        <div ng-if="loading" style="text-align: center; padding: 40px">
+          <div style="font-size: 2rem; margin-bottom: 20px">🎵</div>
+          <div style="color: #7c5c4a; font-size: 1.2rem; font-weight: 600">
+            Şarkılar yükleniyor...
+          </div>
+        </div>
+
+        <!-- Hata mesajı -->
+        <div ng-if="error" style="text-align: center; padding: 40px">
+          <div style="font-size: 2rem; margin-bottom: 20px">❌</div>
+          <div style="color: #7c5c4a; font-size: 1.2rem; font-weight: 600">
+            {{error}}
+          </div>
+          <div style="color: #b48a78; font-size: 1rem; margin-top: 10px">
+            Lütfen sayfayı yenileyin veya daha sonra tekrar deneyin.
           </div>
         </div>
       </div>
@@ -231,708 +271,169 @@
     <script>
       angular
         .module("GirisApp")
-        .controller("MuzikDetayController", function ($scope, $location) {
-          $scope.kullanici = JSON.parse(
-            localStorage.getItem("girisYapan") || "null"
-          );
-
-          // URL'den müzik türü ID'sini al
-          const urlParams = new URLSearchParams(window.location.search);
-          const turId = urlParams.get("tur");
-
-          // Müzik türleri verileri
-          const muzikTurleri = [
-            {
-              id: "klasik",
-              ad: "Klasik Müzik",
-              icon: "🎼",
-            },
-            {
-              id: "jazz",
-              ad: "Jazz",
-              icon: "🎷",
-            },
-            {
-              id: "rock",
-              ad: "Rock",
-              icon: "🎸",
-            },
-            {
-              id: "pop",
-              ad: "Pop Müzik",
-              icon: "🎤",
-            },
-            {
-              id: "folk",
-              ad: "Halk Müziği",
-              icon: "🪕",
-            },
-            {
-              id: "elektronik",
-              ad: "Elektronik Müzik",
-              icon: "🎛️",
-            },
-            {
-              id: "blues",
-              ad: "Blues",
-              icon: "🎵",
-            },
-            {
-              id: "country",
-              ad: "Country",
-              icon: "🤠",
-            },
-            {
-              id: "reggae",
-              ad: "Reggae",
-              icon: "🌴",
-            },
-            {
-              id: "hiphop",
-              ad: "Hip Hop",
-              icon: "🎧",
-            },
-            {
-              id: "world",
-              ad: "Dünya Müziği",
-              icon: "🌍",
-            },
-            {
-              id: "ambient",
-              ad: "Ambient",
-              icon: "🌌",
-            },
-          ];
-
-          // Seçilen türü bul
-          $scope.seciliTur =
-            muzikTurleri.find((tur) => tur.id === turId) || muzikTurleri[0];
-
-          // Şarkı verileri - her tür için 6 şarkı
-          const sarkiVerileri = {
-            klasik: [
-              {
-                baslik: "Moonlight Sonata",
-                sanatci: "Ludwig van Beethoven",
-                yil: "1801",
-                ozellikler: ["Piyano", "Romantik", "Klasik"],
-                fotograf:
-                  "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=80&h=80&fit=crop&crop=center",
-              },
-              {
-                baslik: "Symphony No. 5",
-                sanatci: "Ludwig van Beethoven",
-                yil: "1808",
-                ozellikler: ["Orkestra", "Senfoni", "Klasik"],
-                fotograf:
-                  "https://images.unsplash.com/photo-1516280440614-37939bbacd81?w=80&h=80&fit=crop&crop=center",
-              },
-              {
-                baslik: "The Four Seasons",
-                sanatci: "Antonio Vivaldi",
-                yil: "1723",
-                ozellikler: ["Keman", "Barok", "Klasik"],
-                fotograf:
-                  "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=80&h=80&fit=crop&crop=center",
-              },
-              {
-                baslik: "Eine kleine Nachtmusik",
-                sanatci: "Wolfgang Amadeus Mozart",
-                yil: "1787",
-                ozellikler: ["Oda Müziği", "Klasik", "Mozart"],
-                fotograf:
-                  "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=80&h=80&fit=crop&crop=center",
-              },
-              {
-                baslik: "Toccata and Fugue",
-                sanatci: "Johann Sebastian Bach",
-                yil: "1704",
-                ozellikler: ["Org", "Barok", "Klasik"],
-                fotograf:
-                  "https://images.unsplash.com/photo-1516280440614-37939bbacd81?w=80&h=80&fit=crop&crop=center",
-              },
-              {
-                baslik: "Prelude in C Major",
-                sanatci: "Johann Sebastian Bach",
-                yil: "1722",
-                ozellikler: ["Piyano", "Barok", "Klasik"],
-                fotograf:
-                  "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=80&h=80&fit=crop&crop=center",
-              },
-            ],
-            jazz: [
-              {
-                baslik: "Take Five",
-                sanatci: "Dave Brubeck Quartet",
-                yil: "1959",
-                ozellikler: ["Saksofon", "Cool Jazz", "Jazz"],
-                fotograf:
-                  "https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=80&h=80&fit=crop&crop=center",
-              },
-              {
-                baslik: "So What",
-                sanatci: "Miles Davis",
-                yil: "1959",
-                ozellikler: ["Trompet", "Modal Jazz", "Jazz"],
-                fotograf:
-                  "https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=80&h=80&fit=crop&crop=center",
-              },
-              {
-                baslik: "What a Wonderful World",
-                sanatci: "Louis Armstrong",
-                yil: "1967",
-                ozellikler: ["Vokal", "Trompet", "Jazz"],
-                fotograf:
-                  "https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=80&h=80&fit=crop&crop=center",
-              },
-              {
-                baslik: "Take the A Train",
-                sanatci: "Duke Ellington",
-                yil: "1941",
-                ozellikler: ["Big Band", "Swing", "Jazz"],
-                fotograf:
-                  "https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=80&h=80&fit=crop&crop=center",
-              },
-              {
-                baslik: "Blue in Green",
-                sanatci: "Miles Davis",
-                yil: "1959",
-                ozellikler: ["Modal Jazz", "Trompet", "Jazz"],
-                fotograf:
-                  "https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=80&h=80&fit=crop&crop=center",
-              },
-              {
-                baslik: "Giant Steps",
-                sanatci: "John Coltrane",
-                yil: "1960",
-                ozellikler: ["Saksofon", "Bebop", "Jazz"],
-                fotograf:
-                  "https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=80&h=80&fit=crop&crop=center",
-              },
-            ],
-            rock: [
-              {
-                baslik: "Bohemian Rhapsody",
-                sanatci: "Queen",
-                yil: "1975",
-                ozellikler: ["Progressive", "Rock Opera", "Rock"],
-                fotograf:
-                  "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=80&h=80&fit=crop&crop=center",
-              },
-              {
-                baslik: "Stairway to Heaven",
-                sanatci: "Led Zeppelin",
-                yil: "1971",
-                ozellikler: ["Hard Rock", "Gitar", "Rock"],
-                fotograf:
-                  "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=80&h=80&fit=crop&crop=center",
-              },
-              {
-                baslik: "Hotel California",
-                sanatci: "Eagles",
-                yil: "1976",
-                ozellikler: ["Soft Rock", "Gitar", "Rock"],
-                fotograf:
-                  "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=80&h=80&fit=crop&crop=center",
-              },
-              {
-                baslik: "Sweet Child O' Mine",
-                sanatci: "Guns N' Roses",
-                yil: "1987",
-                ozellikler: ["Hard Rock", "Gitar", "Rock"],
-                fotograf:
-                  "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=80&h=80&fit=crop&crop=center",
-              },
-              {
-                baslik: "Smells Like Teen Spirit",
-                sanatci: "Nirvana",
-                yil: "1991",
-                ozellikler: ["Grunge", "Alternative", "Rock"],
-                fotograf:
-                  "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=80&h=80&fit=crop&crop=center",
-              },
-              {
-                baslik: "Wonderwall",
-                sanatci: "Oasis",
-                yil: "1995",
-                ozellikler: ["Britpop", "Alternative", "Rock"],
-                fotograf:
-                  "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=80&h=80&fit=crop&crop=center",
-              },
-            ],
-            pop: [
-              {
-                baslik: "Blinding Lights",
-                sanatci: "The Weeknd",
-                yil: "2019",
-                ozellikler: ["Synthwave", "Pop", "Modern"],
-                fotograf:
-                  "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=80&h=80&fit=crop&crop=center",
-              },
-              {
-                baslik: "Levitating",
-                sanatci: "Dua Lipa",
-                yil: "2020",
-                ozellikler: ["Disco Pop", "Dance", "Pop"],
-                fotograf:
-                  "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=80&h=80&fit=crop&crop=center",
-              },
-              {
-                baslik: "As It Was",
-                sanatci: "Harry Styles",
-                yil: "2022",
-                ozellikler: ["Pop Rock", "Synth", "Pop"],
-                fotograf:
-                  "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=80&h=80&fit=crop&crop=center",
-              },
-              {
-                baslik: "Flowers",
-                sanatci: "Miley Cyrus",
-                yil: "2023",
-                ozellikler: ["Pop", "Disco", "Modern"],
-                fotograf:
-                  "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=80&h=80&fit=crop&crop=center",
-              },
-              {
-                baslik: "Vampire",
-                sanatci: "Olivia Rodrigo",
-                yil: "2023",
-                ozellikler: ["Pop Rock", "Alternative", "Pop"],
-                fotograf:
-                  "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=80&h=80&fit=crop&crop=center",
-              },
-              {
-                baslik: "Cruel Summer",
-                sanatci: "Taylor Swift",
-                yil: "2019",
-                ozellikler: ["Pop", "Synth", "Modern"],
-                fotograf:
-                  "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=80&h=80&fit=crop&crop=center",
-              },
-            ],
-            folk: [
-              {
-                baslik: "The Sound of Silence",
-                sanatci: "Simon & Garfunkel",
-                yil: "1964",
-                ozellikler: ["Folk Rock", "Akustik", "Folk"],
-                fotograf:
-                  "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=80&h=80&fit=crop&crop=center",
-              },
-              {
-                baslik: "Blowin' in the Wind",
-                sanatci: "Bob Dylan",
-                yil: "1963",
-                ozellikler: ["Folk", "Protest", "Folk"],
-                fotograf:
-                  "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=80&h=80&fit=crop&crop=center",
-              },
-              {
-                baslik: "House of the Rising Sun",
-                sanatci: "The Animals",
-                yil: "1964",
-                ozellikler: ["Folk Rock", "Blues", "Folk"],
-                fotograf:
-                  "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=80&h=80&fit=crop&crop=center",
-              },
-              {
-                baslik: "Scarborough Fair",
-                sanatci: "Simon & Garfunkel",
-                yil: "1966",
-                ozellikler: ["Folk", "Traditional", "Folk"],
-                fotograf:
-                  "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=80&h=80&fit=crop&crop=center",
-              },
-              {
-                baslik: "Mr. Tambourine Man",
-                sanatci: "Bob Dylan",
-                yil: "1965",
-                ozellikler: ["Folk Rock", "Poetic", "Folk"],
-                fotograf:
-                  "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=80&h=80&fit=crop&crop=center",
-              },
-              {
-                baslik: "California Dreamin'",
-                sanatci: "The Mamas & The Papas",
-                yil: "1965",
-                ozellikler: ["Folk Rock", "Pop", "Folk"],
-                fotograf:
-                  "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=80&h=80&fit=crop&crop=center",
-              },
-            ],
-            elektronik: [
-              {
-                baslik: "Strobe",
-                sanatci: "Deadmau5",
-                yil: "2009",
-                ozellikler: ["Progressive House", "Electronic", "Dance"],
-                fotograf:
-                  "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=80&h=80&fit=crop&crop=center",
-              },
-              {
-                baslik: "Levels",
-                sanatci: "Avicii",
-                yil: "2011",
-                ozellikler: ["House", "EDM", "Electronic"],
-                fotograf:
-                  "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=80&h=80&fit=crop&crop=center",
-              },
-              {
-                baslik: "Animals",
-                sanatci: "Martin Garrix",
-                yil: "2013",
-                ozellikler: ["Big Room", "EDM", "Electronic"],
-                fotograf:
-                  "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=80&h=80&fit=crop&crop=center",
-              },
-              {
-                baslik: "Faded",
-                sanatci: "Alan Walker",
-                yil: "2015",
-                ozellikler: ["Progressive House", "Vocal", "Electronic"],
-                fotograf:
-                  "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=80&h=80&fit=crop&crop=center",
-              },
-              {
-                baslik: "Clarity",
-                sanatci: "Zedd ft. Foxes",
-                yil: "2012",
-                ozellikler: ["House", "Vocal", "Electronic"],
-                fotograf:
-                  "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=80&h=80&fit=crop&crop=center",
-              },
-              {
-                baslik: "Wake Me Up",
-                sanatci: "Avicii",
-                yil: "2013",
-                ozellikler: ["Folk House", "EDM", "Electronic"],
-                fotograf:
-                  "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=80&h=80&fit=crop&crop=center",
-              },
-            ],
-            blues: [
-              {
-                baslik: "The Thrill Is Gone",
-                sanatci: "B.B. King",
-                yil: "1969",
-                ozellikler: ["Blues", "Guitar", "Blues"],
-                fotograf:
-                  "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=80&h=80&fit=crop&crop=center",
-              },
-              {
-                baslik: "Hoochie Coochie Man",
-                sanatci: "Muddy Waters",
-                yil: "1954",
-                ozellikler: ["Chicago Blues", "Harmonica", "Blues"],
-                fotograf:
-                  "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=80&h=80&fit=crop&crop=center",
-              },
-              {
-                baslik: "Red House",
-                sanatci: "Jimi Hendrix",
-                yil: "1967",
-                ozellikler: ["Blues Rock", "Guitar", "Blues"],
-                fotograf:
-                  "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=80&h=80&fit=crop&crop=center",
-              },
-              {
-                baslik: "Born Under a Bad Sign",
-                sanatci: "Albert King",
-                yil: "1967",
-                ozellikler: ["Blues", "Guitar", "Blues"],
-                fotograf:
-                  "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=80&h=80&fit=crop&crop=center",
-              },
-              {
-                baslik: "Pride and Joy",
-                sanatci: "Stevie Ray Vaughan",
-                yil: "1983",
-                ozellikler: ["Texas Blues", "Guitar", "Blues"],
-                fotograf:
-                  "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=80&h=80&fit=crop&crop=center",
-              },
-              {
-                baslik: "Sweet Home Chicago",
-                sanatci: "Robert Johnson",
-                yil: "1936",
-                ozellikler: ["Delta Blues", "Guitar", "Blues"],
-                fotograf:
-                  "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=80&h=80&fit=crop&crop=center",
-              },
-            ],
-            country: [
-              {
-                baslik: "Old Town Road",
-                sanatci: "Lil Nas X ft. Billy Ray Cyrus",
-                yil: "2019",
-                ozellikler: ["Country Rap", "Trap", "Country"],
-                fotograf:
-                  "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=80&h=80&fit=crop&crop=center",
-              },
-              {
-                baslik: "The Bones",
-                sanatci: "Maren Morris",
-                yil: "2019",
-                ozellikler: ["Country Pop", "Vocal", "Country"],
-                fotograf:
-                  "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=80&h=80&fit=crop&crop=center",
-              },
-              {
-                baslik: "Tennessee Whiskey",
-                sanatci: "Chris Stapleton",
-                yil: "2015",
-                ozellikler: ["Country Soul", "Vocal", "Country"],
-                fotograf:
-                  "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=80&h=80&fit=crop&crop=center",
-              },
-              {
-                baslik: "Die a Happy Man",
-                sanatci: "Thomas Rhett",
-                yil: "2015",
-                ozellikler: ["Country Pop", "Romantic", "Country"],
-                fotograf:
-                  "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=80&h=80&fit=crop&crop=center",
-              },
-              {
-                baslik: "Humble and Kind",
-                sanatci: "Tim McGraw",
-                yil: "2016",
-                ozellikler: ["Country", "Inspirational", "Country"],
-                fotograf:
-                  "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=80&h=80&fit=crop&crop=center",
-              },
-              {
-                baslik: "Meant to Be",
-                sanatci: "Bebe Rexha ft. Florida Georgia Line",
-                yil: "2017",
-                ozellikler: ["Country Pop", "Crossover", "Country"],
-                fotograf:
-                  "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=80&h=80&fit=crop&crop=center",
-              },
-            ],
-            reggae: [
-              {
-                baslik: "One Love",
-                sanatci: "Bob Marley & The Wailers",
-                yil: "1977",
-                ozellikler: ["Reggae", "Peace", "Reggae"],
-                fotograf:
-                  "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=80&h=80&fit=crop&crop=center",
-              },
-              {
-                baslik: "No Woman, No Cry",
-                sanatci: "Bob Marley & The Wailers",
-                yil: "1974",
-                ozellikler: ["Reggae", "Roots", "Reggae"],
-                fotograf:
-                  "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=80&h=80&fit=crop&crop=center",
-              },
-              {
-                baslik: "Buffalo Soldier",
-                sanatci: "Bob Marley & The Wailers",
-                yil: "1983",
-                ozellikler: ["Reggae", "History", "Reggae"],
-                fotograf:
-                  "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=80&h=80&fit=crop&crop=center",
-              },
-              {
-                baslik: "Three Little Birds",
-                sanatci: "Bob Marley & The Wailers",
-                yil: "1977",
-                ozellikler: ["Reggae", "Positive", "Reggae"],
-                fotograf:
-                  "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=80&h=80&fit=crop&crop=center",
-              },
-              {
-                baslik: "Is This Love",
-                sanatci: "Bob Marley & The Wailers",
-                yil: "1978",
-                ozellikler: ["Reggae", "Love", "Reggae"],
-                fotograf:
-                  "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=80&h=80&fit=crop&crop=center",
-              },
-              {
-                baslik: "Jamming",
-                sanatci: "Bob Marley & The Wailers",
-                yil: "1977",
-                ozellikler: ["Reggae", "Jam", "Reggae"],
-                fotograf:
-                  "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=80&h=80&fit=crop&crop=center",
-              },
-            ],
-            hiphop: [
-              {
-                baslik: "God's Plan",
-                sanatci: "Drake",
-                yil: "2018",
-                ozellikler: ["Hip Hop", "Trap", "Rap"],
-                fotograf:
-                  "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=80&h=80&fit=crop&crop=center",
-              },
-              {
-                baslik: "Sicko Mode",
-                sanatci: "Travis Scott",
-                yil: "2018",
-                ozellikler: ["Trap", "Hip Hop", "Rap"],
-                fotograf:
-                  "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=80&h=80&fit=crop&crop=center",
-              },
-              {
-                baslik: "Old Town Road",
-                sanatci: "Lil Nas X",
-                yil: "2019",
-                ozellikler: ["Country Rap", "Trap", "Hip Hop"],
-                fotograf:
-                  "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=80&h=80&fit=crop&crop=center",
-              },
-              {
-                baslik: "Bad Guy",
-                sanatci: "Billie Eilish",
-                yil: "2019",
-                ozellikler: ["Alternative", "Pop", "Hip Hop"],
-                fotograf:
-                  "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=80&h=80&fit=crop&crop=center",
-              },
-              {
-                baslik: "Blinding Lights",
-                sanatci: "The Weeknd",
-                yil: "2019",
-                ozellikler: ["Synthwave", "Pop", "Hip Hop"],
-                fotograf:
-                  "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=80&h=80&fit=crop&crop=center",
-              },
-              {
-                baslik: "Mood",
-                sanatci: "24kGoldn ft. Iann Dior",
-                yil: "2020",
-                ozellikler: ["Hip Hop", "Pop", "Rap"],
-                fotograf:
-                  "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=80&h=80&fit=crop&crop=center",
-              },
-            ],
-            world: [
-              {
-                baslik: "Despacito",
-                sanatci: "Luis Fonsi ft. Daddy Yankee",
-                yil: "2017",
-                ozellikler: ["Latin Pop", "Reggaeton", "World"],
-                fotograf:
-                  "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=80&h=80&fit=crop&crop=center",
-              },
-              {
-                baslik: "Gangnam Style",
-                sanatci: "PSY",
-                yil: "2012",
-                ozellikler: ["K-Pop", "Dance", "World"],
-                fotograf:
-                  "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=80&h=80&fit=crop&crop=center",
-              },
-              {
-                baslik: "Havana",
-                sanatci: "Camila Cabello",
-                yil: "2017",
-                ozellikler: ["Latin Pop", "Cuban", "World"],
-                fotograf:
-                  "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=80&h=80&fit=crop&crop=center",
-              },
-              {
-                baslik: "Shape of You",
-                sanatci: "Ed Sheeran",
-                yil: "2017",
-                ozellikler: ["Pop", "Tropical", "World"],
-                fotograf:
-                  "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=80&h=80&fit=crop&crop=center",
-              },
-              {
-                baslik: "Mi Gente",
-                sanatci: "J Balvin, Willy William",
-                yil: "2017",
-                ozellikler: ["Reggaeton", "Latin", "World"],
-                fotograf:
-                  "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=80&h=80&fit=crop&crop=center",
-              },
-              {
-                baslik: "Con Calma",
-                sanatci: "Daddy Yankee ft. Snow",
-                yil: "2019",
-                ozellikler: ["Reggaeton", "Latin", "World"],
-                fotograf:
-                  "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=80&h=80&fit=crop&crop=center",
-              },
-            ],
-            ambient: [
-              {
-                baslik: "Claire de Lune",
-                sanatci: "Debussy",
-                yil: "1905",
-                ozellikler: ["Classical", "Piano", "Ambient"],
-                fotograf:
-                  "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=80&h=80&fit=crop&crop=center",
-              },
-              {
-                baslik: "Weightless",
-                sanatci: "Marconi Union",
-                yil: "2011",
-                ozellikler: ["Ambient", "Relaxing", "Ambient"],
-                fotograf:
-                  "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=80&h=80&fit=crop&crop=center",
-              },
-              {
-                baslik: "Echoes",
-                sanatci: "Pink Floyd",
-                yil: "1971",
-                ozellikler: ["Progressive", "Experimental", "Ambient"],
-                fotograf:
-                  "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=80&h=80&fit=crop&crop=center",
-              },
-              {
-                baslik: "The Great Gig in the Sky",
-                sanatci: "Pink Floyd",
-                yil: "1973",
-                ozellikler: ["Progressive", "Vocal", "Ambient"],
-                fotograf:
-                  "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=80&h=80&fit=crop&crop=center",
-              },
-              {
-                baslik: "Shine On You Crazy Diamond",
-                sanatci: "Pink Floyd",
-                yil: "1975",
-                ozellikler: ["Progressive", "Guitar", "Ambient"],
-                fotograf:
-                  "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=80&h=80&fit=crop&crop=center",
-              },
-              {
-                baslik: "Comfortably Numb",
-                sanatci: "Pink Floyd",
-                yil: "1979",
-                ozellikler: ["Progressive", "Rock", "Ambient"],
-                fotograf:
-                  "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=80&h=80&fit=crop&crop=center",
-              },
-            ],
-          };
-
-          // Seçilen türün şarkılarını al
-          $scope.sarkilar = sarkiVerileri[turId] || sarkiVerileri.klasik;
-
-          $scope.sarkiSec = function (sarki) {
-            // Şarkı seçildiğinde yapılacak işlemler
-            alert(
-              sarki.baslik +
-                " - " +
-                sarki.sanatci +
-                " seçildi! Bu özellik yakında eklenecek."
+        .controller(
+          "MuzikDetayController",
+          function ($scope, $location, $http) {
+            $scope.kullanici = JSON.parse(
+              localStorage.getItem("girisYapan") || "null"
             );
-          };
 
-          $scope.geriDon = function () {
-            window.location.href = "muzik-turleri.html";
-          };
+            // URL'den müzik türü ID'sini al
+            const urlParams = new URLSearchParams(window.location.search);
+            const turId = urlParams.get("tur");
 
-          $scope.scrollToTop = function () {
-            window.scrollTo({ top: 0, behavior: "smooth" });
-          };
-        });
+            // Müzik türleri verileri
+            const muzikTurleri = [
+              {
+                id: "klasik",
+                ad: "Klasik",
+                icon: "🎼",
+              },
+              {
+                id: "jazz",
+                ad: "Jazz",
+                icon: "🎷",
+              },
+              {
+                id: "rock",
+                ad: "Rock",
+                icon: "🎸",
+              },
+              {
+                id: "pop",
+                ad: "Pop",
+                icon: "🎤",
+              },
+              {
+                id: "folk",
+                ad: "Folk",
+                icon: "🪕",
+              },
+              {
+                id: "elektronik",
+                ad: "Elektronik",
+                icon: "🎛️",
+              },
+              {
+                id: "blues",
+                ad: "Blues",
+                icon: "🎵",
+              },
+              {
+                id: "country",
+                ad: "Country",
+                icon: "🤠",
+              },
+              {
+                id: "reggae",
+                ad: "Reggae",
+                icon: "🌴",
+              },
+              {
+                id: "hiphop",
+                ad: "Hip Hop",
+                icon: "🎧",
+              },
+              {
+                id: "world",
+                ad: "World",
+                icon: "🌍",
+              },
+              {
+                id: "ambient",
+                ad: "Ambient",
+                icon: "🌌",
+              },
+            ];
+
+            // Seçilen türü bul
+            $scope.seciliTur =
+              muzikTurleri.find((tur) => tur.id === turId) || muzikTurleri[0];
+
+            // Veritabanından şarkıları çek
+            $scope.sarkilar = [];
+            $scope.loading = true;
+            $scope.error = null;
+
+            // API'den şarkıları getir
+            $http
+              .get(
+                "api.php?muzik=1&tur=" + encodeURIComponent($scope.seciliTur.ad)
+              )
+              .then(function (response) {
+                console.log("🎵 API yanıtı:", response.data);
+                $scope.sarkilar = response.data;
+                $scope.loading = false;
+              })
+              .catch(function (error) {
+                console.error("❌ API hatası:", error);
+                $scope.error = "Şarkılar yüklenirken hata oluştu";
+                $scope.loading = false;
+
+                // Hata durumunda statik verileri kullan
+                const sarkiVerileri = {
+                  "Klasik Müzik": [
+                    {
+                      baslik: "Moonlight Sonata",
+                      sanatci: "Ludwig van Beethoven",
+                      yil: "1801",
+                      fotograf:
+                        "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=80&h=80&fit=crop&crop=center",
+                      aciklama:
+                        "Beethoven'ın en ünlü piyano sonatlarından biri. Ay ışığının gölgelerini yansıtan melankolik melodileriyle tanınır.",
+                      sure: "14:39",
+                      spotify_url:
+                        "https://open.spotify.com/track/4CzN9rdDKNcyVNDpPIJh9L",
+                    },
+                  ],
+                  Jazz: [
+                    {
+                      baslik: "Take Five",
+                      sanatci: "Dave Brubeck Quartet",
+                      yil: "1959",
+                      fotograf:
+                        "https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=80&h=80&fit=crop&crop=center",
+                      sure: "5:24",
+                      spotify_url:
+                        "https://open.spotify.com/track/1YQWosTIljIvxAgHWTp7KP",
+                    },
+                  ],
+                  Rock: [
+                    {
+                      baslik: "Bohemian Rhapsody",
+                      sanatci: "Queen",
+                      yil: "1975",
+                      fotograf:
+                        "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=80&h=80&fit=crop&crop=center",
+                      sure: "5:54",
+                      spotify_url:
+                        "https://open.spotify.com/track/3z8h0TU7ReDPLIbEnYhWZb",
+                    },
+                  ],
+                };
+
+                $scope.sarkilar = sarkiVerileri[$scope.seciliTur.ad] || [];
+              });
+
+            $scope.sarkiSec = function (sarki) {
+              // Şarkı bilgilerini localStorage'a kaydet
+              localStorage.setItem("seciliSarki", JSON.stringify(sarki));
+              // Sadece şarkı ID'sini URL'de gönder (temiz URL)
+              const sarkiId = sarki.muzik_adi
+                .replace(/[^a-zA-Z0-9]/g, "-")
+                .toLowerCase();
+              window.location.href = "sarki-detay.html?id=" + sarkiId;
+            };
+
+            $scope.geriDon = function () {
+              window.location.href = "muzik-turleri.html";
+            };
+
+            $scope.scrollToTop = function () {
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            };
+          }
+        );
     </script>
   </body>
 </html>

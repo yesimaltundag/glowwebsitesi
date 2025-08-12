@@ -6,6 +6,15 @@ ini_set('display_errors', 0);
 // Output buffering başlat
 ob_start();
 
+// PHPMailer kütüphanesini dahil et
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+use PHPMailer\PHPMailer\SMTP;
+
+require 'PHPMailer/src/Exception.php';
+require 'PHPMailer/src/PHPMailer.php';
+require 'PHPMailer/src/SMTP.php';
+
 header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE");
@@ -185,6 +194,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $email_baslik = "GLOW Sitesi - Mesajınıza Cevap";
             $email_icerik = "
             <html>
+            <head>
+                <meta charset='UTF-8'>
+                <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'>
+            </head>
             <body style='font-family: Arial, sans-serif; line-height: 1.6; color: #333;'>
                 <div style='max-width: 600px; margin: 0 auto; padding: 20px; background: #f9f9f9;'>
                     <div style='background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);'>
@@ -211,15 +224,39 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             </body>
             </html>";
             
-            // E-posta başlıkları
-            $headers = "MIME-Version: 1.0\r\n";
-            $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
-            $headers .= "From: GLOW Sitesi <noreply@glow.com>\r\n";
-            $headers .= "Reply-To: noreply@glow.com\r\n";
-            $headers .= "X-Mailer: PHP/" . phpversion();
-            
-            // E-posta gönder
-            $email_gonderildi = mail($musteri_email, $email_baslik, $email_icerik, $headers);
+            // PHPMailer ile e-posta gönder
+            $mail = new PHPMailer(true);
+            try {
+                $mail->SMTPDebug = SMTP::DEBUG_OFF;                      //Debug kapalı
+                $mail->isSMTP();                                            //Send using SMTP
+                $mail->Host       = 'smtp.gmail.com';                     //Set the SMTP server to send through
+                $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
+                $mail->Username   = 'stajteknoprosis@gmail.com';                     //SMTP username
+                $mail->Password   = 'keey ejmo fsvd mrii';                               //SMTP password
+                $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;            //Enable implicit TLS encryption
+                $mail->Port       = 465;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
+                
+                // Türkçe karakter ayarları
+                $mail->CharSet = 'UTF-8';
+                $mail->Encoding = 'base64';
+                
+                //Recipients
+                $mail->setFrom('stajteknoprosis@gmail.com', 'GLOW Sistem');
+                $mail->addAddress($musteri_email, $musteri_adi);     //Müşteri e-posta adresi
+                $mail->addReplyTo('stajteknoprosis@gmail.com', 'GLOW Destek');
+
+                //Content
+                $mail->isHTML(true);                                  //Set email format to HTML
+                $mail->Subject = $email_baslik;                               //E-posta konusu
+                $mail->Body    = $email_icerik;                             //E-posta içeriği
+                $mail->AltBody = strip_tags($email_icerik);                 //HTML etiketleri kaldırılmış metin
+
+                $mail->send();
+                $email_gonderildi = true;
+            } catch (Exception $e) {
+                $email_gonderildi = false;
+                error_log("Mail gönderme hatası: {$mail->ErrorInfo}");
+            }
             
             ob_end_clean(); // Buffer'ı temizle
             echo json_encode([

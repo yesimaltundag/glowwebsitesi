@@ -646,7 +646,7 @@
         border: 1px solid #e0e0e0;
       }
 
-      .existing-replies h5 {
+      .existing-replies h5 {  
         color: #7c5c4a;
         margin: 0 0 10px 0;
         font-size: 14px;

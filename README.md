@@ -13,7 +13,7 @@
 # Karakter seti: utf8mb4_unicode_ci
 
 # 2. SQL dosyasını import edin
-# database_setup.sql dosyasını seçin ve "Go" butonuna tıklayın
+# basit_sistem.sql dosyasını seçin ve "Go" butonuna tıklayın
 
 # 3. Tabloların oluştuğunu kontrol edin:
 # - filmler

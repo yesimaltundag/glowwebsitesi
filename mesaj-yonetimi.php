@@ -825,9 +825,11 @@
                     echo "<tr><td colspan='6' style='text-align: center; color: red;'>Veritabanı bağlantı hatası</td></tr>";
                 } else {
                     // Sayfalama ayarları
-                    $sayfa_basina = 30; // Her sayfada 30 mesaj
+                    $sayfa_basina = 10; // Her sayfada 10 mesaj
                     $sayfa = isset($_GET['sayfa']) ? (int)$_GET['sayfa'] : 1;
                     $baslangic = ($sayfa - 1) * $sayfa_basina;
+                    echo $baslangic;
+                    echo $sayfa_basina;
                     
                     // Toplam mesaj sayısını al
                     $toplam_sql = "SELECT COUNT(*) as toplam FROM iletisim_formu";

@@ -177,8 +177,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 if ($stmt->execute()) {
         $yeni_cevap_id = $baglanti->insert_id;
         
-        // Müşterinin e-posta adresini al
-        $email_sql = "SELECT eposta, adisoyadi, konu FROM iletisim_formu WHERE id = ?";
+        // Müşterinin e-posta adresini ve mesaj içeriğini al
+        $email_sql = "SELECT eposta, adisoyadi, konu, mesaj FROM iletisim_formu WHERE id = ?";
         $email_stmt = $baglanti->prepare($email_sql);
         $email_stmt->bind_param("i", $iletisim_formu_id);
         $email_stmt->execute();
@@ -189,6 +189,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $musteri_email = $musteri_bilgi['eposta'];
             $musteri_adi = $musteri_bilgi['adisoyadi'];
             $mesaj_konu = $musteri_bilgi['konu'];
+            $mesaj_icerik = $musteri_bilgi['mesaj'];
             
             // E-posta gönder
             $email_baslik = "GLOW Sitesi - Mesajınıza Cevap";
@@ -208,6 +209,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                         <div style='background: #f5f5f5; padding: 15px; border-radius: 8px; margin: 20px 0;'>
                             <h3 style='color: #7c5c4a; margin-top: 0;'>Mesajınız:</h3>
                             <p><strong>Konu:</strong> {$mesaj_konu}</p>
+                            <p><strong>Mesajınız:</strong></p>
+                            <div style='background: white; padding: 10px; border-radius: 5px; margin-top: 10px; border-left: 3px solid #7c5c4a;'>
+                                " .  nl2br(htmlspecialchars($mesaj_icerik)) . "
+                            </div>
                         </div>
                         
                         <div style='background: #e8f4f8; padding: 15px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #7c5c4a;'>

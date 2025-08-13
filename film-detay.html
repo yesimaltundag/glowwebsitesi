@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="assets/css/style.css" />
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
     <script src="assets/js/app.js"></script>
+
     <style>
       .detay-container {
         max-width: 100%;
@@ -251,6 +252,59 @@
         box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
       }
 
+      .karakter-uyari {
+        color: #dc3545;
+        font-size: 0.9rem;
+        font-weight: 500;
+        margin: 8px 0;
+        text-align: center;
+        padding: 8px;
+        background: linear-gradient(135deg, #fff5f5, #ffe6e6);
+        border: 1px solid #ffcccc;
+        border-radius: 8px;
+        display: none;
+      }
+
+      .karakter-uyari.show {
+        display: block;
+        animation: fadeIn 0.3s ease-in;
+      }
+
+      .karakter-uyari.shake {
+        animation: shake 0.5s ease-in-out;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes shake {
+        0%,
+        100% {
+          transform: translateX(0);
+        }
+        10%,
+        30%,
+        50%,
+        70%,
+        90% {
+          transform: translateX(-10px);
+        }
+        20%,
+        40%,
+        60%,
+        80% {
+          transform: translateX(10px);
+        }
+      }
+
       .yorum-gonder-btn {
         background: linear-gradient(135deg, #dc3545, #c82333);
         color: white;
@@ -273,10 +327,11 @@
         box-shadow: 0 5px 15px rgba(220, 53, 69, 0.3);
       }
 
-      .yorum-gonder-btn:disabled {
+      .yorum-gonder-btn.disabled {
         background: #6c757d;
         cursor: not-allowed;
         transform: none;
+        opacity: 0.6;
       }
 
       .admin-warning,
@@ -379,8 +434,10 @@
         font-size: 1rem;
         line-height: 1.6;
         color: #495057;
-        white-space: pre-wrap;
+        white-space: normal;
         margin-bottom: 15px;
+        text-indent: 0;
+        padding: 0;
       }
 
       /* Puan Seçici Stilleri */
@@ -638,6 +695,20 @@
                 maxlength="500"
                 class="yorum-textarea"
               ></textarea>
+              <div
+                class="karakter-uyari"
+                ng-class="{ 'show': yeniYorum.yorum && yeniYorum.yorum.length < 10 }"
+              >
+                ⚠️ Lütfen en az 10 karakter kullanınız
+              </div>
+              <button
+                type="button"
+                class="spoiler-toggle"
+                ng-class="{ 'active': yeniYorum.spoiler }"
+                ng-click="yeniYorum.spoiler = !yeniYorum.spoiler"
+              >
+                ⚠️ Yorumum spoiler içeriyor
+              </button>
               <div class="karakter-sayisi">
                 {{ yeniYorum.yorum.length }}/500
               </div>
@@ -660,7 +731,7 @@
             <button
               class="yorum-gonder-btn"
               ng-click="yorumEkle()"
-              ng-disabled="!yeniYorum.yorum || yeniYorum.yorum.length < 10 || !yeniYorum.puan || yeniYorum.puan < 1"
+              ng-class="{ 'disabled': !yeniYorum.yorum || yeniYorum.yorum.length < 10 || !yeniYorum.puan || yeniYorum.puan < 1 }"
             >
               Yorum Gönder
             </button>
@@ -705,7 +776,27 @@
                   🗑️ Sil
                 </button>
               </div>
-              <div class="yorum-icerik">{{ yorum.yorum }}</div>
+              <div
+                ng-if="yorum.spoiler == 1 || yorum.spoiler === '1' || yorum.spoiler === true"
+              >
+                <div
+                  class="spoiler-container"
+                  ng-click="yorum._acik = !yorum._acik"
+                >
+                  <div class="spoiler-etiket" ng-if="!yorum._acik">
+                    Bu yorum spoiler içeriyor. Görmek için tıklayın
+                  </div>
+                </div>
+                <div class="yorum-icerik" ng-if="yorum._acik">
+                  {{ yorum.yorum }}
+                </div>
+              </div>
+              <div
+                class="yorum-icerik"
+                ng-if="!yorum.spoiler || yorum.spoiler == 0 || yorum.spoiler === '0'"
+              >
+                {{ yorum.yorum }}
+              </div>
             </div>
           </div>
 

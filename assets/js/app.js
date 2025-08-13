@@ -48,6 +48,11 @@ angular
       return "N/A";
     };
   })
+  .filter("trustUrl", function ($sce) {
+    return function (url) {
+      return $sce.trustAsResourceUrl(url);
+    };
+  })
 
   // ===== MAIN CONTROLLER =====
   .controller("MainController", function ($scope, $http) {
@@ -92,6 +97,59 @@ angular
     $scope.scrollToTop = function () {
       window.scrollTo({ top: 0, behavior: "smooth" });
     };
+
+    // Header fade efekti
+    $scope.headerFade = function () {
+      // Header elementleri
+      var authSection = document.querySelector(".auth-section");
+      var logoSection = document.querySelector(".logo-section");
+      var navLinks = document.querySelectorAll(
+        ".nav-menu > li:not(.category-menu) > a"
+      );
+
+      // Tüm sayfa içeriği
+      var mainContent = document.querySelector(".main-content");
+      var footer = document.querySelector("footer");
+      var scrollTopBtn = document.querySelector("#scrollTopBtn");
+
+      // Header elementlerini saydamlaştır
+      if (authSection) authSection.classList.add("header-fade");
+      if (logoSection) logoSection.classList.add("header-fade");
+      navLinks.forEach(function (link) {
+        link.classList.add("header-fade");
+      });
+
+      // Sayfa içeriğini saydamlaştır
+      if (mainContent) mainContent.classList.add("page-fade");
+      if (footer) footer.classList.add("page-fade");
+      if (scrollTopBtn) scrollTopBtn.classList.add("page-fade");
+    };
+
+    $scope.headerNormal = function () {
+      // Header elementleri
+      var authSection = document.querySelector(".auth-section");
+      var logoSection = document.querySelector(".logo-section");
+      var navLinks = document.querySelectorAll(
+        ".nav-menu > li:not(.category-menu) > a"
+      );
+
+      // Tüm sayfa içeriği
+      var mainContent = document.querySelector(".main-content");
+      var footer = document.querySelector("footer");
+      var scrollTopBtn = document.querySelector("#scrollTopBtn");
+
+      // Header elementlerini normale döndür
+      if (authSection) authSection.classList.remove("header-fade");
+      if (logoSection) logoSection.classList.remove("header-fade");
+      navLinks.forEach(function (link) {
+        link.classList.remove("header-fade");
+      });
+
+      // Sayfa içeriğini normale döndür
+      if (mainContent) mainContent.classList.remove("page-fade");
+      if (footer) footer.classList.remove("page-fade");
+      if (scrollTopBtn) scrollTopBtn.classList.remove("page-fade");
+    };
   })
 
   // ===== LOGIN CONTROLLER =====
@@ -100,7 +158,14 @@ angular
       username: "",
       password: "",
     };
-
+    $scope.girisKontrol = function () {
+      var girisYapan = localStorage.getItem("girisYapan");
+      if (girisYapan != null) {
+        window.location.href = "anasayfa.html";
+      }
+      console.log(girisYapan);
+    };
+    $scope.girisKontrol();
     $scope.girisYap = function () {
       console.log("🔐 Giriş yapılıyor...");
       console.log("📤 Gönderilen veri:", {
@@ -466,375 +531,420 @@ angular
   })
 
   // ===== TIYATRO DETAY CONTROLLER =====
-  .controller("TiyatroDetayController", function ($scope, $http, $location) {
-    $scope.kullanici = JSON.parse(localStorage.getItem("girisYapan") || "null");
-    $scope.tiyatroEseri = null;
-    $scope.loading = true;
-    $scope.error = null;
-    $scope.yorumlar = [];
-    $scope.yeniYorum = {
-      yorum: "",
-      puan: 0,
-    };
-
-    // Puan seçimi için yardımcı fonksiyon
-    $scope.puanSec = function (puan) {
-      console.log("⭐ Puan seçildi:", puan); // Debug log
-      $scope.yeniYorum.puan = parseInt(puan);
-      console.log("📊 Güncellenmiş yeni yorum:", $scope.yeniYorum);
-      // Angular'ın değişiklikleri algılamasını sağla (sadece gerekirse)
-      if (!$scope.$$phase && !$scope.$root.$$phase) {
-        $scope.$apply();
-      }
-    };
-
-    // URL'den ID'yi al
-    var urlParams = new URLSearchParams(window.location.search);
-    var eserId = urlParams.get("id");
-    console.log("🎭 Tiyatro eseri ID'si:", eserId);
-
-    if (!eserId) {
-      $scope.error = "Tiyatro eseri ID'si bulunamadı!";
-      $scope.loading = false;
-      return;
-    }
-
-    // Tiyatro eserini getir
-    $scope.tiyatroEseriniGetir = function () {
-      console.log("🎭 Tiyatro eseri getiriliyor... ID:", eserId);
+  .controller(
+    "TiyatroDetayController",
+    function ($scope, $http, $location, $timeout) {
+      $scope.kullanici = JSON.parse(
+        localStorage.getItem("girisYapan") || "null"
+      );
+      $scope.tiyatroEseri = null;
       $scope.loading = true;
       $scope.error = null;
+      $scope.yorumlar = [];
+      $scope.yeniYorum = {
+        yorum: "",
+        puan: 0,
+        spoiler: false,
+      };
 
-      $http
-        .get("api.php?tiyatro=1&id=" + eserId)
-        .then(function (response) {
-          console.log("📥 Tiyatro eseri API yanıtı:", response);
-          $scope.tiyatroEseri = response.data;
-          console.log("🎭 Yüklenen tiyatro eseri:", $scope.tiyatroEseri);
-          $scope.loading = false;
-          // Eser yüklendikten sonra yorumları getir
-          $scope.yorumlariGetir();
-        })
-        .catch(function (error) {
-          console.error("❌ Tiyatro eseri yükleme hatası:", error);
-          $scope.error =
-            "Tiyatro eseri yüklenirken hata oluştu: " + error.statusText;
-          $scope.loading = false;
-        });
-    };
+      // Puan seçimi için yardımcı fonksiyon
+      $scope.puanSec = function (puan) {
+        console.log("⭐ Puan seçildi:", puan); // Debug log
+        $scope.yeniYorum.puan = parseInt(puan);
+        console.log("📊 Güncellenmiş yeni yorum:", $scope.yeniYorum);
+        // Angular'ın değişiklikleri algılamasını sağla (sadece gerekirse)
+        if (!$scope.$$phase && !$scope.$root.$$phase) {
+          $scope.$apply();
+        }
+      };
 
-    // Yorumları getir
-    $scope.yorumlariGetir = function () {
-      console.log("🔍 Yorumlar getiriliyor... Eser ID:", eserId);
-      console.log("🔍 Önceki yorumlar:", $scope.yorumlar);
+      // URL'den ID'yi al
+      var urlParams = new URLSearchParams(window.location.search);
+      var eserId = urlParams.get("id");
+      console.log("🎭 Tiyatro eseri ID'si:", eserId);
 
-      $http
-        .get("api.php?yorum=1&tur=tiyatro&icerik_id=" + eserId)
-        .then(function (response) {
-          console.log("📊 API'den gelen yorumlar:", response.data);
-          console.log(
-            "📊 Yorum sayısı:",
-            response.data ? response.data.length : 0
-          );
-          console.log("📊 Response tam hali:", response);
+      if (!eserId) {
+        $scope.error = "Tiyatro eseri ID'si bulunamadı!";
+        $scope.loading = false;
+        return;
+      }
 
-          $scope.yorumlar = response.data || [];
-          console.log("📊 Scope'daki yorumlar:", $scope.yorumlar);
-          console.log("📊 Yorumlar array mi?", Array.isArray($scope.yorumlar));
-          console.log(
-            "📊 Yorumların ID'leri:",
-            $scope.yorumlar.map(function (y) {
-              return y.id;
-            })
-          );
-          console.log(
-            "📊 Yorumların kullanıcı adları:",
-            $scope.yorumlar.map(function (y) {
-              return y.kullanici_adi;
-            })
-          );
+      // Tiyatro eserini getir
+      $scope.tiyatroEseriniGetir = function () {
+        console.log("🎭 Tiyatro eseri getiriliyor... ID:", eserId);
+        $scope.loading = true;
+        $scope.error = null;
 
-          // Yorumların tam detaylarını göster
-          console.log("📊 Yorumların tam detayları:");
-          $scope.yorumlar.forEach(function (yorum, index) {
-            console.log("Yorum " + (index + 1) + ":", {
-              id: yorum.id,
-              kullanici_adi: yorum.kullanici_adi,
-              yorum: yorum.yorum,
-              puan: yorum.puan,
-              created_at: yorum.created_at,
-              tur: yorum.tur,
-              icerik_id: yorum.icerik_id,
+        $http
+          .get("api.php?tiyatro=1&id=" + eserId)
+          .then(function (response) {
+            console.log("📥 Tiyatro eseri API yanıtı:", response);
+            $scope.tiyatroEseri = response.data;
+            console.log("🎭 Yüklenen tiyatro eseri:", $scope.tiyatroEseri);
+            $scope.loading = false;
+            // Eser yüklendikten sonra yorumları getir
+            $scope.yorumlariGetir();
+          })
+          .catch(function (error) {
+            console.error("❌ Tiyatro eseri yükleme hatası:", error);
+            $scope.error =
+              "Tiyatro eseri yüklenirken hata oluştu: " + error.statusText;
+            $scope.loading = false;
+          });
+      };
+
+      // Yorumları getir
+      $scope.yorumlariGetir = function () {
+        console.log("🔍 Yorumlar getiriliyor... Eser ID:", eserId);
+        console.log("🔍 Önceki yorumlar:", $scope.yorumlar);
+
+        $http
+          .get("api.php?yorum=1&tur=tiyatro&icerik_id=" + eserId)
+          .then(function (response) {
+            console.log("📊 API'den gelen yorumlar:", response.data);
+            console.log(
+              "📊 Yorum sayısı:",
+              response.data ? response.data.length : 0
+            );
+            console.log("📊 Response tam hali:", response);
+
+            // Yorum verilerini temizle (gereksiz boşlukları kaldır)
+            var temizlenmisYorumlar = (response.data || []).map(function (
+              yorum
+            ) {
+              return {
+                ...yorum,
+                yorum: yorum.yorum
+                  ? yorum.yorum.trim().replace(/\s+/g, " ")
+                  : yorum.yorum,
+              };
             });
 
-            // Ham veriyi kontrol et
-            console.log("Yorum " + (index + 1) + " ham veri:", yorum);
+            $scope.yorumlar = temizlenmisYorumlar;
+            console.log("📊 Scope'daki yorumlar:", $scope.yorumlar);
             console.log(
-              "Yorum " + (index + 1) + " tüm anahtarlar:",
-              Object.keys(yorum)
+              "📊 Yorumlar array mi?",
+              Array.isArray($scope.yorumlar)
             );
             console.log(
-              "Yorum " + (index + 1) + " tüm anahtarlar detayı:",
-              Object.keys(yorum).map(function (key) {
-                return key + ": " + yorum[key] + " (" + typeof yorum[key] + ")";
+              "📊 Yorumların ID'leri:",
+              $scope.yorumlar.map(function (y) {
+                return y.id;
+              })
+            );
+            console.log(
+              "📊 Yorumların kullanıcı adları:",
+              $scope.yorumlar.map(function (y) {
+                return y.kullanici_adi;
               })
             );
 
-            // Veritabanı alanlarını kontrol et
-            console.log("Yorum " + (index + 1) + " veritabanı alanları:");
-            console.log("  - id:", yorum.id, "(" + typeof yorum.id + ")");
-            console.log(
-              "  - kullanici_id:",
-              yorum.kullanici_id,
-              "(" + typeof yorum.kullanici_id + ")"
-            );
-            console.log(
-              "  - kullanici_adi:",
-              yorum.kullanici_adi,
-              "(" + typeof yorum.kullanici_adi + ")"
-            );
-            console.log("  - tur:", yorum.tur, "(" + typeof yorum.tur + ")");
-            console.log(
-              "  - icerik_id:",
-              yorum.icerik_id,
-              "(" + typeof yorum.icerik_id + ")"
-            );
-            console.log(
-              "  - icerik_adi:",
-              yorum.icerik_adi,
-              "(" + typeof yorum.icerik_adi + ")"
-            );
-            console.log(
-              "  - yorum:",
-              yorum.yorum,
-              "(" + typeof yorum.yorum + ")"
-            );
-            console.log("  - puan:", yorum.puan, "(" + typeof yorum.puan + ")");
-            console.log(
-              "  - created_at:",
-              yorum.created_at,
-              "(" + typeof yorum.created_at + ")"
-            );
-          });
+            // Yorumların tam detaylarını göster
+            console.log("📊 Yorumların tam detayları:");
+            $scope.yorumlar.forEach(function (yorum, index) {
+              console.log("Yorum " + (index + 1) + ":", {
+                id: yorum.id,
+                kullanici_adi: yorum.kullanici_adi,
+                yorum: yorum.yorum,
+                puan: yorum.puan,
+                created_at: yorum.created_at,
+                tur: yorum.tur,
+                icerik_id: yorum.icerik_id,
+              });
 
-          // Angular'ın değişiklikleri algılamasını sağla (sadece gerekirse)
-          if (!$scope.$$phase && !$scope.$root.$$phase) {
-            $scope.$apply();
-          }
+              // Ham veriyi kontrol et
+              console.log("Yorum " + (index + 1) + " ham veri:", yorum);
+              console.log(
+                "Yorum " + (index + 1) + " tüm anahtarlar:",
+                Object.keys(yorum)
+              );
+              console.log(
+                "Yorum " + (index + 1) + " tüm anahtarlar detayı:",
+                Object.keys(yorum).map(function (key) {
+                  return (
+                    key + ": " + yorum[key] + " (" + typeof yorum[key] + ")"
+                  );
+                })
+              );
 
-          // DOM'u kontrol et
-          setTimeout(function () {
-            var yorumlarListe = document.querySelector(".yorumlar-liste");
-            var yorumYok = document.querySelector(".yorum-yok");
-            console.log("🎭 DOM durumu:", {
-              yorumlarListe: yorumlarListe,
-              yorumYok: yorumYok,
-              yorumlarListeVisible:
-                yorumlarListe && yorumlarListe.style.display !== "none",
-              yorumYokVisible: yorumYok && yorumYok.style.display !== "none",
+              // Veritabanı alanlarını kontrol et
+              console.log("Yorum " + (index + 1) + " veritabanı alanları:");
+              console.log("  - id:", yorum.id, "(" + typeof yorum.id + ")");
+              console.log(
+                "  - kullanici_id:",
+                yorum.kullanici_id,
+                "(" + typeof yorum.kullanici_id + ")"
+              );
+              console.log(
+                "  - kullanici_adi:",
+                yorum.kullanici_adi,
+                "(" + typeof yorum.kullanici_adi + ")"
+              );
+              console.log("  - tur:", yorum.tur, "(" + typeof yorum.tur + ")");
+              console.log(
+                "  - icerik_id:",
+                yorum.icerik_id,
+                "(" + typeof yorum.icerik_id + ")"
+              );
+              console.log(
+                "  - icerik_adi:",
+                yorum.icerik_adi,
+                "(" + typeof yorum.icerik_adi + ")"
+              );
+              console.log(
+                "  - yorum:",
+                yorum.yorum,
+                "(" + typeof yorum.yorum + ")"
+              );
+              console.log(
+                "  - puan:",
+                yorum.puan,
+                "(" + typeof yorum.puan + ")"
+              );
+              console.log(
+                "  - created_at:",
+                yorum.created_at,
+                "(" + typeof yorum.created_at + ")"
+              );
             });
-          }, 100);
-        })
-        .catch(function (error) {
-          console.error("❌ Yorumlar yüklenirken hata:", error);
-          console.error("❌ Hata detayı:", error.data);
-          $scope.yorumlar = [];
-          if (!$scope.$$phase && !$scope.$root.$$phase) {
-            $scope.$apply();
-          }
-        });
-    };
 
-    // Yorum ekle
-    $scope.yorumEkle = function () {
-      console.log("🚀 Yorum ekleme fonksiyonu çağrıldı");
-      console.log("👤 Kullanıcı:", $scope.kullanici);
-      console.log("📝 Yeni yorum:", $scope.yeniYorum);
-      console.log("🎭 Tiyatro eseri:", $scope.tiyatroEseri);
-      console.log("🆔 Eser ID:", eserId);
+            // Angular'ın değişiklikleri algılamasını sağla (sadece gerekirse)
+            if (!$scope.$$phase && !$scope.$root.$$phase) {
+              $scope.$apply();
+            }
 
-      if (!$scope.kullanici) {
-        alert("Yorum yapmak için giriş yapmalısınız!");
-        return;
-      }
-
-      if (!$scope.yeniYorum.yorum || $scope.yeniYorum.yorum.length < 10) {
-        alert("Yorum en az 10 karakter olmalıdır!");
-        return;
-      }
-
-      if (!$scope.yeniYorum.puan || $scope.yeniYorum.puan < 1) {
-        alert("Lütfen bir puan seçin!");
-        return;
-      }
-
-      if (!$scope.tiyatroEseri || !$scope.tiyatroEseri.eser_adi) {
-        alert("Tiyatro eseri bilgisi yüklenemedi!");
-        return;
-      }
-
-      var yorumData = {
-        kullanici_id: $scope.kullanici.id,
-        kullanici_adi: $scope.kullanici.username,
-        tur: "tiyatro",
-        icerik_id: eserId,
-        icerik_adi: $scope.tiyatroEseri.eser_adi,
-        yorum: $scope.yeniYorum.yorum,
-        puan: $scope.yeniYorum.puan,
-      };
-
-      console.log("📤 Gönderilecek veri:", yorumData);
-
-      $http
-        .post("api.php?yorum=1", yorumData)
-        .then(function (response) {
-          console.log("📥 API yanıtı:", response);
-          if (response.data.success) {
-            alert("Yorum başarıyla eklendi!");
-            // Formu temizle
-            $scope.yeniYorum = {
-              yorum: "",
-              puan: 0,
-            };
-            // Yorumları yeniden yükle
-            $scope.yorumlariGetir();
-            // Sayfayı yenile (güvenlik için)
+            // DOM'u kontrol et
             setTimeout(function () {
-              location.reload();
-            }, 1000);
-          } else {
-            alert("Yorum eklenirken hata: " + response.data.message);
-          }
-        })
-        .catch(function (error) {
-          console.error("❌ Yorum ekleme hatası:", error);
-          console.error("❌ Hata detayı:", error.data);
-          alert("Yorum eklenirken hata oluştu: " + error.statusText);
-        });
-    };
-
-    // Test yorum ekleme fonksiyonu
-    $scope.testYorumEkle = function () {
-      console.log("🧪 Test yorum ekleme başlatılıyor...");
-
-      // Test verisi
-      $scope.yeniYorum = {
-        yorum: "Bu bir test yorumudur. Tiyatro eseri gerçekten harika!",
-        puan: 8,
+              var yorumlarListe = document.querySelector(".yorumlar-liste");
+              var yorumYok = document.querySelector(".yorum-yok");
+              console.log("🎭 DOM durumu:", {
+                yorumlarListe: yorumlarListe,
+                yorumYok: yorumYok,
+                yorumlarListeVisible:
+                  yorumlarListe && yorumlarListe.style.display !== "none",
+                yorumYokVisible: yorumYok && yorumYok.style.display !== "none",
+              });
+            }, 100);
+          })
+          .catch(function (error) {
+            console.error("❌ Yorumlar yüklenirken hata:", error);
+            console.error("❌ Hata detayı:", error.data);
+            $scope.yorumlar = [];
+            if (!$scope.$$phase && !$scope.$root.$$phase) {
+              $scope.$apply();
+            }
+          });
       };
 
-      console.log("🧪 Test verisi hazırlandı:", $scope.yeniYorum);
+      // Yorum ekle
+      $scope.yorumEkle = function () {
+        console.log("🚀 Yorum ekleme fonksiyonu çağrıldı");
+        console.log("👤 Kullanıcı:", $scope.kullanici);
+        console.log("📝 Yeni yorum:", $scope.yeniYorum);
+        console.log("🎭 Tiyatro eseri:", $scope.tiyatroEseri);
+        console.log("🆔 Eser ID:", eserId);
 
-      // Yorum ekleme fonksiyonunu çağır
-      $scope.yorumEkle();
-    };
+        if (!$scope.kullanici) {
+          alert("Yorum yapmak için giriş yapmalısınız!");
+          return;
+        }
 
-    // Debug yorumlar fonksiyonu
-    $scope.debugYorumlar = function () {
-      console.log("🔍 Debug: Yorumlar kontrol ediliyor...");
-      console.log("🔍 Mevcut durum:", {
-        yorumlar: $scope.yorumlar,
-        yorumlarLength: $scope.yorumlar ? $scope.yorumlar.length : 0,
-        eserId: eserId,
-      });
+        if (!$scope.yeniYorum.yorum || $scope.yeniYorum.yorum.length < 10) {
+          // Titreme animasyonu ekle
+          console.log("🔍 Tiyatro: Titreme animasyonu tetikleniyor...");
 
-      // API'den yorumları tekrar getir
-      $http
-        .get("api.php?yorum=1&tur=tiyatro&icerik_id=" + eserId)
-        .then(function (response) {
-          console.log("🔍 Debug API yanıtı:", response);
-          console.log(
-            "🔍 Gelen yorum sayısı:",
-            response.data ? response.data.length : 0
-          );
+          $timeout(function () {
+            var karakterUyari = document.querySelector(".karakter-uyari");
+            if (karakterUyari) {
+              console.log(
+                "✅ Tiyatro: Element bulundu, shake sınıfı ekleniyor..."
+              );
+              karakterUyari.classList.add("shake");
+              $timeout(function () {
+                karakterUyari.classList.remove("shake");
+              }, 500);
+            }
+          }, 100);
+          return;
+        }
 
-          if (response.data && response.data.length > 0) {
-            console.log("🔍 İlk yorum örneği:", response.data[0]);
-          }
+        if (!$scope.yeniYorum.puan || $scope.yeniYorum.puan < 1) {
+          alert("Lütfen bir puan seçin!");
+          return;
+        }
 
-          alert(
-            "Debug tamamlandı. Console'u kontrol edin. Yorum sayısı: " +
-              (response.data ? response.data.length : 0)
-          );
-        })
-        .catch(function (error) {
-          console.error("🔍 Debug hatası:", error);
-          alert("Debug hatası: " + error.statusText);
-        });
-    };
+        if (!$scope.tiyatroEseri || !$scope.tiyatroEseri.eser_adi) {
+          alert("Tiyatro eseri bilgisi yüklenemedi!");
+          return;
+        }
 
-    // Manuel test: Yorumları zorla göster
-    $scope.manuelTestYorumlar = function () {
-      console.log("🧪 Manuel test başlatılıyor...");
-
-      // Test yorumları oluştur
-      var testYorumlar = [
-        {
-          id: 1,
-          kullanici_id: 1,
-          kullanici_adi: "Test Kullanıcı",
+        var yorumData = {
+          kullanici_id: $scope.kullanici.id,
+          kullanici_adi: $scope.kullanici.username,
           tur: "tiyatro",
           icerik_id: eserId,
-          icerik_adi: "Test Tiyatro",
-          yorum: "Bu bir test yorumudur. Tiyatro eseri harika!",
-          puan: 8,
-          created_at: new Date().toISOString(),
-        },
-        {
-          id: 2,
-          kullanici_id: 1,
-          kullanici_adi: "Test Kullanıcı 2",
-          tur: "tiyatro",
-          icerik_id: eserId,
-          icerik_adi: "Test Tiyatro",
-          yorum: "İkinci test yorumu. Gerçekten güzel!",
-          puan: 9,
-          created_at: new Date().toISOString(),
-        },
-      ];
+          icerik_adi: $scope.tiyatroEseri.eser_adi,
+          yorum: $scope.yeniYorum.yorum
+            ? $scope.yeniYorum.yorum.trim()
+            : $scope.yeniYorum.yorum,
+          puan: $scope.yeniYorum.puan,
+          spoiler: $scope.yeniYorum.spoiler ? 1 : 0,
+        };
 
-      console.log("🧪 Test yorumları:", testYorumlar);
-      $scope.yorumlar = testYorumlar;
-      if (!$scope.$$phase && !$scope.$root.$$phase) {
-        $scope.$apply();
-      }
+        console.log("📤 Gönderilecek veri:", yorumData);
 
-      alert("Test yorumları eklendi! Şimdi yorumlar görünmeli.");
-    };
-
-    // Yorum sil
-    $scope.yorumSil = function (yorumId) {
-      if (confirm("Bu yorumu silmek istediğinizden emin misiniz?")) {
-        $http({
-          method: "DELETE",
-          url:
-            "api.php?yorum=1&id=" +
-            yorumId +
-            "&kullanici_id=" +
-            $scope.kullanici.id,
-        })
+        $http
+          .post("api.php?yorum=1", yorumData)
           .then(function (response) {
+            console.log("📥 API yanıtı:", response);
             if (response.data.success) {
-              alert("Yorum başarıyla silindi!");
+              alert("Yorum başarıyla eklendi!");
+              // Formu temizle
+              $scope.yeniYorum = {
+                yorum: "",
+                puan: 0,
+                spoiler: false,
+              };
+              // Yorumları yeniden yükle
               $scope.yorumlariGetir();
+              // Sayfayı yenile (güvenlik için)
+              setTimeout(function () {
+                location.reload();
+              }, 1000);
             } else {
-              alert("Yorum silinirken hata: " + response.data.message);
+              alert("Yorum eklenirken hata: " + response.data.message);
             }
           })
           .catch(function (error) {
-            alert("Yorum silinirken hata oluştu: " + error.statusText);
+            console.error("❌ Yorum ekleme hatası:", error);
+            console.error("❌ Hata detayı:", error.data);
+            alert("Yorum eklenirken hata oluştu: " + error.statusText);
           });
-      }
-    };
+      };
 
-    // Scroll to top fonksiyonu
-    $scope.scrollToTop = function () {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    };
+      // Test yorum ekleme fonksiyonu
+      $scope.testYorumEkle = function () {
+        console.log("🧪 Test yorum ekleme başlatılıyor...");
 
-    // Sayfa yüklendiğinde eseri getir
-    $scope.tiyatroEseriniGetir();
-  })
+        // Test verisi
+        $scope.yeniYorum = {
+          yorum: "Bu bir test yorumudur. Tiyatro eseri gerçekten harika!",
+          puan: 8,
+        };
+
+        console.log("🧪 Test verisi hazırlandı:", $scope.yeniYorum);
+
+        // Yorum ekleme fonksiyonunu çağır
+        $scope.yorumEkle();
+      };
+
+      // Debug yorumlar fonksiyonu
+      $scope.debugYorumlar = function () {
+        console.log("🔍 Debug: Yorumlar kontrol ediliyor...");
+        console.log("🔍 Mevcut durum:", {
+          yorumlar: $scope.yorumlar,
+          yorumlarLength: $scope.yorumlar ? $scope.yorumlar.length : 0,
+          eserId: eserId,
+        });
+
+        // API'den yorumları tekrar getir
+        $http
+          .get("api.php?yorum=1&tur=tiyatro&icerik_id=" + eserId)
+          .then(function (response) {
+            console.log("🔍 Debug API yanıtı:", response);
+            console.log(
+              "🔍 Gelen yorum sayısı:",
+              response.data ? response.data.length : 0
+            );
+
+            if (response.data && response.data.length > 0) {
+              console.log("🔍 İlk yorum örneği:", response.data[0]);
+            }
+
+            alert(
+              "Debug tamamlandı. Console'u kontrol edin. Yorum sayısı: " +
+                (response.data ? response.data.length : 0)
+            );
+          })
+          .catch(function (error) {
+            console.error("🔍 Debug hatası:", error);
+            alert("Debug hatası: " + error.statusText);
+          });
+      };
+
+      // Manuel test: Yorumları zorla göster
+      $scope.manuelTestYorumlar = function () {
+        console.log("🧪 Manuel test başlatılıyor...");
+
+        // Test yorumları oluştur
+        var testYorumlar = [
+          {
+            id: 1,
+            kullanici_id: 1,
+            kullanici_adi: "Test Kullanıcı",
+            tur: "tiyatro",
+            icerik_id: eserId,
+            icerik_adi: "Test Tiyatro",
+            yorum: "Bu bir test yorumudur. Tiyatro eseri harika!",
+            puan: 8,
+            created_at: new Date().toISOString(),
+          },
+          {
+            id: 2,
+            kullanici_id: 1,
+            kullanici_adi: "Test Kullanıcı 2",
+            tur: "tiyatro",
+            icerik_id: eserId,
+            icerik_adi: "Test Tiyatro",
+            yorum: "İkinci test yorumu. Gerçekten güzel!",
+            puan: 9,
+            created_at: new Date().toISOString(),
+          },
+        ];
+
+        console.log("🧪 Test yorumları:", testYorumlar);
+        $scope.yorumlar = testYorumlar;
+        if (!$scope.$$phase && !$scope.$root.$$phase) {
+          $scope.$apply();
+        }
+
+        alert("Test yorumları eklendi! Şimdi yorumlar görünmeli.");
+      };
+
+      // Yorum sil
+      $scope.yorumSil = function (yorumId) {
+        if (confirm("Bu yorumu silmek istediğinizden emin misiniz?")) {
+          $http({
+            method: "DELETE",
+            url:
+              "api.php?yorum=1&id=" +
+              yorumId +
+              "&kullanici_id=" +
+              $scope.kullanici.id,
+          })
+            .then(function (response) {
+              if (response.data.success) {
+                alert("Yorum başarıyla silindi!");
+                $scope.yorumlariGetir();
+              } else {
+                alert("Yorum silinirken hata: " + response.data.message);
+              }
+            })
+            .catch(function (error) {
+              alert("Yorum silinirken hata oluştu: " + error.statusText);
+            });
+        }
+      };
+
+      // Scroll to top fonksiyonu
+      $scope.scrollToTop = function () {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      };
+
+      // Sayfa yüklendiğinde eseri getir
+      $scope.tiyatroEseriniGetir();
+    }
+  )
 
   // ===== TIYATRO CONTROLLER =====
   .controller("TiyatroController", function ($scope, $http) {
@@ -965,140 +1075,176 @@ angular
   })
 
   // ===== BELGESEL DETAY CONTROLLER =====
-  .controller("BelgeselDetayController", function ($scope, $http, $location) {
-    $scope.kullanici = JSON.parse(localStorage.getItem("girisYapan") || "null");
-    $scope.belgesel = null;
-    $scope.loading = true;
-    $scope.error = null;
-    $scope.yorumlar = [];
-    $scope.yeniYorum = {
-      yorum: "",
-      puan: 0,
-    };
-
-    // URL'den ID'yi al
-    var urlParams = new URLSearchParams(window.location.search);
-    var belgeselId = urlParams.get("id");
-
-    if (!belgeselId) {
-      $scope.error = "Belgesel ID'si bulunamadı!";
-      $scope.loading = false;
-      return;
-    }
-
-    // Belgeseli getir
-    $scope.belgeseliGetir = function () {
+  .controller(
+    "BelgeselDetayController",
+    function ($scope, $http, $location, $timeout) {
+      $scope.kullanici = JSON.parse(
+        localStorage.getItem("girisYapan") || "null"
+      );
+      $scope.belgesel = null;
       $scope.loading = true;
       $scope.error = null;
-
-      $http
-        .get("api.php?belgesel=1&id=" + belgeselId)
-        .then(function (response) {
-          $scope.belgesel = response.data;
-          $scope.loading = false;
-          // Belgesel yüklendikten sonra yorumları getir
-          $scope.yorumlariGetir();
-        })
-        .catch(function (error) {
-          $scope.error =
-            "Belgesel yüklenirken hata oluştu: " + error.statusText;
-          $scope.loading = false;
-        });
-    };
-
-    // Yorumları getir
-    $scope.yorumlariGetir = function () {
-      $http
-        .get("api.php?yorum=1&tur=belgesel&icerik_id=" + belgeselId)
-        .then(function (response) {
-          $scope.yorumlar = response.data;
-        })
-        .catch(function (error) {
-          console.error("Yorumlar yüklenirken hata:", error);
-        });
-    };
-
-    // Yorum ekle
-    $scope.yorumEkle = function () {
-      if (!$scope.kullanici) {
-        alert("Yorum yapmak için giriş yapmalısınız!");
-        return;
-      }
-
-      if (!$scope.yeniYorum.yorum || $scope.yeniYorum.yorum.length < 10) {
-        alert("Yorum en az 10 karakter olmalıdır!");
-        return;
-      }
-
-      if (!$scope.yeniYorum.puan || $scope.yeniYorum.puan < 1) {
-        alert("Lütfen bir puan seçin!");
-        return;
-      }
-
-      var yorumData = {
-        kullanici_id: $scope.kullanici.id,
-        kullanici_adi: $scope.kullanici.username,
-        tur: "belgesel",
-        icerik_id: belgeselId,
-        icerik_adi: $scope.belgesel.belgesel_adi,
-        yorum: $scope.yeniYorum.yorum,
-        puan: $scope.yeniYorum.puan,
+      $scope.yorumlar = [];
+      $scope.yeniYorum = {
+        yorum: "",
+        puan: 0,
+        spoiler: false,
       };
 
-      $http
-        .post("api.php?yorum=1", yorumData)
-        .then(function (response) {
-          if (response.data.success) {
-            alert("Yorum başarıyla eklendi!");
-            // Formu temizle
-            $scope.yeniYorum = {
-              yorum: "",
-              puan: 0,
-            };
-            // Yorumları yeniden yükle
-            $scope.yorumlariGetir();
-          } else {
-            alert("Yorum eklenirken hata: " + response.data.message);
-          }
-        })
-        .catch(function (error) {
-          alert("Yorum eklenirken hata oluştu: " + error.statusText);
-        });
-    };
+      // URL'den ID'yi al
+      var urlParams = new URLSearchParams(window.location.search);
+      var belgeselId = urlParams.get("id");
 
-    // Yorum sil
-    $scope.yorumSil = function (yorumId) {
-      if (confirm("Bu yorumu silmek istediğinizden emin misiniz?")) {
-        $http({
-          method: "DELETE",
-          url:
-            "api.php?yorum=1&id=" +
-            yorumId +
-            "&kullanici_id=" +
-            $scope.kullanici.id,
-        })
+      if (!belgeselId) {
+        $scope.error = "Belgesel ID'si bulunamadı!";
+        $scope.loading = false;
+        return;
+      }
+
+      // Belgeseli getir
+      $scope.belgeseliGetir = function () {
+        $scope.loading = true;
+        $scope.error = null;
+
+        $http
+          .get("api.php?belgesel=1&id=" + belgeselId)
+          .then(function (response) {
+            $scope.belgesel = response.data;
+            $scope.loading = false;
+            // Belgesel yüklendikten sonra yorumları getir
+            $scope.yorumlariGetir();
+          })
+          .catch(function (error) {
+            $scope.error =
+              "Belgesel yüklenirken hata oluştu: " + error.statusText;
+            $scope.loading = false;
+          });
+      };
+
+      // Yorumları getir
+      $scope.yorumlariGetir = function () {
+        $http
+          .get("api.php?yorum=1&tur=belgesel&icerik_id=" + belgeselId)
+          .then(function (response) {
+            // Yorum verilerini temizle (gereksiz boşlukları kaldır)
+            var temizlenmisYorumlar = (response.data || []).map(function (
+              yorum
+            ) {
+              return {
+                ...yorum,
+                yorum: yorum.yorum
+                  ? yorum.yorum.trim().replace(/\s+/g, " ")
+                  : yorum.yorum,
+              };
+            });
+
+            $scope.yorumlar = temizlenmisYorumlar;
+          })
+          .catch(function (error) {
+            console.error("Yorumlar yüklenirken hata:", error);
+          });
+      };
+
+      // Yorum ekle
+      $scope.yorumEkle = function () {
+        if (!$scope.kullanici) {
+          alert("Yorum yapmak için giriş yapmalısınız!");
+          return;
+        }
+
+        if (!$scope.yeniYorum.yorum || $scope.yeniYorum.yorum.length < 10) {
+          // Titreme animasyonu ekle
+          console.log("🔍 Belgesel: Titreme animasyonu tetikleniyor...");
+
+          $timeout(function () {
+            var karakterUyari = document.querySelector(".karakter-uyari");
+            if (karakterUyari) {
+              console.log(
+                "✅ Belgesel: Element bulundu, shake sınıfı ekleniyor..."
+              );
+              karakterUyari.classList.add("shake");
+              $timeout(function () {
+                karakterUyari.classList.remove("shake");
+              }, 500);
+            }
+          }, 100);
+          return;
+        }
+
+        if (!$scope.yeniYorum.puan || $scope.yeniYorum.puan < 1) {
+          alert("Lütfen bir puan seçin!");
+          return;
+        }
+
+        var yorumData = {
+          kullanici_id: $scope.kullanici.id,
+          kullanici_adi: $scope.kullanici.username,
+          tur: "belgesel",
+          icerik_id: belgeselId,
+          icerik_adi: $scope.belgesel.belgesel_adi,
+          yorum: $scope.yeniYorum.yorum
+            ? $scope.yeniYorum.yorum.trim()
+            : $scope.yeniYorum.yorum,
+          puan: $scope.yeniYorum.puan,
+          spoiler: $scope.yeniYorum.spoiler ? 1 : 0,
+        };
+
+        $http
+          .post("api.php?yorum=1", yorumData)
           .then(function (response) {
             if (response.data.success) {
-              alert("Yorum başarıyla silindi!");
+              alert("Yorum başarıyla eklendi!");
+              // Formu temizle
+              $scope.yeniYorum = {
+                yorum: "",
+                puan: 0,
+                spoiler: false,
+              };
+              // Yorumları yeniden yükle
               $scope.yorumlariGetir();
             } else {
-              alert("Yorum silinirken hata: " + response.data.message);
+              alert("Yorum eklenirken hata: " + response.data.message);
             }
           })
           .catch(function (error) {
-            alert("Yorum silinirken hata oluştu: " + error.statusText);
+            alert("Yorum eklenirken hata oluştu: " + error.statusText);
           });
-      }
-    };
+      };
 
-    // Scroll to top fonksiyonu
-    $scope.scrollToTop = function () {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    };
+      // Yorum sil
+      $scope.yorumSil = function (yorumId) {
+        if (confirm("Bu yorumu silmek istediğinizden emin misiniz?")) {
+          $http({
+            method: "DELETE",
+            url:
+              "api.php?yorum=1&id=" +
+              yorumId +
+              "&kullanici_id=" +
+              $scope.kullanici.id,
+          })
+            .then(function (response) {
+              if (response.data.success) {
+                alert("Yorum başarıyla silindi!");
+                $scope.yorumlariGetir();
+              } else {
+                alert("Yorum silinirken hata: " + response.data.message);
+              }
+            })
+            .catch(function (error) {
+              alert("Yorum silinirken hata oluştu: " + error.statusText);
+            });
+        }
+      };
 
-    // Sayfa yüklendiğinde belgeseli getir
-    $scope.belgeseliGetir();
-  })
+      // Scroll to top fonksiyonu
+      $scope.scrollToTop = function () {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      };
+
+      // Sayfa yüklendiğinde belgeseli getir
+      $scope.belgeseliGetir();
+    }
+  )
 
   // ===== ANIME CONTROLLER =====
   .controller("AnimeController", function ($scope, $http) {
@@ -1140,148 +1286,189 @@ angular
   })
 
   // ===== ANIME DETAY CONTROLLER =====
-  .controller("AnimeDetayController", function ($scope, $http, $location) {
-    $scope.kullanici = JSON.parse(localStorage.getItem("girisYapan") || "null");
-    $scope.anime = null;
-    $scope.loading = true;
-    $scope.error = null;
-    $scope.yorumlar = [];
-    $scope.yeniYorum = {
-      yorum: "",
-      puan: 0,
-    };
-
-    // URL'den ID'yi al
-    var urlParams = new URLSearchParams(window.location.search);
-    var animeId = urlParams.get("id");
-
-    if (!animeId) {
-      $scope.error = "Anime ID'si bulunamadı!";
-      $scope.loading = false;
-      return;
-    }
-
-    // Animeyi getir
-    $scope.animeyiGetir = function () {
+  .controller(
+    "AnimeDetayController",
+    function ($scope, $http, $location, $timeout) {
+      $scope.kullanici = JSON.parse(
+        localStorage.getItem("girisYapan") || "null"
+      );
+      $scope.anime = null;
       $scope.loading = true;
       $scope.error = null;
-
-      $http
-        .get("api.php?anime=1&id=" + animeId)
-        .then(function (response) {
-          $scope.anime = response.data;
-          $scope.loading = false;
-          // Anime yüklendikten sonra yorumları getir
-          $scope.yorumlariGetir();
-        })
-        .catch(function (error) {
-          $scope.error = "Anime yüklenirken hata oluştu: " + error.statusText;
-          $scope.loading = false;
-        });
-    };
-
-    // Yorumları getir
-    $scope.yorumlariGetir = function () {
-      $http
-        .get("api.php?yorum=1&tur=anime&icerik_id=" + animeId)
-        .then(function (response) {
-          $scope.yorumlar = response.data;
-        })
-        .catch(function (error) {
-          console.error("Yorumlar yüklenirken hata:", error);
-        });
-    };
-
-    // Yorum ekle
-    $scope.yorumEkle = function () {
-      if (!$scope.kullanici) {
-        alert("Yorum yapmak için giriş yapmalısınız!");
-        return;
-      }
-
-      if (!$scope.yeniYorum.yorum || $scope.yeniYorum.yorum.length < 10) {
-        alert("Yorum en az 10 karakter olmalıdır!");
-        return;
-      }
-
-      if (!$scope.yeniYorum.puan || $scope.yeniYorum.puan < 1) {
-        alert("Lütfen bir puan seçin!");
-        return;
-      }
-
-      var yorumData = {
-        kullanici_id: $scope.kullanici.id,
-        kullanici_adi: $scope.kullanici.username,
-        tur: "anime",
-        icerik_id: animeId,
-        icerik_adi: $scope.anime.anime_adi,
-        yorum: $scope.yeniYorum.yorum,
-        puan: $scope.yeniYorum.puan,
+      $scope.yorumlar = [];
+      $scope.yeniYorum = {
+        yorum: "",
+        puan: 0,
+        spoiler: false,
       };
 
-      $http
-        .post("api.php?yorum=1", yorumData)
-        .then(function (response) {
-          if (response.data.success) {
-            alert("Yorum başarıyla eklendi!");
-            // Formu temizle
-            $scope.yeniYorum = {
-              yorum: "",
-              puan: 0,
-            };
-            // Yorumları yeniden yükle
-            $scope.yorumlariGetir();
-          } else {
-            alert("Yorum eklenirken hata: " + response.data.message);
-          }
-        })
-        .catch(function (error) {
-          alert("Yorum eklenirken hata oluştu: " + error.statusText);
-        });
-    };
+      // URL'den ID'yi al
+      var urlParams = new URLSearchParams(window.location.search);
+      var animeId = urlParams.get("id");
 
-    // Yorum sil
-    $scope.yorumSil = function (yorumId) {
-      if (confirm("Bu yorumu silmek istediğinizden emin misiniz?")) {
-        $http({
-          method: "DELETE",
-          url:
-            "api.php?yorum=1&id=" +
-            yorumId +
-            "&kullanici_id=" +
-            $scope.kullanici.id,
-        })
+      if (!animeId) {
+        $scope.error = "Anime ID'si bulunamadı!";
+        $scope.loading = false;
+        return;
+      }
+
+      // Animeyi getir
+      $scope.animeyiGetir = function () {
+        $scope.loading = true;
+        $scope.error = null;
+
+        $http
+          .get("api.php?anime=1&id=" + animeId)
+          .then(function (response) {
+            $scope.anime = response.data;
+            $scope.loading = false;
+            // Anime yüklendikten sonra yorumları getir
+            $scope.yorumlariGetir();
+          })
+          .catch(function (error) {
+            $scope.error = "Anime yüklenirken hata oluştu: " + error.statusText;
+            $scope.loading = false;
+          });
+      };
+
+      // Yorumları getir
+      $scope.yorumlariGetir = function () {
+        $http
+          .get("api.php?yorum=1&tur=anime&icerik_id=" + animeId)
+          .then(function (response) {
+            // Yorum verilerini temizle (gereksiz boşlukları kaldır)
+            var temizlenmisYorumlar = (response.data || []).map(function (
+              yorum
+            ) {
+              return {
+                ...yorum,
+                yorum: yorum.yorum
+                  ? yorum.yorum.trim().replace(/\s+/g, " ")
+                  : yorum.yorum,
+              };
+            });
+
+            $scope.yorumlar = temizlenmisYorumlar;
+          })
+          .catch(function (error) {
+            console.error("Yorumlar yüklenirken hata:", error);
+          });
+      };
+
+      // Yorum ekle
+      $scope.yorumEkle = function () {
+        if (!$scope.kullanici) {
+          alert("Yorum yapmak için giriş yapmalısınız!");
+          return;
+        }
+
+        if (!$scope.yeniYorum.yorum || $scope.yeniYorum.yorum.length < 10) {
+          // Titreme animasyonu ekle
+          console.log("🔍 Anime: Titreme animasyonu tetikleniyor...");
+
+          $timeout(function () {
+            var karakterUyari = document.querySelector(".karakter-uyari");
+            if (karakterUyari) {
+              console.log(
+                "✅ Anime: Element bulundu, shake sınıfı ekleniyor..."
+              );
+              karakterUyari.classList.add("shake");
+              $timeout(function () {
+                karakterUyari.classList.remove("shake");
+              }, 500);
+            }
+          }, 100);
+          return;
+        }
+
+        if (!$scope.yeniYorum.puan || $scope.yeniYorum.puan < 1) {
+          alert("Lütfen bir puan seçin!");
+          return;
+        }
+
+        var yorumData = {
+          kullanici_id: $scope.kullanici.id,
+          kullanici_adi: $scope.kullanici.username,
+          tur: "anime",
+          icerik_id: animeId,
+          icerik_adi: $scope.anime.anime_adi,
+          yorum: $scope.yeniYorum.yorum
+            ? $scope.yeniYorum.yorum.trim()
+            : $scope.yeniYorum.yorum,
+          puan: $scope.yeniYorum.puan,
+          spoiler: $scope.yeniYorum.spoiler ? 1 : 0,
+        };
+
+        $http
+          .post("api.php?yorum=1", yorumData)
           .then(function (response) {
             if (response.data.success) {
-              alert("Yorum başarıyla silindi!");
+              alert("Yorum başarıyla eklendi!");
+              // Formu temizle
+              $scope.yeniYorum = {
+                yorum: "",
+                puan: 0,
+                spoiler: false,
+              };
+              // Yorumları yeniden yükle
               $scope.yorumlariGetir();
             } else {
-              alert("Yorum silinirken hata: " + response.data.message);
+              alert("Yorum eklenirken hata: " + response.data.message);
             }
           })
           .catch(function (error) {
-            alert("Yorum silinirken hata oluştu: " + error.statusText);
+            alert("Yorum eklenirken hata oluştu: " + error.statusText);
           });
-      }
-    };
+      };
 
-    // Fragman oynatma fonksiyonu
-    $scope.fragmanOynat = function () {
-      alert(
-        "🎬 " +
-          $scope.anime.anime_adi +
-          " önizleme videosu başlatılıyor...\n\nBu özellik gerçek video oynatıcı ile entegre edilecek."
-      );
-    };
+      // Yorum sil
+      $scope.yorumSil = function (yorumId) {
+        if (confirm("Bu yorumu silmek istediğinizden emin misiniz?")) {
+          $http({
+            method: "DELETE",
+            url:
+              "api.php?yorum=1&id=" +
+              yorumId +
+              "&kullanici_id=" +
+              $scope.kullanici.id,
+          })
+            .then(function (response) {
+              if (response.data.success) {
+                alert("Yorum başarıyla silindi!");
+                $scope.yorumlariGetir();
+              } else {
+                alert("Yorum silinirken hata: " + response.data.message);
+              }
+            })
+            .catch(function (error) {
+              alert("Yorum silinirken hata oluştu: " + error.statusText);
+            });
+        }
+      };
 
-    // Scroll to top fonksiyonu
-    $scope.scrollToTop = function () {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    };
+      // Fragman oynatma fonksiyonu
+      $scope.fragmanOynat = function () {
+        if ($scope.anime.onizleme) {
+          // Önizleme varsa yeni sekmede aç
+          window.open($scope.anime.onizleme, "_blank");
+        } else {
+          alert(
+            "🎬 " +
+              $scope.anime.anime_adi +
+              " için henüz önizleme videosu bulunmuyor.\n\nBu anime'nin önizleme videosu yakında eklenecek."
+          );
+        }
+      };
 
-    // Sayfa yüklendiğinde animeyi getir
-    $scope.animeyiGetir();
-  })
+      // Scroll to top fonksiyonu
+      $scope.scrollToTop = function () {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      };
+
+      // Sayfa yüklendiğinde animeyi getir
+      $scope.animeyiGetir();
+    }
+  )
 
   // ===== LIST CONTROLLER =====
   .controller("ListeController", function ($scope, $http) {
@@ -1455,7 +1642,7 @@ angular
   })
 
   // ===== FILM DETAY CONTROLLER =====
-  .controller("FilmDetayController", function ($scope, $http) {
+  .controller("FilmDetayController", function ($scope, $http, $timeout) {
     $scope.kullanici = JSON.parse(localStorage.getItem("girisYapan") || "null");
     $scope.loading = true;
     $scope.error = null;
@@ -1464,6 +1651,7 @@ angular
     $scope.yeniYorum = {
       yorum: "",
       puan: 0,
+      spoiler: false,
     };
 
     // URL'den film ID'sini al
@@ -1521,7 +1709,18 @@ angular
         .then(function (response) {
           console.log("📊 API'den gelen yorumlar:", response.data); // Debug log
           console.log("📊 Yorum sayısı:", response.data.length); // Debug log
-          $scope.yorumlar = response.data || []; // Handle null/undefined response
+
+          // Yorum verilerini temizle (gereksiz boşlukları kaldır)
+          var temizlenmisYorumlar = (response.data || []).map(function (yorum) {
+            return {
+              ...yorum,
+              yorum: yorum.yorum
+                ? yorum.yorum.trim().replace(/\s+/g, " ")
+                : yorum.yorum,
+            };
+          });
+
+          $scope.yorumlar = temizlenmisYorumlar; // Handle null/undefined response
           console.log("📊 Scope'daki yorumlar:", $scope.yorumlar); // Debug log
           // Angular'ın değişiklikleri algılamasını sağla (güvenli)
           if (!$scope.$$phase && !$scope.$root.$$phase) {
@@ -1547,13 +1746,39 @@ angular
         return;
       }
 
-      if (!$scope.yeniYorum.yorum || $scope.yeniYorum.yorum.length < 10) {
-        alert("Yorum en az 10 karakter olmalıdır!");
-        return;
-      }
+      // Buton disabled durumunda ise işlemi durdur
+      if (
+        !$scope.yeniYorum.yorum ||
+        $scope.yeniYorum.yorum.length < 10 ||
+        !$scope.yeniYorum.puan ||
+        $scope.yeniYorum.puan < 1
+      ) {
+        // Titreme animasyonu ekle
+        console.log("🔍 Titreme animasyonu tetikleniyor...");
 
-      if (!$scope.yeniYorum.puan || $scope.yeniYorum.puan < 1) {
-        alert("Lütfen bir puan seçin!");
+        // AngularJS digest cycle'ını bekle
+        $timeout(function () {
+          var karakterUyari = document.querySelector(".karakter-uyari");
+          console.log("🔍 Bulunan element:", karakterUyari);
+
+          if (karakterUyari) {
+            console.log("✅ Element bulundu, shake sınıfı ekleniyor...");
+            karakterUyari.classList.add("shake");
+            $timeout(function () {
+              console.log("🔄 Shake sınıfı kaldırılıyor...");
+              karakterUyari.classList.remove("shake");
+            }, 500);
+          } else {
+            console.log("❌ Karakter uyarı elementi bulunamadı!");
+            // Alternatif yöntem dene
+            var allElements = document.querySelectorAll(".karakter-uyari");
+            console.log("🔍 Tüm karakter-uyari elementleri:", allElements);
+          }
+        }, 100);
+
+        if (!$scope.yeniYorum.puan || $scope.yeniYorum.puan < 1) {
+          alert("Lütfen bir puan seçin!");
+        }
         return;
       }
 
@@ -1563,8 +1788,11 @@ angular
         tur: "film",
         icerik_id: filmId,
         icerik_adi: $scope.film.film_adi,
-        yorum: $scope.yeniYorum.yorum,
+        yorum: $scope.yeniYorum.yorum
+          ? $scope.yeniYorum.yorum.trim()
+          : $scope.yeniYorum.yorum,
         puan: $scope.yeniYorum.puan,
+        spoiler: $scope.yeniYorum.spoiler ? 1 : 0,
       };
 
       console.log("📤 Gönderilecek yorum verisi:", yorumData); // Debug log
@@ -1579,6 +1807,7 @@ angular
             $scope.yeniYorum = {
               yorum: "",
               puan: 0,
+              spoiler: false,
             };
             // Angular'ın değişiklikleri algılamasını sağla (güvenli)
             if (!$scope.$$phase && !$scope.$root.$$phase) {
@@ -1631,7 +1860,7 @@ angular
   })
 
   // Dizi Detay Controller
-  .controller("DiziDetayController", function ($scope, $http) {
+  .controller("DiziDetayController", function ($scope, $http, $timeout) {
     $scope.kullanici = JSON.parse(localStorage.getItem("girisYapan") || "null");
     $scope.loading = true;
     $scope.error = null;
@@ -1640,6 +1869,7 @@ angular
     $scope.yeniYorum = {
       yorum: "",
       puan: 0,
+      spoiler: false,
     };
 
     // URL'den dizi ID'sini al
@@ -1679,7 +1909,17 @@ angular
       $http
         .get("api.php?yorum=1&tur=dizi&icerik_id=" + diziId)
         .then(function (response) {
-          $scope.yorumlar = response.data;
+          // Yorum verilerini temizle (gereksiz boşlukları kaldır)
+          var temizlenmisYorumlar = (response.data || []).map(function (yorum) {
+            return {
+              ...yorum,
+              yorum: yorum.yorum
+                ? yorum.yorum.trim().replace(/\s+/g, " ")
+                : yorum.yorum,
+            };
+          });
+
+          $scope.yorumlar = temizlenmisYorumlar;
         })
         .catch(function (error) {
           console.error("Yorumlar yüklenirken hata:", error);
@@ -1693,13 +1933,32 @@ angular
         return;
       }
 
-      if (!$scope.yeniYorum.yorum || $scope.yeniYorum.yorum.length < 10) {
-        alert("Yorum en az 10 karakter olmalıdır!");
-        return;
-      }
+      // Buton disabled durumunda ise işlemi durdur
+      if (
+        !$scope.yeniYorum.yorum ||
+        $scope.yeniYorum.yorum.length < 10 ||
+        !$scope.yeniYorum.puan ||
+        $scope.yeniYorum.puan < 1
+      ) {
+        // Titreme animasyonu ekle
+        console.log("🔍 Dizi: Titreme animasyonu tetikleniyor...");
 
-      if (!$scope.yeniYorum.puan || $scope.yeniYorum.puan < 1) {
-        alert("Lütfen bir puan seçin!");
+        $timeout(function () {
+          var karakterUyari = document.querySelector(".karakter-uyari");
+          if (karakterUyari) {
+            console.log("✅ Dizi: Element bulundu, shake sınıfı ekleniyor...");
+            karakterUyari.classList.add("shake");
+            $timeout(function () {
+              karakterUyari.classList.remove("shake");
+            }, 500);
+          }
+        }, 100);
+
+        if (!$scope.yeniYorum.yorum || $scope.yeniYorum.yorum.length < 10) {
+          alert("Yorum en az 10 karakter olmalıdır!");
+        } else if (!$scope.yeniYorum.puan || $scope.yeniYorum.puan < 1) {
+          alert("Lütfen bir puan seçin!");
+        }
         return;
       }
 
@@ -1709,8 +1968,11 @@ angular
         tur: "dizi",
         icerik_id: diziId,
         icerik_adi: $scope.dizi.dizi_adi,
-        yorum: $scope.yeniYorum.yorum,
+        yorum: $scope.yeniYorum.yorum
+          ? $scope.yeniYorum.yorum.trim()
+          : $scope.yeniYorum.yorum,
         puan: $scope.yeniYorum.puan,
+        spoiler: $scope.yeniYorum.spoiler ? 1 : 0,
       };
 
       $http
@@ -1722,6 +1984,7 @@ angular
             $scope.yeniYorum = {
               yorum: "",
               puan: 0,
+              spoiler: false,
             };
             // Yorumları yeniden yükle
             $scope.yorumlariGetir();
@@ -1796,8 +2059,18 @@ angular
       $http
         .get("api.php?tum_yorumlar=1")
         .then(function (response) {
-          $scope.yorumlar = response.data;
-          $scope.filteredYorumlar = response.data;
+          // Yorum verilerini temizle (gereksiz boşlukları kaldır)
+          var temizlenmisYorumlar = (response.data || []).map(function (yorum) {
+            return {
+              ...yorum,
+              yorum: yorum.yorum
+                ? yorum.yorum.trim().replace(/\s+/g, " ")
+                : yorum.yorum,
+            };
+          });
+
+          $scope.yorumlar = temizlenmisYorumlar;
+          $scope.filteredYorumlar = temizlenmisYorumlar;
           $scope.istatistikleriHesapla();
           $scope.filtrele();
           $scope.loading = false;

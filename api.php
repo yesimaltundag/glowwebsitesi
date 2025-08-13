@@ -286,6 +286,15 @@ if (isset($_GET["tiyatro"])) {
     } else {
         // Tüm tiyatro eserlerini getir (limit desteği ile)
         $limit = isset($_GET["limit"]) ? (int)$_GET["limit"] : 0;
+        
+        // Tabloların varlığını kontrol et
+        $tablo_kontrol = $baglanti->query("SHOW TABLES LIKE 'tiyatro_eserleri'");
+        if ($tablo_kontrol->num_rows == 0) {
+            error_log("tiyatro_eserleri tablosu bulunamadı");
+            echo json_encode([]);
+            exit;
+        }
+        
         $query = "SELECT * FROM tiyatro_eserleri ORDER BY puan DESC";
         if ($limit > 0) {
             $query .= " LIMIT $limit";
@@ -345,6 +354,15 @@ if ($_SERVER["REQUEST_METHOD"] === "GET" && isset($_GET["belgesel"])) {
     } else {
         // Tüm belgeselleri getir (limit desteği ile)
         $limit = isset($_GET["limit"]) ? (int)$_GET["limit"] : 0;
+        
+        // Tabloların varlığını kontrol et
+        $tablo_kontrol = $baglanti->query("SHOW TABLES LIKE 'belgeseller'");
+        if ($tablo_kontrol->num_rows == 0) {
+            error_log("belgeseller tablosu bulunamadı");
+            echo json_encode([]);
+            exit;
+        }
+        
         $query = "SELECT * FROM belgeseller ORDER BY puan DESC";
         if ($limit > 0) {
             $query .= " LIMIT $limit";
@@ -398,6 +416,15 @@ if ($_SERVER["REQUEST_METHOD"] === "GET" && isset($_GET["anime"])) {
     } else {
         // Tüm animeleri getir (limit desteği ile)
         $limit = isset($_GET["limit"]) ? (int)$_GET["limit"] : 0;
+        
+        // Tabloların varlığını kontrol et
+        $tablo_kontrol = $baglanti->query("SHOW TABLES LIKE 'animeler'");
+        if ($tablo_kontrol->num_rows == 0) {
+            error_log("animeler tablosu bulunamadı");
+            echo json_encode([]);
+            exit;
+        }
+        
         $query = "SELECT * FROM animeler ORDER BY puan DESC";
         if ($limit > 0) {
             $query .= " LIMIT $limit";
@@ -470,8 +497,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_GET["yorum"])) {
     $tur = $baglanti->real_escape_string($girdi["tur"]);
     $icerik_id = (int)$girdi["icerik_id"];
     $icerik_adi = $baglanti->real_escape_string($girdi["icerik_adi"]);
-    $yorum = $baglanti->real_escape_string($girdi["yorum"]);
+    $yorum = $baglanti->real_escape_string(trim($girdi["yorum"]));
     $puan = (int)$girdi["puan"];
+    $spoiler = isset($girdi["spoiler"]) ? (int)$girdi["spoiler"] : 0;
     
     // Validasyon
     if ($puan < 1 || $puan > 10) {
@@ -486,8 +514,20 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_GET["yorum"])) {
         exit;
     }
     
-    $sql = "INSERT INTO yorumlar (kullanici_id, kullanici_adi, tur, icerik_id, icerik_adi, yorum, puan, created_at) 
-            VALUES ($kullanici_id, '$kullanici_adi', '$tur', $icerik_id, '$icerik_adi', '$yorum', $puan, NOW())";
+    // Spoiler sütunu varsa dinamik şekilde ekle
+    $spoilerKolonuVar = false;
+    $kolonKontrol = $baglanti->query("SHOW COLUMNS FROM yorumlar LIKE 'spoiler'");
+    if ($kolonKontrol && $kolonKontrol->num_rows > 0) {
+        $spoilerKolonuVar = true;
+    }
+
+    if ($spoilerKolonuVar) {
+        $sql = "INSERT INTO yorumlar (kullanici_id, kullanici_adi, tur, icerik_id, icerik_adi, yorum, puan, spoiler, created_at) 
+                VALUES ($kullanici_id, '$kullanici_adi', '$tur', $icerik_id, '$icerik_adi', '$yorum', $puan, $spoiler, NOW())";
+    } else {
+        $sql = "INSERT INTO yorumlar (kullanici_id, kullanici_adi, tur, icerik_id, icerik_adi, yorum, puan, created_at) 
+                VALUES ($kullanici_id, '$kullanici_adi', '$tur', $icerik_id, '$icerik_adi', '$yorum', $puan, NOW())";
+    }
     
     error_log("SQL sorgusu: " . $sql);
     
@@ -860,6 +900,10 @@ if ($_SERVER["REQUEST_METHOD"] === "GET" && isset($_GET["tum_yorumlar"])) {
     
     if ($sonuc) {
         while ($satir = $sonuc->fetch_assoc()) {
+            // Yorum metnini temizle (gereksiz boşlukları kaldır)
+            if (isset($satir['yorum'])) {
+                $satir['yorum'] = trim(preg_replace('/\s+/', ' ', $satir['yorum']));
+            }
             $yorumlar[] = $satir;
         }
         error_log("Toplam yorum sayısı: " . count($yorumlar));
@@ -897,6 +941,10 @@ if ($_SERVER["REQUEST_METHOD"] === "GET" && isset($_GET["son_yorumlar"])) {
     
     if ($sonuc) {
         while ($satir = $sonuc->fetch_assoc()) {
+            // Yorum metnini temizle (gereksiz boşlukları kaldır)
+            if (isset($satir['yorum'])) {
+                $satir['yorum'] = trim(preg_replace('/\s+/', ' ', $satir['yorum']));
+            }
             $yorumlar[] = $satir;
         }
         error_log("Bulunan son yorum sayısı: " . count($yorumlar));
@@ -945,6 +993,10 @@ if ($_SERVER["REQUEST_METHOD"] === "GET" && isset($_GET["yorum"])) {
     if ($sonuc) {
         error_log("✅ SQL sorgusu başarılı");
         while ($satir = $sonuc->fetch_assoc()) {
+            // Yorum metnini temizle (gereksiz boşlukları kaldır)
+            if (isset($satir['yorum'])) {
+                $satir['yorum'] = trim(preg_replace('/\s+/', ' ', $satir['yorum']));
+            }
             error_log("📊 Yorum satırı: " . json_encode($satir));
             $yorumlar[] = $satir;
         }

@@ -113,9 +113,6 @@
           <div class="kategori-card" ng-click="kategoriSec('Pratik Tarifler')">
             Pratik Tarifler
           </div>
-          <div class="kategori-card" ng-click="kategoriSec('İçecekler')">
-            İçecekler
-          </div>
           <div
             class="kategori-card"
             ng-click="kategoriSec('Sağlıklı Besinler')"
@@ -139,15 +136,20 @@
 
           $scope.kategoriSec = function (kategori) {
             if (kategori === "Yöresel Yemekler") {
-              window.location.href = "yoresel-yemekler.html";
+              window.location.href =
+                "http://app.test2.local/yoresel-yemekler.html";
             } else if (kategori === "Dünya Mutfağı") {
-              window.location.href = "dunya-mutfagi.html";
+              window.location.href =
+                "http://app.test2.local/dunya-mutfagi.html";
             } else if (kategori === "Tatlılar ve Hamur İşleri") {
-              window.location.href = "tatlilar-hamur.html";
+              window.location.href =
+                "http://app.test2.local/tatlilar-hamur.html";
             } else if (kategori === "Pratik Tarifler") {
-              window.location.href = "pratik-tarifler.html";
+              window.location.href =
+                "http://app.test2.local/pratik-tarifler.html";
             } else if (kategori === "Sağlıklı Besinler") {
-              window.location.href = "saglikli-besinler.html";
+              window.location.href =
+                "http://app.test2.local/saglikli-besinler.html";
             } else {
               alert(
                 kategori + " kategorisi seçildi! Bu özellik yakında eklenecek."

@@ -11,7 +11,7 @@
       .detay-container {
         max-width: 100%;
         margin: 40px auto;
-        padding: 32px 40px;
+        padding: 32px 40px 32px 80px;
         background: rgba(255, 255, 255, 0.92);
         border-radius: 18px;
         box-shadow: 0 8px 32px rgba(124, 92, 74, 0.1);
@@ -132,10 +132,9 @@
         background: linear-gradient(135deg, #ff6b6b, #ee5a24);
         border-radius: 12px;
         display: flex;
+        flex-direction: column;
         align-items: center;
         justify-content: center;
-        font-size: 60px;
-        color: white;
         margin-bottom: 16px;
         box-shadow: 0 4px 16px rgba(255, 107, 107, 0.3);
         cursor: pointer;
@@ -144,6 +143,20 @@
 
       .anime-fragman:hover {
         transform: scale(1.02);
+        box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+      }
+
+      .anime-onizleme-container {
+        width: 100%;
+        margin-bottom: 16px;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 16px rgba(255, 107, 107, 0.3);
+        transition: all 0.3s ease;
+      }
+
+      .anime-onizleme-container:hover {
+        transform: scale(1.01);
         box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
       }
 
@@ -164,6 +177,7 @@
         position: absolute;
         top: 20px;
         right: 20px;
+        z-index: 1000;
       }
 
       .geri-btn:hover {
@@ -243,6 +257,59 @@
         outline: none;
         border-color: #ff6b6b;
         box-shadow: 0 0 0 2px rgba(255, 107, 107, 0.1);
+      }
+
+      .karakter-uyari {
+        color: #dc3545;
+        font-size: 0.9rem;
+        font-weight: 500;
+        margin: 8px 0;
+        text-align: center;
+        padding: 8px;
+        background: linear-gradient(135deg, #fff5f5, #ffe6e6);
+        border: 1px solid #ffcccc;
+        border-radius: 8px;
+        display: none;
+      }
+
+      .karakter-uyari.show {
+        display: block;
+        animation: fadeIn 0.3s ease-in;
+      }
+
+      .karakter-uyari.shake {
+        animation: shake 0.5s ease-in-out;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes shake {
+        0%,
+        100% {
+          transform: translateX(0);
+        }
+        10%,
+        30%,
+        50%,
+        70%,
+        90% {
+          transform: translateX(-5px);
+        }
+        20%,
+        40%,
+        60%,
+        80% {
+          transform: translateX(5px);
+        }
       }
 
       .karakter-sayisi {
@@ -408,6 +475,14 @@
         .detay-baslik {
           font-size: 2rem;
         }
+
+        .anime-onizleme-container iframe {
+          height: 250px;
+        }
+
+        .anime-fragman {
+          height: 250px;
+        }
       }
 
       /* Yorum Silme Butonu Stilleri */
@@ -437,8 +512,25 @@
       }
       @media (max-width: 600px) {
         .detay-container {
-          padding: 20px;
+          padding: 20px 20px 20px 60px;
           max-width: 100%;
+        }
+
+        .anime-onizleme-container iframe {
+          height: 200px;
+        }
+
+        .anime-fragman {
+          height: 200px;
+        }
+
+        .anime-fragman div {
+          font-size: 40px !important;
+        }
+
+        .anime-fragman p {
+          font-size: 14px !important;
+          margin-top: 5px !important;
         }
       }
     </style>
@@ -492,10 +584,40 @@
           <div class="detay-icerik">
             <div class="detay-bolum">
               <h3 class="bolum-baslik">🎬 Anime Önizlemesi</h3>
-              <div class="anime-fragman" ng-click="fragmanOynat()">▶️</div>
-              <p style="text-align: center; color: #7f8c8d; font-style: italic">
-                Bu anime'nin önizleme videosunu izlemek için tıklayın
-              </p>
+
+              <!-- Debug Bilgisi -->
+
+              <div ng-if="anime.onizleme" class="anime-onizleme-container">
+                <iframe
+                  ng-src="{{anime.onizleme | trustUrl}}"
+                  width="100%"
+                  height="300"
+                  frameborder="0"
+                  allowfullscreen
+                  style="
+                    border-radius: 12px;
+                    box-shadow: 0 4px 16px rgba(255, 107, 107, 0.3);
+                  "
+                >
+                </iframe>
+              </div>
+              <div
+                ng-if="!anime.onizleme"
+                class="anime-fragman"
+                ng-click="fragmanOynat()"
+              >
+                <div style="font-size: 60px; color: white">▶️</div>
+                <p
+                  style="
+                    text-align: center;
+                    color: white;
+                    font-style: italic;
+                    margin-top: 10px;
+                  "
+                >
+                  Bu anime'nin önizleme videosunu izlemek için tıklayın
+                </p>
+              </div>
             </div>
 
             <div class="detay-bolum">
@@ -537,6 +659,20 @@
                   rows="4"
                   maxlength="500"
                 ></textarea>
+                <div
+                  class="karakter-uyari"
+                  ng-class="{ 'show': yeniYorum.yorum && yeniYorum.yorum.length < 10 }"
+                >
+                  ⚠️ Lütfen en az 10 karakter kullanınız
+                </div>
+                <button
+                  type="button"
+                  class="spoiler-toggle"
+                  ng-class="{ 'active': yeniYorum.spoiler }"
+                  ng-click="yeniYorum.spoiler = !yeniYorum.spoiler"
+                >
+                  ⚠️ Yorumum spoiler içeriyor
+                </button>
                 <div class="karakter-sayisi">
                   {{ yeniYorum.yorum.length }}/500
                 </div>
@@ -598,7 +734,28 @@
                     🗑️ Sil
                   </button>
                 </div>
-                <div class="yorum-icerik">{{ yorum.yorum }}</div>
+                <div
+                  ng-if="yorum.spoiler == 1 || yorum.spoiler === '1' || yorum.spoiler === true"
+                >
+                  <div
+                    class="spoiler-container"
+                    ng-click="yorum._acik = !yorum._acik"
+                  >
+                    <div class="spoiler-etiket" ng-if="!yorum._acik">
+                      
+                      Bu yorum spoiler içeriyor. Görmek için tıklayın
+                    </div>
+                  </div>
+                  <div class="yorum-icerik" ng-if="yorum._acik">
+                    {{ yorum.yorum }}
+                  </div>
+                </div>
+                <div
+                  class="yorum-icerik"
+                  ng-if="!yorum.spoiler || yorum.spoiler == 0 || yorum.spoiler === '0'"
+                >
+                  {{ yorum.yorum }}
+                </div>
               </div>
             </div>
 

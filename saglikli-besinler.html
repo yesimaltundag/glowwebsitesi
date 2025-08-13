@@ -461,10 +461,12 @@
             $scope.error = null;
 
             console.log("🔄 Sağlıklı besinler yükleniyor...");
-            console.log("📡 API URL: api.php?saglikli_besinler=1");
+            console.log(
+              "📡 API URL: http://app.test2.local/api.php?saglikli_besinler=1"
+            );
 
             $http
-              .get("api.php?saglikli_besinler=1")
+              .get("http://app.test2.local/api.php?saglikli_besinler=1")
               .then(function (response) {
                 console.log("✅ API yanıtı:", response);
                 console.log("📊 Gelen veri:", response.data);
@@ -495,7 +497,7 @@
           };
 
           $scope.geriDon = function () {
-            window.location.href = "yemekler.html";
+            window.location.href = "http://app.test2.local/yemekler.html";
           };
 
           $scope.scrollToTop = function () {

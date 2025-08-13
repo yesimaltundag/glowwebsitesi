@@ -34,7 +34,7 @@
             ng-click="filmDetay(film.id)"
           >
             <img
-              ng-src="{{ film.kapak_url || 'assets/images/logo.jpg' }}"
+              ng-src="{{ film.poster_url || 'assets/images/logo.jpg' }}"
               ng-alt="{{ film.film_adi }}"
               class="film-poster"
             />
@@ -63,7 +63,7 @@
 
           // Veritabanından filmleri çek
           $http
-            .get("api.php?films=1&kategori=Belgesel")
+            .get("http://app.test2.local/api.php?films=1&kategori=Belgesel")
             .then(function (response) {
               $scope.filmler = response.data;
               $scope.loading = false;
@@ -75,7 +75,8 @@
             });
 
           $scope.filmDetay = function (filmId) {
-            window.location.href = "film-detay.html?id=" + filmId;
+            window.location.href =
+              "http://app.test2.local/film-detay.html?id=" + filmId;
           };
 
           $scope.scrollToTop = function () {

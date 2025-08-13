@@ -41,14 +41,14 @@
 
       .contact-grid {
         display: grid;
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: 1fr;
         gap: 20px;
         margin: 20px 0;
       }
 
       .contact-bottom {
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(4, 1fr);
         gap: 20px;
         margin-top: 20px;
       }
@@ -299,7 +299,7 @@
         }
 
         .contact-bottom {
-          grid-template-columns: 1fr;
+          grid-template-columns: repeat(2, 1fr);
           gap: 20px;
         }
 
@@ -341,12 +341,7 @@
         <div class="contact-container">
           <h2 class="contact-title">İLETİŞİM</h2>
           <div class="contact-grid">
-            <div class="contact-item">
-              <i>📍</i>
-              <h3>Adres</h3>
-              <p>Londra, Birleşik Krallık<br />SW1A 1AA</p>
-            </div>
-            <div class="contact-item" style="padding: 0">
+            <div class="contact-item" style="padding: 0; min-height: 300px">
               <div
                 style="
                   border-radius: 12px;
@@ -357,20 +352,28 @@
                 "
               >
                 <iframe
-                  src="https://www.google.com/maps?q=London,+UK&output=embed"
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3010.9053747099806!2d28.665045976713127!3d41.005444271350875!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14caa1baf78be10d%3A0x4180090b13edab41!2sTekprosis%20Bilgisayar%20Mikro%20Yaz%C4%B1l%C4%B1m!5e0!3m2!1str!2str!4v1755095798462!5m2!1str!2str"
                   width="100%"
                   height="100%"
-                  style="border: 0; min-width: 220px; min-height: 200px"
+                  style="border: 0; min-height: 300px"
                   allowfullscreen=""
                   loading="lazy"
                   referrerpolicy="no-referrer-when-downgrade"
-                  title="Londra Harita"
+                  title="İstanbul Harita"
                 ></iframe>
               </div>
             </div>
           </div>
 
           <div class="contact-bottom">
+            <div class="contact-item">
+              <i>📍</i>
+              <h3>Adres</h3>
+              <p>
+                Nanna Plaza, Yakuplu, 208 Sk No:23 Kat:3 D:3, 34524
+                Beylikdüzü/İstanbul<br />34000
+              </p>
+            </div>
             <div class="contact-item">
               <i>✉️</i>
               <h3>E-posta</h3>

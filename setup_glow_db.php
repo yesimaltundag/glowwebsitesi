@@ -1,16 +1,24 @@
 <?php
-// Veritabanı bağlantı ayarları - WampServer
+// WampServer için Sağlıklı Besinler tablosu kurulum scripti
+echo "<h2>🚀 Sağlıklı Besinler Tablosu Kurulumu - WampServer</h2>";
+
+// Veritabanı bağlantı ayarları
 $servername = "localhost";
 $username = "root";
 $password = "";
-$dbname = "basit_sistem";
 
 try {
-    // PDO bağlantısı oluştur
-    $pdo = new PDO("mysql:host=$servername;dbname=$dbname;charset=utf8", $username, $password);
+    // Ana veritabanına bağlan
+    $pdo = new PDO("mysql:host=$servername;charset=utf8", $username, $password);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     
-    echo "✅ Veritabanı bağlantısı başarılı!<br>";
+    echo "✅ WampServer bağlantısı başarılı!<br>";
+    
+         // basit_sistem veritabanına bağlan
+     $pdo = new PDO("mysql:host=$servername;dbname=basit_sistem;charset=utf8", $username, $password);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    
+         echo "✅ 'basit_sistem' veritabanına bağlantı başarılı!<br><br>";
     
     // Sağlıklı besinler tablosu oluştur
     $sql = "CREATE TABLE IF NOT EXISTS saglikli_besinler (
@@ -130,28 +138,38 @@ try {
     $insert_sql = "INSERT INTO saglikli_besinler (ad, kategori, aciklama, sure, zorluk, porsiyon, kalori, protein, karbonhidrat, yag, lif, resim, malzemeler, hazirlanis, puf_noktalari) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     $stmt = $pdo->prepare($insert_sql);
     
+    $eklenen = 0;
     foreach ($ornek_veriler as $veri) {
-        $stmt->execute([
-            $veri['ad'],
-            $veri['kategori'],
-            $veri['aciklama'],
-            $veri['sure'],
-            $veri['zorluk'],
-            $veri['porsiyon'],
-            $veri['kalori'],
-            $veri['protein'],
-            $veri['karbonhidrat'],
-            $veri['yag'],
-            $veri['lif'],
-            $veri['resim'],
-            $veri['malzemeler'],
-            $veri['hazirlanis'],
-            $veri['puf_noktalari']
-        ]);
+        try {
+            $stmt->execute([
+                $veri['ad'],
+                $veri['kategori'],
+                $veri['aciklama'],
+                $veri['sure'],
+                $veri['zorluk'],
+                $veri['porsiyon'],
+                $veri['kalori'],
+                $veri['protein'],
+                $veri['karbonhidrat'],
+                $veri['yag'],
+                $veri['lif'],
+                $veri['resim'],
+                $veri['malzemeler'],
+                $veri['hazirlanis'],
+                $veri['puf_noktalari']
+            ]);
+            $eklenen++;
+            echo "✅ " . $veri['ad'] . " eklendi<br>";
+        } catch(PDOException $e) {
+            if ($e->getCode() == 23000) { // Duplicate entry
+                echo "⚠️ " . $veri['ad'] . " zaten mevcut<br>";
+            } else {
+                echo "❌ " . $veri['ad'] . " eklenirken hata: " . $e->getMessage() . "<br>";
+            }
+        }
     }
     
-    echo "✅ Örnek veriler başarıyla eklendi!<br>";
-    echo "📊 Toplam " . count($ornek_veriler) . " adet sağlıklı besin eklendi.<br>";
+    echo "<br>📊 Toplam " . $eklenen . " adet sağlıklı besin eklendi.<br>";
     
     // Tablo yapısını göster
     echo "<br><h3>📋 Tablo Yapısı:</h3>";
@@ -193,5 +211,9 @@ try {
     echo "❌ Hata: " . $e->getMessage();
 }
 
-echo "<br><br>🎉 Sağlıklı besinler veritabanı kurulumu tamamlandı!";
+echo "<br><br>🎉 Sağlıklı besinler tablosu kurulumu tamamlandı!";
+echo "<br><br>📝 <strong>Sonraki Adımlar:</strong>";
+echo "<br>1. WampServer'ı başlatın";
+echo "<br>2. Tarayıcıda http://app.test2.local/saglikli-besinler.html adresini açın";
+echo "<br>3. Sağlıklı besinler sayfasının çalıştığını kontrol edin";
 ?>

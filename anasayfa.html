@@ -138,10 +138,13 @@
 
       .ana-slider-nav.prev {
         left: 20px;
+        font-size: 40px;
       }
 
       .ana-slider-nav.next {
         right: 20px;
+        font-size: 40px;
+        fill: white;
       }
 
       .ana-slider-dots {
@@ -155,8 +158,8 @@
       }
 
       .ana-slider-dot {
-        width: 15px;
-        height: 15px;
+        width: 10px;
+        height: 10px;
         border-radius: 50%;
         background: rgba(255, 255, 255, 0.5);
         cursor: pointer;
@@ -1057,6 +1060,15 @@
         margin-bottom: 15px;
       }
 
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
       .diger-loading p {
         margin: 0;
         font-weight: 500;
@@ -1142,6 +1154,19 @@
 
         .kitaplar-carousel-wrapper {
           height: 300px;
+        }
+
+        .diger-carousel-wrapper {
+          height: 300px;
+        }
+
+        .diger-carousel-slide {
+          min-width: 240px;
+        }
+
+        .diger-carousel-baslik {
+          font-size: 1.5rem;
+          margin-top: 40px;
         }
 
         .kitap-carousel-slide {
@@ -1825,61 +1850,76 @@
           $scope.digerCarousel = [];
 
           // Diğer içerikleri veritabanından yükle (tiyatro, anime, belgesel)
-          var digerTimestamp = Date.now();
-          console.log(
-            "Diğer içerikler API çağrısı yapılıyor, timestamp:",
-            digerTimestamp
-          );
+          console.log("🎯 Diğer içerikler yükleniyor...");
 
           // Tiyatro eserlerini getir
           $http
             .get("api.php?tiyatro=1&limit=3")
             .then(function (tiyatroResponse) {
-              var tiyatroItems = tiyatroResponse.data.map(function (eser) {
-                return {
-                  id: eser.id,
-                  ad: eser.eser_adi,
-                  yazar: eser.yazar,
-                  foto: eser.kapak_url || "assets/images/logo.jpg",
-                  puan: eser.puan,
-                  tip: "Tiyatro",
-                  sayfa: "tiyatro-detay.html",
-                };
-              });
+              console.log("🎭 Tiyatro response:", tiyatroResponse.data);
+              var tiyatroItems = [];
+              if (tiyatroResponse.data && Array.isArray(tiyatroResponse.data)) {
+                tiyatroItems = tiyatroResponse.data.map(function (eser) {
+                  return {
+                    id: eser.id,
+                    ad: eser.eser_adi,
+                    yazar: eser.yazar,
+                    foto: eser.kapak_url || "assets/images/logo.jpg",
+                    puan: eser.puan,
+                    tip: "Tiyatro",
+                    sayfa: "tiyatro-detay.html",
+                  };
+                });
+              }
 
               // Animeleri getir
               $http
                 .get("api.php?anime=1&limit=3")
                 .then(function (animeResponse) {
-                  var animeItems = animeResponse.data.map(function (anime) {
-                    return {
-                      id: anime.id,
-                      ad: anime.anime_adi,
-                      yazar: anime.yonetmen,
-                      foto: anime.kapak_url || "assets/images/logo.jpg",
-                      puan: anime.puan,
-                      tip: "Anime",
-                      sayfa: "anime-detay.html",
-                    };
-                  });
+                  console.log("🎬 Anime response:", animeResponse.data);
+                  var animeItems = [];
+                  if (animeResponse.data && Array.isArray(animeResponse.data)) {
+                    animeItems = animeResponse.data.map(function (anime) {
+                      return {
+                        id: anime.id,
+                        ad: anime.anime_adi,
+                        yazar: anime.yonetmen,
+                        foto: anime.kapak_url || "assets/images/logo.jpg",
+                        puan: anime.puan,
+                        tip: "Anime",
+                        sayfa: "anime-detay.html",
+                      };
+                    });
+                  }
 
                   // Belgeselleri getir
                   $http
-                    .get("api.php?belgesel=1&limit=2")
+                    .get("api.php?belgesel=1&limit=4")
                     .then(function (belgeselResponse) {
-                      var belgeselItems = belgeselResponse.data.map(function (
-                        belgesel
+                      console.log(
+                        "📺 Belgesel response:",
+                        belgeselResponse.data
+                      );
+                      var belgeselItems = [];
+                      if (
+                        belgeselResponse.data &&
+                        Array.isArray(belgeselResponse.data)
                       ) {
-                        return {
-                          id: belgesel.id,
-                          ad: belgesel.belgesel_adi,
-                          yazar: belgesel.yonetmen,
-                          foto: belgesel.kapak_url || "assets/images/logo.jpg",
-                          puan: belgesel.puan,
-                          tip: "Belgesel",
-                          sayfa: "belgesel-detay.html",
-                        };
-                      });
+                        belgeselItems = belgeselResponse.data.map(function (
+                          belgesel
+                        ) {
+                          return {
+                            id: belgesel.id,
+                            ad: belgesel.belgesel_adi,
+                            yazar: belgesel.yonetmen,
+                            foto:
+                              belgesel.kapak_url || "assets/images/logo.jpg",
+                            puan: belgesel.puan,
+                            tip: "Belgesel",
+                            sayfa: "belgesel-detay.html",
+                          };
+                        });
+                      }
 
                       // Tüm içerikleri birleştir ve karıştır
                       $scope.digerCarousel = tiyatroItems
@@ -1908,14 +1948,20 @@
                     })
                     .catch(function (error) {
                       console.error("❌ Belgeseller yüklenirken hata:", error);
+                      // Hata durumunda boş array ile devam et
+                      $scope.digerCarousel = tiyatroItems.concat(animeItems);
                     });
                 })
                 .catch(function (error) {
                   console.error("❌ Animeler yüklenirken hata:", error);
+                  // Hata durumunda sadece tiyatro ile devam et
+                  $scope.digerCarousel = tiyatroItems;
                 });
             })
             .catch(function (error) {
               console.error("❌ Tiyatro eserleri yüklenirken hata:", error);
+              // Tüm API'ler başarısız olursa boş array
+              $scope.digerCarousel = [];
             });
 
           // Diğer carousel fonksiyonları

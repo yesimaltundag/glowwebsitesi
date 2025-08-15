@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Anamakine: 127.0.0.1:3306
--- Üretim Zamanı: 15 Ağu 2025, 11:12:52
+-- Üretim Zamanı: 15 Ağu 2025, 14:24:18
 -- Sunucu sürümü: 9.1.0
 -- PHP Sürümü: 8.3.14
 
@@ -463,7 +463,7 @@ CREATE TABLE IF NOT EXISTS `iletisim_formu` (
   `adisoyadi` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=29 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=31 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Tablo döküm verisi `iletisim_formu`
@@ -495,7 +495,9 @@ INSERT INTO `iletisim_formu` (`id`, `konu`, `mesaj`, `eposta`, `adisoyadi`, `cre
 (25, 'staj', 'tekprosis1111', 'yesimaltundag00@gmail.com', 'yeşim', '2025-08-12 06:53:52'),
 (26, 'survivor başvuru', 'survivor ne zaman başlayacak çok seviyorum', 'info@acunmedyaakademi.com', 'glow tech', '2025-08-12 09:53:43'),
 (27, 'dsadsadsadas', 'dsadsadsadsadsa', 'emresabahat@outlook.com', 'emre', '2025-08-13 07:16:04'),
-(28, 'adsadasdsa', 'dsadasdsadsad', 'dsadsadsa@outlook.com', 'tech', '2025-08-14 08:37:43');
+(28, 'adsadasdsa', 'dsadasdsadsad', 'dsadsadsa@outlook.com', 'tech', '2025-08-14 08:37:43'),
+(29, 'dsadsadsadsa', 'sadsaddsadsadsa', 'dsadsadsadsa@hotmail.com', 'dsadsadsa', '2025-08-15 12:48:00'),
+(30, 'dsaddsadsa', 'sadsadsadsa', 'sadsadsadsa@outlook.com', 'dsadsadsa', '2025-08-15 13:28:58');
 
 -- --------------------------------------------------------
 
@@ -512,7 +514,7 @@ CREATE TABLE IF NOT EXISTS `kisiler` (
   `rol` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `e_posta` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=113 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=114 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Tablo döküm verisi `kisiler`
@@ -525,7 +527,7 @@ INSERT INTO `kisiler` (`id`, `username`, `adsoyad`, `sifre`, `rol`, `e_posta`) V
 (106, 'emre', 'şabahat', '$2y$10$6lsvigYtLwjyiGWU53SXmORzAX7butfRbVyYjuaOy/nw1NFX/Yswy', 'kullanici', 'emres@posta.com'),
 (107, 'gizem', 'alt', '$2y$10$SqXUXB3WlDTfX2L0wrbieekl7uqa9haQXvvkzOVTSZNyCCdIPyWMm', 'kullanici', 'gizemalt@posta.com'),
 (108, 'ekber', 'ekber h', '$2y$10$7S/0Ng/m.8AzUUWxT3FU5eGihxZ2MmbqosIPcHT459eNsZVVLuyiO', 'kullanici', 'ekhas@posta.com.tr'),
-(112, 'testtest', 'test', '$2y$10$v.Lrof5M6CtLDeNKhTtJvuD1sk6dtNfPatsuLIjgjzxOh/J6UQfFG', 'kullanici', 'test@outlook.com');
+(113, 'test', 'test', '$2y$10$l.XPxPMpnqGk1ZeUD1IL0Oes1UGG/Y/IrN4JLKzNsHGoV5I2EgdWC', 'kullanici', 'test@posta.com');
 
 -- --------------------------------------------------------
 
@@ -1139,7 +1141,7 @@ CREATE TABLE IF NOT EXISTS `yorumlar` (
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `kullanici_id` (`kullanici_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=75 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=77 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Tablo döküm verisi `yorumlar`
@@ -1189,7 +1191,9 @@ INSERT INTO `yorumlar` (`id`, `kullanici_id`, `kullanici_adi`, `tur`, `icerik_id
 (71, 104, 'yeşim', 'film', 16, 'The Dark Knight', 'dsadsadsadsadsa', 8, 1, '2025-08-13 13:33:35'),
 (72, 104, 'yeşim', 'film', 16, 'The Dark Knight', 'dsadsadasdsads', 9, 0, '2025-08-13 13:46:30'),
 (73, 104, 'yeşim', 'film', 16, 'The Dark Knight', 'asdsadasds', 7, 0, '2025-08-13 13:58:48'),
-(74, 104, 'yeşim', 'film', 16, 'The Dark Knight', 'dsadsdasdsad', 8, 1, '2025-08-13 14:16:22');
+(74, 104, 'yeşim', 'film', 16, 'The Dark Knight', 'dsadsdasdsad', 8, 1, '2025-08-13 14:16:22'),
+(75, 104, 'yeşim', 'film', 16, 'The Dark Knight', 'dsadsadsadsa', 8, 1, '2025-08-15 13:32:15'),
+(76, 104, 'yeşim', 'tiyatro', 2, 'Romeo ve Juliet', 'dasdsa6552525', 8, 0, '2025-08-15 13:33:16');
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

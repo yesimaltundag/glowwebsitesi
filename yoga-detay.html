@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="tr" ng-app="GirisApp">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Yoga Detay - GLOW</title>
+    <link rel="stylesheet" href="assets/css/style.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="assets/js/app.js"></script>
+    <style>
+      .yoga-container {
+        max-width: 1000px;
+        margin: 40px auto;
+        padding: 32px;
+        background: rgba(255, 255, 255, 0.92);
+        border-radius: 18px;
+        box-shadow: 0 8px 32px rgba(124, 92, 74, 0.1);
+        backdrop-filter: blur(10px);
+        position: relative;
+      }
+
+      .yoga-header {
+        text-align: center;
+        margin-bottom: 40px;
+        position: relative;
+      }
+
+      .yoga-title {
+        color: #7c5c4a;
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 8px;
+        letter-spacing: 1px;
+      }
+
+      .yoga-subtitle {
+        color: #b48a78;
+        font-size: 1.1rem;
+        font-weight: 500;
+      }
+
+      .geri-btn {
+        background: linear-gradient(135deg, #e2d9d0, #b48a78);
+        color: #7c5c4a;
+        border: none;
+        border-radius: 50%;
+        width: 45px;
+        height: 45px;
+        padding: 0;
+        font-size: 18px;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s;
+        position: absolute;
+        top: 0;
+        left: 0;
+        margin: 0;
+      }
+
+      .geri-btn:hover {
+        background: linear-gradient(135deg, #b48a78, #e2d9d0);
+        color: #fff;
+        transform: scale(1.08);
+      }
+
+      .kategori-tabs {
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        margin-bottom: 40px;
+        flex-wrap: wrap;
+      }
+
+      .tab-btn {
+        background: linear-gradient(135deg, #f8e0e1, #e2d9d0);
+        color: #7c5c4a;
+        border: none;
+        border-radius: 25px;
+        padding: 12px 24px;
+        font-size: 0.95rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        letter-spacing: 0.5px;
+      }
+
+      .tab-btn.active {
+        background: linear-gradient(135deg, #b48a78, #7c5c4a);
+        color: #fff;
+        transform: scale(1.05);
+      }
+
+      .tab-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 16px rgba(180, 138, 120, 0.2);
+      }
+
+      .content-section {
+        display: none;
+        animation: fadeIn 0.5s ease-in-out;
+      }
+
+      .content-section.active {
+        display: block;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .section-title {
+        color: #7c5c4a;
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin-bottom: 24px;
+        text-align: center;
+        letter-spacing: 0.5px;
+      }
+
+      .content-card {
+        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        border-radius: 16px;
+        padding: 28px;
+        margin-bottom: 24px;
+        box-shadow: 0 4px 16px rgba(180, 138, 120, 0.08);
+        border-left: 4px solid #b48a78;
+      }
+
+      .content-card h3 {
+        color: #7c5c4a;
+        font-size: 1.3rem;
+        font-weight: 600;
+        margin-bottom: 16px;
+        letter-spacing: 0.5px;
+      }
+
+      .content-card p {
+        color: #6c757d;
+        line-height: 1.7;
+        margin-bottom: 12px;
+        font-size: 1rem;
+      }
+
+      .content-card ul {
+        color: #6c757d;
+        line-height: 1.7;
+        padding-left: 20px;
+      }
+
+      .content-card li {
+        margin-bottom: 8px;
+      }
+
+      .highlight-box {
+        background: linear-gradient(135deg, #f8e0e1, #e2d9d0);
+        border-radius: 12px;
+        padding: 20px;
+        margin: 16px 0;
+        border-left: 4px solid #b48a78;
+      }
+
+      .highlight-box h4 {
+        color: #7c5c4a;
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 12px;
+      }
+
+      .highlight-box p {
+        color: #6c757d;
+        margin: 0;
+        font-size: 0.95rem;
+      }
+
+      .grid-2 {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+        margin: 20px 0;
+      }
+
+      .grid-3 {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 16px;
+        margin: 20px 0;
+      }
+
+      .philosophy-card {
+        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        border-radius: 12px;
+        padding: 20px;
+        border-left: 4px solid #b48a78;
+      }
+
+      .philosophy-card h4 {
+        color: #7c5c4a;
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 12px;
+      }
+
+      .philosophy-card p {
+        color: #6c757d;
+        font-size: 0.9rem;
+        line-height: 1.6;
+      }
+
+      .yoga-type-card {
+        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        border-radius: 12px;
+        padding: 20px;
+        text-align: center;
+        border: 2px solid #e2d9d0;
+        transition: all 0.3s;
+      }
+
+      .yoga-type-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(180, 138, 120, 0.15);
+      }
+
+      .yoga-type-card h4 {
+        color: #7c5c4a;
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 12px;
+      }
+
+      .yoga-type-card p {
+        color: #6c757d;
+        font-size: 0.9rem;
+        line-height: 1.5;
+      }
+
+      .pose-card {
+        background: linear-gradient(135deg, #f8e0e1, #e2d9d0);
+        border-radius: 12px;
+        padding: 20px;
+        text-align: center;
+        transition: all 0.3s;
+      }
+
+      .pose-card:hover {
+        transform: scale(1.02);
+        box-shadow: 0 6px 20px rgba(180, 138, 120, 0.15);
+      }
+
+      .pose-card h4 {
+        color: #7c5c4a;
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 8px;
+      }
+
+      .pose-card p {
+        color: #6c757d;
+        font-size: 0.9rem;
+        margin: 0;
+      }
+
+      .benefit-card {
+        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 16px;
+        border-left: 4px solid #28a745;
+      }
+
+      .benefit-card h4 {
+        color: #7c5c4a;
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 12px;
+      }
+
+      .benefit-card p {
+        color: #6c757d;
+        font-size: 0.9rem;
+        line-height: 1.6;
+        margin: 0;
+      }
+
+      .safety-card {
+        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 16px;
+        border-left: 4px solid #dc3545;
+      }
+
+      .safety-card h4 {
+        color: #7c5c4a;
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 12px;
+      }
+
+      .safety-card p {
+        color: #6c757d;
+        font-size: 0.9rem;
+        line-height: 1.6;
+        margin: 0;
+      }
+
+      @media (max-width: 768px) {
+        .yoga-container {
+          margin: 20px auto;
+          padding: 20px;
+        }
+
+        .yoga-title {
+          font-size: 2rem;
+        }
+
+        .kategori-tabs {
+          gap: 8px;
+        }
+
+        .tab-btn {
+          padding: 10px 16px;
+          font-size: 0.85rem;
+        }
+
+        .grid-2,
+        .grid-3 {
+          grid-template-columns: 1fr;
+        }
+
+        .content-card {
+          padding: 20px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <ng-include src="'components/header.html'"></ng-include>
+    <main class="main-content">
+      <div class="yoga-container" ng-controller="YogaDetayController">
+        <button
+          class="geri-btn"
+          onclick="window.history.back()"
+          title="Geri Dön"
+        >
+          ←
+        </button>
+
+        <div class="yoga-header">
+          <h1 class="yoga-title">🧘‍♀️ Yoga</h1>
+          <p class="yoga-subtitle">
+            Zihin, beden ve ruhun uyumunu sağlayan kadim öğreti
+          </p>
+        </div>
+
+        <div class="kategori-tabs">
+          <button class="tab-btn active" ng-click="tabSec('felsefe')">
+            Yoga Felsefesi ve Tarihi
+          </button>
+          <button class="tab-btn" ng-click="tabSec('turler')">
+            🪷 Yoga Türleri
+          </button>
+          <button class="tab-btn" ng-click="tabSec('evde')">
+            🏠 Evde Yoga Rehberi
+          </button>
+          <button class="tab-btn" ng-click="tabSec('zihin')">
+            🧠 Zihin ve Ruh Sağlığı
+          </button>
+          <button class="tab-btn" ng-click="tabSec('esneme')">
+            🩹 Esneme ve Güvenlik
+          </button>
+        </div>
+
+        <!-- Yoga Felsefesi ve Tarihi -->
+        <div class="content-section active" id="felsefe">
+          <h2 class="section-title">📚 Yoga Felsefesi ve Tarihi</h2>
+
+          <div class="grid-2">
+            <div class="philosophy-card">
+              <h4>🏛️ Yoga'nın Kökeni</h4>
+              <p>
+                <strong>Menşei:</strong> Hindistan, yaklaşık 5000 yıl önce<br />
+                <strong>İlk Metin:</strong> Rig Veda (MÖ 1500)<br />
+                <strong>Klasik Dönem:</strong> Patanjali'nin Yoga Sutra'sı (MÖ
+                200)<br />
+                <strong>Modern Dönem:</strong> 19. yüzyıldan itibaren Batı'ya
+                yayıldı
+              </p>
+            </div>
+
+            <div class="philosophy-card">
+              <h4>🎯 Yoga'nın Anlamı</h4>
+              <p>
+                <strong>Sanskritçe:</strong> "Yuj" - birleştirmek, bağlamak<br />
+                <strong>Felsefi Anlam:</strong> Zihin, beden ve ruhun birliği<br />
+                <strong>Pratik Anlam:</strong> Fiziksel ve zihinsel disiplin<br />
+                <strong>Spiritüel Anlam:</strong> Evrensel bilinçle birleşme
+              </p>
+            </div>
+
+            <div class="philosophy-card">
+              <h4>📖 Temel Felsefeler</h4>
+              <p>
+                <strong>Ahimsa:</strong> Şiddetsizlik ve merhamet<br />
+                <strong>Satya:</strong> Dürüstlük ve gerçeklik<br />
+                <strong>Asteya:</strong> Çalmamak ve açgözlülük yapmamak<br />
+                <strong>Brahmacharya:</strong> Öz disiplin ve enerji korunması
+              </p>
+            </div>
+
+            <div class="philosophy-card">
+              <h4>🕉️ Yoga'nın Sekiz Kolu</h4>
+              <p>
+                <strong>Yama:</strong> Ahlaki kurallar<br />
+                <strong>Niyama:</strong> Kişisel disiplin<br />
+                <strong>Asana:</strong> Fiziksel duruşlar<br />
+                <strong>Pranayama:</strong> Nefes kontrolü
+              </p>
+            </div>
+          </div>
+
+          <div class="content-card">
+            <h3>Yoga'nın Tarihsel Gelişimi</h3>
+            <p>
+              Yoga, Hindistan'ın kadim kültüründen doğmuş, binlerce yıl boyunca
+              gelişerek günümüze ulaşmıştır. Başlangıçta sadece spiritüel bir
+              uygulama olan yoga, zamanla fiziksel sağlık ve zihinsel denge için
+              de kullanılmaya başlanmıştır.
+            </p>
+            <p>
+              Modern yoga, geleneksel öğretileri çağdaş yaşam tarzına
+              uyarlayarak her yaş ve seviyeden insanın erişebileceği bir pratik
+              haline gelmiştir. Günümüzde dünya çapında milyonlarca insan yoga
+              yapmaktadır.
+            </p>
+          </div>
+
+          <div class="highlight-box">
+            <h4>🎯 Yoga'nın Temel Amacı</h4>
+            <p>
+              Yoga, sadece fiziksel esneklik değil, aynı zamanda zihinsel
+              netlik, duygusal denge ve spiritüel farkındalık geliştirmeyi
+              amaçlar. Günlük yaşamın stresinden uzaklaşarak iç huzuru bulmayı
+              hedefler.
+            </p>
+          </div>
+        </div>
+
+        <!-- Yoga Türleri -->
+        <div class="content-section" id="turler">
+          <h2 class="section-title">
+            🪷 Yoga Türleri – Hatha, Vinyasa, Ashtanga
+          </h2>
+
+          <div class="grid-3">
+            <div class="yoga-type-card">
+              <h4>🧘‍♀️ Hatha Yoga</h4>
+              <p>
+                <strong>Seviye:</strong> Başlangıç<br />
+                <strong>Tempo:</strong> Yavaş ve kontrollü<br />
+                <strong>Odak:</strong> Temel duruşlar ve nefes<br />
+                <strong>Süre:</strong> 60-90 dakika<br />
+                <strong>Faydalar:</strong> Esneklik, güç, denge
+              </p>
+            </div>
+
+            <div class="yoga-type-card">
+              <h4>🌊 Vinyasa Yoga</h4>
+              <p>
+                <strong>Seviye:</strong> Orta-İleri<br />
+                <strong>Tempo:</strong> Dinamik ve akıcı<br />
+                <strong>Odak:</strong> Nefes ile hareket uyumu<br />
+                <strong>Süre:</strong> 60-75 dakika<br />
+                <strong>Faydalar:</strong> Kardiyo, güç, esneklik
+              </p>
+            </div>
+
+            <div class="yoga-type-card">
+              <h4>🔥 Ashtanga Yoga</h4>
+              <p>
+                <strong>Seviye:</strong> İleri<br />
+                <strong>Tempo:</strong> Güçlü ve yoğun<br />
+                <strong>Odak:</strong> Sabit seri ve nefes<br />
+                <strong>Süre:</strong> 90-120 dakika<br />
+                <strong>Faydalar:</strong> Dayanıklılık, güç, disiplin
+              </p>
+            </div>
+
+            <div class="yoga-type-card">
+              <h4>🕯️ Yin Yoga</h4>
+              <p>
+                <strong>Seviye:</strong> Tüm seviyeler<br />
+                <strong>Tempo:</strong> Çok yavaş ve pasif<br />
+                <strong>Odak:</strong> Bağ dokuları ve eklemler<br />
+                <strong>Süre:</strong> 60-90 dakika<br />
+                <strong>Faydalar:</strong> Esneklik, gevşeme, meditasyon
+              </p>
+            </div>
+
+            <div class="yoga-type-card">
+              <h4>🌅 Kundalini Yoga</h4>
+              <p>
+                <strong>Seviye:</strong> Orta<br />
+                <strong>Tempo:</strong> Dinamik ve ritmik<br />
+                <strong>Odak:</strong> Enerji ve spiritüellik<br />
+                <strong>Süre:</strong> 60-90 dakika<br />
+                <strong>Faydalar:</strong> Enerji, farkındalık, spiritüel
+                gelişim
+              </p>
+            </div>
+
+            <div class="yoga-type-card">
+              <h4>🧘‍♂️ Restorative Yoga</h4>
+              <p>
+                <strong>Seviye:</strong> Tüm seviyeler<br />
+                <strong>Tempo:</strong> Çok yavaş ve destekli<br />
+                <strong>Odak:</strong> Dinlenme ve iyileşme<br />
+                <strong>Süre:</strong> 60-90 dakika<br />
+                <strong>Faydalar:</strong> Stres azaltma, iyileşme, gevşeme
+              </p>
+            </div>
+          </div>
+
+          <div class="content-card">
+            <h3>Yoga Türü Seçimi</h3>
+            <p>
+              <strong>Başlangıç İçin:</strong> Hatha, Yin, Restorative<br />
+              <strong>Güç ve Dayanıklılık İçin:</strong> Vinyasa, Ashtanga<br />
+              <strong>Esneklik İçin:</strong> Yin, Hatha<br />
+              <strong>Stres Azaltma İçin:</strong> Restorative, Yin<br />
+              <strong>Spiritüel Gelişim İçin:</strong> Kundalini, Hatha
+            </p>
+          </div>
+
+          <div class="highlight-box">
+            <h4>💡 Başlangıç İpuçları</h4>
+            <p>
+              Yeni başlayanlar için Hatha yoga önerilir. Kendi seviyenize uygun
+              bir tür seçin ve düzenli pratik yapın. Acele etmeyin, vücudunuzu
+              dinleyin ve nefesinize odaklanın.
+            </p>
+          </div>
+        </div>
+
+        <!-- Evde Yoga Rehberi -->
+        <div class="content-section" id="evde">
+          <h2 class="section-title">
+            🏠 Evde Yoga Rehberi – Başlangıç Pozları
+          </h2>
+
+          <div class="grid-2">
+            <div class="pose-card">
+              <h4>🧘‍♀️ Çocuk Pozu (Balasana)</h4>
+              <p>
+                <strong>Seviye:</strong> Başlangıç<br />
+                <strong>Süre:</strong> 30-60 saniye<br />
+                <strong>Faydalar:</strong> Sırt gevşetme, stres azaltma<br />
+                <strong>Teknik:</strong> Dizler üzerinde oturun, öne eğilin
+              </p>
+            </div>
+
+            <div class="pose-card">
+              <h4>🐕 Aşağı Bakan Köpek (Adho Mukha Svanasana)</h4>
+              <p>
+                <strong>Seviye:</strong> Başlangıç<br />
+                <strong>Süre:</strong> 30-60 saniye<br />
+                <strong>Faydalar:</strong> Omuz açma, bacak esnetme<br />
+                <strong>Teknik:</strong> V harfi şeklinde durun
+              </p>
+            </div>
+
+            <div class="pose-card">
+              <h4>🌳 Ağaç Pozu (Vrksasana)</h4>
+              <p>
+                <strong>Seviye:</strong> Başlangıç<br />
+                <strong>Süre:</strong> 30-60 saniye<br />
+                <strong>Faydalar:</strong> Denge, konsantrasyon<br />
+                <strong>Teknik:</strong> Tek ayak üzerinde durun
+              </p>
+            </div>
+
+            <div class="pose-card">
+              <h4>🦋 Kelebek Pozu (Baddha Konasana)</h4>
+              <p>
+                <strong>Seviye:</strong> Başlangıç<br />
+                <strong>Süre:</strong> 30-60 saniye<br />
+                <strong>Faydalar:</strong> Kalça açma, kasık esnetme<br />
+                <strong>Teknik:</strong> Ayak tabanları birleşik oturun
+              </p>
+            </div>
+
+            <div class="pose-card">
+              <h4>🐍 Kobra Pozu (Bhujangasana)</h4>
+              <p>
+                <strong>Seviye:</strong> Başlangıç<br />
+                <strong>Süre:</strong> 15-30 saniye<br />
+                <strong>Faydalar:</strong> Sırt güçlendirme, göğüs açma<br />
+                <strong>Teknik:</strong> Yüzüstü yatın, üst gövdeyi kaldırın
+              </p>
+            </div>
+
+            <div class="pose-card">
+              <h4>🧘‍♂️ Lotus Pozu (Padmasana)</h4>
+              <p>
+                <strong>Seviye:</strong> Orta<br />
+                <strong>Süre:</strong> 5-15 dakika<br />
+                <strong>Faydalar:</strong> Meditasyon, kalça açma<br />
+                <strong>Teknik:</strong> Bacakları çapraz oturun
+              </p>
+            </div>
+          </div>
+
+          <div class="content-card">
+            <h3>Evde Yoga İçin Gerekli Ekipmanlar</h3>
+            <ul>
+              <li><strong>Yoga Matı:</strong> Kaymayan, kalın bir mat</li>
+              <li><strong>Yoga Blokları:</strong> Denge ve destek için</li>
+              <li><strong>Yoga Kemeri:</strong> Esneme ve destek için</li>
+              <li><strong>Yastık:</strong> Destek ve konfor için</li>
+              <li><strong>Battaniye:</strong> Dinlenme pozları için</li>
+              <li><strong>Rahat Kıyafetler:</strong> Hareket kolaylığı için</li>
+            </ul>
+          </div>
+
+          <div class="highlight-box">
+            <h4>💡 Evde Yoga İpuçları</h4>
+            <p>
+              <strong>Zaman:</strong> Sabah veya akşam, düzenli saatler<br />
+              <strong>Mekan:</strong> Havadar, sessiz ve temiz bir alan<br />
+              <strong>Süre:</strong> 15-30 dakika ile başlayın<br />
+              <strong>Nefes:</strong> Her zaman nefesinize odaklanın<br />
+              <strong>Sabır:</strong> Acele etmeyin, vücudunuzu dinleyin
+            </p>
+          </div>
+        </div>
+
+        <!-- Zihin ve Ruh Sağlığına Katkıları -->
+        <div class="content-section" id="zihin">
+          <h2 class="section-title">🧠 Zihin ve Ruh Sağlığına Katkıları</h2>
+
+          <div class="benefit-card">
+            <h4>😌 Stres Azaltma ve Anksiyete Yönetimi</h4>
+            <p>
+              <strong>Nefes Teknikleri:</strong> Pranayama stres hormonlarını
+              azaltır<br />
+              <strong>Meditasyon:</strong> Zihinsel netlik ve sakinlik sağlar<br />
+              <strong>Fiziksel Aktivite:</strong> Endorfin salınımını artırır<br />
+              <strong>Mindfulness:</strong> Şimdiki ana odaklanmayı öğretir<br />
+              <strong>Gevşeme Teknikleri:</strong> Kas gerginliğini azaltır
+            </p>
+          </div>
+
+          <div class="benefit-card">
+            <h4>🧘‍♀️ Konsantrasyon ve Odaklanma</h4>
+            <p>
+              <strong>Drishti (Bakış Noktası):</strong> Göz odaklanmasını
+              geliştirir<br />
+              <strong>Nefes Farkındalığı:</strong> Zihinsel dağınıklığı
+              azaltır<br />
+              <strong>Denge Pozları:</strong> Konsantrasyonu artırır<br />
+              <strong>Meditasyon:</strong> Dikkat süresini uzatır<br />
+              <strong>Mindfulness:</strong> Günlük yaşamda odaklanmayı
+              iyileştirir
+            </p>
+          </div>
+
+          <div class="benefit-card">
+            <h4>😊 Duygusal Denge ve Ruh Hali</h4>
+            <p>
+              <strong>Serotonin Artışı:</strong> Mutluluk hormonunu artırır<br />
+              <strong>Kortizol Azalması:</strong> Stres hormonunu düşürür<br />
+              <strong>GABA Artışı:</strong> Sakinleştirici nörotransmitter<br />
+              <strong>Duygusal Farkındalık:</strong> Duyguları tanıma ve
+              yönetme<br />
+              <strong>İç Huzur:</strong> Spiritüel bağlantı ve barış
+            </p>
+          </div>
+
+          <div class="benefit-card">
+            <h4>🌙 Uyku Kalitesi ve İnsomnia</h4>
+            <p>
+              <strong>Gevşeme Teknikleri:</strong> Uykuya dalma süresini
+              kısaltır<br />
+              <strong>Melatonin Artışı:</strong> Uyku hormonunu artırır<br />
+              <strong>Stres Azaltma:</strong> Uyku kalitesini iyileştirir<br />
+              <strong>Nefes Egzersizleri:</strong> Sakinleştirici etki<br />
+              <strong>Rutin Oluşturma:</strong> Uyku düzenini iyileştirir
+            </p>
+          </div>
+
+          <div class="benefit-card">
+            <h4>🧠 Bilişsel Fonksiyonlar ve Hafıza</h4>
+            <p>
+              <strong>Hipokampus Gelişimi:</strong> Hafıza merkezini
+              güçlendirir<br />
+              <strong>Nöroplastisite:</strong> Beyin esnekliğini artırır<br />
+              <strong>Konsantrasyon:</strong> Dikkat süresini uzatır<br />
+              <strong>Öğrenme Kapasitesi:</strong> Yeni bilgileri öğrenmeyi
+              kolaylaştırır<br />
+              <strong>Yaşlanma Karşıtı:</strong> Bilişsel gerilemeyi yavaşlatır
+            </p>
+          </div>
+
+          <div class="highlight-box">
+            <h4>🎯 Spiritüel Gelişim ve Farkındalık</h4>
+            <p>
+              Yoga sadece fiziksel bir aktivite değil, aynı zamanda spiritüel
+              bir yolculuktur. Kendini tanıma, iç huzur bulma ve evrensel
+              bilinçle bağlantı kurma fırsatı sunar. Düzenli pratik ile daha
+              derin bir farkındalık ve yaşam amacı geliştirilebilir.
+            </p>
+          </div>
+        </div>
+
+        <!-- Esneme ve Sakatlık Önleme -->
+        <div class="content-section" id="esneme">
+          <h2 class="section-title">🩹 Esneme ve Sakatlık Önleme</h2>
+
+          <div class="safety-card">
+            <h4>⚠️ Yoga Güvenliği ve Sakatlık Önleme</h4>
+            <p>
+              <strong>Isınma:</strong> Her seansa 5-10 dakika ısınma ile
+              başlayın<br />
+              <strong>Nefes:</strong> Nefesinizi tutmayın, düzenli nefes alın<br />
+              <strong>Sınırlar:</strong> Vücudunuzun sınırlarını zorlamayın<br />
+              <strong>Ağrı:</strong> Ağrı hissederseniz durun ve pozisyonu
+              değiştirin<br />
+              <strong>Yavaş İlerleme:</strong> Acele etmeyin, kademeli ilerleyin
+            </p>
+          </div>
+
+          <div class="safety-card">
+            <h4>🏥 Sağlık Durumları ve Dikkat Edilmesi Gerekenler</h4>
+            <p>
+              <strong>Hamilelik:</strong> Hamilelik yogası için özel dersler
+              alın<br />
+              <strong>Kalp Hastalığı:</strong> Doktorunuza danışın<br />
+              <strong>Yüksek Tansiyon:</strong> Ters duruşlardan kaçının<br />
+              <strong>Bel Ağrısı:</strong> Öne eğilme pozlarından kaçının<br />
+              <strong>Eklem Problemleri:</strong> Destek kullanın
+            </p>
+          </div>
+
+          <div class="safety-card">
+            <h4>🧘‍♀️ Doğru Teknik ve Hizalama</h4>
+            <p>
+              <strong>Omurga:</strong> Doğal kıvrımları koruyun<br />
+              <strong>Dizler:</strong> Ayak parmaklarıyla aynı yönde olsun<br />
+              <strong>Omuzlar:</strong> Geriye ve aşağıya doğru açın<br />
+              <strong>Kalçalar:</strong> Dengeli ve hizalı tutun<br />
+              <strong>Ayaklar:</strong> Yere sağlam basın
+            </p>
+          </div>
+
+          <div class="safety-card">
+            <h4>🔄 Esneme Teknikleri ve İpuçları</h4>
+            <p>
+              <strong>Dinamik Esneme:</strong> Hareket halinde esneme<br />
+              <strong>Statik Esneme:</strong> Sabit pozisyonda tutma<br />
+              <strong>PNF Esneme:</strong> Kas kasma ve gevşetme<br />
+              <strong>Nefes:</strong> Esneme sırasında derin nefes alın<br />
+              <strong>Süre:</strong> Her pozda 30-60 saniye kalın
+            </p>
+          </div>
+
+          <div class="safety-card">
+            <h4>💪 Güçlendirme ve Stabilite</h4>
+            <p>
+              <strong>Core Gücü:</strong> Plank ve denge pozları<br />
+              <strong>Bacak Gücü:</strong> Savaşçı pozları ve squat'lar<br />
+              <strong>Üst Vücut:</strong> Chaturanga ve kol denge pozları<br />
+              <strong>Stabilite:</strong> Tek ayak duruşları<br />
+              <strong>Koordinasyon:</strong> Karmaşık akışlar
+            </p>
+          </div>
+
+          <div class="highlight-box">
+            <h4>💡 Güvenli Yoga Pratiği İçin Altın Kurallar</h4>
+            <p>
+              <strong>1. Vücudunuzu Dinleyin:</strong> Ağrı sinyallerini
+              görmezden gelmeyin<br />
+              <strong>2. Nefesinizi Takip Edin:</strong> Nefes düzenli olmalı<br />
+              <strong>3. Acele Etmeyin:</strong> Sabırlı ve kademeli
+              ilerleyin<br />
+              <strong>4. Doğru Teknik:</strong> Hizalamaya dikkat edin<br />
+              <strong>5. Profesyonel Destek:</strong> Gerekirse eğitmen desteği
+              alın
+            </p>
+          </div>
+        </div>
+      </div>
+    </main>
+    <ng-include src="'components/footer.html'"></ng-include>
+    <button id="scrollTopBtn" title="Yukarı Çık" ng-click="scrollToTop()">
+      ↑
+    </button>
+  </body>
+</html>

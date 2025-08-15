@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="tr" ng-app="GirisApp">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fitness Detay - GLOW</title>
+    <link rel="stylesheet" href="assets/css/style.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="assets/js/app.js"></script>
+    <style>
+      .fitness-container {
+        max-width: 1000px;
+        margin: 40px auto;
+        padding: 32px;
+        background: rgba(255, 255, 255, 0.92);
+        border-radius: 18px;
+        box-shadow: 0 8px 32px rgba(124, 92, 74, 0.1);
+        backdrop-filter: blur(10px);
+        position: relative;
+      }
+
+      .fitness-header {
+        text-align: center;
+        margin-bottom: 40px;
+        position: relative;
+      }
+
+      .fitness-title {
+        color: #7c5c4a;
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 8px;
+        letter-spacing: 1px;
+      }
+
+      .fitness-subtitle {
+        color: #b48a78;
+        font-size: 1.1rem;
+        font-weight: 500;
+      }
+
+      .geri-btn {
+        background: linear-gradient(135deg, #e2d9d0, #b48a78);
+        color: #7c5c4a;
+        border: none;
+        border-radius: 50%;
+        width: 45px;
+        height: 45px;
+        padding: 0;
+        font-size: 18px;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s;
+        position: absolute;
+        top: 0;
+        left: 0;
+        margin: 0;
+      }
+
+      .geri-btn:hover {
+        background: linear-gradient(135deg, #b48a78, #e2d9d0);
+        color: #fff;
+        transform: scale(1.08);
+      }
+
+      .kategori-tabs {
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        margin-bottom: 40px;
+        flex-wrap: wrap;
+      }
+
+      .tab-btn {
+        background: linear-gradient(135deg, #f8e0e1, #e2d9d0);
+        color: #7c5c4a;
+        border: none;
+        border-radius: 25px;
+        padding: 12px 24px;
+        font-size: 0.95rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        letter-spacing: 0.5px;
+      }
+
+      .tab-btn.active {
+        background: linear-gradient(135deg, #b48a78, #7c5c4a);
+        color: #fff;
+        transform: scale(1.05);
+      }
+
+      .tab-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 16px rgba(180, 138, 120, 0.2);
+      }
+
+      .content-section {
+        display: none;
+        animation: fadeIn 0.5s ease-in-out;
+      }
+
+      .content-section.active {
+        display: block;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .section-title {
+        color: #7c5c4a;
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin-bottom: 24px;
+        text-align: center;
+        letter-spacing: 0.5px;
+      }
+
+      .content-card {
+        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        border-radius: 16px;
+        padding: 28px;
+        margin-bottom: 24px;
+        box-shadow: 0 4px 16px rgba(180, 138, 120, 0.08);
+        border-left: 4px solid #b48a78;
+      }
+
+      .content-card h3 {
+        color: #7c5c4a;
+        font-size: 1.3rem;
+        font-weight: 600;
+        margin-bottom: 16px;
+        letter-spacing: 0.5px;
+      }
+
+      .content-card p {
+        color: #6c757d;
+        line-height: 1.7;
+        margin-bottom: 12px;
+        font-size: 1rem;
+      }
+
+      .content-card ul {
+        color: #6c757d;
+        line-height: 1.7;
+        padding-left: 20px;
+      }
+
+      .content-card li {
+        margin-bottom: 8px;
+      }
+
+      .highlight-box {
+        background: linear-gradient(135deg, #f8e0e1, #e2d9d0);
+        border-radius: 12px;
+        padding: 20px;
+        margin: 16px 0;
+        border-left: 4px solid #b48a78;
+      }
+
+      .highlight-box h4 {
+        color: #7c5c4a;
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 12px;
+      }
+
+      .highlight-box p {
+        color: #6c757d;
+        margin: 0;
+        font-size: 0.95rem;
+      }
+
+      .grid-2 {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+        margin: 20px 0;
+      }
+
+      .grid-3 {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 16px;
+        margin: 20px 0;
+      }
+
+      .workout-card {
+        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        border-radius: 12px;
+        padding: 20px;
+        text-align: center;
+        border: 2px solid #e2d9d0;
+        transition: all 0.3s;
+      }
+
+      .workout-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(180, 138, 120, 0.15);
+      }
+
+      .workout-card h4 {
+        color: #7c5c4a;
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 12px;
+      }
+
+      .workout-card p {
+        color: #6c757d;
+        font-size: 0.9rem;
+        line-height: 1.5;
+      }
+
+      .nutrition-card {
+        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        border-radius: 12px;
+        padding: 20px;
+        border-left: 4px solid #28a745;
+      }
+
+      .nutrition-card h4 {
+        color: #7c5c4a;
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 12px;
+      }
+
+      .nutrition-card p {
+        color: #6c757d;
+        font-size: 0.9rem;
+        line-height: 1.6;
+      }
+
+      .motivation-card {
+        background: linear-gradient(135deg, #f8e0e1, #e2d9d0);
+        border-radius: 12px;
+        padding: 20px;
+        text-align: center;
+        transition: all 0.3s;
+      }
+
+      .motivation-card:hover {
+        transform: scale(1.02);
+        box-shadow: 0 6px 20px rgba(180, 138, 120, 0.15);
+      }
+
+      .motivation-card h4 {
+        color: #7c5c4a;
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 8px;
+      }
+
+      .motivation-card p {
+        color: #6c757d;
+        font-size: 0.9rem;
+        margin: 0;
+      }
+
+      .error-card {
+        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 16px;
+        border-left: 4px solid #dc3545;
+      }
+
+      .error-card h4 {
+        color: #7c5c4a;
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 12px;
+      }
+
+      .error-card p {
+        color: #6c757d;
+        font-size: 0.9rem;
+        line-height: 1.6;
+        margin: 0;
+      }
+
+      @media (max-width: 768px) {
+        .fitness-container {
+          margin: 20px auto;
+          padding: 20px;
+        }
+
+        .fitness-title {
+          font-size: 2rem;
+        }
+
+        .kategori-tabs {
+          gap: 8px;
+        }
+
+        .tab-btn {
+          padding: 10px 16px;
+          font-size: 0.85rem;
+        }
+
+        .grid-2,
+        .grid-3 {
+          grid-template-columns: 1fr;
+        }
+
+        .content-card {
+          padding: 20px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <ng-include src="'components/header.html'"></ng-include>
+    <main class="main-content">
+      <div class="fitness-container" ng-controller="FitnessDetayController">
+        <button
+          class="geri-btn"
+          onclick="window.history.back()"
+          title="Geri Dön"
+        >
+          ←
+        </button>
+
+        <div class="fitness-header">
+          <h1 class="fitness-title">💪 Fitness</h1>
+          <p class="fitness-subtitle">
+            Sağlıklı yaşam ve güçlü vücut için kapsamlı fitness rehberi
+          </p>
+        </div>
+
+        <div class="kategori-tabs">
+          <button class="tab-btn active" ng-click="tabSec('nedir')">
+            Fitness Nedir?
+          </button>
+          <button class="tab-btn" ng-click="tabSec('antrenman')">
+            🏋️‍♂️ Antrenman Türleri
+          </button>
+          <button class="tab-btn" ng-click="tabSec('beslenme')">
+            🥗 Beslenme Rehberi
+          </button>
+          <button class="tab-btn" ng-click="tabSec('motivasyon')">
+            🧠 Motivasyon
+          </button>
+          <button class="tab-btn" ng-click="tabSec('hatalar')">
+            ❌ Yaygın Hatalar
+          </button>
+        </div>
+
+        <!-- Fitness Nedir? -->
+        <div class="content-section active" id="nedir">
+          <h2 class="section-title">💪 Fitness Nedir?</h2>
+
+          <div class="content-card">
+            <h3>Fitness'ın Tanımı</h3>
+            <p>
+              Fitness, genel sağlık ve fiziksel uygunluk için yapılan düzenli
+              egzersiz ve aktivitelerin bütünüdür. Sadece kas yapmak değil,
+              kardiyovasküler sağlık, esneklik, güç ve dayanıklılığı da kapsayan
+              kapsamlı bir yaklaşımdır.
+            </p>
+            <p>
+              Modern fitness, bilimsel araştırmalara dayalı antrenman
+              programları, beslenme planları ve yaşam tarzı değişikliklerini bir
+              araya getirir.
+            </p>
+          </div>
+
+          <div class="grid-2">
+            <div class="highlight-box">
+              <h4>🎯 Fitness'ın Faydaları</h4>
+              <ul>
+                <li>Kardiyovasküler sağlığı iyileştirir</li>
+                <li>Kas gücü ve dayanıklılığı artırır</li>
+                <li>Kemik yoğunluğunu korur</li>
+                <li>Metabolizmayı hızlandırır</li>
+                <li>Stres ve anksiyeteyi azaltır</li>
+                <li>Uyku kalitesini artırır</li>
+                <li>Bağışıklık sistemini güçlendirir</li>
+                <li>Özgüveni artırır</li>
+              </ul>
+            </div>
+
+            <div class="highlight-box">
+              <h4>📊 Fitness Bileşenleri</h4>
+              <ul>
+                <li>
+                  <strong>Kardiyovasküler Dayanıklılık:</strong> Kalp ve akciğer
+                  sağlığı
+                </li>
+                <li><strong>Kas Gücü:</strong> Kasların kuvveti</li>
+                <li>
+                  <strong>Kas Dayanıklılığı:</strong> Uzun süreli aktivite
+                  kapasitesi
+                </li>
+                <li><strong>Esneklik:</strong> Eklem hareketliliği</li>
+                <li><strong>Vücut Kompozisyonu:</strong> Yağ ve kas oranı</li>
+                <li><strong>Koordinasyon:</strong> Hareket kontrolü</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="content-card">
+            <h3>Fitness Felsefesi</h3>
+            <p>
+              Fitness, sadece fiziksel değil, zihinsel ve sosyal sağlığı da
+              hedefler. Düzenli egzersiz, sağlıklı beslenme ve yeterli dinlenme
+              ile birlikte sürdürülebilir bir yaşam tarzı oluşturmayı amaçlar.
+            </p>
+            <p>
+              Her yaş grubu ve fitness seviyesi için uygun programlar
+              bulunmaktadır. Önemli olan kişisel hedeflere uygun, sürdürülebilir
+              bir program seçmektir.
+            </p>
+          </div>
+        </div>
+
+        <!-- Antrenman Türleri -->
+        <div class="content-section" id="antrenman">
+          <h2 class="section-title">🏋️‍♂️ Antrenman Türleri</h2>
+
+          <div class="grid-3">
+            <div class="workout-card">
+              <h4>💪 Kuvvet Antrenmanı</h4>
+              <p>
+                Ağırlık kaldırma, vücut ağırlığı egzersizleri. Kas gücü ve
+                kütlesini artırır. Squat, deadlift, bench press temel
+                hareketlerdir.
+              </p>
+            </div>
+
+            <div class="workout-card">
+              <h4>🏃‍♂️ Kardiyo</h4>
+              <p>
+                Koşu, bisiklet, yüzme, HIIT. Kalp sağlığını iyileştirir, yağ
+                yakımını artırır. Dayanıklılığı geliştirir.
+              </p>
+            </div>
+
+            <div class="workout-card">
+              <h4>🧘‍♀️ Esneklik</h4>
+              <p>
+                Yoga, pilates, stretching. Eklem hareketliliğini artırır, kas
+                ağrılarını azaltır. Duruş bozukluklarını düzeltir.
+              </p>
+            </div>
+
+            <div class="workout-card">
+              <h4>⚡ Fonksiyonel Antrenman</h4>
+              <p>
+                Günlük hareketleri taklit eden egzersizler. Denge, koordinasyon
+                ve çok yönlü güç geliştirir. CrossFit, TRX örnekleridir.
+              </p>
+            </div>
+
+            <div class="workout-card">
+              <h4>🎯 Spor Odaklı</h4>
+              <p>
+                Belirli sporlar için özel antrenmanlar. Futbol, basketbol, tenis
+                gibi sporların gereksinimlerine yönelik programlar.
+              </p>
+            </div>
+
+            <div class="workout-card">
+              <h4>🔄 Döngü Antrenmanı</h4>
+              <p>
+                Farklı egzersizleri sırayla yapma. Zaman tasarrufu sağlar,
+                metabolizmayı hızlandırır. Tam vücut antrenmanı sunar.
+              </p>
+            </div>
+          </div>
+
+          <div class="content-card">
+            <h3>Antrenman Programı Oluşturma</h3>
+            <p>Etkili bir antrenman programı şu unsurları içermelidir:</p>
+            <ul>
+              <li>
+                <strong>Isınma:</strong> 5-10 dakika hafif kardiyo ve dinamik
+                stretching
+              </li>
+              <li>
+                <strong>Ana Antrenman:</strong> Hedeflere uygun egzersizler
+              </li>
+              <li><strong>Soğuma:</strong> Statik stretching ve gevşeme</li>
+              <li>
+                <strong>Dinlenme:</strong> Kasların iyileşmesi için yeterli süre
+              </li>
+              <li>
+                <strong>İlerleme:</strong> Zamanla zorluk seviyesini artırma
+              </li>
+            </ul>
+          </div>
+
+          <div class="highlight-box">
+            <h4>💡 Başlangıç İpuçları</h4>
+            <p>
+              Yeni başlayanlar için: Haftada 3-4 gün, 30-45 dakika antrenman
+              yeterlidir. Yavaş başlayın, form üzerine odaklanın. Profesyonel
+              destek almayı düşünün.
+            </p>
+          </div>
+        </div>
+
+        <!-- Beslenme Rehberi -->
+        <div class="content-section" id="beslenme">
+          <h2 class="section-title">🥗 Beslenme Rehberi</h2>
+
+          <div class="grid-2">
+            <div class="nutrition-card">
+              <h4>🍗 Protein</h4>
+              <p>
+                <strong>Günlük İhtiyaç:</strong> Vücut ağırlığının 1.6-2.2 katı
+                (gram)<br />
+                <strong>Kaynaklar:</strong> Tavuk, balık, yumurta, süt ürünleri,
+                baklagiller<br />
+                <strong>Önemi:</strong> Kas yapımı ve onarımı için kritik
+              </p>
+            </div>
+
+            <div class="nutrition-card">
+              <h4>🍞 Karbonhidrat</h4>
+              <p>
+                <strong>Günlük İhtiyaç:</strong> Toplam kalorinin %45-65'i<br />
+                <strong>Kaynaklar:</strong> Tam tahıllar, meyve, sebze,
+                baklagiller<br />
+                <strong>Önemi:</strong> Enerji kaynağı, antrenman performansı
+              </p>
+            </div>
+
+            <div class="nutrition-card">
+              <h4>🥑 Sağlıklı Yağlar</h4>
+              <p>
+                <strong>Günlük İhtiyaç:</strong> Toplam kalorinin %20-35'i<br />
+                <strong>Kaynaklar:</strong> Zeytinyağı, avokado, kuruyemiş,
+                balık<br />
+                <strong>Önemi:</strong> Hormon üretimi, vitamin emilimi
+              </p>
+            </div>
+
+            <div class="nutrition-card">
+              <h4>💧 Su</h4>
+              <p>
+                <strong>Günlük İhtiyaç:</strong> 2-3 litre (aktiviteye göre
+                değişir)<br />
+                <strong>Zamanlama:</strong> Antrenman öncesi, sırası ve
+                sonrası<br />
+                <strong>Önemi:</strong> Performans, toksin atımı, metabolizma
+              </p>
+            </div>
+          </div>
+
+          <div class="content-card">
+            <h3>Beslenme Stratejileri</h3>
+            <p>
+              <strong>Antrenman Öncesi (2-3 saat):</strong> Karbonhidrat ve
+              protein içeren öğün<br />
+              <strong>Antrenman Sırası:</strong> Uzun antrenmanlarda
+              karbonhidrat takviyesi<br />
+              <strong>Antrenman Sonrası (30 dakika):</strong> Protein ve
+              karbonhidrat kombinasyonu<br />
+              <strong>Günlük Beslenme:</strong> Düzenli öğünler, porsiyon
+              kontrolü
+            </p>
+          </div>
+
+          <div class="highlight-box">
+            <h4>🎯 Hedef Odaklı Beslenme</h4>
+            <p>
+              <strong>Kas Kazanımı:</strong> Kalori fazlası + yüksek protein<br />
+              <strong>Yağ Kaybı:</strong> Kalori açığı + yeterli protein<br />
+              <strong>Performans:</strong> Karbonhidrat yükleme + hidrasyon<br />
+              <strong>Genel Sağlık:</strong> Dengeli beslenme + çeşitlilik
+            </p>
+          </div>
+        </div>
+
+        <!-- Motivasyon Teknikleri -->
+        <div class="content-section" id="motivasyon">
+          <h2 class="section-title">🧠 Motivasyon Teknikleri</h2>
+
+          <div class="grid-2">
+            <div class="motivation-card">
+              <h4>🎯 SMART Hedefler</h4>
+              <p>
+                Spesifik, ölçülebilir, ulaşılabilir, gerçekçi ve zaman sınırlı
+                hedefler belirleyin.
+              </p>
+            </div>
+
+            <div class="motivation-card">
+              <h4>📊 İlerleme Takibi</h4>
+              <p>
+                Günlük kayıt tutun, fotoğraf çekin, ölçümlerinizi kaydedin.
+                İlerlemeyi görün.
+              </p>
+            </div>
+
+            <div class="motivation-card">
+              <h4>👥 Sosyal Destek</h4>
+              <p>
+                Antrenman partneri bulun, fitness topluluklarına katılın.
+                Sorumluluk hissi motivasyonu artırır.
+              </p>
+            </div>
+
+            <div class="motivation-card">
+              <h4>🎵 Müzik ve Motivasyon</h4>
+              <p>
+                Antrenman playlist'i oluşturun. Müzik performansı artırır ve
+                motivasyonu yükseltir.
+              </p>
+            </div>
+
+            <div class="motivation-card">
+              <h4>🏆 Ödül Sistemi</h4>
+              <p>
+                Hedeflere ulaştığınızda kendinizi ödüllendirin. Küçük başarıları
+                kutlayın.
+              </p>
+            </div>
+
+            <div class="motivation-card">
+              <h4>🧘‍♀️ Görselleştirme</h4>
+              <p>
+                Hedeflerinizi hayal edin, başarı senaryolarını zihninizde
+                canlandırın.
+              </p>
+            </div>
+          </div>
+
+          <div class="content-card">
+            <h3>Motivasyonu Koruma Stratejileri</h3>
+            <ul>
+              <li>
+                <strong>Rutin Oluşturun:</strong> Düzenli antrenman saatleri
+                belirleyin
+              </li>
+              <li>
+                <strong>Çeşitlilik Ekleyin:</strong> Farklı egzersizler ve
+                aktiviteler deneyin
+              </li>
+              <li>
+                <strong>Gerçekçi Beklentiler:</strong> Anlık sonuçlar beklemeyin
+              </li>
+              <li>
+                <strong>Pozitif Düşünün:</strong> Başarıları vurgulayın,
+                hataları öğrenme fırsatı olarak görün
+              </li>
+              <li>
+                <strong>Dinlenme Önemli:</strong> Aşırı antrenmandan kaçının
+              </li>
+              <li>
+                <strong>Profesyonel Destek:</strong> Gerekirse antrenör veya
+                beslenme uzmanından yardım alın
+              </li>
+            </ul>
+          </div>
+
+          <div class="highlight-box">
+            <h4>💪 Zor Dönemlerde Motivasyon</h4>
+            <p>
+              Motivasyonunuz düştüğünde: Küçük hedefler belirleyin, antrenman
+              süresini kısaltın, sevdiğiniz aktivitelere odaklanın. Her gün bir
+              adım atmak, hiç atmamaktan iyidir.
+            </p>
+          </div>
+        </div>
+
+        <!-- Yaygın Hatalar -->
+        <div class="content-section" id="hatalar">
+          <h2 class="section-title">❌ Yaygın Hatalar</h2>
+
+          <div class="error-card">
+            <h4>🚫 Yanlış Form ve Teknik</h4>
+            <p>
+              <strong>Hata:</strong> Ağırlık kaldırırken yanlış form kullanma<br />
+              <strong>Sonuç:</strong> Sakatlanma riski, etkisiz antrenman<br />
+              <strong>Çözüm:</strong> Hafif ağırlıklarla başlayın, form üzerine
+              odaklanın, profesyonel destek alın
+            </p>
+          </div>
+
+          <div class="error-card">
+            <h4>⚡ Aşırı Antrenman</h4>
+            <p>
+              <strong>Hata:</strong> Çok sık ve yoğun antrenman yapma<br />
+              <strong>Sonuç:</strong> Yorgunluk, sakatlanma, motivasyon kaybı<br />
+              <strong>Çözüm:</strong> Dinlenme günleri ekleyin, vücudunuzu
+              dinleyin, kademeli ilerleyin
+            </p>
+          </div>
+
+          <div class="error-card">
+            <h4>🥗 Yanlış Beslenme</h4>
+            <p>
+              <strong>Hata:</strong> Antrenman sonrası yeterli beslenmeme veya
+              aşırı yeme<br />
+              <strong>Sonuç:</strong> Kas kaybı, yağ artışı, düşük performans<br />
+              <strong>Çözüm:</strong> Dengeli beslenme planı oluşturun, porsiyon
+              kontrolü yapın
+            </p>
+          </div>
+
+          <div class="error-card">
+            <h4>🎯 Gerçekçi Olmayan Hedefler</h4>
+            <p>
+              <strong>Hata:</strong> Çok hızlı sonuç beklemek<br />
+              <strong>Sonuç:</strong> Hayal kırıklığı, motivasyon kaybı<br />
+              <strong>Çözüm:</strong> Uzun vadeli hedefler belirleyin, küçük
+              başarıları kutlayın
+            </p>
+          </div>
+
+          <div class="error-card">
+            <h4>💧 Yetersiz Hidrasyon</h4>
+            <p>
+              <strong>Hata:</strong> Yeterli su içmemek<br />
+              <strong>Sonuç:</strong> Düşük performans, yorgunluk, baş ağrısı<br />
+              <strong>Çözüm:</strong> Günlük su ihtiyacınızı hesaplayın, su içme
+              alışkanlığı geliştirin
+            </p>
+          </div>
+
+          <div class="error-card">
+            <h4>🔄 Tek Düze Antrenman</h4>
+            <p>
+              <strong>Hata:</strong> Aynı egzersizleri sürekli tekrarlama<br />
+              <strong>Sonuç:</strong> Plateau (durağanlık), sıkılma<br />
+              <strong>Çözüm:</strong> Antrenman programınızı çeşitlendirin, yeni
+              egzersizler ekleyin
+            </p>
+          </div>
+
+          <div class="highlight-box">
+            <h4>✅ Doğru Yaklaşım</h4>
+            <p>
+              Fitness yolculuğunuzda: Sabırlı olun, bilimsel yaklaşım
+              benimseyin, vücudunuzu dinleyin, profesyonel destek alın.
+              Sürdürülebilir alışkanlıklar oluşturun.
+            </p>
+          </div>
+        </div>
+      </div>
+    </main>
+    <ng-include src="'components/footer.html'"></ng-include>
+    <button id="scrollTopBtn" title="Yukarı Çık" ng-click="scrollToTop()">
+      ↑
+    </button>
+  </body>
+</html>

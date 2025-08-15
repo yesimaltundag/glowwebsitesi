@@ -129,9 +129,25 @@
           );
 
           $scope.kategoriSec = function (kategori) {
-            alert(
-              kategori + " kategorisi seçildi! Bu özellik yakında eklenecek."
-            );
+            if (kategori === "Futbol") {
+              window.location.href = "futbol-detay.html";
+            } else if (kategori === "Basketbol") {
+              window.location.href = "basketbol-detay.html";
+            } else if (kategori === "Voleybol") {
+              window.location.href = "voleybol-detay.html";
+            } else if (kategori === "Fitness") {
+              window.location.href = "fitness-detay.html";
+            } else if (kategori === "Tenis") {
+              window.location.href = "tenis-detay.html";
+            } else if (kategori === "Yoga") {
+              window.location.href = "yoga-detay.html";
+            } else if (kategori === "Boks") {
+              window.location.href = "boks-detay.html";
+            } else {
+              alert(
+                kategori + " kategorisi seçildi! Bu özellik yakında eklenecek."
+              );
+            }
           };
 
           $scope.scrollToTop = function () {

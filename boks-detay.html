@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="tr" ng-app="GirisApp">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Boks Detay - GLOW</title>
+    <link rel="stylesheet" href="assets/css/style.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="assets/js/app.js"></script>
+    <style>
+      .boks-container {
+        max-width: 1000px;
+        margin: 40px auto;
+        padding: 32px;
+        background: rgba(255, 255, 255, 0.92);
+        border-radius: 18px;
+        box-shadow: 0 8px 32px rgba(124, 92, 74, 0.1);
+        backdrop-filter: blur(10px);
+        position: relative;
+      }
+
+      .boks-header {
+        text-align: center;
+        margin-bottom: 40px;
+        position: relative;
+      }
+
+      .boks-title {
+        color: #7c5c4a;
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 8px;
+        letter-spacing: 1px;
+      }
+
+      .boks-subtitle {
+        color: #b48a78;
+        font-size: 1.1rem;
+        font-weight: 500;
+      }
+
+      .geri-btn {
+        background: linear-gradient(135deg, #e2d9d0, #b48a78);
+        color: #7c5c4a;
+        border: none;
+        border-radius: 50%;
+        width: 45px;
+        height: 45px;
+        padding: 0;
+        font-size: 18px;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s;
+        position: absolute;
+        top: 0;
+        left: 0;
+        margin: 0;
+      }
+
+      .geri-btn:hover {
+        background: linear-gradient(135deg, #b48a78, #e2d9d0);
+        color: #fff;
+        transform: scale(1.08);
+      }
+
+      .kategori-tabs {
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        margin-bottom: 40px;
+        flex-wrap: wrap;
+      }
+
+      .tab-btn {
+        background: linear-gradient(135deg, #f8e0e1, #e2d9d0);
+        color: #7c5c4a;
+        border: none;
+        border-radius: 25px;
+        padding: 12px 24px;
+        font-size: 0.95rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        letter-spacing: 0.5px;
+      }
+
+      .tab-btn.active {
+        background: linear-gradient(135deg, #b48a78, #7c5c4a);
+        color: #fff;
+        transform: scale(1.05);
+      }
+
+      .tab-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 16px rgba(180, 138, 120, 0.2);
+      }
+
+      .content-section {
+        display: none;
+        animation: fadeIn 0.5s ease-in-out;
+      }
+
+      .content-section.active {
+        display: block;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .section-title {
+        color: #7c5c4a;
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin-bottom: 24px;
+        text-align: center;
+        letter-spacing: 0.5px;
+      }
+
+      .content-card {
+        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        border-radius: 16px;
+        padding: 28px;
+        margin-bottom: 24px;
+        box-shadow: 0 4px 16px rgba(180, 138, 120, 0.08);
+        border-left: 4px solid #b48a78;
+      }
+
+      .content-card h3 {
+        color: #7c5c4a;
+        font-size: 1.3rem;
+        font-weight: 600;
+        margin-bottom: 16px;
+        letter-spacing: 0.5px;
+      }
+
+      .content-card p {
+        color: #6c757d;
+        line-height: 1.7;
+        margin-bottom: 12px;
+        font-size: 1rem;
+      }
+
+      .content-card ul {
+        color: #6c757d;
+        line-height: 1.7;
+        padding-left: 20px;
+      }
+
+      .content-card li {
+        margin-bottom: 8px;
+      }
+
+      .highlight-box {
+        background: linear-gradient(135deg, #f8e0e1, #e2d9d0);
+        border-radius: 12px;
+        padding: 20px;
+        margin: 16px 0;
+        border-left: 4px solid #b48a78;
+      }
+
+      .highlight-box h4 {
+        color: #7c5c4a;
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 12px;
+      }
+
+      .highlight-box p {
+        color: #6c757d;
+        margin: 0;
+        font-size: 0.95rem;
+      }
+
+      .grid-2 {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+        margin: 20px 0;
+      }
+
+      .grid-3 {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 16px;
+        margin: 20px 0;
+      }
+
+      .history-card {
+        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        border-radius: 12px;
+        padding: 20px;
+        border-left: 4px solid #b48a78;
+      }
+
+      .history-card h4 {
+        color: #7c5c4a;
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 12px;
+      }
+
+      .history-card p {
+        color: #6c757d;
+        font-size: 0.9rem;
+        line-height: 1.6;
+      }
+
+      .stance-card {
+        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        border-radius: 12px;
+        padding: 20px;
+        text-align: center;
+        border: 2px solid #e2d9d0;
+        transition: all 0.3s;
+      }
+
+      .stance-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(180, 138, 120, 0.15);
+      }
+
+      .stance-card h4 {
+        color: #7c5c4a;
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 12px;
+      }
+
+      .stance-card p {
+        color: #6c757d;
+        font-size: 0.9rem;
+        line-height: 1.5;
+      }
+
+      .punch-card {
+        background: linear-gradient(135deg, #f8e0e1, #e2d9d0);
+        border-radius: 12px;
+        padding: 20px;
+        text-align: center;
+        transition: all 0.3s;
+      }
+
+      .punch-card:hover {
+        transform: scale(1.02);
+        box-shadow: 0 6px 20px rgba(180, 138, 120, 0.15);
+      }
+
+      .punch-card h4 {
+        color: #7c5c4a;
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 8px;
+      }
+
+      .punch-card p {
+        color: #6c757d;
+        font-size: 0.9rem;
+        margin: 0;
+      }
+
+      .training-card {
+        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 16px;
+        border-left: 4px solid #28a745;
+      }
+
+      .training-card h4 {
+        color: #7c5c4a;
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 12px;
+      }
+
+      .training-card p {
+        color: #6c757d;
+        font-size: 0.9rem;
+        line-height: 1.6;
+        margin: 0;
+      }
+
+      .player-slider-container {
+        position: relative;
+        margin: 30px 0;
+        overflow: hidden;
+      }
+
+      .player-slider {
+        display: flex;
+        gap: 20px;
+        transition: transform 0.3s ease;
+      }
+
+      .player-card {
+        min-width: 280px;
+        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        border-radius: 16px;
+        padding: 24px;
+        text-align: center;
+        box-shadow: 0 4px 16px rgba(180, 138, 120, 0.08);
+        border: 2px solid #e2d9d0;
+        transition: all 0.3s;
+      }
+
+      .player-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(180, 138, 120, 0.2);
+      }
+
+      .player-image {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        margin: 0 auto 16px;
+        background: linear-gradient(135deg, #e2d9d0, #b48a78);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 3rem;
+        color: #7c5c4a;
+      }
+
+      .player-card h4 {
+        color: #7c5c4a;
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin-bottom: 8px;
+      }
+
+      .player-card p {
+        color: #6c757d;
+        font-size: 0.9rem;
+        line-height: 1.5;
+        margin: 0;
+      }
+
+      .slider-controls {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        margin: 20px 0;
+      }
+
+      .slider-btn {
+        background: linear-gradient(135deg, #b48a78, #7c5c4a);
+        color: #fff;
+        border: none;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: all 0.3s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .slider-btn:hover {
+        transform: scale(1.1);
+        box-shadow: 0 4px 12px rgba(180, 138, 120, 0.3);
+      }
+
+      .slider-dots {
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+        margin-top: 16px;
+      }
+
+      .dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: #e2d9d0;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+
+      .dot.active {
+        background: #b48a78;
+        transform: scale(1.2);
+      }
+
+      @media (max-width: 768px) {
+        .boks-container {
+          margin: 20px auto;
+          padding: 20px;
+        }
+
+        .boks-title {
+          font-size: 2rem;
+        }
+
+        .kategori-tabs {
+          gap: 8px;
+        }
+
+        .tab-btn {
+          padding: 10px 16px;
+          font-size: 0.85rem;
+        }
+
+        .grid-2,
+        .grid-3 {
+          grid-template-columns: 1fr;
+        }
+
+        .content-card {
+          padding: 20px;
+        }
+
+        .player-card {
+          min-width: 250px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <ng-include src="'components/header.html'"></ng-include>
+    <main class="main-content">
+      <div class="boks-container" ng-controller="BoksDetayController">
+        <button
+          class="geri-btn"
+          onclick="window.history.back()"
+          title="Geri Dön"
+        >
+          ←
+        </button>
+
+        <div class="boks-header">
+          <h1 class="boks-title">🥊 Boks</h1>
+          <p class="boks-subtitle">
+            Güç, hız ve stratejiyi birleştiren asil spor
+          </p>
+        </div>
+
+        <div class="kategori-tabs">
+          <button class="tab-btn active" ng-click="tabSec('tarih')">
+            Boksun Tarihi ve Türleri
+          </button>
+          <button class="tab-btn" ng-click="tabSec('durus')">
+            🧍‍♂️ Temel Duruş ve Gard
+          </button>
+          <button class="tab-btn" ng-click="tabSec('vurus')">
+            ✊ Vuruş Teknikleri
+          </button>
+          <button class="tab-btn" ng-click="tabSec('kondisyon')">
+            💪 Kondisyon ve Güç
+          </button>
+          <button class="tab-btn" ng-click="tabSec('boksorler')">
+            🌟 Efsane Boksörler
+          </button>
+        </div>
+
+        <!-- Boksun Tarihi ve Türleri -->
+        <div class="content-section active" id="tarih">
+          <h2 class="section-title">📚 Boksun Tarihi ve Türleri</h2>
+
+          <div class="grid-2">
+            <div class="history-card">
+              <h4>🏛️ Boksun Kökeni</h4>
+              <p>
+                <strong>Antik Dönem:</strong> MÖ 3000'lerde Mısır'da başladı<br />
+                <strong>Antik Yunan:</strong> Olimpiyat Oyunları'nda yer aldı<br />
+                <strong>Roma Dönemi:</strong> Gladyatör dövüşlerinde
+                kullanıldı<br />
+                <strong>Modern Dönem:</strong> 18. yüzyılda İngiltere'de gelişti
+              </p>
+            </div>
+
+            <div class="history-card">
+              <h4>🎯 Boksun Anlamı</h4>
+              <p>
+                <strong>Fiziksel:</strong> Güç, hız ve dayanıklılık
+                geliştirme<br />
+                <strong>Zihinsel:</strong> Strateji ve taktik düşünme<br />
+                <strong>Spiritüel:</strong> Disiplin ve öz kontrol<br />
+                <strong>Sportif:</strong> Fair play ve saygı
+              </p>
+            </div>
+
+            <div class="history-card">
+              <h4>🥊 Boks Türleri</h4>
+              <p>
+                <strong>Amateur Boks:</strong> Olimpiyat ve ulusal turnuvalar<br />
+                <strong>Profesyonel Boks:</strong> Para için yapılan maçlar<br />
+                <strong>Kick Boks:</strong> Tekme ve yumruk kombinasyonu<br />
+                <strong>Muay Thai:</strong> Tayland'ın geleneksel boksu
+              </p>
+            </div>
+
+            <div class="history-card">
+              <h4>⚖️ Ağırlık Kategorileri</h4>
+              <p>
+                <strong>Sinek Sıklet:</strong> 52 kg'a kadar<br />
+                <strong>Horoz Sıklet:</strong> 53.5 kg'a kadar<br />
+                <strong>Tüy Sıklet:</strong> 57 kg'a kadar<br />
+                <strong>Hafif Sıklet:</strong> 61 kg'a kadar
+              </p>
+            </div>
+          </div>
+
+          <div class="content-card">
+            <h3>Boksun Tarihsel Gelişimi</h3>
+            <p>
+              Boks, insanlık tarihinin en eski sporlarından biridir. Antik
+              uygarlıklardan günümüze kadar gelişerek, sadece fiziksel güç değil
+              aynı zamanda zihinsel strateji gerektiren bir spor haline
+              gelmiştir.
+            </p>
+            <p>
+              Modern boks, 18. yüzyılda İngiltere'de Marquis of Queensberry
+              kurallarıyla standartlaştırılmıştır. Günümüzde hem amatör hem de
+              profesyonel seviyede dünya çapında yapılmaktadır.
+            </p>
+          </div>
+
+          <div class="highlight-box">
+            <h4>🎯 Boksun Temel Prensipleri</h4>
+            <p>
+              Boks, sadece yumruk atmak değil, aynı zamanda savunma, hareket
+              etme ve strateji geliştirme sanatıdır. Güç, hız, dayanıklılık ve
+              zeka bir arada kullanılır.
+            </p>
+          </div>
+        </div>
+
+        <!-- Temel Duruş ve Gard -->
+        <div class="content-section" id="durus">
+          <h2 class="section-title">🧍‍♂️ Temel Duruş ve Gard</h2>
+
+          <div class="grid-3">
+            <div class="stance-card">
+              <h4>🥊 Temel Duruş</h4>
+              <p>
+                <strong>Ayak Pozisyonu:</strong> Sol ayak önde, sağ ayak
+                arkada<br />
+                <strong>Mesafe:</strong> Omuz genişliğinde açık<br />
+                <strong>Dizler:</strong> Hafif bükük ve esnek<br />
+                <strong>Ağırlık:</strong> Ön ayakta %60, arka ayakta %40
+              </p>
+            </div>
+
+            <div class="stance-card">
+              <h4>🛡️ Gard Pozisyonu</h4>
+              <p>
+                <strong>Sol El:</strong> Yüz hizasında, önde<br />
+                <strong>Sağ El:</strong> Çene hizasında, arkada<br />
+                <strong>Dirsekler:</strong> Vücuda yakın<br />
+                <strong>Omuzlar:</strong> Yüksek ve koruyucu
+              </p>
+            </div>
+
+            <div class="stance-card">
+              <h4>👀 Bakış ve Odaklanma</h4>
+              <p>
+                <strong>Gözler:</strong> Rakibin omuzlarına odaklan<br />
+                <strong>Çene:</strong> Göğse yakın tutun<br />
+                <strong>Boyun:</strong> Esnek ve hareketli<br />
+                <strong>Farkındalık:</strong> Çevreyi sürekli tarayın
+              </p>
+            </div>
+
+            <div class="stance-card">
+              <h4>🔄 Hareket ve Denge</h4>
+              <p>
+                <strong>Adım Atma:</strong> Küçük ve kontrollü adımlar<br />
+                <strong>Denge:</strong> Merkez ağırlığı koruyun<br />
+                <strong>Hız:</strong> Hızlı ama kontrollü hareket<br />
+                <strong>Esneklik:</strong> Sürekli hazır pozisyonda
+              </p>
+            </div>
+
+            <div class="stance-card">
+              <h4>💪 Güç Pozisyonu</h4>
+              <p>
+                <strong>Core:</strong> Karın kasları sıkı<br />
+                <strong>Kalça:</strong> Hafif döndürülmüş<br />
+                <strong>Omuzlar:</strong> Rahat ve gevşek<br />
+                <strong>Kollar:</strong> Esnek ve hazır
+              </p>
+            </div>
+
+            <div class="stance-card">
+              <h4>🎯 Savunma Pozisyonu</h4>
+              <p>
+                <strong>Eller:</strong> Yüzü koruyacak şekilde<br />
+                <strong>Dirsekler:</strong> Vücuda yakın<br />
+                <strong>Bacaklar:</strong> Hareket için hazır<br />
+                <strong>Pozisyon:</strong> Her zaman kaçış yolu açık
+              </p>
+            </div>
+          </div>
+
+          <div class="content-card">
+            <h3>Duruş ve Gard İpuçları</h3>
+            <ul>
+              <li><strong>Doğal Duruş:</strong> Rahat ve doğal hissedin</li>
+              <li><strong>Sürekli Hareket:</strong> Sabit durmayın</li>
+              <li>
+                <strong>Denge Koruma:</strong> Ağırlığınızı dengeli dağıtın
+              </li>
+              <li><strong>Göz Teması:</strong> Rakibi sürekli takip edin</li>
+              <li><strong>Nefes Kontrolü:</strong> Düzenli nefes alın</li>
+              <li><strong>Pratik:</strong> Ayna karşısında çalışın</li>
+            </ul>
+          </div>
+
+          <div class="highlight-box">
+            <h4>💡 Başlangıç İpuçları</h4>
+            <p>
+              Yeni başlayanlar için temel duruş çok önemlidir. Doğru duruş
+              öğrenmek zaman alır ama temelidir. Ayna karşısında pratik yapın ve
+              antrenörünüzden sürekli geri bildirim alın.
+            </p>
+          </div>
+        </div>
+
+        <!-- Vuruş Teknikleri -->
+        <div class="content-section" id="vurus">
+          <h2 class="section-title">✊ Vuruş Teknikleri</h2>
+
+          <div class="grid-2">
+            <div class="punch-card">
+              <h4>👊 Jab (Direkt)</h4>
+              <p>
+                <strong>El:</strong> Ön el (genellikle sol)<br />
+                <strong>Hedef:</strong> Yüz ve vücut<br />
+                <strong>Teknik:</strong> Hızlı ve düz vuruş<br />
+                <strong>Amacı:</strong> Mesafe ölçme ve rahatsız etme
+              </p>
+            </div>
+
+            <div class="punch-card">
+              <h4>💥 Cross (Sağ Direkt)</h4>
+              <p>
+                <strong>El:</strong> Arka el (genellikle sağ)<br />
+                <strong>Hedef:</strong> Yüz ve vücut<br />
+                <strong>Teknik:</strong> Güçlü ve düz vuruş<br />
+                <strong>Amacı:</strong> Güçlü darbe ve nakavt
+              </p>
+            </div>
+
+            <div class="punch-card">
+              <h4>🔄 Hook (Kanca)</h4>
+              <p>
+                <strong>El:</strong> Her iki el<br />
+                <strong>Hedef:</strong> Yanak ve şakak<br />
+                <strong>Teknik:</strong> Yay çizerek vuruş<br />
+                <strong>Amacı:</strong> Yan taraftan darbe
+              </p>
+            </div>
+
+            <div class="punch-card">
+              <h4>⬆️ Uppercut (Alt Çene)</h4>
+              <p>
+                <strong>El:</strong> Her iki el<br />
+                <strong>Hedef:</strong> Çene ve burun<br />
+                <strong>Teknik:</strong> Aşağıdan yukarı vuruş<br />
+                <strong>Amacı:</strong> Çene altına darbe
+              </p>
+            </div>
+
+            <div class="punch-card">
+              <h4>🔄 Overhand (Üstten)</h4>
+              <p>
+                <strong>El:</strong> Arka el<br />
+                <strong>Hedef:</strong> Yüz ve şakak<br />
+                <strong>Teknik:</strong> Yukarıdan aşağı vuruş<br />
+                <strong>Amacı:</strong> Gardı aşma
+              </p>
+            </div>
+
+            <div class="punch-card">
+              <h4>💪 Body Shot (Vücut)</h4>
+              <p>
+                <strong>El:</strong> Her iki el<br />
+                <strong>Hedef:</strong> Karın ve kaburga<br />
+                <strong>Teknik:</strong> Kısa ve güçlü vuruş<br />
+                <strong>Amacı:</strong> Rakibi yorma
+              </p>
+            </div>
+          </div>
+
+          <div class="content-card">
+            <h3>Vuruş Kombinasyonları</h3>
+            <p>
+              <strong>1-2 Kombinasyonu:</strong> Jab + Cross<br />
+              <strong>1-2-3 Kombinasyonu:</strong> Jab + Cross + Hook<br />
+              <strong>Double Jab:</strong> İki ardışık jab<br />
+              <strong>Jab-Cross-Hook-Cross:</strong> Dörtlü kombinasyon<br />
+              <strong>Body-Head:</strong> Vücut + Kafa kombinasyonu
+            </p>
+          </div>
+
+          <div class="highlight-box">
+            <h4>💡 Vuruş Teknikleri İpuçları</h4>
+            <p>
+              <strong>Doğru Form:</strong> Her vuruşta doğru formu koruyun<br />
+              <strong>Nefes Kontrolü:</strong> Vuruş sırasında nefes verin<br />
+              <strong>Hız ve Güç:</strong> Önce hız, sonra güç geliştirin<br />
+              <strong>Hedef Odaklı:</strong> Her vuruşta hedefi belirleyin<br />
+              <strong>Pratik:</strong> Shadow boxing ile çalışın
+            </p>
+          </div>
+        </div>
+
+        <!-- Kondisyon ve Güç Antrenmanları -->
+        <div class="content-section" id="kondisyon">
+          <h2 class="section-title">💪 Kondisyon ve Güç Antrenmanları</h2>
+
+          <div class="training-card">
+            <h4>🏃‍♂️ Kardiyovasküler Kondisyon</h4>
+            <p>
+              <strong>Koşu:</strong> 30-45 dakika tempolu koşu. 4-5
+              gün/hafta.<br />
+              <strong>Interval Antrenmanı:</strong> 30 saniye sprint, 30 saniye
+              dinlenme. 20 dakika.<br />
+              <strong>Jump Rope:</strong> 15-20 dakika ip atlama. Her gün.<br />
+              <strong>Shadow Boxing:</strong> 20-30 dakika gölge boksu. 3-4
+              gün/hafta.<br />
+              <strong>Heavy Bag:</strong> 10-15 dakika torba çalışması. 3
+              gün/hafta.
+            </p>
+          </div>
+
+          <div class="training-card">
+            <h4>💪 Güç Antrenmanı</h4>
+            <p>
+              <strong>Üst Vücut:</strong> Şınav, barfiks, dip. 3 gün/hafta.<br />
+              <strong>Alt Vücut:</strong> Squat, lunge, calf raises. 3
+              gün/hafta.<br />
+              <strong>Core:</strong> Plank, crunches, Russian twists. Her gün 20
+              dakika.<br />
+              <strong>Omuz Gücü:</strong> Military press, lateral raises. 2
+              gün/hafta.<br />
+              <strong>Kol Gücü:</strong> Bicep curls, tricep dips. 2 gün/hafta.
+            </p>
+          </div>
+
+          <div class="training-card">
+            <h4>⚡ Hız ve Çeviklik</h4>
+            <p>
+              <strong>Speed Bag:</strong> 10-15 dakika hız torbası. Her gün.<br />
+              <strong>Double End Bag:</strong> 10 dakika çift uçlu torba. 3
+              gün/hafta.<br />
+              <strong>Ladder Drills:</strong> 15 dakika merdiven egzersizleri. 2
+              gün/hafta.<br />
+              <strong>Plyometrics:</strong> Box jumps, burpees. 2 gün/hafta.<br />
+              <strong>Reaksiyon Antrenmanı:</strong> Işık veya ses ile tepki. 2
+              gün/hafta.
+            </p>
+          </div>
+
+          <div class="training-card">
+            <h4>🧘‍♀️ Esneklik ve Mobilite</h4>
+            <p>
+              <strong>Dinamik Stretching:</strong> Antrenman öncesi 15
+              dakika.<br />
+              <strong>Statik Stretching:</strong> Antrenman sonrası 20
+              dakika.<br />
+              <strong>Yoga:</strong> Haftada 2-3 gün. Esneklik için.<br />
+              <strong>Foam Rolling:</strong> Kas gevşetme. Her gün 15 dakika.<br />
+              <strong>Mobilite Egzersizleri:</strong> Omuz ve kalça mobilitesi.
+              Her gün.
+            </p>
+          </div>
+
+          <div class="training-card">
+            <h4>🎯 Boks Özel Antrenmanı</h4>
+            <p>
+              <strong>Sparring:</strong> Partner ile dövüş pratiği. 2-3
+              gün/hafta.<br />
+              <strong>Pad Work:</strong> Antrenör ile pad çalışması. 3
+              gün/hafta.<br />
+              <strong>Defense Drills:</strong> Savunma teknikleri. 2
+              gün/hafta.<br />
+              <strong>Footwork:</strong> Ayak hareketleri. Her gün 15 dakika.<br />
+              <strong>Mental Training:</strong> Görselleştirme ve konsantrasyon.
+            </p>
+          </div>
+
+          <div class="highlight-box">
+            <h4>💡 Antrenman Programı Önerisi</h4>
+            <p>
+              <strong>Pazartesi:</strong> Güç antrenmanı + kardiyo<br />
+              <strong>Salı:</strong> Boks antrenmanı + sparring<br />
+              <strong>Çarşamba:</strong> Hız + çeviklik antrenmanı<br />
+              <strong>Perşembe:</strong> Boks antrenmanı + pad work<br />
+              <strong>Cuma:</strong> Güç antrenmanı + kardiyo<br />
+              <strong>Cumartesi:</strong> Sparring + teknik çalışma<br />
+              <strong>Pazar:</strong> Dinlenme veya hafif aktivite
+            </p>
+          </div>
+        </div>
+
+        <!-- Efsane Boksörler -->
+        <div class="content-section" id="boksorler">
+          <h2 class="section-title">🌟 Efsane Boksörler</h2>
+
+          <div class="player-slider-container">
+            <div class="player-slider" id="playerSlider">
+              <div class="player-card">
+                <img
+                  src="https://upload.wikimedia.org/wikipedia/commons/8/89/Muhammad_Ali_NYWTS.jpg"
+                  alt="Muhammad Ali"
+                  class="player-image"
+                />
+                <h4>Muhammad Ali</h4>
+                <p>
+                  <strong>"The Greatest"</strong><br />
+                  56 galibiyet, 5 mağlubiyet<br />
+                  Üç kez ağır sıklet şampiyonu<br />
+                  Sadece boksör değil, aktivist
+                </p>
+              </div>
+
+              <div class="player-card">
+                <img
+                  src="https://qph.cf2.quoracdn.net/main-qimg-30200442e2bef8e506c309072a926f1f-pjlq"
+                  alt="Mike Tyson"
+                  class="player-image"
+                />
+                <h4>Mike Tyson</h4>
+                <p>
+                  <strong>"Iron Mike"</strong><br />
+                  50 galibiyet, 6 mağlubiyet<br />
+                  En genç ağır sıklet şampiyonu<br />
+                  Korkunç gücü ile tanınır
+                </p>
+              </div>
+
+              <div class="player-card">
+                <img
+                  src="https://www.wbaboxing.com/wp-content/uploads/2012/09/floydmayweather-jr.png"
+                  alt="Floyd Mayweather Jr."
+                  class="player-image"
+                />
+                <h4>Floyd Mayweather Jr.</h4>
+                <p>
+                  <strong>"Money"</strong><br />
+                  50 galibiyet, 0 mağlubiyet<br />
+                  Mükemmel savunma tekniği<br />
+                  Tüm zamanların en iyi savunmacısı
+                </p>
+              </div>
+
+              <div class="player-card">
+                <img
+                  src="https://hips.hearstapps.com/hmg-prod/images/gettyimages-1163293092.jpg"
+                  alt="Manny Pacquiao"
+                  class="player-image"
+                />
+                <h4>Manny Pacquiao</h4>
+                <p>
+                  <strong>"Pac-Man"</strong><br />
+                  62 galibiyet, 8 mağlubiyet<br />
+                  8 farklı ağırlıkta şampiyon<br />
+                  Filipinler'in ulusal kahramanı
+                </p>
+              </div>
+
+              <div class="player-card">
+                <img
+                  src="https://www.vice.com/wp-content/uploads/sites/2/2017/01/fighting-ugly-rocky-marciano-1484762023.jpeg?w=700"
+                  alt="Rocky Marciano"
+                  class="player-image"
+                />
+                <h4>Rocky Marciano</h4>
+                <p>
+                  <strong>"The Brockton Blockbuster"</strong><br />
+                  49 galibiyet, 0 mağlubiyet<br />
+                  Hiç yenilmeyen tek ağır sıklet şampiyonu<br />
+                  Dayanıklılık ve güç sembolü
+                </p>
+              </div>
+
+              <div class="player-card">
+                <img
+                  src="https://upload.wikimedia.org/wikipedia/commons/3/30/Joe_Louis_by_van_Vechten.jpg"
+                  alt="Joe Louis"
+                  class="player-image"
+                />
+                <h4>Joe Louis</h4>
+                <p>
+                  <strong>"The Brown Bomber"</strong><br />
+                  66 galibiyet, 3 mağlubiyet<br />
+                  12 yıl ağır sıklet şampiyonu<br />
+                  Amerika'nın ilk siyahi kahramanı
+                </p>
+              </div>
+            </div>
+
+            <div class="slider-controls">
+              <span class="slider-btn" ng-click="prevSlide()" id="prevBtn"
+                >◀</span
+              >
+              <span class="slider-btn" ng-click="nextSlide()" id="nextBtn"
+                >▶</span
+              >
+            </div>
+
+            <div class="slider-dots">
+              <span class="dot active" ng-click="goToSlide(0)"></span>
+              <span class="dot" ng-click="goToSlide(1)"></span>
+              <span class="dot" ng-click="goToSlide(2)"></span>
+              <span class="dot" ng-click="goToSlide(3)"></span>
+              <span class="dot" ng-click="goToSlide(4)"></span>
+              <span class="dot" ng-click="goToSlide(5)"></span>
+            </div>
+          </div>
+
+          <div class="content-card">
+            <h3>Boks Tarihinde Dönüm Noktaları</h3>
+            <p>
+              <strong>1867 - Queensberry Kuralları:</strong> Modern boks
+              kuralları<br />
+              <strong>1904 - Olimpiyat Sporu:</strong> Boks olimpiyatlara dahil
+              edildi<br />
+              <strong>1927 - İlk Radyo Yayını:</strong> Boks maçları radyoda
+              yayınlandı<br />
+              <strong>1960 - Televizyon Dönemi:</strong> Boks TV'de yayınlanmaya
+              başladı<br />
+              <strong>1980 - Pay-Per-View:</strong> Ücretli yayın dönemi başladı
+            </p>
+          </div>
+        </div>
+      </div>
+    </main>
+    <ng-include src="'components/footer.html'"></ng-include>
+    <button id="scrollTopBtn" title="Yukarı Çık" ng-click="scrollToTop()">
+      ↑
+    </button>
+  </body>
+</html>

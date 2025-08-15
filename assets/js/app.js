@@ -1709,25 +1709,58 @@ angular
         });
     };
 
+    // Silme onayını göster/gizle
+    $scope.silmeOnayiGoster = function (id) {
+      // Seçilen kullanıcıyı bul
+      var kisi = $scope.kisiler.find(function (k) {
+        return k.id == id;
+      });
+
+      if (kisi) {
+        // Eğer bu kullanıcının onayı zaten açıksa, kapat
+        if (kisi.silmeOnayiGoster) {
+          kisi.silmeOnayiGoster = false;
+        } else {
+          // Önce tüm açık onayları kapat
+          $scope.kisiler.forEach(function (k) {
+            k.silmeOnayiGoster = false;
+          });
+          // Bu kullanıcının onayını aç
+          kisi.silmeOnayiGoster = true;
+        }
+      }
+    };
+
+    // Silme onayını kapat
+    $scope.silmeOnayiKapat = function (kisi) {
+      kisi.silmeOnayiGoster = false;
+    };
+
     // Kullanıcı sil
     $scope.kisiSil = function (id) {
-      if (confirm("Bu kullanıcıyı silmek istediğinizden emin misiniz?")) {
-        $http({
-          method: "DELETE",
-          url: "api.php?id=" + id,
-        })
-          .then(function (response) {
-            if (response.data.success) {
-              showMessage("Kullanıcı başarıyla silindi!", "success");
-              $scope.kisileriGetir();
-            } else {
-              showMessage("Silme işlemi başarısız", "error");
-            }
-          })
-          .catch(function (error) {
-            showMessage("Silme işlemi sırasında hata oluştu", "error");
-          });
+      // Önce onay alanını kapat
+      var kisi = $scope.kisiler.find(function (k) {
+        return k.id == id;
+      });
+      if (kisi) {
+        kisi.silmeOnayiGoster = false;
       }
+
+      $http({
+        method: "DELETE",
+        url: "api.php?id=" + id,
+      })
+        .then(function (response) {
+          if (response.data.success) {
+            showMessage("Kullanıcı başarıyla silindi!", "success");
+            $scope.kisileriGetir();
+          } else {
+            showMessage("Silme işlemi başarısız", "error");
+          }
+        })
+        .catch(function (error) {
+          showMessage("Silme işlemi sırasında hata oluştu", "error");
+        });
     };
 
     // Kullanıcı güncelle
@@ -2764,5 +2797,514 @@ document.head.appendChild(style);
 angular.module("GirisApp").filter("trustUrl", function ($sce) {
   return function (url) {
     return $sce.trustAsResourceUrl(url);
+  };
+});
+
+// ===== FUTBOL DETAY CONTROLLER =====
+angular
+  .module("GirisApp")
+  .controller("FutbolDetayController", function ($scope) {
+    $scope.kullanici = JSON.parse(localStorage.getItem("girisYapan") || "null");
+
+    // Slider değişkenleri
+    $scope.currentSlide = 0;
+    $scope.totalSlides = 6;
+    $scope.slidesPerView = 3;
+
+    // Tab değiştirme fonksiyonu
+    $scope.tabSec = function (tabName) {
+      // Tüm tab butonlarından active class'ını kaldır
+      document.querySelectorAll(".tab-btn").forEach((btn) => {
+        btn.classList.remove("active");
+      });
+
+      // Tüm content section'ları gizle
+      document.querySelectorAll(".content-section").forEach((section) => {
+        section.classList.remove("active");
+      });
+
+      // Seçilen tab butonunu aktif yap
+      event.target.classList.add("active");
+
+      // Seçilen content section'ı göster
+      document.getElementById(tabName).classList.add("active");
+    };
+
+    // Slider fonksiyonları
+    $scope.nextSlide = function () {
+      if ($scope.currentSlide < $scope.totalSlides - $scope.slidesPerView) {
+        $scope.currentSlide++;
+      } else {
+        // Son kartta ise başa dön
+        $scope.currentSlide = 0;
+      }
+      updateSlider();
+    };
+
+    $scope.prevSlide = function () {
+      if ($scope.currentSlide > 0) {
+        $scope.currentSlide--;
+      } else {
+        // İlk kartta ise sona git
+        $scope.currentSlide = $scope.totalSlides - $scope.slidesPerView;
+      }
+      updateSlider();
+    };
+
+    $scope.goToSlide = function (index) {
+      $scope.currentSlide = index;
+      updateSlider();
+    };
+
+    function updateSlider() {
+      const slider = document.getElementById("playerSlider");
+      const cardWidth = 300; // card width + gap
+      const translateX = -$scope.currentSlide * cardWidth;
+
+      if (slider) {
+        slider.style.transform = `translateX(${translateX}px)`;
+      }
+
+      // Buton durumlarını güncelle (sürekli döngü için disabled yok)
+      const prevBtn = document.getElementById("prevBtn");
+      const nextBtn = document.getElementById("nextBtn");
+
+      if (prevBtn) {
+        prevBtn.disabled = false;
+      }
+
+      if (nextBtn) {
+        nextBtn.disabled = false;
+      }
+
+      // Dots'ları güncelle
+      updateDots();
+    }
+
+    function updateDots() {
+      const dots = document.querySelectorAll(".dot");
+      dots.forEach((dot, index) => {
+        if (index === $scope.currentSlide) {
+          dot.classList.add("active");
+        } else {
+          dot.classList.remove("active");
+        }
+      });
+    }
+
+    // Mobil cihazlar için slidesPerView ayarı
+    function checkMobile() {
+      if (window.innerWidth <= 768) {
+        $scope.slidesPerView = 1;
+      } else if (window.innerWidth <= 1024) {
+        $scope.slidesPerView = 2;
+      } else {
+        $scope.slidesPerView = 3;
+      }
+    }
+
+    // Sayfa yüklendiğinde ve resize olduğunda kontrol et
+    checkMobile();
+    window.addEventListener("resize", function () {
+      checkMobile();
+      updateSlider();
+    });
+
+    $scope.scrollToTop = function () {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    };
+  });
+
+// ===== BASKETBOL DETAY CONTROLLER =====
+angular
+  .module("GirisApp")
+  .controller("BasketbolDetayController", function ($scope) {
+    $scope.kullanici = JSON.parse(localStorage.getItem("girisYapan") || "null");
+
+    // Slider değişkenleri
+    $scope.currentSlide = 0;
+    $scope.totalSlides = 6;
+    $scope.slidesPerView = 3;
+
+    // Tab değiştirme fonksiyonu
+    $scope.tabSec = function (tabName) {
+      // Tüm tab butonlarından active class'ını kaldır
+      document.querySelectorAll(".tab-btn").forEach((btn) => {
+        btn.classList.remove("active");
+      });
+
+      // Tüm content section'ları gizle
+      document.querySelectorAll(".content-section").forEach((section) => {
+        section.classList.remove("active");
+      });
+
+      // Seçilen tab butonunu aktif yap
+      event.target.classList.add("active");
+
+      // Seçilen content section'ı göster
+      document.getElementById(tabName).classList.add("active");
+    };
+
+    // Slider fonksiyonları
+    $scope.nextSlide = function () {
+      if ($scope.currentSlide < $scope.totalSlides - $scope.slidesPerView) {
+        $scope.currentSlide++;
+      } else {
+        // Son kartta ise başa dön
+        $scope.currentSlide = 0;
+      }
+      updateSlider();
+    };
+
+    $scope.prevSlide = function () {
+      if ($scope.currentSlide > 0) {
+        $scope.currentSlide--;
+      } else {
+        // İlk kartta ise sona git
+        $scope.currentSlide = $scope.totalSlides - $scope.slidesPerView;
+      }
+      updateSlider();
+    };
+
+    $scope.goToSlide = function (index) {
+      $scope.currentSlide = index;
+      updateSlider();
+    };
+
+    function updateSlider() {
+      const slider = document.getElementById("playerSlider");
+      const cardWidth = 300; // card width + gap
+      const translateX = -$scope.currentSlide * cardWidth;
+
+      if (slider) {
+        slider.style.transform = `translateX(${translateX}px)`;
+      }
+
+      // Buton durumlarını güncelle (sürekli döngü için disabled yok)
+      const prevBtn = document.getElementById("prevBtn");
+      const nextBtn = document.getElementById("nextBtn");
+
+      if (prevBtn) {
+        prevBtn.disabled = false;
+      }
+
+      if (nextBtn) {
+        nextBtn.disabled = false;
+      }
+
+      // Dots'ları güncelle
+      updateDots();
+    }
+
+    function updateDots() {
+      const dots = document.querySelectorAll(".dot");
+      dots.forEach((dot, index) => {
+        if (index === $scope.currentSlide) {
+          dot.classList.add("active");
+        } else {
+          dot.classList.remove("active");
+        }
+      });
+    }
+
+    // Mobil cihazlar için slidesPerView ayarı
+    function checkMobile() {
+      if (window.innerWidth <= 768) {
+        $scope.slidesPerView = 1;
+      } else if (window.innerWidth <= 1024) {
+        $scope.slidesPerView = 2;
+      } else {
+        $scope.slidesPerView = 3;
+      }
+    }
+
+    // Sayfa yüklendiğinde ve resize olduğunda kontrol et
+    checkMobile();
+    window.addEventListener("resize", function () {
+      checkMobile();
+      updateSlider();
+    });
+
+    $scope.scrollToTop = function () {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    };
+  });
+
+// ===== VOLEYBOL DETAY CONTROLLER =====
+angular
+  .module("GirisApp")
+  .controller("VoleybolDetayController", function ($scope) {
+    $scope.kullanici = JSON.parse(localStorage.getItem("girisYapan") || "null");
+
+    // Tab değiştirme fonksiyonu
+    $scope.tabSec = function (tabName) {
+      // Tüm tab butonlarından active class'ını kaldır
+      document.querySelectorAll(".tab-btn").forEach((btn) => {
+        btn.classList.remove("active");
+      });
+
+      // Tüm content section'ları gizle
+      document.querySelectorAll(".content-section").forEach((section) => {
+        section.classList.remove("active");
+      });
+
+      // Seçilen tab butonunu aktif yap
+      event.target.classList.add("active");
+
+      // Seçilen content section'ı göster
+      document.getElementById(tabName).classList.add("active");
+    };
+
+    $scope.scrollToTop = function () {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    };
+  });
+
+// ===== FITNESS DETAY CONTROLLER =====
+angular
+  .module("GirisApp")
+  .controller("FitnessDetayController", function ($scope) {
+    $scope.kullanici = JSON.parse(localStorage.getItem("girisYapan") || "null");
+
+    // Tab değiştirme fonksiyonu
+    $scope.tabSec = function (tabName) {
+      // Tüm tab butonlarından active class'ını kaldır
+      document.querySelectorAll(".tab-btn").forEach((btn) => {
+        btn.classList.remove("active");
+      });
+
+      // Tüm content section'ları gizle
+      document.querySelectorAll(".content-section").forEach((section) => {
+        section.classList.remove("active");
+      });
+
+      // Seçilen tab butonunu aktif yap
+      event.target.classList.add("active");
+
+      // Seçilen content section'ı göster
+      document.getElementById(tabName).classList.add("active");
+    };
+
+    $scope.scrollToTop = function () {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    };
+  });
+
+// ===== TENIS DETAY CONTROLLER =====
+angular
+  .module("GirisApp")
+  .controller("TenisDetayController", function ($scope) {
+    $scope.kullanici = JSON.parse(localStorage.getItem("girisYapan") || "null");
+
+    // Slider değişkenleri
+    $scope.currentSlide = 0;
+    $scope.totalSlides = 6;
+    $scope.slidesPerView = 3;
+
+    // Tab değiştirme fonksiyonu
+    $scope.tabSec = function (tabName) {
+      document.querySelectorAll(".tab-btn").forEach((btn) => {
+        btn.classList.remove("active");
+      });
+      document.querySelectorAll(".content-section").forEach((section) => {
+        section.classList.remove("active");
+      });
+      event.target.classList.add("active");
+      document.getElementById(tabName).classList.add("active");
+    };
+
+    // Slider fonksiyonları
+    $scope.nextSlide = function () {
+      if ($scope.currentSlide < $scope.totalSlides - $scope.slidesPerView) {
+        $scope.currentSlide++;
+      } else {
+        $scope.currentSlide = 0;
+      }
+      updateSlider();
+    };
+
+    $scope.prevSlide = function () {
+      if ($scope.currentSlide > 0) {
+        $scope.currentSlide--;
+      } else {
+        $scope.currentSlide = $scope.totalSlides - $scope.slidesPerView;
+      }
+      updateSlider();
+    };
+
+    $scope.goToSlide = function (index) {
+      $scope.currentSlide = index;
+      updateSlider();
+    };
+
+    function updateSlider() {
+      const slider = document.getElementById("playerSlider");
+      const cardWidth = 300; // card width + gap
+      const translateX = -$scope.currentSlide * cardWidth;
+
+      if (slider) {
+        slider.style.transform = `translateX(${translateX}px)`;
+      }
+
+      const prevBtn = document.getElementById("prevBtn");
+      const nextBtn = document.getElementById("nextBtn");
+
+      if (prevBtn) {
+        prevBtn.disabled = false;
+      }
+      if (nextBtn) {
+        nextBtn.disabled = false;
+      }
+      updateDots();
+    }
+
+    function updateDots() {
+      const dots = document.querySelectorAll(".dot");
+      dots.forEach((dot, index) => {
+        if (index === $scope.currentSlide) {
+          dot.classList.add("active");
+        } else {
+          dot.classList.remove("active");
+        }
+      });
+    }
+
+    function checkMobile() {
+      if (window.innerWidth <= 768) {
+        $scope.slidesPerView = 1;
+      } else if (window.innerWidth <= 1024) {
+        $scope.slidesPerView = 2;
+      } else {
+        $scope.slidesPerView = 3;
+      }
+    }
+
+    checkMobile();
+    window.addEventListener("resize", function () {
+      checkMobile();
+      updateSlider();
+    });
+
+    $scope.scrollToTop = function () {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    };
+  });
+
+// ===== YOGA DETAY CONTROLLER =====
+angular.module("GirisApp").controller("YogaDetayController", function ($scope) {
+  $scope.kullanici = JSON.parse(localStorage.getItem("girisYapan") || "null");
+
+  // Tab değiştirme fonksiyonu
+  $scope.tabSec = function (tabName) {
+    document.querySelectorAll(".tab-btn").forEach((btn) => {
+      btn.classList.remove("active");
+    });
+    document.querySelectorAll(".content-section").forEach((section) => {
+      section.classList.remove("active");
+    });
+    event.target.classList.add("active");
+    document.getElementById(tabName).classList.add("active");
+  };
+
+  $scope.scrollToTop = function () {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+});
+
+// ===== BOKS DETAY CONTROLLER =====
+angular.module("GirisApp").controller("BoksDetayController", function ($scope) {
+  $scope.kullanici = JSON.parse(localStorage.getItem("girisYapan") || "null");
+
+  // Slider değişkenleri
+  $scope.currentSlide = 0;
+  $scope.totalSlides = 6;
+  $scope.slidesPerView = 3;
+
+  // Tab değiştirme fonksiyonu
+  $scope.tabSec = function (tabName) {
+    document.querySelectorAll(".tab-btn").forEach((btn) => {
+      btn.classList.remove("active");
+    });
+    document.querySelectorAll(".content-section").forEach((section) => {
+      section.classList.remove("active");
+    });
+    event.target.classList.add("active");
+    document.getElementById(tabName).classList.add("active");
+  };
+
+  // Slider fonksiyonları
+  $scope.nextSlide = function () {
+    if ($scope.currentSlide < $scope.totalSlides - $scope.slidesPerView) {
+      $scope.currentSlide++;
+    } else {
+      $scope.currentSlide = 0;
+    }
+    updateSlider();
+  };
+
+  $scope.prevSlide = function () {
+    if ($scope.currentSlide > 0) {
+      $scope.currentSlide--;
+    } else {
+      $scope.currentSlide = $scope.totalSlides - $scope.slidesPerView;
+    }
+    updateSlider();
+  };
+
+  $scope.goToSlide = function (index) {
+    $scope.currentSlide = index;
+    updateSlider();
+  };
+
+  function updateSlider() {
+    const slider = document.getElementById("playerSlider");
+    const cardWidth = 300; // card width + gap
+    const translateX = -$scope.currentSlide * cardWidth;
+
+    if (slider) {
+      slider.style.transform = `translateX(${translateX}px)`;
+    }
+
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
+
+    if (prevBtn) {
+      prevBtn.disabled = false;
+    }
+    if (nextBtn) {
+      nextBtn.disabled = false;
+    }
+    updateDots();
+  }
+
+  function updateDots() {
+    const dots = document.querySelectorAll(".dot");
+    dots.forEach((dot, index) => {
+      if (index === $scope.currentSlide) {
+        dot.classList.add("active");
+      } else {
+        dot.classList.remove("active");
+      }
+    });
+  }
+
+  function checkMobile() {
+    if (window.innerWidth <= 768) {
+      $scope.slidesPerView = 1;
+    } else if (window.innerWidth <= 1024) {
+      $scope.slidesPerView = 2;
+    } else {
+      $scope.slidesPerView = 3;
+    }
+  }
+
+  checkMobile();
+  window.addEventListener("resize", function () {
+    checkMobile();
+    updateSlider();
+  });
+
+  $scope.scrollToTop = function () {
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 });

@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="tr" ng-app="GirisApp">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tenis Detay - GLOW</title>
+    <link rel="stylesheet" href="assets/css/style.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="assets/js/app.js"></script>
+    <style>
+      .tenis-container {
+        max-width: 1000px;
+        margin: 40px auto;
+        padding: 32px;
+        background: rgba(255, 255, 255, 0.92);
+        border-radius: 18px;
+        box-shadow: 0 8px 32px rgba(124, 92, 74, 0.1);
+        backdrop-filter: blur(10px);
+        position: relative;
+      }
+
+      .tenis-header {
+        text-align: center;
+        margin-bottom: 40px;
+        position: relative;
+      }
+
+      .tenis-title {
+        color: #7c5c4a;
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 8px;
+        letter-spacing: 1px;
+      }
+
+      .tenis-subtitle {
+        color: #b48a78;
+        font-size: 1.1rem;
+        font-weight: 500;
+      }
+
+      .geri-btn {
+        background: linear-gradient(135deg, #e2d9d0, #b48a78);
+        color: #7c5c4a;
+        border: none;
+        border-radius: 50%;
+        width: 45px;
+        height: 45px;
+        padding: 0;
+        font-size: 18px;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s;
+        position: absolute;
+        top: 0;
+        left: 0;
+        margin: 0;
+      }
+
+      .geri-btn:hover {
+        background: linear-gradient(135deg, #b48a78, #e2d9d0);
+        color: #fff;
+        transform: scale(1.08);
+      }
+
+      .kategori-tabs {
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        margin-bottom: 40px;
+        flex-wrap: wrap;
+      }
+
+      .tab-btn {
+        background: linear-gradient(135deg, #f8e0e1, #e2d9d0);
+        color: #7c5c4a;
+        border: none;
+        border-radius: 25px;
+        padding: 12px 24px;
+        font-size: 0.95rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        letter-spacing: 0.5px;
+      }
+
+      .tab-btn.active {
+        background: linear-gradient(135deg, #b48a78, #7c5c4a);
+        color: #fff;
+        transform: scale(1.05);
+      }
+
+      .tab-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 16px rgba(180, 138, 120, 0.2);
+      }
+
+      .content-section {
+        display: none;
+        animation: fadeIn 0.5s ease-in-out;
+      }
+
+      .content-section.active {
+        display: block;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .section-title {
+        color: #7c5c4a;
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin-bottom: 24px;
+        text-align: center;
+        letter-spacing: 0.5px;
+      }
+
+      .content-card {
+        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        border-radius: 16px;
+        padding: 28px;
+        margin-bottom: 24px;
+        box-shadow: 0 4px 16px rgba(180, 138, 120, 0.08);
+        border-left: 4px solid #b48a78;
+      }
+
+      .content-card h3 {
+        color: #7c5c4a;
+        font-size: 1.3rem;
+        font-weight: 600;
+        margin-bottom: 16px;
+        letter-spacing: 0.5px;
+      }
+
+      .content-card p {
+        color: #6c757d;
+        line-height: 1.7;
+        margin-bottom: 12px;
+        font-size: 1rem;
+      }
+
+      .content-card ul {
+        color: #6c757d;
+        line-height: 1.7;
+        padding-left: 20px;
+      }
+
+      .content-card li {
+        margin-bottom: 8px;
+      }
+
+      .highlight-box {
+        background: linear-gradient(135deg, #f8e0e1, #e2d9d0);
+        border-radius: 12px;
+        padding: 20px;
+        margin: 16px 0;
+        border-left: 4px solid #b48a78;
+      }
+
+      .highlight-box h4 {
+        color: #7c5c4a;
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 12px;
+      }
+
+      .highlight-box p {
+        color: #6c757d;
+        margin: 0;
+        font-size: 0.95rem;
+      }
+
+      .grid-2 {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+        margin: 20px 0;
+      }
+
+      .grid-3 {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 16px;
+        margin: 20px 0;
+      }
+
+      .rule-card {
+        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        border-radius: 12px;
+        padding: 20px;
+        border-left: 4px solid #b48a78;
+      }
+
+      .rule-card h4 {
+        color: #7c5c4a;
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 12px;
+      }
+
+      .rule-card p {
+        color: #6c757d;
+        font-size: 0.9rem;
+        line-height: 1.6;
+      }
+
+      .technique-card {
+        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        border-radius: 12px;
+        padding: 20px;
+        text-align: center;
+        border: 2px solid #e2d9d0;
+        transition: all 0.3s;
+      }
+
+      .technique-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(180, 138, 120, 0.15);
+      }
+
+      .technique-card h4 {
+        color: #7c5c4a;
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 12px;
+      }
+
+      .technique-card p {
+        color: #6c757d;
+        font-size: 0.9rem;
+        line-height: 1.5;
+      }
+
+      .court-card {
+        background: linear-gradient(135deg, #f8e0e1, #e2d9d0);
+        border-radius: 12px;
+        padding: 20px;
+        text-align: center;
+        transition: all 0.3s;
+      }
+
+      .court-card:hover {
+        transform: scale(1.02);
+        box-shadow: 0 6px 20px rgba(180, 138, 120, 0.15);
+      }
+
+      .court-card h4 {
+        color: #7c5c4a;
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 8px;
+      }
+
+      .court-card p {
+        color: #6c757d;
+        font-size: 0.9rem;
+        margin: 0;
+      }
+
+      .player-slider-container {
+        position: relative;
+        margin: 30px 0;
+        overflow: hidden;
+      }
+
+      .player-slider {
+        display: flex;
+        gap: 20px;
+        transition: transform 0.3s ease;
+      }
+
+      .player-card {
+        min-width: 280px;
+        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        border-radius: 16px;
+        padding: 24px;
+        text-align: center;
+        box-shadow: 0 4px 16px rgba(180, 138, 120, 0.08);
+        border: 2px solid #e2d9d0;
+        transition: all 0.3s;
+      }
+
+      .player-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(180, 138, 120, 0.2);
+      }
+
+      .player-image {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin: 0 auto 16px;
+        border: 4px solid #b48a78;
+        box-shadow: 0 4px 12px rgba(180, 138, 120, 0.2);
+      }
+
+      .player-card h4 {
+        color: #7c5c4a;
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin-bottom: 8px;
+      }
+
+      .player-card p {
+        color: #6c757d;
+        font-size: 0.9rem;
+        line-height: 1.5;
+        margin: 0;
+      }
+
+      .player-image {
+        width: 100px;
+        height: 100px;
+      }
+
+      .slider-controls {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        margin: 20px 0;
+      }
+
+      .slider-btn {
+        background: linear-gradient(135deg, #b48a78, #7c5c4a);
+        color: #fff;
+        border: none;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: all 0.3s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .slider-btn:hover {
+        transform: scale(1.1);
+        box-shadow: 0 4px 12px rgba(180, 138, 120, 0.3);
+      }
+
+      .slider-dots {
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+        margin-top: 16px;
+      }
+
+      .dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: #e2d9d0;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+
+      .dot.active {
+        background: #b48a78;
+        transform: scale(1.2);
+      }
+
+      .fitness-card {
+        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 16px;
+        border-left: 4px solid #28a745;
+      }
+
+      .fitness-card h4 {
+        color: #7c5c4a;
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 12px;
+      }
+
+      .fitness-card p {
+        color: #6c757d;
+        font-size: 0.9rem;
+        line-height: 1.6;
+        margin: 0;
+      }
+
+      @media (max-width: 768px) {
+        .tenis-container {
+          margin: 20px auto;
+          padding: 20px;
+        }
+
+        .tenis-title {
+          font-size: 2rem;
+        }
+
+        .kategori-tabs {
+          gap: 8px;
+        }
+
+        .tab-btn {
+          padding: 10px 16px;
+          font-size: 0.85rem;
+        }
+
+        .grid-2,
+        .grid-3 {
+          grid-template-columns: 1fr;
+        }
+
+        .content-card {
+          padding: 20px;
+        }
+
+        .player-card {
+          min-width: 250px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <ng-include src="'components/header.html'"></ng-include>
+    <main class="main-content">
+      <div class="tenis-container" ng-controller="TenisDetayController">
+        <button
+          class="geri-btn"
+          onclick="window.history.back()"
+          title="Geri Dön"
+        >
+          ←
+        </button>
+
+        <div class="tenis-header">
+          <h1 class="tenis-title">🎾 Tenis</h1>
+          <p class="tenis-subtitle">
+            Zarafet ve stratejiyi birleştiren asil spor hakkında detaylı
+            bilgiler
+          </p>
+        </div>
+
+        <div class="kategori-tabs">
+          <button class="tab-btn active" ng-click="tabSec('kurallar')">
+            Tenis Kuralları
+          </button>
+          <button class="tab-btn" ng-click="tabSec('teknikler')">
+            🤾‍♂️ Vuruş Teknikleri
+          </button>
+          <button class="tab-btn" ng-click="tabSec('kortlar')">
+            ⛳ Kort Türleri
+          </button>
+          <button class="tab-btn" ng-click="tabSec('oyuncular')">
+            🌟 Efsane Tenisçiler
+          </button>
+          <button class="tab-btn" ng-click="tabSec('kondisyon')">
+            🏋️ Kondisyon
+          </button>
+        </div>
+
+        <!-- Tenis Kuralları -->
+        <div class="content-section active" id="kurallar">
+          <h2 class="section-title">📋 Tenis Kuralları</h2>
+
+          <div class="grid-2">
+            <div class="rule-card">
+              <h4>🎾 Oyun Alanı</h4>
+              <p>
+                <strong>Tekler:</strong> 23.77m x 8.23m<br />
+                <strong>Çiftler:</strong> 23.77m x 10.97m<br />
+                <strong>File Yüksekliği:</strong> 0.914m<br />
+                <strong>Servis Kutuları:</strong> 6.40m x 4.115m
+              </p>
+            </div>
+
+            <div class="rule-card">
+              <h4>⏰ Oyun Süresi</h4>
+              <p>
+                <strong>Set:</strong> 6 oyun (2 oyun farkla)<br />
+                <strong>Maç:</strong> En iyi 3/5 set<br />
+                <strong>Servis Süresi:</strong> 20 saniye<br />
+                <strong>Mola:</strong> Set arası 90 saniye
+              </p>
+            </div>
+
+            <div class="rule-card">
+              <h4>📊 Sayı Sistemi</h4>
+              <p>
+                <strong>Oyun:</strong> 0, 15, 30, 40, Game<br />
+                <strong>Deuce:</strong> 40-40 durumu<br />
+                <strong>Advantage:</strong> Avantaj puanı<br />
+                <strong>Tiebreak:</strong> 6-6 durumunda
+              </p>
+            </div>
+
+            <div class="rule-card">
+              <h4>🎯 Servis Kuralları</h4>
+              <p>
+                <strong>İlk Servis:</strong> Sağ kutudan başlar<br />
+                <strong>Fault:</strong> İki hata hakkı<br />
+                <strong>Let:</strong> Top fileye değerse tekrar<br />
+                <strong>Foot Fault:</strong> Çizgiye basma yasağı
+              </p>
+            </div>
+          </div>
+
+          <div class="content-card">
+            <h3>Temel Oyun Kuralları</h3>
+            <ul>
+              <li>
+                <strong>Top Karşılama:</strong> Top yere bir kez değdikten sonra
+                karşılanmalı
+              </li>
+              <li>
+                <strong>File Üzerinden Geçiş:</strong> Top file üzerinden
+                geçmeli
+              </li>
+              <li>
+                <strong>Çizgi Kuralları:</strong> Top çizgi üzerine düşerse "in"
+                sayılır
+              </li>
+              <li><strong>Let:</strong> Top fileye değerse oyun tekrarlanır</li>
+              <li>
+                <strong>Hakem Kararları:</strong> Hakem kararları kesindir
+              </li>
+              <li>
+                <strong>Davranış Kuralları:</strong> Sportmenlik ve saygı
+                esastır
+              </li>
+            </ul>
+          </div>
+
+          <div class="highlight-box">
+            <h4>🎯 Önemli Kural Değişiklikleri</h4>
+            <p>
+              2006'da Hawk-Eye teknolojisi getirildi. 2019'da servis süresi 25
+              saniyeden 20 saniyeye düşürüldü. 2020'de COVID-19 nedeniyle geçici
+              kural değişiklikleri yapıldı.
+            </p>
+          </div>
+        </div>
+
+        <!-- Vuruş Teknikleri -->
+        <div class="content-section" id="teknikler">
+          <h2 class="section-title">🤾‍♂️ Vuruş Teknikleri</h2>
+
+          <div class="grid-3">
+            <div class="technique-card">
+              <h4>🎾 Forehand</h4>
+              <p>
+                Sağ el oyuncular için sağ taraftan yapılan vuruş. Raket ön
+                taraftan arkaya doğru sallanır. En güçlü vuruşlardan biridir.
+              </p>
+            </div>
+
+            <div class="technique-card">
+              <h4>🎾 Backhand</h4>
+              <p>
+                Sol taraftan yapılan vuruş. Tek el veya çift el kullanılabilir.
+                Çift el daha kontrollü, tek el daha esnek.
+              </p>
+            </div>
+
+            <div class="technique-card">
+              <h4>🎾 Servis</h4>
+              <p>
+                Oyunu başlatan vuruş. Flat, slice, kick servis çeşitleri vardır.
+                Doğruluk ve güç dengesi önemlidir.
+              </p>
+            </div>
+
+            <div class="technique-card">
+              <h4>🎾 Volley</h4>
+              <p>
+                File önünde yapılan vuruş. Top yere değmeden karşılanır. Hızlı
+                refleks ve iyi pozisyon alma gerekir.
+              </p>
+            </div>
+
+            <div class="technique-card">
+              <h4>🎾 Smash</h4>
+              <p>
+                Yüksek topları karşılama tekniği. Güçlü ve etkili vuruş.
+                Zamanlama ve sıçrama önemlidir.
+              </p>
+            </div>
+
+            <div class="technique-card">
+              <h4>🎾 Lob</h4>
+              <p>
+                Rakibi file önünden uzaklaştırmak için yapılan yüksek vuruş.
+                Savunma ve hücum lobu çeşitleri vardır.
+              </p>
+            </div>
+          </div>
+
+          <div class="content-card">
+            <h3>Teknik Geliştirme İpuçları</h3>
+            <ul>
+              <li>
+                <strong>Doğru Tutuş:</strong> Continental, Eastern, Western
+                tutuşları öğrenin
+              </li>
+              <li>
+                <strong>Ayak Hareketleri:</strong> Split step ve hızlı ayak
+                hareketleri
+              </li>
+              <li><strong>Göz Takibi:</strong> Topu sürekli takip edin</li>
+              <li><strong>Denge:</strong> Vuruş sırasında dengeyi koruyun</li>
+              <li>
+                <strong>Follow Through:</strong> Vuruş sonrası hareketi
+                tamamlayın
+              </li>
+              <li><strong>Pratik:</strong> Düzenli antrenman yapın</li>
+            </ul>
+          </div>
+
+          <div class="highlight-box">
+            <h4>💡 Başlangıç İpuçları</h4>
+            <p>
+              Yeni başlayanlar için: Önce temel vuruşları öğrenin. Doğru form
+              üzerine odaklanın. Yavaş ve kontrollü başlayın. Profesyonel eğitim
+              almayı düşünün.
+            </p>
+          </div>
+        </div>
+
+        <!-- Kort Türleri -->
+        <div class="content-section" id="kortlar">
+          <h2 class="section-title">⛳ Kort Türleri</h2>
+
+          <div class="grid-2">
+            <div class="court-card">
+              <h4>🏟️ Sert Kort (Hard Court)</h4>
+              <p>
+                <strong>Malzeme:</strong> Asfalt veya beton üzerine akrilik<br />
+                <strong>Hız:</strong> Orta hızda<br />
+                <strong>Zıplama:</strong> Yüksek ve tahmin edilebilir<br />
+                <strong>Turnuvalar:</strong> US Open, Australian Open
+              </p>
+            </div>
+
+            <div class="court-card">
+              <h4>🌱 Çim Kort (Grass Court)</h4>
+              <p>
+                <strong>Malzeme:</strong> Doğal çim<br />
+                <strong>Hız:</strong> Çok hızlı<br />
+                <strong>Zıplama:</strong> Düşük ve düzensiz<br />
+                <strong>Turnuvalar:</strong> Wimbledon
+              </p>
+            </div>
+
+            <div class="court-card">
+              <h4>🏖️ Toprak Kort (Clay Court)</h4>
+              <p>
+                <strong>Malzeme:</strong> Kırmızı toprak<br />
+                <strong>Hız:</strong> Yavaş<br />
+                <strong>Zıplama:</strong> Yüksek ve yavaş<br />
+                <strong>Turnuvalar:</strong> French Open, Monte Carlo
+              </p>
+            </div>
+
+            <div class="court-card">
+              <h4>🏢 Kapalı Kort (Indoor Court)</h4>
+              <p>
+                <strong>Malzeme:</strong> Sert zemin veya halı<br />
+                <strong>Hız:</strong> Hızlı<br />
+                <strong>Zıplama:</strong> Düşük ve hızlı<br />
+                <strong>Turnuvalar:</strong> ATP Finals, Paris Masters
+              </p>
+            </div>
+          </div>
+
+          <div class="content-card">
+            <h3>Kort Seçimi ve Strateji</h3>
+            <p>
+              Her kort türü farklı oyun stillerini destekler. Sert kortlar tüm
+              oyun stillerine uygundur. Çim kortlar servis ve volley oyuncuları
+              için idealdir. Toprak kortlar baseline oyuncuları için
+              avantajlıdır.
+            </p>
+            <p>
+              Oyuncular kort türüne göre ayakkabı seçmeli ve oyun stratejilerini
+              adapte etmelidir. Farklı kortlarda antrenman yapmak çok yönlülük
+              kazandırır.
+            </p>
+          </div>
+
+          <div class="highlight-box">
+            <h4>🎯 Kort Bakımı</h4>
+            <p>
+              Çim kortlar düzenli sulama ve biçme gerektirir. Toprak kortlar
+              sıkıştırma ve çizgi düzeltme ihtiyacı duyar. Sert kortlar düzenli
+              temizlik ve onarım gerektirir. Kort bakımı oyun kalitesini
+              doğrudan etkiler.
+            </p>
+          </div>
+        </div>
+
+        <!-- Efsane Tenisçiler -->
+        <div class="content-section" id="oyuncular">
+          <h2 class="section-title">🌟 Efsane Tenisçiler</h2>
+
+          <div class="player-slider-container">
+            <div class="player-slider" id="playerSlider">
+              <div class="player-card">
+                <img
+                  class="player-image"
+                  src="https://hips.hearstapps.com/hmg-prod/images/gettyimages-1322028686.jpg?crop=1xw:1.0xh;center,top&resize=640:*"
+                  alt="Roger Federer"
+                />
+
+                <h4>Roger Federer</h4>
+                <p>
+                  <strong>20 Grand Slam</strong><br />
+                  Zarafet ve teknik mükemmellik. Tüm kortlarda başarılı. Tenis
+                  tarihinin en büyük oyuncularından.
+                </p>
+              </div>
+
+              <div class="player-card">
+                <img
+                  src="https://imageio.forbes.com/specials-images/imageserve/5ece8a5c938ec500060aae37/0x0.jpg?format=jpg&crop=2462,2460,x503,y156,safe&height=416&width=416&fit=bounds"
+                  alt="Rafael Nadal"
+                  class="player-image"
+                />
+                <h4>Rafael Nadal</h4>
+                <p>
+                  <strong>22 Grand Slam</strong><br />
+                  Toprak kort kralı. Güçlü forehand ve dayanıklılık. "King of
+                  Clay" olarak bilinir.
+                </p>
+              </div>
+
+              <div class="player-card">
+                <img
+                  src="https://a.espncdn.com/i/headshots/tennis/players/full/296.png"
+                  alt="Novak Djokovic"
+                  class="player-image"
+                />
+                <h4>Novak Djokovic</h4>
+                <p>
+                  <strong>24 Grand Slam</strong><br />
+                  Defansif oyun ustası. Esnek vücut ve mükemmel return. Tüm
+                  kortlarda etkili.
+                </p>
+              </div>
+
+              <div class="player-card">
+                <img
+                  src="https://hips.hearstapps.com/hmg-prod/images/gettyimages-1155421342.jpg?crop=1xw:1.0xh;center,top&resize=640:*"
+                  alt="Serena Williams"
+                  class="player-image"
+                />
+                <h4>Serena Williams</h4>
+                <p>
+                  <strong>23 Grand Slam</strong><br />
+                  Kadınlar tenisinin en büyük oyuncusu. Güçlü servis ve agresif
+                  oyun. Tenis tarihine damga vurdu.
+                </p>
+              </div>
+
+              <div class="player-card">
+                <img
+                  src="https://upload.wikimedia.org/wikipedia/commons/f/f0/Steffi_Graf_in_Hamburg_2010_%28cropped%29.jpg"
+                  alt="Steffi Graf"
+                  class="player-image"
+                />
+                <h4>Steffi Graf</h4>
+                <p>
+                  <strong>22 Grand Slam</strong><br />
+                  "Golden Slam" sahibi. Güçlü forehand ve hızlı ayak
+                  hareketleri. 1988'de tüm büyük turnuvaları kazandı.
+                </p>
+              </div>
+
+              <div class="player-card">
+                <img
+                  src="https://photo-assets.usopen.org/images/pics/large/f_Sampras-fistpump.jpg"
+                  alt="Pete Sampras"
+                  class="player-image"
+                />
+                <h4>Pete Sampras</h4>
+                <p>
+                  <strong>14 Grand Slam</strong><br />
+                  Servis ve volley ustası. Çim kortlarda efsanevi. 1990'ların en
+                  dominant oyuncusu.
+                </p>
+              </div>
+            </div>
+
+            <div class="slider-controls">
+              <span class="slider-btn" ng-click="prevSlide()" id="prevBtn"
+                >◀</span
+              >
+              <span class="slider-btn" ng-click="nextSlide()" id="nextBtn"
+                >▶</span
+              >
+            </div>
+
+            <div class="slider-dots">
+              <span class="dot active" ng-click="goToSlide(0)"></span>
+              <span class="dot" ng-click="goToSlide(1)"></span>
+              <span class="dot" ng-click="goToSlide(2)"></span>
+              <span class="dot" ng-click="goToSlide(3)"></span>
+              <span class="dot" ng-click="goToSlide(4)"></span>
+              <span class="dot" ng-click="goToSlide(5)"></span>
+            </div>
+          </div>
+
+          <div class="content-card">
+            <h3>Tenis Tarihinde Dönüm Noktaları</h3>
+            <p>
+              <strong>1968 - Açık Dönem:</strong> Amatör ve profesyonel
+              oyuncular birleşti<br />
+              <strong>1973 - ATP Kuruldu:</strong> Erkekler tenisinin yönetim
+              organı<br />
+              <strong>1973 - WTA Kuruldu:</strong> Kadınlar tenisinin yönetim
+              organı<br />
+              <strong>2006 - Hawk-Eye:</strong> Teknoloji tenise girdi<br />
+              <strong>2020 - COVID-19:</strong> Tenis dünyası değişti
+            </p>
+          </div>
+        </div>
+
+        <!-- Tenis İçin Kondisyon Çalışmaları -->
+        <div class="content-section" id="kondisyon">
+          <h2 class="section-title">🏋️ Tenis İçin Kondisyon Çalışmaları</h2>
+
+          <div class="fitness-card">
+            <h4>🏃‍♂️ Kardiyovasküler Kondisyon</h4>
+            <p>
+              <strong>Koşu:</strong> 30-45 dakika tempolu koşu. 3-4
+              gün/hafta.<br />
+              <strong>Interval Antrenmanı:</strong> 30 saniye sprint, 30 saniye
+              dinlenme. 20 dakika.<br />
+              <strong>Bisiklet:</strong> 45 dakika orta yoğunlukta. 2-3
+              gün/hafta.<br />
+              <strong>Yüzme:</strong> 30 dakika serbest stil. 2 gün/hafta.
+            </p>
+          </div>
+
+          <div class="fitness-card">
+            <h4>💪 Güç Antrenmanı</h4>
+            <p>
+              <strong>Üst Vücut:</strong> Şınav, barfiks, omuz presleri. 3
+              gün/hafta.<br />
+              <strong>Alt Vücut:</strong> Squat, lunge, calf raises. 3
+              gün/hafta.<br />
+              <strong>Core:</strong> Plank, crunches, Russian twists. Her gün 15
+              dakika.<br />
+              <strong>Fonksiyonel:</strong> Medicine ball throws, resistance
+              band çalışmaları.
+            </p>
+          </div>
+
+          <div class="fitness-card">
+            <h4>⚡ Çeviklik ve Hız</h4>
+            <p>
+              <strong>Merdiven Egzersizleri:</strong> Hızlı ayak hareketleri. 15
+              dakika/gün.<br />
+              <strong>Ladder Drills:</strong> Çeşitli ayak hareketleri. 10
+              dakika/gün.<br />
+              <strong>Plyometrics:</strong> Box jumps, burpees. 2 gün/hafta.<br />
+              <strong>Reaksiyon Antrenmanı:</strong> Işık veya ses ile tepki
+              egzersizleri.
+            </p>
+          </div>
+
+          <div class="fitness-card">
+            <h4>🧘‍♀️ Esneklik ve Mobilite</h4>
+            <p>
+              <strong>Dinamik Stretching:</strong> Antrenman öncesi 10
+              dakika.<br />
+              <strong>Statik Stretching:</strong> Antrenman sonrası 15
+              dakika.<br />
+              <strong>Yoga:</strong> Haftada 2-3 gün. Esneklik ve denge için.<br />
+              <strong>Foam Rolling:</strong> Kas gevşetme. Her gün 10 dakika.
+            </p>
+          </div>
+
+          <div class="fitness-card">
+            <h4>🎯 Tenis Özel Antrenmanı</h4>
+            <p>
+              <strong>Shadow Tennis:</strong> Raket olmadan vuruş pratiği. 20
+              dakika/gün.<br />
+              <strong>Wall Practice:</strong> Duvar önünde vuruş çalışması. 30
+              dakika/gün.<br />
+              <strong>Footwork Drills:</strong> Kort üzerinde ayak hareketleri.
+              15 dakika/gün.<br />
+              <strong>Mental Training:</strong> Görselleştirme ve konsantrasyon
+              egzersizleri.
+            </p>
+          </div>
+
+          <div class="highlight-box">
+            <h4>💡 Antrenman Programı Önerisi</h4>
+            <p>
+              <strong>Pazartesi:</strong> Güç antrenmanı + kardiyo<br />
+              <strong>Salı:</strong> Tenis antrenmanı + esneklik<br />
+              <strong>Çarşamba:</strong> Çeviklik + hız antrenmanı<br />
+              <strong>Perşembe:</strong> Tenis antrenmanı + güç<br />
+              <strong>Cuma:</strong> Kardiyo + esneklik<br />
+              <strong>Cumartesi:</strong> Maç pratiği<br />
+              <strong>Pazar:</strong> Dinlenme veya hafif aktivite
+            </p>
+          </div>
+        </div>
+      </div>
+    </main>
+    <ng-include src="'components/footer.html'"></ng-include>
+    <button id="scrollTopBtn" title="Yukarı Çık" ng-click="scrollToTop()">
+      ↑
+    </button>
+  </body>
+</html>

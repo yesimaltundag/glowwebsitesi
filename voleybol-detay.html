@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="tr" ng-app="GirisApp">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Voleybol Detay - GLOW</title>
+    <link rel="stylesheet" href="assets/css/style.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="assets/js/app.js"></script>
+    <style>
+      .voleybol-container {
+        max-width: 1000px;
+        margin: 40px auto;
+        padding: 32px;
+        background: rgba(255, 255, 255, 0.92);
+        border-radius: 18px;
+        box-shadow: 0 8px 32px rgba(124, 92, 74, 0.1);
+        backdrop-filter: blur(10px);
+        position: relative;
+      }
+
+      .voleybol-header {
+        text-align: center;
+        margin-bottom: 40px;
+        position: relative;
+      }
+
+      .voleybol-title {
+        color: #7c5c4a;
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 8px;
+        letter-spacing: 1px;
+      }
+
+      .voleybol-subtitle {
+        color: #b48a78;
+        font-size: 1.1rem;
+        font-weight: 500;
+      }
+
+      .geri-btn {
+        background: linear-gradient(135deg, #e2d9d0, #b48a78);
+        color: #7c5c4a;
+        border: none;
+        border-radius: 50%;
+        width: 45px;
+        height: 45px;
+        padding: 0;
+        font-size: 18px;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s;
+        position: absolute;
+        top: 0;
+        left: 0;
+        margin: 0;
+      }
+
+      .geri-btn:hover {
+        background: linear-gradient(135deg, #b48a78, #e2d9d0);
+        color: #fff;
+        transform: scale(1.08);
+      }
+
+      .kategori-tabs {
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        margin-bottom: 40px;
+        flex-wrap: wrap;
+      }
+
+      .tab-btn {
+        background: linear-gradient(135deg, #f8e0e1, #e2d9d0);
+        color: #7c5c4a;
+        border: none;
+        border-radius: 25px;
+        padding: 12px 24px;
+        font-size: 0.95rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        letter-spacing: 0.5px;
+      }
+
+      .tab-btn.active {
+        background: linear-gradient(135deg, #b48a78, #7c5c4a);
+        color: #fff;
+        transform: scale(1.05);
+      }
+
+      .tab-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 16px rgba(180, 138, 120, 0.2);
+      }
+
+      .content-section {
+        display: none;
+        animation: fadeIn 0.5s ease-in-out;
+      }
+
+      .content-section.active {
+        display: block;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .section-title {
+        color: #7c5c4a;
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin-bottom: 24px;
+        text-align: center;
+        letter-spacing: 0.5px;
+      }
+
+      .content-card {
+        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        border-radius: 16px;
+        padding: 28px;
+        margin-bottom: 24px;
+        box-shadow: 0 4px 16px rgba(180, 138, 120, 0.08);
+        border-left: 4px solid #b48a78;
+      }
+
+      .content-card h3 {
+        color: #7c5c4a;
+        font-size: 1.3rem;
+        font-weight: 600;
+        margin-bottom: 16px;
+        letter-spacing: 0.5px;
+      }
+
+      .content-card p {
+        color: #6c757d;
+        line-height: 1.7;
+        margin-bottom: 12px;
+        font-size: 1rem;
+      }
+
+      .content-card ul {
+        color: #6c757d;
+        line-height: 1.7;
+        padding-left: 20px;
+      }
+
+      .content-card li {
+        margin-bottom: 8px;
+      }
+
+      .highlight-box {
+        background: linear-gradient(135deg, #f8e0e1, #e2d9d0);
+        border-radius: 12px;
+        padding: 20px;
+        margin: 16px 0;
+        border-left: 4px solid #b48a78;
+      }
+
+      .highlight-box h4 {
+        color: #7c5c4a;
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 12px;
+      }
+
+      .highlight-box p {
+        color: #6c757d;
+        margin: 0;
+        font-size: 0.95rem;
+      }
+
+      .grid-2 {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+        margin: 20px 0;
+      }
+
+      .grid-3 {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 16px;
+        margin: 20px 0;
+      }
+
+      .rule-card {
+        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        border-radius: 12px;
+        padding: 20px;
+        border-left: 4px solid #b48a78;
+      }
+
+      .rule-card h4 {
+        color: #7c5c4a;
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 12px;
+      }
+
+      .rule-card p {
+        color: #6c757d;
+        font-size: 0.9rem;
+        line-height: 1.6;
+      }
+
+      .position-card {
+        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        border-radius: 12px;
+        padding: 20px;
+        text-align: center;
+        border: 2px solid #e2d9d0;
+        transition: all 0.3s;
+      }
+
+      .position-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(180, 138, 120, 0.15);
+      }
+
+      .position-card h4 {
+        color: #7c5c4a;
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 12px;
+      }
+
+      .position-card p {
+        color: #6c757d;
+        font-size: 0.9rem;
+        line-height: 1.5;
+      }
+
+      .technique-card {
+        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        border-radius: 12px;
+        padding: 20px;
+        border-left: 4px solid #b48a78;
+      }
+
+      .technique-card h4 {
+        color: #7c5c4a;
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 12px;
+      }
+
+      .technique-card p {
+        color: #6c757d;
+        font-size: 0.9rem;
+        line-height: 1.6;
+      }
+
+      .tournament-card {
+        background: linear-gradient(135deg, #f8e0e1, #e2d9d0);
+        border-radius: 12px;
+        padding: 20px;
+        text-align: center;
+        transition: all 0.3s;
+      }
+
+      .tournament-card:hover {
+        transform: scale(1.02);
+        box-shadow: 0 6px 20px rgba(180, 138, 120, 0.15);
+      }
+
+      .tournament-card h4 {
+        color: #7c5c4a;
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 8px;
+      }
+
+      .tournament-card p {
+        color: #6c757d;
+        font-size: 0.9rem;
+        margin: 0;
+      }
+
+      .training-card {
+        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 16px;
+        border-left: 4px solid #28a745;
+      }
+
+      .training-card h4 {
+        color: #7c5c4a;
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 12px;
+      }
+
+      .training-card p {
+        color: #6c757d;
+        font-size: 0.9rem;
+        line-height: 1.6;
+        margin: 0;
+      }
+
+      @media (max-width: 768px) {
+        .voleybol-container {
+          margin: 20px auto;
+          padding: 20px;
+        }
+
+        .voleybol-title {
+          font-size: 2rem;
+        }
+
+        .kategori-tabs {
+          gap: 8px;
+        }
+
+        .tab-btn {
+          padding: 10px 16px;
+          font-size: 0.85rem;
+        }
+
+        .grid-2,
+        .grid-3 {
+          grid-template-columns: 1fr;
+        }
+
+        .content-card {
+          padding: 20px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <ng-include src="'components/header.html'"></ng-include>
+    <main class="main-content">
+      <div class="voleybol-container" ng-controller="VoleybolDetayController">
+        <button
+          class="geri-btn"
+          onclick="window.history.back()"
+          title="Geri Dön"
+        >
+          ←
+        </button>
+
+        <div class="voleybol-header">
+          <h1 class="voleybol-title">🏐 Voleybol</h1>
+          <p class="voleybol-subtitle">
+            Takım ruhu ve teknik becerinin buluştuğu spor hakkında detaylı
+            bilgiler
+          </p>
+        </div>
+
+        <div class="kategori-tabs">
+          <button class="tab-btn active" ng-click="tabSec('kurallar')">
+            Kurallar ve Oyun Alanı
+          </button>
+          <button class="tab-btn" ng-click="tabSec('pozisyonlar')">
+            🏃‍♀️ Pozisyonlar
+          </button>
+          <button class="tab-btn" ng-click="tabSec('teknikler')">
+            📋 Temel Teknikler
+          </button>
+          <button class="tab-btn" ng-click="tabSec('turnuvalar')">
+            🌍 Turnuvalar
+          </button>
+          <button class="tab-btn" ng-click="tabSec('antrenman')">
+            🔥 Antrenman
+          </button>
+        </div>
+
+        <!-- Kurallar ve Oyun Alanı -->
+        <div class="content-section active" id="kurallar">
+          <h2 class="section-title">📏 Kurallar ve Oyun Alanı</h2>
+
+          <div class="grid-2">
+            <div class="rule-card">
+              <h4>🏐 Oyun Alanı</h4>
+              <p>
+                Saha boyutları: 18m x 9m<br />
+                File yüksekliği: Erkekler 2.43m, Kadınlar 2.24m<br />
+                Servis alanı: 9m x 9m<br />
+                Libero alanı: 3m x 9m
+              </p>
+            </div>
+
+            <div class="rule-card">
+              <h4>⏰ Oyun Süresi</h4>
+              <p>
+                Set sayısı: En iyi 3/5 set<br />
+                Set puanı: 25 puan (2 puan farkla)<br />
+                Son set: 15 puan (2 puan farkla)<br />
+                Maksimum süre: Yok
+              </p>
+            </div>
+
+            <div class="rule-card">
+              <h4>👥 Oyuncu Sayısı</h4>
+              <p>
+                Sahada 6 kişi<br />
+                Libero: 1 kişi (sınırsız değişim)<br />
+                Yedek oyuncu: 6 kişi<br />
+                Toplam: 12 kişi
+              </p>
+            </div>
+
+            <div class="rule-card">
+              <h4>📊 Sayı Sistemi</h4>
+              <p>
+                Rally Point System<br />
+                Her top düşüşünde sayı<br />
+                Servis atan takım sayı alır<br />
+                Servis karşılayan takım sayı alır
+              </p>
+            </div>
+          </div>
+
+          <div class="content-card">
+            <h3>Temel Kurallar</h3>
+            <ul>
+              <li>
+                <strong>3 Vuruş Kuralı:</strong> Top en fazla 3 vuruşta karşı
+                sahaya geçmeli
+              </li>
+              <li>
+                <strong>Rotasyon:</strong> Servis değişiminde oyuncular saat
+                yönünde döner
+              </li>
+              <li>
+                <strong>Libero:</strong> Sadece arka alanda oynar, servis atamaz
+              </li>
+              <li><strong>Net Touch:</strong> Fileye dokunma faulü</li>
+              <li><strong>Antenna:</strong> Top anten dışından geçemez</li>
+              <li><strong>Time Out:</strong> Set başına 2 mola (30 saniye)</li>
+            </ul>
+          </div>
+
+          <div class="highlight-box">
+            <h4>🎯 Önemli Kural Değişiklikleri</h4>
+            <p>
+              1999'da Rally Point System getirildi. 2015'te libero kuralları
+              güncellendi. 2020'de COVID-19 nedeniyle geçici kural
+              değişiklikleri yapıldı.
+            </p>
+          </div>
+        </div>
+
+        <!-- Pozisyonlar ve Rotasyon Sistemi -->
+        <div class="content-section" id="pozisyonlar">
+          <h2 class="section-title">🏃‍♀️ Pozisyonlar ve Rotasyon Sistemi</h2>
+
+          <div class="grid-3">
+            <div class="position-card">
+              <h4>🎯 Pasör (Setter)</h4>
+              <p>
+                Takımın oyun kurucusu. İkinci topu pasör oynar. Hücum
+                organizasyonu ve taktik uygulamasından sorumlu.
+              </p>
+            </div>
+
+            <div class="position-card">
+              <h4>💪 Pasör Çaprazı (Opposite)</h4>
+              <p>
+                Pasörün karşısında oynar. Güçlü hücum oyuncusu. Servis karşılama
+                ve hücumda etkili olmalı.
+              </p>
+            </div>
+
+            <div class="position-card">
+              <h4>🔥 Smaçör (Outside Hitter)</h4>
+              <p>
+                Sol ve sağ kanatlarda oynar. Güçlü hücum ve servis karşılama.
+                Takımın en çok sayı üreten oyuncuları.
+              </p>
+            </div>
+
+            <div class="position-card">
+              <h4>🛡️ Orta Oyuncu (Middle Blocker)</h4>
+              <p>
+                File önünde blok ve hızlı hücum. Kısa paslarla etkili olur.
+                Servis karşılama ve hücumda görev alır.
+              </p>
+            </div>
+
+            <div class="position-card">
+              <h4>⚡ Libero</h4>
+              <p>
+                Sadece arka alanda oynar. Servis karşılama uzmanı. Servis
+                atamaz, blok yapamaz. Sınırsız değişim hakkı.
+              </p>
+            </div>
+
+            <div class="position-card">
+              <h4>🎯 Servis Atan Oyuncu</h4>
+              <p>
+                Rotasyon sistemine göre değişir. Servis atışından sonra normal
+                pozisyonuna geçer. Tüm oyuncular servis atabilir.
+              </p>
+            </div>
+          </div>
+
+          <div class="content-card">
+            <h3>Rotasyon Sistemi</h3>
+            <p>
+              Voleybolda 6 pozisyon vardır ve oyuncular saat yönünde döner.
+              Servis atan takım sayı aldığında aynı oyuncu servis atmaya devam
+              eder. Servis karşılayan takım sayı aldığında servis hakkı geçer ve
+              oyuncular bir pozisyon döner.
+            </p>
+            <p>
+              Libero sadece arka alanda oynayabilir ve sınırsız değişim hakkı
+              vardır. Pasör genellikle 1. pozisyonda (sağ arka) başlar ve
+              rotasyon sistemine göre hareket eder.
+            </p>
+          </div>
+        </div>
+
+        <!-- Temel Teknikler -->
+        <div class="content-section" id="teknikler">
+          <h2 class="section-title">📋 Temel Teknikler</h2>
+
+          <div class="grid-2">
+            <div class="technique-card">
+              <h4>🤲 Servis Karşılama (Pass)</h4>
+              <p>
+                Servis atışını karşılama tekniği. Ön kollar birleştirilir,
+                dirsekler düz tutulur. Top ön kollara çarptırılır. Pasöre doğru
+                yönlendirilir.
+              </p>
+            </div>
+
+            <div class="technique-card">
+              <h4>👐 Pas (Set)</h4>
+              <p>
+                İkinci top oyunu. Parmaklar açık, baş üstünde yapılır. Pasör
+                tarafından hücum oyuncusuna verilir. Doğru yükseklik ve yön
+                önemlidir.
+              </p>
+            </div>
+
+            <div class="technique-card">
+              <h4>💥 Smaç (Spike)</h4>
+              <p>
+                Hücum tekniği. Yüksek sıçrama, güçlü kol hareketi. Top file
+                üzerinden karşı sahaya gönderilir. Açı ve güç kontrolü
+                kritiktir.
+              </p>
+            </div>
+
+            <div class="technique-card">
+              <h4>🛡️ Blok</h4>
+              <p>
+                Savunma tekniği. File önünde yapılır. Rakip hücumunu durdurmak
+                için kullanılır. Zamanlama ve pozisyon alma önemlidir.
+              </p>
+            </div>
+
+            <div class="technique-card">
+              <h4>🎯 Servis (Serve)</h4>
+              <p>
+                Oyunu başlatan vuruş. Alt servis, üst servis, sıçrayarak servis
+                gibi çeşitleri vardır. Doğruluk ve güç dengesi önemlidir.
+              </p>
+            </div>
+
+            <div class="technique-card">
+              <h4>🏃‍♀️ Savunma (Dig)</h4>
+              <p>
+                Yere yakın savunma tekniği. Tek el veya iki el kullanılır.
+                Bloktan dönen topları karşılar. Hızlı refleks ve pozisyon alma
+                gerekir.
+              </p>
+            </div>
+          </div>
+
+          <div class="highlight-box">
+            <h4>🎯 Teknik Geliştirme İpuçları</h4>
+            <p>
+              Her teknik için düzenli pratik yapın. Video analizi ile kendinizi
+              izleyin. Doğru form üzerine odaklanın. Güç zamanla gelecektir.
+              Profesyonel oyuncuları izleyerek tekniklerini öğrenin.
+            </p>
+          </div>
+        </div>
+
+        <!-- Dünya Çapında Turnuvalar -->
+        <div class="content-section" id="turnuvalar">
+          <h2 class="section-title">🌍 Dünya Çapında Turnuvalar</h2>
+
+          <div class="grid-2">
+            <div class="tournament-card">
+              <h4>🏆 FIVB Dünya Şampiyonası</h4>
+              <p>
+                4 yılda bir düzenlenir. Erkekler ve kadınlar ayrı ayrı. Dünyanın
+                en prestijli voleybol turnuvası.
+              </p>
+            </div>
+
+            <div class="tournament-card">
+              <h4>🥇 Olimpiyat Oyunları</h4>
+              <p>
+                4 yılda bir düzenlenir. Voleybol 1964'ten beri olimpiyat sporu.
+                En büyük uluslararası organizasyon.
+              </p>
+            </div>
+
+            <div class="tournament-card">
+              <h4>🏆 FIVB Dünya Kupası</h4>
+              <p>
+                4 yılda bir düzenlenir. Olimpiyat öncesi önemli turnuva.
+                Japonya'da düzenlenir.
+              </p>
+            </div>
+
+            <div class="tournament-card">
+              <h4>🌍 FIVB Nations League</h4>
+              <p>
+                Yıllık düzenlenir. En iyi 16 takım katılır. Modern voleybolun en
+                prestijli ligi.
+              </p>
+            </div>
+
+            <div class="tournament-card">
+              <h4>🏆 Avrupa Şampiyonası</h4>
+              <p>
+                2 yılda bir düzenlenir. CEV tarafından organize edilir.
+                Avrupa'nın en büyük turnuvası.
+              </p>
+            </div>
+
+            <div class="tournament-card">
+              <h4>🏆 Şampiyonlar Ligi</h4>
+              <p>
+                Yıllık düzenlenir. En iyi kulüp takımları katılır. Avrupa'nın en
+                prestijli kulüp turnuvası.
+              </p>
+            </div>
+          </div>
+
+          <div class="content-card">
+            <h3>Türkiye'de Voleybol</h3>
+            <p>
+              Türkiye'de voleybol çok popüler bir spordur. Kadınlar voleybolunda
+              Türkiye dünya çapında başarılıdır. VakıfBank, Eczacıbaşı,
+              Fenerbahçe gibi kulüpler Avrupa'da başarılı olmuştur.
+            </p>
+            <p>
+              Türkiye A Milli Kadın Voleybol Takımı 2023'te FIVB Nations
+              League'de şampiyon olmuştur. Erkekler voleybolunda da gelişmeler
+              yaşanmaktadır.
+            </p>
+          </div>
+        </div>
+
+        <!-- Amatörler için Antrenman Önerileri -->
+        <div class="content-section" id="antrenman">
+          <h2 class="section-title">🔥 Amatörler için Antrenman Önerileri</h2>
+
+          <div class="training-card">
+            <h4>🎯 Temel Teknik Antrenmanı</h4>
+            <p>
+              <strong>Servis Karşılama:</strong> Partner ile servis karşılama
+              çalışması. 30 dakika/gün.<br />
+              <strong>Pas Çalışması:</strong> Duvar önünde pas tekniği. 20
+              dakika/gün.<br />
+              <strong>Smaç Tekniği:</strong> Düşük file ile smaç çalışması. 15
+              dakika/gün.
+            </p>
+          </div>
+
+          <div class="training-card">
+            <h4>🏃‍♀️ Kondisyon Antrenmanı</h4>
+            <p>
+              <strong>Koşu:</strong> 30 dakika tempolu koşu. 3 gün/hafta.<br />
+              <strong>Sıçrama Egzersizleri:</strong> Dikey sıçrama çalışması. 15
+              dakika/gün.<br />
+              <strong>Çeviklik:</strong> Merdiven egzersizleri. 10 dakika/gün.
+            </p>
+          </div>
+
+          <div class="training-card">
+            <h4>🤝 Takım Antrenmanı</h4>
+            <p>
+              <strong>6-on-6 Oyun:</strong> Tam saha maç pratiği. 60
+              dakika/hafta.<br />
+              <strong>Rotasyon Çalışması:</strong> Pozisyon değişimi pratiği. 30
+              dakika/hafta.<br />
+              <strong>Taktik Çalışma:</strong> Hücum ve savunma organizasyonu.
+              45 dakika/hafta.
+            </p>
+          </div>
+
+          <div class="training-card">
+            <h4>💪 Güç Antrenmanı</h4>
+            <p>
+              <strong>Üst Vücut:</strong> Şınav, barfiks, omuz presleri. 3
+              gün/hafta.<br />
+              <strong>Alt Vücut:</strong> Squat, lunge, calf raises. 3
+              gün/hafta.<br />
+              <strong>Core:</strong> Plank, crunches, Russian twists. Her gün 10
+              dakika.
+            </p>
+          </div>
+
+          <div class="training-card">
+            <h4>🧠 Mental Antrenman</h4>
+            <p>
+              <strong>Konsantrasyon:</strong> Meditasyon ve nefes egzersizleri.
+              10 dakika/gün.<br />
+              <strong>Görselleştirme:</strong> Maç senaryolarını hayal etme. 5
+              dakika/gün.<br />
+              <strong>Stres Yönetimi:</strong> Maç öncesi rahatlama teknikleri.
+            </p>
+          </div>
+
+          <div class="training-card">
+            <h4>📊 Performans Takibi</h4>
+            <p>
+              <strong>Günlük Kayıt:</strong> Antrenman notları tutma.<br />
+              <strong>Video Analizi:</strong> Kendi oyununuzu izleme.<br />
+              <strong>Hedef Belirleme:</strong> Kısa ve uzun vadeli hedefler
+              koyma.
+            </p>
+          </div>
+
+          <div class="highlight-box">
+            <h4>💡 Başlangıç İpuçları</h4>
+            <p>
+              Voleybola yeni başlayanlar için: Önce temel teknikleri öğrenin.
+              Düzenli antrenman yapın. Takım oyununa odaklanın. Sabırlı olun,
+              gelişim zaman alır. Eğlenceli tutun!
+            </p>
+          </div>
+        </div>
+      </div>
+    </main>
+    <ng-include src="'components/footer.html'"></ng-include>
+    <button id="scrollTopBtn" title="Yukarı Çık" ng-click="scrollToTop()">
+      ↑
+    </button>
+  </body>
+</html>

@@ -370,7 +370,11 @@
             ng-click="yemekDetay(yemek)"
           >
             <div class="yemek-card-img">
-              <img ng-src="{{yemek.resim}}" alt="{{yemek.ad}}" />
+              <img
+                ng-src="{{yemek.resim}}"
+                alt="{{yemek.ad}}"
+                onerror="this.src='assets/images/yemekler.jpg'"
+              />
               <div class="yemek-card-overlay">
                 <h3>{{yemek.ad}}</h3>
                 <p>{{yemek.bolge}}</p>

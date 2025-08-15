@@ -33,15 +33,34 @@ switch($method) {
             $kategori = $_GET['kategori'] ?? null;
             
             if ($kitapAd) {
-                // Belirli bir kitap ara
+                // Belirli bir kitap ara - daha esnek arama
+                $cleanKitapAd = trim($kitapAd);
+                
+                // Önce exact match dene
                 $stmt = $pdo->prepare("SELECT * FROM kitaplar WHERE kitap_adi = ?");
-                $stmt->execute([$kitapAd]);
+                $stmt->execute([$cleanKitapAd]);
                 $kitaplar = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                
+                // Eğer bulunamazsa, LIKE ile ara
+                if (count($kitaplar) == 0) {
+                    $stmt = $pdo->prepare("SELECT * FROM kitaplar WHERE kitap_adi LIKE ?");
+                    $likeKitapAd = '%' . $cleanKitapAd . '%';
+                    $stmt->execute([$likeKitapAd]);
+                    $kitaplar = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                }
+                
+                // Hala bulunamazsa, case-insensitive ara
+                if (count($kitaplar) == 0) {
+                    $stmt = $pdo->prepare("SELECT * FROM kitaplar WHERE LOWER(kitap_adi) = LOWER(?)");
+                    $stmt->execute([$cleanKitapAd]);
+                    $kitaplar = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                }
                 
                 echo json_encode([
                     'success' => true,
                     'kitaplar' => $kitaplar,
-                    'searched_for' => $kitapAd
+                    'searched_for' => $kitapAd,
+                    'found_count' => count($kitaplar)
                 ]);
             } elseif ($kategori) {
                 // Kategoriye göre kitaplar ara

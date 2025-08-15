@@ -12,11 +12,11 @@
     <title>Ana Sayfa - GLOW</title>
 
     <!-- CSS -->
-    <link rel="stylesheet" href="assets/css/style.css" />
+    <link rel="stylesheet" href="/assets/css/style.css" />
 
     <!-- AngularJS -->
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
-    <script src="assets/js/app.js"></script>
+    <script src="/assets/js/app.js"></script>
 
     <!-- Page Specific CSS -->
     <style>
@@ -128,12 +128,14 @@
         z-index: 10;
         text-shadow: 2px 2px 15px rgba(0, 0, 0, 0.9);
         transition: all 0.3s ease;
+        opacity: 0.6;
       }
 
       .ana-slider-nav:hover {
         color: rgba(255, 255, 255, 1);
         text-shadow: 3px 3px 20px rgba(0, 0, 0, 1);
         transform: translateY(-50%) scale(1.1);
+        opacity: 1;
       }
 
       .ana-slider-nav.prev {
@@ -744,12 +746,14 @@
         z-index: 10;
         text-shadow: 2px 2px 15px rgba(0, 0, 0, 0.9);
         transition: all 0.3s ease;
+        opacity: 0.6;
       }
 
       .kitap-carousel-nav:hover {
         color: rgba(255, 255, 255, 1);
         text-shadow: 3px 3px 20px rgba(0, 0, 0, 1);
         transform: translateY(-50%) scale(1.1);
+        opacity: 1;
       }
 
       .kitap-carousel-nav.prev {
@@ -868,12 +872,14 @@
         z-index: 10;
         text-shadow: 2px 2px 15px rgba(0, 0, 0, 0.9);
         transition: all 0.3s ease;
+        opacity: 0.6;
       }
 
       .film-carousel-nav:hover {
         color: rgba(255, 255, 255, 1);
         text-shadow: 3px 3px 20px rgba(0, 0, 0, 1);
         transform: translateY(-50%) scale(1.1);
+        opacity: 1;
       }
 
       .film-carousel-nav.prev {
@@ -1023,12 +1029,14 @@
         z-index: 10;
         text-shadow: 2px 2px 15px rgba(0, 0, 0, 0.9);
         transition: all 0.3s ease;
+        opacity: 0.6;
       }
 
       .diger-carousel-nav:hover {
         color: rgba(255, 255, 255, 1);
         text-shadow: 3px 3px 20px rgba(0, 0, 0, 1);
         transform: translateY(-50%) scale(1.1);
+        opacity: 1;
       }
 
       .diger-carousel-nav.prev {
@@ -1241,8 +1249,8 @@
             </div>
 
             <!-- Navigation Buttons -->
-            <span class="ana-slider-nav prev" ng-click="prevAnaSlide()">ᐊ</span>
-            <span class="ana-slider-nav next" ng-click="nextAnaSlide()">ᐅ</span>
+            <span class="ana-slider-nav prev" ng-click="prevAnaSlide()">◀</span>
+            <span class="ana-slider-nav next" ng-click="nextAnaSlide()">▶</span>
 
             <!-- Dots -->
             <div class="ana-slider-dots">
@@ -1345,10 +1353,10 @@
 
             <!-- Kitaplar Carousel Navigation -->
             <span class="kitap-carousel-nav prev" ng-click="prevKitapSlide()"
-              >ᐊ</span
+              >◀</span
             >
             <span class="kitap-carousel-nav next" ng-click="nextKitapSlide()"
-              >ᐅ</span
+              >▶</span
             >
           </div>
 
@@ -1391,13 +1399,13 @@
               class="film-carousel-nav prev"
               ng-if="filmlerCarousel.length > 0"
               ng-click="prevFilmSlide()"
-              >ᐊ</span
+              >◀</span
             >
             <span
               class="film-carousel-nav next"
               ng-if="filmlerCarousel.length > 0"
               ng-click="nextFilmSlide()"
-              >ᐅ</span
+              >▶</span
             >
           </div>
 
@@ -1450,13 +1458,13 @@
               class="diger-carousel-nav prev"
               ng-if="digerCarousel.length > 0"
               ng-click="prevDigerSlide()"
-              >ᐊ</span
+              >◀</span
             >
             <span
               class="diger-carousel-nav next"
               ng-if="digerCarousel.length > 0"
               ng-click="nextDigerSlide()"
-              >ᐅ</span
+              >▶</span
             >
           </div>
         </div>
@@ -1740,8 +1748,15 @@
 
           // Kitap carousel'a tıklama fonksiyonu
           $scope.kitapCarouselClick = function (kitap) {
-            window.location.href =
-              "alintilar.html?kitap=" + encodeURIComponent(kitap.ad);
+            // Temiz URL için kitap adını URL-friendly hale getir
+            var urlFriendlyKitap = kitap.ad
+              .toLowerCase()
+              .replace(/[^a-zA-Z0-9çğıöşüÇĞIİÖŞÜ]/g, "-")
+              .replace(/-+/g, "-")
+              .replace(/^-|-$/g, "");
+            // URL encode et
+            var encodedKitap = encodeURIComponent(urlFriendlyKitap);
+            window.location.href = "kitap/" + encodedKitap;
           };
 
           // Kitaplar carousel otomatik kaydırma - 3 saniyede bir

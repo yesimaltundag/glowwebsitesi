@@ -632,7 +632,28 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_GET["iletisim"])) {
                     VALUES ('$username', '$email', '$message', '$konu')";
     
     if ($baglanti->query($insert_sql)) {
-        echo json_encode(["success" => true, "message" => "Mesaj başarıyla gönderildi."]);
+        // E-posta gönderme işlemi
+        $email_sent = false;
+        try {
+            // E-posta konfigürasyon dosyasını dahil et
+            require_once 'email_config.php';
+            
+            // E-posta gönderme fonksiyonunu çağır
+            $email_sent = sendContactEmail($username, $email, $konu, $message);
+            
+        } catch (Exception $e) {
+            error_log("❌ E-posta gönderme hatası: " . $e->getMessage());
+            // E-posta gönderilemese bile veritabanına kayıt başarılı olduğu için devam et
+        }
+
+        $response_message = "Mesaj başarıyla gönderildi.";
+        if ($email_sent) {
+            $response_message .= " E-posta bildirimi de gönderildi.";
+        } else {
+            $response_message .= " (E-posta bildirimi gönderilemedi)";
+        }
+        
+        echo json_encode(["success" => true, "message" => $response_message]);
     } else {
         http_response_code(500);
         $error_message = "Mesaj gönderilemedi";
@@ -737,16 +758,21 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_GET["films"])) {
 
 // POST: Giriş işlemi
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_GET["login"])) {
+    error_log("=== GİRİŞ ENDPOINT BAŞLADI ===");
+    
     $girdi = json_decode(file_get_contents("php://input"), true);
+    error_log("Gelen veri: " . json_encode($girdi));
     
     // Parametre kontrolü
     if (!isset($girdi["username"]) || empty($girdi["username"])) {
+        error_log("Kullanıcı adı boş");
         http_response_code(400);
         echo json_encode(["success" => false, "message" => "Kullanıcı adı alanı boş bırakılamaz."]);
         exit;
     }
     
     if (!isset($girdi["sifre"]) || empty($girdi["sifre"])) {
+        error_log("Şifre boş");
         http_response_code(400);
         echo json_encode(["success" => false, "message" => "Şifre alanı boş bırakılamaz."]);
         exit;
@@ -754,16 +780,29 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_GET["login"])) {
     
     $username = $baglanti->real_escape_string($girdi["username"]);
     $sifre = $girdi["sifre"];
+    
+    error_log("Aranan kullanıcı: " . $username);
 
     $sonuc = $baglanti->query("SELECT * FROM kisiler WHERE username='$username'");
+    error_log("SQL sorgusu sonucu: " . ($sonuc ? "başarılı" : "başarısız"));
+    
     if ($sonuc && $sonuc->num_rows > 0) {
         $kisi = $sonuc->fetch_assoc();
+        error_log("Kullanıcı bulundu, şifre kontrolü yapılıyor");
+        
         if (password_verify($sifre, $kisi["sifre"])) {
+            error_log("Şifre doğru, giriş başarılı");
             unset($kisi["sifre"]);
             echo json_encode(["success" => true, "kullanici" => $kisi]);
             exit;
+        } else {
+            error_log("Şifre yanlış");
         }
+    } else {
+        error_log("Kullanıcı bulunamadı");
     }
+    
+    error_log("Giriş başarısız");
     echo json_encode(["success" => false, "message" => "Geçersiz kullanıcı adı veya şifre."]);
     exit;
 }

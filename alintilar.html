@@ -4,9 +4,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Kitap Detayı - GLOW</title>
-    <link rel="stylesheet" href="assets/css/style.css" />
+    <link rel="stylesheet" href="/assets/css/style.css" />
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
-    <script src="assets/js/app.js"></script>
+    <script src="/assets/js/app.js"></script>
     <style>
       .kitap-container {
         max-width: 100%;
@@ -132,6 +132,7 @@
         line-height: 1.7;
         white-space: pre-line;
       }
+
       @media (max-width: 768px) {
         .kitap-container {
           margin: 0;
@@ -183,8 +184,8 @@
       }
     </style>
   </head>
-  <body>
-    <ng-include src="'components/header.html'"></ng-include>
+  <body ng-controller="HeaderController">
+    <ng-include src="'/components/header.html'"></ng-include>
     <main ng-controller="KitapDetayController">
       <div class="kitap-container">
         <button class="geri-btn" ng-click="geriDon()" title="Geri Dön">
@@ -232,13 +233,44 @@
         </div>
       </div>
     </main>
-    <ng-include src="'components/footer.html'"></ng-include>
+    <ng-include src="'/components/footer.html'"></ng-include>
     <button id="scrollTopBtn" title="Yukarı Çık" ng-click="scrollToTop()">
       ↑
     </button>
     <script>
       angular
         .module("GirisApp")
+        .controller("HeaderController", function ($scope, $http) {
+          // Kullanıcı durumu kontrolü
+          $scope.kullanici = JSON.parse(
+            localStorage.getItem("girisYapan") || "null"
+          );
+
+          // Çıkış yapma fonksiyonu
+          $scope.cikisYap = function () {
+            localStorage.removeItem("girisYapan");
+            $scope.kullanici = null;
+            window.location.href = "/index.html";
+          };
+
+          $scope.hesapGit = function ($event) {
+            $event.preventDefault();
+            if (
+              $scope.kullanici &&
+              ($scope.kullanici.rol === "admin" ||
+                $scope.kullanici.rol === "Yönetici")
+            ) {
+              window.location.href = "/liste.html";
+            } else {
+              window.location.href = "/profil.html";
+            }
+          };
+
+          // Scroll to top fonksiyonu
+          $scope.scrollToTop = function () {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          };
+        })
         .controller("KitapDetayController", function ($scope, $http) {
           $scope.kullanici = JSON.parse(
             localStorage.getItem("girisYapan") || "null"
@@ -253,20 +285,66 @@
             return;
           }
 
-          function getQueryParam(param) {
+          // URL'den kitap adını al (temiz URL için)
+          function getKitapAdFromURL() {
+            // Önce query parameter'dan dene (eski format için)
             const urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get(param);
+            let kitapAd = urlParams.get("kitap");
+
+            if (kitapAd) {
+              console.log("Query parameter'dan alınan kitap adı:", kitapAd);
+              return decodeURIComponent(kitapAd.trim());
+            }
+
+            // Query parameter yoksa, path'den al (yeni temiz URL formatı)
+            const path = window.location.pathname;
+            const pathSegments = path.split("/");
+            console.log("Path segments:", pathSegments);
+
+            // /kitap/kitap-adi formatını kontrol et
+            if (
+              pathSegments.length >= 3 &&
+              pathSegments[pathSegments.length - 2] === "kitap"
+            ) {
+              const lastSegment = pathSegments[pathSegments.length - 1];
+              console.log("Son segment:", lastSegment);
+
+              if (lastSegment && lastSegment !== "alintilar.html") {
+                // URL-friendly formatından gerçek kitap adına çevir
+                // Önce URL decode et
+                const decodedSegment = decodeURIComponent(lastSegment);
+
+                const convertedKitapAd = decodedSegment
+                  .replace(/-/g, " ")
+                  .replace(/\b\w/g, (l) => l.toUpperCase()); // İlk harfleri büyük yap
+
+                console.log("Decoded segment:", decodedSegment);
+                console.log("Dönüştürülen kitap adı:", convertedKitapAd);
+                return convertedKitapAd;
+              }
+            }
+
+            console.log("Kitap adı bulunamadı!");
+            return null;
           }
 
-          const kitapAd = getQueryParam("kitap");
+          const kitapAd = getKitapAdFromURL();
+          console.log("Final kitap adı:", kitapAd);
 
-          // Kitap adını temizle
-          const temizKitapAd = kitapAd ? kitapAd.trim() : "";
-          const decodeKitapAd = decodeURIComponent(temizKitapAd);
+          // Kitap adı bulunamazsa ana sayfaya yönlendir
+          if (!kitapAd) {
+            alert("Kitap bulunamadı!");
+            window.location.href = "index.html";
+            return;
+          }
 
           // Veritabanından kitap bilgilerini çek
+          const apiUrl =
+            "/kitaplar_api.php?kitap=" + encodeURIComponent(kitapAd);
+          console.log("API URL:", apiUrl);
+
           $http
-            .get("kitaplar_api.php?kitap=" + encodeURIComponent(decodeKitapAd))
+            .get(apiUrl)
             .then(function (response) {
               console.log("API Response:", response.data); // Debug için
 
@@ -281,7 +359,7 @@
                 console.log("DB Kitap:", dbKitap); // Debug için
 
                 $scope.kitap = {
-                  ad: dbKitap.kitap_adi || decodeKitapAd,
+                  ad: dbKitap.kitap_adi || kitapAd,
                   yazar: dbKitap.yazar || "Bilinmeyen Yazar",
                   foto:
                     dbKitap.kapak_url ||
@@ -293,14 +371,14 @@
                   isbn: dbKitap.isbn || "Bilinmiyor",
                   tanitim:
                     dbKitap.tanitim ||
-                    `Bu kitap hakkında henüz detaylı bilgi bulunmamaktadır. Kitap adı: "${decodeKitapAd}"`,
+                    `Bu kitap hakkında henüz detaylı bilgi bulunmamaktadır. Kitap adı: "${kitapAd}"`,
                 };
 
                 console.log("Scope Kitap:", $scope.kitap); // Debug için
               } else {
                 // Veritabanında bulunamazsa varsayılan bilgiler
                 $scope.kitap = {
-                  ad: decodeKitapAd,
+                  ad: kitapAd,
                   yazar: "Bilinmeyen Yazar",
                   foto: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400&h=600&fit=crop",
                   sayfa: "Bilinmiyor",
@@ -308,7 +386,7 @@
                   basimYeri: "Bilinmiyor",
                   kategori: "Klasik Edebiyat",
                   isbn: "Bilinmiyor",
-                  tanitim: `Bu kitap hakkında henüz detaylı bilgi bulunmamaktadır. Kitap adı: "${decodeKitapAd}"`,
+                  tanitim: `Bu kitap hakkında henüz detaylı bilgi bulunmamaktadır. Kitap adı: "${kitapAd}"`,
                 };
               }
             })
@@ -316,7 +394,7 @@
               console.error("API Hatası:", error);
               // Hata durumunda varsayılan bilgiler
               $scope.kitap = {
-                ad: decodeKitapAd,
+                ad: kitapAd,
                 yazar: "Bilinmeyen Yazar",
                 foto: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400&h=600&fit=crop",
                 sayfa: "Bilinmiyor",
@@ -324,7 +402,7 @@
                 basimYeri: "Bilinmiyor",
                 kategori: "Klasik Edebiyat",
                 isbn: "Bilinmiyor",
-                tanitim: `Bu kitap hakkında henüz detaylı bilgi bulunmamaktadır. Kitap adı: "${decodeKitapAd}"`,
+                tanitim: `Bu kitap hakkında henüz detaylı bilgi bulunmamaktadır. Kitap adı: "${kitapAd}"`,
               };
             });
 

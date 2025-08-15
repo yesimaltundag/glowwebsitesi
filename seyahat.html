@@ -99,58 +99,256 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        transition: all 0.3s;
         position: absolute;
-        top: 20px;
-        left: 20px;
-        margin: 0;
+        top: 30px;
+        right: 30px;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(124, 92, 74, 0.2);
       }
       .geri-btn:hover {
         background: linear-gradient(135deg, #b48a78, #e2d9d0);
         color: #fff;
-        transform: scale(1.08);
+        transform: scale(1.1);
       }
-      @media (max-width: 1024px) {
-        .kategori-grid {
-          grid-template-columns: repeat(2, 1fr);
-        }
+      .seyahat-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+        gap: 40px;
+        margin-top: 40px;
       }
-
+      .seyahat-card {
+        background: linear-gradient(135deg, #f8e0e1 60%, #e2d9d0 100%);
+        border-radius: 20px;
+        box-shadow: 0 8px 25px rgba(180, 138, 120, 0.15);
+        padding: 50px 40px;
+        transition: all 0.3s ease;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        min-height: 220px;
+        position: relative;
+      }
+      .seyahat-header {
+        display: flex;
+        align-items: flex-start;
+        gap: 32px;
+        margin-bottom: 24px;
+        width: 100%;
+      }
+      .seyahat-foto {
+        width: 120px;
+        height: 180px;
+        object-fit: cover;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(124, 92, 74, 0.15);
+        background: #eee;
+      }
+      .seyahat-bilgi {
+        color: #7c5c4a;
+        font-size: 1.7rem;
+        font-weight: 700;
+        margin-bottom: 12px;
+        line-height: 1.3;
+      }
+      .seyahat-aciklama {
+        color: #b48a78;
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 18px;
+      }
+      .seyahat-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 20px;
+        width: 100%;
+      }
+      .detay-btn {
+        background: linear-gradient(135deg, #b48a78, #e2d9d0);
+        color: #fff;
+        border: none;
+        border-radius: 24px;
+        padding: 14px 28px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        letter-spacing: 0.5px;
+      }
+      .detay-btn:hover {
+        background: linear-gradient(135deg, #e2d9d0, #b48a78);
+        color: #7c5c4a;
+      }
+      .alt-kategori-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 30px;
+        margin-top: 40px;
+      }
+      .alt-kategori-card {
+        background: linear-gradient(135deg, #f8e0e1 60%, #e2d9d0 100%);
+        border-radius: 20px;
+        box-shadow: 0 8px 25px rgba(180, 138, 120, 0.15);
+        padding: 40px 30px;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        min-height: 180px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+      .alt-kategori-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 35px rgba(180, 138, 120, 0.25);
+      }
+      .alt-kategori-baslik {
+        color: #7c5c4a;
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin-bottom: 15px;
+        line-height: 1.3;
+      }
+      .alt-kategori-ozet {
+        color: #b48a78;
+        font-size: 1rem;
+        font-weight: 500;
+        line-height: 1.6;
+        margin-bottom: 20px;
+        flex-grow: 1;
+      }
+      .alt-kategori-btn {
+        background: linear-gradient(135deg, #b48a78, #e2d9d0);
+        color: #fff;
+        border: none;
+        border-radius: 20px;
+        padding: 12px 24px;
+        font-size: 0.95rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        align-self: flex-start;
+      }
+      .alt-kategori-btn:hover {
+        background: linear-gradient(135deg, #e2d9d0, #b48a78);
+        color: #7c5c4a;
+      }
+      .loading {
+        text-align: center;
+        font-size: 1.2rem;
+        color: #7c5c4a;
+        margin: 40px 0;
+      }
+      .error {
+        text-align: center;
+        font-size: 1.1rem;
+        color: #d32f2f;
+        margin: 40px 0;
+        padding: 20px;
+        background: rgba(211, 47, 47, 0.1);
+        border-radius: 12px;
+      }
       @media (max-width: 768px) {
         .seyahat-container {
-          padding: 30px 10px;
+          padding: 30px;
+          margin: 30px auto;
+        }
+        .seyahat-title {
+          font-size: 2rem;
+          margin-bottom: 30px;
         }
         .kategori-grid {
           grid-template-columns: 1fr;
           gap: 20px;
         }
-        .seyahat-title {
-          font-size: 2.2rem;
-          margin-bottom: 30px;
-        }
         .kategori-card {
-          min-height: 120px;
+          padding: 20px;
+          min-height: 150px;
         }
-        .kategori-card-content {
-          padding: 30px 10px 20px 10px;
-          border-radius: 18px;
+        .seyahat-grid {
+          grid-template-columns: 1fr;
+          gap: 20px;
+        }
+        .seyahat-card {
+          padding: 24px 12px;
+          min-height: 140px;
+        }
+        .seyahat-header {
+          flex-direction: column;
+          align-items: center;
+          text-align: center;
+          gap: 16px;
+        }
+        .seyahat-foto {
+          width: 100px;
+          height: 150px;
+        }
+        .seyahat-bilgi {
+          font-size: 1.2rem;
+        }
+        .seyahat-aciklama {
+          font-size: 1rem;
+        }
+        .detay-btn {
+          padding: 10px 18px;
+          font-size: 0.95rem;
+        }
+        .geri-btn {
+          width: 40px;
+          height: 40px;
+          font-size: 16px;
+          top: 70px;
+          right: 20px;
+        }
+        .alt-kategori-grid {
+          grid-template-columns: 1fr;
+          gap: 20px;
+        }
+        .alt-kategori-card {
+          padding: 30px 20px;
+          min-height: 150px;
+        }
+        .alt-kategori-baslik {
+          font-size: 1.4rem;
+        }
+        .alt-kategori-ozet {
+          font-size: 0.9rem;
+        }
+        .alt-kategori-btn {
+          padding: 10px 20px;
+          font-size: 13px;
         }
       }
     </style>
   </head>
-  <body>
+  <body ng-controller="MainController">
     <ng-include src="'components/header.html'"></ng-include>
     <main class="main-content">
       <div class="seyahat-container" ng-controller="SeyahatController">
-        <button
-          class="geri-btn"
-          onclick="window.history.back()"
-          title="Geri Dön"
-        >
+        <button class="geri-btn" ng-click="geriGit()" title="Geri Dön">
           ←
         </button>
-        <div class="seyahat-title">Seyahat</div>
-        <div class="kategori-grid">
+        <div
+          class="seyahat-title-row"
+          style="
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 32px;
+          "
+        >
+          <div
+            class="seyahat-title"
+            style="line-height: 1; vertical-align: middle"
+          >
+            {{kategori || 'Seyahat Kategorileri'}}
+          </div>
+        </div>
+        <div ng-if="loading" class="loading">✈️ Seyahatler yükleniyor...</div>
+        <div ng-if="error" class="error">❌ {{error}}</div>
+
+        <!-- Ana Kategoriler -->
+        <div class="kategori-grid" ng-if="!kategori && !loading && !error">
           <div
             class="kategori-card"
             ng-click="kategoriSec('Avrupa Seyahatleri')"
@@ -194,9 +392,25 @@
             <div class="kategori-ikon">🏕️</div>
             <div class="kategori-card-title">Kamp ve Doğa</div>
           </div>
-          <div class="kategori-card" ng-click="kategoriSec('Şehir Turları')">
-            <div class="kategori-ikon">🏙️</div>
-            <div class="kategori-card-title">Şehir Turları</div>
+        </div>
+
+        <!-- Seyahat Listesi -->
+        <div class="seyahat-grid" ng-if="kategori && !loading && !error">
+          <div class="seyahat-card" ng-repeat="seyahat in seyahatler">
+            <div class="seyahat-header">
+              <img
+                class="seyahat-foto"
+                ng-src="{{seyahat.resim_url}}"
+                alt="{{seyahat.seyahat_adi}}"
+              />
+              <div>
+                <div class="seyahat-bilgi">{{seyahat.seyahat_adi}}</div>
+                <div class="seyahat-aciklama">{{seyahat.aciklama}}</div>
+              </div>
+            </div>
+            <div class="seyahat-footer">
+              <button class="detay-btn" ng-click="detay(seyahat)">Detay</button>
+            </div>
           </div>
         </div>
       </div>
@@ -208,12 +422,64 @@
     <script>
       angular
         .module("GirisApp")
-        .controller("SeyahatController", function ($scope) {
-          $scope.kullanici = JSON.parse(
-            localStorage.getItem("girisYapan") || "null"
-          );
+        .controller("SeyahatController", function ($scope, $http) {
+          $scope.seyahatler = [];
+          $scope.loading = true;
+          $scope.error = null;
+
+          // URL'den kategori parametresini al
+          var urlParams = new URLSearchParams(window.location.search);
+          var kategori = urlParams.get("kategori");
+
+          // Debug için kategori bilgisini logla
+          console.log("URL'den gelen kategori:", kategori);
+          console.log("Decoded kategori:", decodeURIComponent(kategori || ""));
+
+          // Kategori başlığını scope'a ekle
+          $scope.kategori = kategori;
+
+          // Seyahatleri API'den yükle
+          var apiUrl = "/seyahat_api.php";
+          if (kategori) {
+            // Kategoriyi decode et ve tekrar encode et
+            var decodedKategori = decodeURIComponent(kategori);
+            console.log("Decoded kategori:", decodedKategori);
+            apiUrl += "?kategori=" + encodeURIComponent(decodedKategori);
+          }
+
+          console.log("API URL:", apiUrl); // Debug için
+          $http
+            .get(apiUrl)
+            .then(function (response) {
+              console.log("API Response:", response.data); // Debug için
+              if (response.data.success) {
+                $scope.seyahatler = response.data.seyahatler;
+                console.log("Bulunan seyahatler:", $scope.seyahatler); // Debug için
+                console.log(
+                  "Bulunan seyahat sayısı:",
+                  $scope.seyahatler.length
+                ); // Debug için
+                $scope.loading = false;
+              } else {
+                $scope.error =
+                  response.data.error || "Seyahatler yüklenirken hata oluştu";
+                $scope.loading = false;
+              }
+            })
+            .catch(function (error) {
+              $scope.error = "API bağlantı hatası: " + error.statusText;
+              $scope.loading = false;
+              console.error("API Hatası:", error);
+            });
+
+          // Geri tuşu fonksiyonu
+          $scope.geriGit = function () {
+            console.log("Seyahat ana sayfasından geri tuşu");
+            window.location.href = "index.html";
+          };
 
           $scope.kategoriSec = function (kategori) {
+            // Özel sayfalar için yönlendirme
             if (kategori === "Avrupa Seyahatleri") {
               window.location.href = "avrupa-seyahatleri.html";
             } else if (kategori === "Asya Seyahatleri") {
@@ -228,13 +494,32 @@
               window.location.href = "deniz-seyahatleri.html";
             } else if (kategori === "Kamp ve Doğa") {
               window.location.href = "kamp-doga.html";
-            } else if (kategori === "Şehir Turları") {
-              window.location.href = "sehir-turlari.html";
             } else {
-              alert(
-                kategori + " kategorisi seçildi! Bu özellik yakında eklenecek."
-              );
+              // Diğer kategoriler için normal yönlendirme
+              window.location.href =
+                "seyahat.html?kategori=" + encodeURIComponent(kategori);
             }
+          };
+
+          $scope.detay = function (seyahat) {
+            console.log("Seçilen seyahat:", seyahat);
+
+            // LocalStorage'ı temizle
+            localStorage.removeItem("seciliSehir");
+
+            // Şehir bilgisini LocalStorage'a kaydet
+            localStorage.setItem("seciliSehir", JSON.stringify(seyahat));
+
+            // URL parametresi ile sehir-detay.html'e yönlendir
+            var sehirAdi = seyahat.seyahat_adi
+              .toLowerCase()
+              .replace(/\s+/g, "-");
+            console.log(
+              "sehir-detay.html?sehir=" +
+                sehirAdi +
+                " sayfasına yönlendiriliyor..."
+            );
+            window.location.replace("sehir-detay.html?sehir=" + sehirAdi);
           };
 
           $scope.scrollToTop = function () {

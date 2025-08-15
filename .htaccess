@@ -1,0 +1,38 @@
+RewriteEngine On
+
+# Cache kontrolü - tarayıcı önbelleğini temizle
+<IfModule mod_headers.c>
+    Header set Cache-Control "no-cache, no-store, must-revalidate"
+    Header set Pragma "no-cache"
+    Header set Expires 0
+</IfModule>
+
+# Static dosyalar için rewrite yapma (CSS, JS, resimler)
+RewriteCond %{REQUEST_URI} !\.(css|js|png|jpg|jpeg|gif|ico|svg|webp)$ [NC]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+
+
+# Kitap detay sayfaları için URL rewrite
+RewriteRule ^kitap/([a-zA-Z0-9\-_çğıöşüÇĞIİÖŞÜ]+)$ alintilar.html?kitap=$1 [L,QSA]
+
+# Şehir detay sayfaları için URL yönlendirmeleri (kitap kuralı gibi)
+RewriteRule ^seyahat/([a-zA-Z0-9\-_çğıöşüÇĞIİÖŞÜ]+)$ sehir-detay.html?sehir=$1 [L,QSA]
+
+# Diğer sayfalar için de temiz URL'ler (opsiyonel)
+RewriteRule ^kitaplar$ kitaplar.html [L]
+RewriteRule ^filmler$ film-kategoriler.html [L]
+RewriteRule ^diziler$ dizi-kategoriler.html [L]
+RewriteRule ^muzik$ muzik-turleri.html [L]
+RewriteRule ^sanat$ sanat-kategoriler.html [L]
+RewriteRule ^seyahat$ seyahat.html [L]
+RewriteRule ^yemekler$ yemekler.html [L]
+RewriteRule ^spor$ spor.html [L]
+RewriteRule ^teknoloji$ teknoloji.html [L]
+RewriteRule ^egitim$ egitim.html [L]
+RewriteRule ^yasam-tarzi$ yasam-tarzi.html [L]
+RewriteRule ^kultur-toplum$ kultur-toplum.html [L]
+
+# Ana sayfa için
+RewriteRule ^$ index.html [L]

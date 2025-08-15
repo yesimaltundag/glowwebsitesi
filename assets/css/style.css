@@ -160,12 +160,14 @@ body {
   display: flex;
   align-items: center;
   gap: 8px;
+  z-index: 10001;
 }
 
 .category-text {
   display: flex;
   align-items: center;
   gap: 8px;
+  z-index: 10002;
 }
 
 .category-text::after {
@@ -198,8 +200,8 @@ body {
   opacity: 0;
   visibility: hidden;
   transform: translateX(-50%) translateY(-10px);
-  transition: all 0.3s ease;
-  z-index: 9999;
+  transition: opacity 0.2s ease, visibility 0.2s ease, transform 0.2s ease;
+  z-index: 10000 !important;
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
@@ -231,6 +233,54 @@ body {
   transition: opacity 0.3s ease !important;
 }
 
+/* KATEGORİLER KORUMASI - EN GÜÇLÜ ÇÖZÜM */
+/* Tüm kategori elementleri her zaman opak kalacak */
+.category-menu,
+.category-menu *,
+.category-text,
+.category-text *,
+.dropdown-menu,
+.dropdown-menu *,
+.dropdown-item,
+.dropdown-item *,
+.submenu,
+.submenu *,
+.submenu-item,
+.submenu-item *,
+.dropdown-item-with-submenu,
+.dropdown-item-with-submenu * {
+  opacity: 1 !important;
+  z-index: 99999 !important;
+}
+
+/* Header fade durumunda bile kategoriler opak kalacak */
+.header-fade .category-menu,
+.header-fade .category-menu *,
+.header-fade .category-text,
+.header-fade .category-text *,
+.header-fade .dropdown-menu,
+.header-fade .dropdown-menu *,
+.header-fade .dropdown-item,
+.header-fade .dropdown-item *,
+.header-fade .submenu,
+.header-fade .submenu *,
+.header-fade .submenu-item,
+.header-fade .submenu-item *,
+.header-fade .dropdown-item-with-submenu,
+.header-fade .dropdown-item-with-submenu * {
+  opacity: 1 !important;
+  z-index: 99999 !important;
+}
+
+/* JavaScript ile eklenen sınıflar */
+.category-keep-opaque,
+.category-keep-opaque *,
+.dropdown-keep-opaque,
+.dropdown-keep-opaque * {
+  opacity: 1 !important;
+  z-index: 99999 !important;
+}
+
 .dropdown-item {
   display: block;
   padding: 12px 20px;
@@ -256,6 +306,7 @@ body {
 /* ===== ALT KATEGORİ STİLLERİ ===== */
 .dropdown-item-with-submenu {
   position: relative;
+  z-index: 1001;
 }
 
 .dropdown-item-with-submenu .dropdown-item {
@@ -290,15 +341,36 @@ body {
   opacity: 0;
   visibility: hidden;
   transform: translateX(-10px);
-  transition: all 0.3s ease;
+  transition: none !important;
   z-index: 1002;
   border: 1px solid rgba(255, 255, 255, 0.2);
+  pointer-events: none;
 }
 
 .dropdown-item-with-submenu:hover .submenu {
   opacity: 1;
   visibility: visible;
   transform: translateX(0);
+  pointer-events: auto;
+  transition: none !important;
+}
+
+/* Diğer submenu'leri anında gizle */
+.dropdown-item-with-submenu:not(:hover) .submenu {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  transform: translateX(-10px) !important;
+  pointer-events: none !important;
+  transition: none !important;
+}
+
+/* Sadece submenu'lerin anında geçiş yapması için özel kural */
+.submenu {
+  transition: none !important;
+}
+
+.dropdown-item-with-submenu:hover .submenu {
+  transition: none !important;
 }
 
 .submenu-item {
@@ -1496,6 +1568,7 @@ tr:hover {
     border-radius: 8px;
     box-shadow: none;
     border: 1px solid rgba(124, 92, 74, 0.1);
+    transition: none !important;
   }
 
   .dropdown-item-with-submenu .dropdown-item::after {
@@ -1527,4 +1600,65 @@ tr:hover {
     padding: 14px 20px;
     font-size: 15px;
   }
+}
+
+/* ===== KATEGORİLER KORUMASI - EN SON KORUMA ===== */
+/* Bu kurallar en son yazıldığı için en yüksek önceliğe sahip */
+.category-menu,
+.category-menu *,
+.category-text,
+.category-text *,
+.dropdown-menu,
+.dropdown-menu *,
+.dropdown-item,
+.dropdown-item *,
+.submenu,
+.submenu *,
+.submenu-item,
+.submenu-item *,
+.dropdown-item-with-submenu,
+.dropdown-item-with-submenu * {
+  opacity: 1 !important;
+  z-index: 999999 !important;
+  pointer-events: auto !important;
+}
+
+/* Header fade durumunda bile kategoriler opak kalacak - EN GÜÇLÜ KORUMA */
+.header-fade .category-menu,
+.header-fade .category-menu *,
+.header-fade .category-text,
+.header-fade .category-text *,
+.header-fade .dropdown-menu,
+.header-fade .dropdown-menu *,
+.header-fade .dropdown-item,
+.header-fade .dropdown-item *,
+.header-fade .submenu,
+.header-fade .submenu *,
+.header-fade .submenu-item,
+.header-fade .submenu-item *,
+.header-fade .dropdown-item-with-submenu,
+.header-fade .dropdown-item-with-submenu * {
+  opacity: 1 !important;
+  z-index: 999999 !important;
+  pointer-events: auto !important;
+}
+
+/* Page fade durumunda bile kategoriler opak kalacak */
+.page-fade .category-menu,
+.page-fade .category-menu *,
+.page-fade .category-text,
+.page-fade .category-text *,
+.page-fade .dropdown-menu,
+.page-fade .dropdown-menu *,
+.page-fade .dropdown-item,
+.page-fade .dropdown-item *,
+.page-fade .submenu,
+.page-fade .submenu *,
+.page-fade .submenu-item,
+.page-fade .submenu-item *,
+.page-fade .dropdown-item-with-submenu,
+.page-fade .dropdown-item-with-submenu * {
+  opacity: 1 !important;
+  z-index: 999999 !important;
+  pointer-events: auto !important;
 }

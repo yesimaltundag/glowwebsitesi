@@ -4,9 +4,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Türk Edebiyatı - GLOW</title>
-    <link rel="stylesheet" href="assets/css/style.css" />
+    <link rel="stylesheet" href="/assets/css/style.css" />
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
-    <script src="assets/js/app.js"></script>
+    <script src="/assets/js/app.js"></script>
     <style>
       .turk-edebiyat-container {
         max-width: 100%;
@@ -136,7 +136,7 @@
     </style>
   </head>
   <body ng-controller="MainController">
-    <ng-include src="'components/header.html'"></ng-include>
+    <ng-include src="'/components/header.html'"></ng-include>
     <main class="main-content">
       <div
         class="turk-edebiyat-container"
@@ -170,7 +170,7 @@
         </div>
       </div>
     </main>
-    <ng-include src="'components/footer.html'"></ng-include>
+    <ng-include src="'/components/footer.html'"></ng-include>
     <button id="scrollTopBtn" title="Yukarı Çık" ng-click="scrollToTop()">
       ↑
     </button>
@@ -206,8 +206,15 @@
             },
           ];
           $scope.oku = function (kitap) {
-            window.location.href =
-              "alintilar.html?kitap=" + encodeURIComponent(kitap.ad);
+            // Temiz URL için kitap adını URL-friendly hale getir
+            var urlFriendlyKitap = kitap.ad
+              .toLowerCase()
+              .replace(/[^a-zA-Z0-9çğıöşüÇĞIİÖŞÜ]/g, "-")
+              .replace(/-+/g, "-")
+              .replace(/^-|-$/g, "");
+            // URL encode et
+            var encodedKitap = encodeURIComponent(urlFriendlyKitap);
+            window.location.href = "kitap/" + encodedKitap;
           };
 
           $scope.scrollToTop = function () {

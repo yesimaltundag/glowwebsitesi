@@ -4,9 +4,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Şehir Detayı - GLOW</title>
-    <link rel="stylesheet" href="assets/css/style.css" />
+    <link rel="stylesheet" href="assets/css/style.css?v=3.0" />
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
-    <script src="assets/js/app.js"></script>
+    <script src="assets/js/app.js?v=3.0"></script>
     <style>
       /* Kategori bazlı renk sistemleri */
       .detay-container.avrupa {
@@ -429,11 +429,7 @@
         ng-class="kategoriClass"
         ng-controller="SehirDetayController"
       >
-        <button
-          class="geri-btn"
-          onclick="window.history.back()"
-          title="Geri Dön"
-        >
+        <button class="geri-btn" ng-click="geriGit()" title="Geri Dön">
           ←
         </button>
 
@@ -443,7 +439,7 @@
             {{sehir.ad}}
           </h1>
           <p class="sehir-ulke">{{sehir.ulke}}</p>
-          <p class="sehir-aciklama">{{sehir.kisaAciklama}}</p>
+          <p class="sehir-aciklama">{{sehir.aciklama}}</p>
         </div>
 
         <div class="bolumler-grid">
@@ -453,7 +449,7 @@
               <span class="bolum-icon">📚</span>
               Tarihi Bilgiler
             </h2>
-            <div class="tarih-icerik">{{sehir.tarih}}</div>
+            <div class="tarih-icerik">{{sehir.aciklama}}</div>
           </div>
 
           <!-- Görülecek Yerler -->
@@ -536,7 +532,7 @@
     <script>
       angular
         .module("GirisApp")
-        .controller("SehirDetayController", function ($scope) {
+        .controller("SehirDetayController", function ($scope, $http) {
           $scope.kullanici = JSON.parse(
             localStorage.getItem("girisYapan") || "null"
           );
@@ -618,10 +614,183 @@
             return [];
           };
 
-          // LocalStorage'dan seçilen şehri al
-          var seciliSehirStr = localStorage.getItem("seciliSehir");
-          if (seciliSehirStr) {
-            $scope.sehir = JSON.parse(seciliSehirStr);
+          // TAMAMEN YENİ CONTROLLER - URL parametresi ve LocalStorage desteği
+          console.log("=== YENİ CONTROLLER BAŞLATILIYOR ===");
+
+          // ÖNCE FONKSİYONLARI TANIMLA
+          // API'den şehir bilgisini yükleme fonksiyonu
+          $scope.loadSehirFromAPI = function (sehirAdi) {
+            console.log("API'den şehir bilgisi yükleniyor:", sehirAdi);
+
+            $http
+              .get("seyahat_api.php?sehir=" + encodeURIComponent(sehirAdi))
+              .then(function (response) {
+                if (
+                  response.data.success &&
+                  response.data.seyahatler.length > 0
+                ) {
+                  $scope.sehir = response.data.seyahatler[0];
+                  console.log("Şehir bilgisi API'den yüklendi:", $scope.sehir);
+
+                  // LocalStorage'a kaydet
+                  localStorage.setItem(
+                    "seciliSehir",
+                    JSON.stringify($scope.sehir)
+                  );
+
+                  $scope.loadSehirData();
+                } else {
+                  console.error("Şehir bulunamadı:", sehirAdi);
+                  alert("Şehir bulunamadı! Ana sayfaya yönlendiriliyorsunuz.");
+                  window.location.href = $scope.getKategoriSayfasi(sehirAdi);
+                }
+              })
+              .catch(function (error) {
+                console.error("API hatası:", error);
+                alert("Şehir bilgisi yüklenirken hata oluştu!");
+                window.location.href = $scope.getKategoriSayfasi(sehirAdi);
+              });
+          };
+
+          // Kategori belirleme fonksiyonu
+          $scope.getKategoriSayfasi = function (sehirAdi) {
+            var sehirAdiLower = sehirAdi.toLowerCase();
+
+            // Avrupa şehirleri
+            if (
+              sehirAdiLower.includes("paris") ||
+              sehirAdiLower.includes("roma") ||
+              sehirAdiLower.includes("barcelona") ||
+              sehirAdiLower.includes("amsterdam") ||
+              sehirAdiLower.includes("prag") ||
+              sehirAdiLower.includes("viyana") ||
+              sehirAdiLower.includes("londra") ||
+              sehirAdiLower.includes("berlin") ||
+              sehirAdiLower.includes("budapeşte") ||
+              sehirAdiLower.includes("istanbul")
+            ) {
+              return "avrupa-seyahatleri.html";
+            }
+            // Asya şehirleri
+            else if (
+              sehirAdiLower.includes("tokyo") ||
+              sehirAdiLower.includes("seul") ||
+              sehirAdiLower.includes("bangkok") ||
+              sehirAdiLower.includes("singapore") ||
+              sehirAdiLower.includes("hong kong") ||
+              sehirAdiLower.includes("beijing") ||
+              sehirAdiLower.includes("pekin") ||
+              sehirAdiLower.includes("shanghai") ||
+              sehirAdiLower.includes("delhi") ||
+              sehirAdiLower.includes("bakü") ||
+              sehirAdiLower.includes("dubai") ||
+              sehirAdiLower.includes("mumbai")
+            ) {
+              return "asya-seyahatleri.html";
+            }
+            // Amerika şehirleri
+            else if (
+              sehirAdiLower.includes("new york") ||
+              sehirAdiLower.includes("los angeles") ||
+              sehirAdiLower.includes("chicago") ||
+              sehirAdiLower.includes("miami") ||
+              sehirAdiLower.includes("san francisco") ||
+              sehirAdiLower.includes("las vegas") ||
+              sehirAdiLower.includes("washington") ||
+              sehirAdiLower.includes("boston") ||
+              sehirAdiLower.includes("new orleans") ||
+              sehirAdiLower.includes("seattle")
+            ) {
+              return "amerika-seyahatleri.html";
+            }
+            // Afrika şehirleri
+            else if (
+              sehirAdiLower.includes("kahire") ||
+              sehirAdiLower.includes("cape town") ||
+              sehirAdiLower.includes("marakeş") ||
+              sehirAdiLower.includes("nairobi") ||
+              sehirAdiLower.includes("lagos") ||
+              sehirAdiLower.includes("johannesburg") ||
+              sehirAdiLower.includes("khartum") ||
+              sehirAdiLower.includes("dakar") ||
+              sehirAdiLower.includes("addis ababa") ||
+              sehirAdiLower.includes("tunus")
+            ) {
+              return "afrika-seyahatleri.html";
+            }
+            // Türkiye şehirleri
+            else if (
+              sehirAdiLower.includes("istanbul") ||
+              sehirAdiLower.includes("ankara") ||
+              sehirAdiLower.includes("izmir") ||
+              sehirAdiLower.includes("antalya") ||
+              sehirAdiLower.includes("bursa") ||
+              sehirAdiLower.includes("konya") ||
+              sehirAdiLower.includes("trabzon") ||
+              sehirAdiLower.includes("gaziantep") ||
+              sehirAdiLower.includes("kayseri") ||
+              sehirAdiLower.includes("eskişehir")
+            ) {
+              return "turkiye-seyahatleri.html";
+            }
+            // Deniz destinasyonları
+            else if (
+              sehirAdiLower.includes("maldives") ||
+              sehirAdiLower.includes("santorini") ||
+              sehirAdiLower.includes("bora bora") ||
+              sehirAdiLower.includes("amalfi") ||
+              sehirAdiLower.includes("seychelles") ||
+              sehirAdiLower.includes("barrier reef") ||
+              sehirAdiLower.includes("dubrovnik") ||
+              sehirAdiLower.includes("maui") ||
+              sehirAdiLower.includes("cinque terre") ||
+              sehirAdiLower.includes("phi phi")
+            ) {
+              return "deniz-seyahatleri.html";
+            }
+            // Kamp ve doğa destinasyonları
+            else if (
+              sehirAdiLower.includes("yellowstone") ||
+              sehirAdiLower.includes("banff") ||
+              sehirAdiLower.includes("patagonia") ||
+              sehirAdiLower.includes("swiss alps") ||
+              sehirAdiLower.includes("new zealand") ||
+              sehirAdiLower.includes("iceland") ||
+              sehirAdiLower.includes("norwegian fjords") ||
+              sehirAdiLower.includes("amazon") ||
+              sehirAdiLower.includes("serengeti") ||
+              sehirAdiLower.includes("galapagos")
+            ) {
+              return "kamp-doga.html";
+            }
+            // Varsayılan olarak avrupa
+            else {
+              return "avrupa-seyahatleri.html";
+            }
+          };
+
+          // Şehir verilerini yükleme fonksiyonu
+          $scope.loadSehirData = function () {
+            // String alanları array'e çevir
+            if (
+              $scope.sehir.gorulecekYerler &&
+              typeof $scope.sehir.gorulecekYerler === "string"
+            ) {
+              $scope.sehir.gorulecekYerler =
+                $scope.sehir.gorulecekYerler.split(", ");
+            }
+            if (
+              $scope.sehir.etkinlikler &&
+              typeof $scope.sehir.etkinlikler === "string"
+            ) {
+              $scope.sehir.etkinlikler = $scope.sehir.etkinlikler.split(", ");
+            }
+            if (
+              $scope.sehir.restoranlar &&
+              typeof $scope.sehir.restoranlar === "string"
+            ) {
+              $scope.sehir.restoranlar = $scope.sehir.restoranlar.split(", ");
+            }
 
             // Şehir fotoğraflarını yükle
             $scope.sehirFotograflari = $scope.getSehirFotograflari(
@@ -630,11 +799,10 @@
 
             // Debug: Fotoğrafların yüklenip yüklenmediğini kontrol et
             console.log("Şehir adı:", $scope.sehir.ad);
+            console.log("Görülecek yerler:", $scope.sehir.gorulecekYerler);
+            console.log("Etkinlikler:", $scope.sehir.etkinlikler);
+            console.log("Restoranlar:", $scope.sehir.restoranlar);
             console.log("Fotoğraflar:", $scope.sehirFotograflari);
-            console.log(
-              "Slider görünür mü:",
-              $scope.sehir.ad.toLowerCase().includes("izmir")
-            );
 
             // Kategori belirleme mantığı
             $scope.kategoriClass = "avrupa"; // Varsayılan
@@ -764,9 +932,68 @@
             ) {
               $scope.kategoriClass = "sehir";
             }
+          };
+
+          // Geri tuşu için özel fonksiyon
+          $scope.geriGit = function () {
+            var kategoriSayfasi = $scope.getKategoriSayfasi($scope.sehir.ad);
+            console.log(
+              "Geri tuşu: " + kategoriSayfasi + " sayfasına yönlendiriliyor"
+            );
+            window.location.href = kategoriSayfasi;
+          };
+
+          // Tarayıcının geri tuşunu yakala
+          window.addEventListener("popstate", function (event) {
+            if ($scope.sehir && $scope.sehir.ad) {
+              var kategoriSayfasi = $scope.getKategoriSayfasi($scope.sehir.ad);
+              console.log(
+                "Tarayıcı geri tuşu: " +
+                  kategoriSayfasi +
+                  " sayfasına yönlendiriliyor"
+              );
+              window.location.href = kategoriSayfasi;
+            }
+          });
+
+          // ŞİMDİ ANA MANTIĞI ÇALIŞTIR
+          // URL parametresinden şehir adını al
+          var urlParams = new URLSearchParams(window.location.search);
+          var sehirParam = urlParams.get("sehir");
+          console.log("URL parametresi:", sehirParam);
+
+          // LocalStorage'dan seçilen şehri al
+          var seciliSehirStr = localStorage.getItem("seciliSehir");
+          console.log("LocalStorage'dan alınan veri:", seciliSehirStr);
+
+          if (seciliSehirStr) {
+            try {
+              $scope.sehir = JSON.parse(seciliSehirStr);
+              console.log(
+                "Şehir bilgisi LocalStorage'dan yüklendi:",
+                $scope.sehir
+              );
+              $scope.loadSehirData();
+            } catch (error) {
+              console.error("JSON parse hatası:", error);
+              // URL parametresi varsa API'den şehir bilgisini al
+              if (sehirParam) {
+                $scope.loadSehirFromAPI(sehirParam);
+              } else {
+                alert("Şehir bilgisi yüklenirken hata oluştu!");
+                window.location.href = $scope.getKategoriSayfasi(sehirParam);
+              }
+            }
+          } else if (sehirParam) {
+            // URL parametresi varsa API'den şehir bilgisini al
+            $scope.loadSehirFromAPI(sehirParam);
           } else {
             // Eğer şehir bilgisi yoksa ana sayfaya yönlendir
-            window.location.href = "avrupa-seyahatleri.html";
+            console.log("Şehir bilgisi bulunamadı!");
+            alert(
+              "Şehir bilgisi bulunamadı! Ana sayfaya yönlendiriliyorsunuz."
+            );
+            window.location.href = "seyahat.html";
           }
         });
     </script>

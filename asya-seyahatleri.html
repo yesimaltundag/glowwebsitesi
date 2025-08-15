@@ -2,6 +2,7 @@
 <html lang="tr" ng-app="GirisApp">
   <head>
     <meta charset="UTF-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Asya Seyahatleri - GLOW</title>
     <link rel="stylesheet" href="assets/css/style.css" />
@@ -15,7 +16,7 @@
         width: 100%;
         background: rgba(255, 255, 255, 0.92);
         border-radius: 18px;
-        box-shadow: 0 8px 32px rgba(124, 92, 74, 0.1);
+        box-shadow: 0 8px 32px rgba(255, 215, 0, 0.1);
         backdrop-filter: blur(10px);
       }
 
@@ -75,7 +76,7 @@
         background-repeat: no-repeat;
         border-radius: 16px;
         padding: 25px;
-        box-shadow: 0 6px 20px rgba(180, 138, 120, 0.1);
+        box-shadow: 0 6px 20px rgba(255, 215, 0, 0.1);
         transition: all 0.3s ease;
         cursor: pointer;
         position: relative;
@@ -86,16 +87,11 @@
       }
 
       .sehir-card:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 12px 30px rgba(180, 138, 120, 0.2);
+        transform: translateY(-5px);
+        box-shadow: 0 12px 30px rgba(255, 215, 0, 0.2);
       }
 
       .sehir-overlay {
-        position: absolute;
-        left: 18px;
-        bottom: 18px;
-        min-width: 160px;
-        max-width: 70%;
         background: linear-gradient(
           to top,
           rgba(124, 92, 74, 0.55) 0%,
@@ -128,7 +124,7 @@
         left: 0;
         right: 0;
         height: 4px;
-        background: linear-gradient(90deg, #b48a78, #e2d9d0, #f8e0e1);
+        background: linear-gradient(90deg, #ffd700, #ffa500, #ff8c00);
       }
 
       .sehir-baslik {
@@ -155,26 +151,59 @@
         margin-bottom: 20px;
       }
 
-      .detay-btn {
-        background: linear-gradient(135deg, #b48a78, #e2d9d0);
+      .sehir-ozellikler {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 20px;
+      }
+
+      .ozellik-tag {
+        background: rgba(255, 255, 255, 0.2);
         color: white;
-        border: none;
-        border-radius: 25px;
-        padding: 10px 20px;
-        font-size: 0.9rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s;
-        width: 100%;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 500;
+        backdrop-filter: blur(5px);
+      }
+
+      .detay-btn {
+        background: linear-gradient(135deg, #ffd700, #ffa500) !important;
+        color: white !important;
+        border: none !important;
+        border-radius: 10px !important;
+        padding: 8px !important;
+        font-size: 0.8rem !important;
+        font-weight: 600 !important;
+        cursor: pointer !important;
+        transition: all 0.3s !important;
+        width: auto !important;
+        margin: 0 auto !important;
+        display: block !important;
       }
 
       .detay-btn:hover {
-        background: linear-gradient(135deg, #e2d9d0, #b48a78);
-        transform: scale(1.02);
+        background: linear-gradient(135deg, #ffa500, #ffd700) !important;
+        transform: scale(1.02) !important;
       }
 
       .sehir-icon {
         font-size: 1.2rem;
+      }
+
+      .loading {
+        text-align: center;
+        padding: 40px;
+        font-size: 1.2rem;
+        color: #7c5c4a;
+      }
+
+      .error {
+        text-align: center;
+        padding: 40px;
+        color: #e74c3c;
+        font-size: 1.1rem;
       }
 
       @media (max-width: 768px) {
@@ -208,20 +237,25 @@
 
     <main class="main-content">
       <div class="asya-container" ng-controller="AsyaSeyahatController">
-        <button
-          class="geri-btn"
-          onclick="window.history.back()"
-          title="Geri Dön"
-        >
+        <button class="geri-btn" ng-click="geriGit()" title="Geri Dön">
           ←
         </button>
 
         <div class="page-header">
           <h1 class="page-title">🌏 Asya Seyahatleri</h1>
-          <p class="page-subtitle">Asya'nın En Ünlü 10 Şehri</p>
+          <p class="page-subtitle">Asya'nın En Ünlü Şehirleri</p>
         </div>
 
-        <div class="sehirler-grid">
+        <!-- Loading durumu -->
+        <div ng-if="loading" class="loading">
+          ✈️ Asya seyahatleri yükleniyor...
+        </div>
+
+        <!-- Hata durumu -->
+        <div ng-if="error" class="error">❌ {{error}}</div>
+
+        <!-- Şehirler grid -->
+        <div class="sehirler-grid" ng-if="!loading && !error">
           <div
             class="sehir-card"
             ng-repeat="sehir in asyaSehirleri"
@@ -234,11 +268,9 @@
                 {{sehir.ad}}
               </h3>
               <p class="sehir-ulke">{{sehir.ulke}}</p>
-              <p class="sehir-aciklama">{{sehir.kisaAciklama}}</p>
+              <p class="sehir-aciklama">{{sehir.aciklama}}</p>
 
-              <button class="detay-btn" ng-click="sehirDetayGit(sehir)">
-                Detayları Gör
-              </button>
+              <button class="detay-btn">Detayları Gör</button>
             </div>
           </div>
         </div>
@@ -250,369 +282,59 @@
     <script>
       angular
         .module("GirisApp")
-        .controller("AsyaSeyahatController", function ($scope) {
+        .controller("AsyaSeyahatController", function ($scope, $http) {
           $scope.kullanici = JSON.parse(
             localStorage.getItem("girisYapan") || "null"
           );
 
-          $scope.asyaSehirleri = [
-            {
-              id: 1,
-              ad: "Tokyo",
-              ulke: "Japonya",
-              icon: "🗾",
-              foto: "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=800&h=600&fit=crop",
-              kisaAciklama:
-                "Geleceğin şehri. Gelenek ve modernliğin mükemmel uyumu, neon ışıkları ve gelişmiş teknolojisi ile dünyanın en dinamik metropolü.",
-              tarih:
-                "M.S. 12. yüzyılda Edo adıyla kurulan Tokyo, 1868'de Japonya'nın başkenti oldu. İkinci Dünya Savaşı'ndan sonra hızla gelişerek dünyanın en büyük metropollerinden biri haline geldi.",
-              gorulecekYerler: [
-                "Senso-ji Tapınağı - Tokyo'nun en eski tapınağı",
-                "Tokyo Skytree - 634 metre yüksekliğinde kule",
-                "Shibuya Crossing - Dünyanın en kalabalık yaya geçidi",
-                "Tsukiji Fish Market - Balık pazarı",
-                "Meiji Shrine - İmparatorluk tapınağı",
-                "Tokyo Tower - Şehrin simgesi",
-                "Harajuku - Gençlik kültürü merkezi",
-                "Ueno Park - Büyük park ve müzeler",
-              ],
-              etkinlikler: [
-                "Cherry Blossom Festivali - Kiraz çiçeği festivali",
-                "Tokyo Game Show - Oyun fuarı",
-                "Tokyo International Film Festival",
-                "Sumidagawa Fireworks - Havai fişek festivali",
-                "Sanja Matsuri - Geleneksel festival",
-              ],
-              restoranlar: [
-                "Sukiyabashi Jiro - 3 Michelin yıldızlı sushi",
-                "Narisawa - Modern Japon mutfağı",
-                "Ichiran - Geleneksel ramen",
-                "Gonpachi - Kill Bill restoranı",
-                "Kozasa - Geleneksel tempura",
-              ],
-            },
-            {
-              id: 2,
-              ad: "Seul",
-              ulke: "Güney Kore",
-              icon: "🏯",
-              foto: "https://cdn2.enuygun.com/media/lib/1200x675/uploads/image/sonbaharda-gyeongbokgung-sarayi-seul-guney-kore-65396.webp",
-              kisaAciklama:
-                "K-pop kültürünün merkezi, geleneksel hanok evleri ve ultra-modern gökdelenleri ile Doğu Asya'nın kalbi.",
-              tarih:
-                "M.Ö. 18 yılında kurulan Seul, Joseon Hanedanlığı'nın başkenti oldu. 20. yüzyılda hızla modernleşerek dünyanın en gelişmiş şehirlerinden biri haline geldi.",
-              gorulecekYerler: [
-                "Gyeongbokgung Palace - Ana saray",
-                "N Seoul Tower - Şehir kulesi",
-                "Myeongdong - Alışveriş caddesi",
-                "Bukchon Hanok Village - Geleneksel evler",
-                "Changdeokgung Palace - UNESCO mirası saray",
-                "Hongdae - Gençlik bölgesi",
-                "Dongdaemun Design Plaza - Modern mimari",
-                "Namsan Park - Şehir parkı",
-              ],
-              etkinlikler: [
-                "Seoul Lantern Festival - Fener festivali",
-                "Busan International Film Festival",
-                "K-pop World Festival",
-                "Seoul Fashion Week",
-                "Cherry Blossom Festivali",
-              ],
-              restoranlar: [
-                "Jungsik - Modern Kore mutfağı",
-                "Gwangjang Market - Geleneksel pazar",
-                "Myeongdong Kyoja - Kalguksu",
-                "Mapo Galmaegi - Barbekü",
-                "Isaac Toast - Kahvaltı",
-              ],
-            },
-            {
-              id: 3,
-              ad: "Bangkok",
-              ulke: "Tayland",
-              icon: "🏛️",
-              foto: "https://avusturyagezi.com/assets/uploads/f6d59ad2b77665848f3c168064d02a38.jpg",
-              kisaAciklama:
-                "Tayland'ın başkenti, geleneksel ve modern bir şehir. Kültür, gastronomi ve alışveriş alanlarıyla ünlü.",
-              tarih:
-                "M.Ö. 2578 yılında kurulan Bangkok, Siam Hanedanlığı'nın başkenti oldu. 18. yüzyılda hızla gelişerek dünyanın en büyük metropollerinden biri haline geldi.",
-              gorulecekYerler: [
-                "Wat Phra Kaew - Kraliçe'nin tapınağı",
-                "Wat Pho - 46 metre yükseklikteki büyük budist tapınağı",
-                "Grand Palace - Kraliyet sarayı",
-                "Wat Arun - Şafak tapınağı",
-                "Chatuchak Weekend Market - Hafta sonu pazarı",
-                "Khao San Road - Backpacker caddesi",
-                "Sukhumvit - Modern alışveriş bölgesi",
-                "Chinatown - Çin mahallesi",
-              ],
-              etkinlikler: [
-                "Songkran Festivali - Su festivali",
-                "Loy Krathong - Işık festivali",
-                "Bangkok International Film Festival",
-                "Bangkok Fashion Week",
-                "Vegetarian Festival - Vejetaryen festivali",
-              ],
-              restoranlar: [
-                "Gaggan - Modern Hint mutfağı",
-                "Nahm - Geleneksel Tay mutfağı",
-                "Bo.lan - Modern Tay mutfağı",
-                "Issaya Siamese Club - Geleneksel restoran",
-                "Le Du - Modern Tay mutfağı",
-              ],
-            },
-            {
-              id: 4,
-              ad: "Singapur",
-              ulke: "Singapur",
-              icon: "🌴",
-              foto: "https://images.unsplash.com/photo-1525625293389-3f8f99389edd?w=800&h=600&fit=crop",
-              kisaAciklama:
-                "Asya'nın finans merkezi, modern mimarisi ve çok kültürlü yapısıyla dünyanın en gelişmiş şehirlerinden biri.",
-              tarih:
-                "1819 yılında Sir Stamford Raffles tarafından kurulan Singapur, 1965'te bağımsızlığını kazandı. Hızla gelişerek dünyanın en zengin ülkelerinden biri haline geldi.",
-              gorulecekYerler: [
-                "Marina Bay Sands - İkonik otel",
-                "Gardens by the Bay - Botanik bahçeleri",
-                "Sentosa Island - Eğlence adası",
-                "Orchard Road - Alışveriş caddesi",
-                "Chinatown - Çin mahallesi",
-                "Little India - Hint mahallesi",
-                "Singapore Zoo - Hayvanat bahçesi",
-                "Universal Studios - Tema parkı",
-              ],
-              etkinlikler: [
-                "Singapore Food Festival - Yemek festivali",
-                "Singapore International Film Festival",
-                "Singapore Fashion Week",
-                "Singapore Arts Festival",
-                "Singapore Grand Prix - Formula 1 yarışı",
-              ],
-              restoranlar: [
-                "Odette - Modern Fransız mutfağı",
-                "Liao Fan Hong Kong Soya Sauce Chicken Rice - Hawker standı",
-                "Burnt Ends - Modern Avustralya mutfağı",
-                "Les Amis - Modern Fransız mutfağı",
-                "Waku Ghin - Modern Japon mutfağı",
-              ],
-            },
-            {
-              id: 5,
-              ad: "Hong Kong",
-              ulke: "Çin",
-              icon: "🏙️",
-              foto: "https://images.unsplash.com/photo-1536599018102-9f803c140fc1?w=800&h=600&fit=crop",
-              kisaAciklama:
-                "Doğu'nun New York'u, gökdelenleri ve limanıyla ünlü, finans ve ticaret merkezi.",
-              tarih:
-                "1841 yılında İngiliz kolonisi olan Hong Kong, 1997'de Çin'e geri verildi. Hızla gelişerek dünyanın en önemli finans merkezlerinden biri haline geldi.",
-              gorulecekYerler: [
-                "Victoria Peak - Şehir manzarası",
-                "Tian Tan Buddha - Büyük Buda heykeli",
-                "Hong Kong Disneyland - Tema parkı",
-                "Ocean Park - Eğlence parkı",
-                "Tsim Sha Tsui - Liman bölgesi",
-                "Central - Finans merkezi",
-                "Causeway Bay - Alışveriş bölgesi",
-                "Mong Kok - Halk pazarı",
-              ],
-              etkinlikler: [
-                "Hong Kong International Film Festival",
-                "Hong Kong Arts Festival",
-                "Hong Kong Fashion Week",
-                "Hong Kong Food Festival",
-                "Hong Kong Dragon Boat Festival",
-              ],
-              restoranlar: [
-                "Lung King Heen - Modern Çin mutfağı",
-                "Tim Ho Wan - Dim sum",
-                "Amber - Modern Fransız mutfağı",
-                "8½ Otto e Mezzo Bombana - Modern İtalyan mutfağı",
-                "L'Atelier de Joël Robuchon - Modern Fransız mutfağı",
-              ],
-            },
-            {
-              id: 6,
-              ad: "Dubai",
-              ulke: "Birleşik Arap Emirlikleri",
-              icon: "🏗️",
-              foto: "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=800&h=600&fit=crop",
-              kisaAciklama:
-                "Çölün ortasında yükselen modern şehir, lüks alışveriş ve eğlence merkezi.",
-              tarih:
-                "1833 yılında kurulan Dubai, 1971'de Birleşik Arap Emirlikleri'nin bir parçası oldu. Petrol gelirleriyle hızla gelişerek dünyanın en modern şehirlerinden biri haline geldi.",
-              gorulecekYerler: [
-                "Burj Khalifa - Dünyanın en yüksek binası",
-                "Palm Jumeirah - Palmiye adası",
-                "Dubai Mall - Dünyanın en büyük alışveriş merkezi",
-                "Burj Al Arab - 7 yıldızlı otel",
-                "Dubai Frame - Şehir çerçevesi",
-                "Dubai Miracle Garden - Çiçek bahçesi",
-                "Dubai Marina - Liman bölgesi",
-                "Dubai Creek - Tarihi liman",
-              ],
-              etkinlikler: [
-                "Dubai Shopping Festival - Alışveriş festivali",
-                "Dubai International Film Festival",
-                "Dubai Food Festival",
-                "Dubai Jazz Festival",
-                "Dubai World Cup - At yarışı",
-              ],
-              restoranlar: [
-                "Al Ustad Special Kabab - Geleneksel İran mutfağı",
-                "Zuma - Modern Japon mutfağı",
-                "Pierchic - Deniz ürünleri",
-                "At.mosphere - Burj Khalifa'da restoran",
-                "Al Qasr - Geleneksel Arap mutfağı",
-              ],
-            },
-            {
-              id: 7,
-              ad: "Mumbai",
-              ulke: "Hindistan",
-              icon: "🎬",
-              foto: "https://images.unsplash.com/photo-1570168007204-dfb528c6958f?w=800&h=600&fit=crop",
-              kisaAciklama:
-                "Hindistan'ın finans ve eğlence başkenti, Bollywood'un merkezi ve çok kültürlü yapısıyla ünlü.",
-              tarih:
-                "1661 yılında İngiliz kolonisi olan Mumbai, 1947'de Hindistan'ın bağımsızlığıyla birlikte ülkenin en önemli şehirlerinden biri haline geldi.",
-              gorulecekYerler: [
-                "Gateway of India - Hindistan'ın kapısı",
-                "Taj Mahal Palace - İkonik otel",
-                "Marine Drive - Deniz kenarı caddesi",
-                "Juhu Beach - Plaj",
-                "Elephanta Caves - Mağara tapınakları",
-                "Colaba Causeway - Alışveriş caddesi",
-                "Bandra West - Hipster bölgesi",
-                "Dharavi - Slum bölgesi",
-              ],
-              etkinlikler: [
-                "Mumbai Film Festival",
-                "Mumbai Fashion Week",
-                "Ganesh Chaturthi - Hindu festivali",
-                "Mumbai Marathon",
-                "Kala Ghoda Arts Festival",
-              ],
-              restoranlar: [
-                "Bombay Canteen - Modern Hint mutfağı",
-                "Gymkhana - Geleneksel Hint mutfağı",
-                "Masala Library - Modern Hint mutfağı",
-                "Trishna - Deniz ürünleri",
-                "Leopold Cafe - Tarihi kafe",
-              ],
-            },
-            {
-              id: 8,
-              ad: "İstanbul",
-              ulke: "Türkiye",
-              icon: "🕌",
-              foto: "https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?w=800&h=600&fit=crop",
-              kisaAciklama:
-                "Doğu ile Batı'nın buluştuğu şehir, tarihi yarımada ve modern yapılarıyla dünyanın en güzel şehirlerinden biri.",
-              tarih:
-                "M.Ö. 660 yılında kurulan İstanbul, Roma, Bizans ve Osmanlı İmparatorluklarına başkentlik yaptı. 1923'te Türkiye Cumhuriyeti'nin kurulmasıyla birlikte Ankara başkent oldu.",
-              gorulecekYerler: [
-                "Ayasofya - Tarihi müze",
-                "Topkapı Sarayı - Osmanlı sarayı",
-                "Sultanahmet Camii - Mavi cami",
-                "Kapalıçarşı - Tarihi pazar",
-                "Galata Kulesi - Tarihi kule",
-                "Boğaziçi Köprüsü - Asya-Avrupa köprüsü",
-                "Ortaköy - Sahil bölgesi",
-                "Taksim - Modern merkez",
-              ],
-              etkinlikler: [
-                "İstanbul Film Festivali",
-                "İstanbul Bienali",
-                "İstanbul Fashion Week",
-                "İstanbul Jazz Festivali",
-                "İstanbul Marathon",
-              ],
-              restoranlar: [
-                "Mikla - Modern Türk mutfağı",
-                "Çiya Sofrası - Geleneksel Anadolu mutfağı",
-                "Nusr-Et - Et restoranı",
-                "Balıkçı Lokantası - Deniz ürünleri",
-                "Kebapçı Selim Usta - Geleneksel kebap",
-              ],
-            },
-            {
-              id: 9,
-              ad: "Pekin",
-              ulke: "Çin",
-              icon: "🏛️",
-              foto: "https://images.unsplash.com/photo-1508804185872-d7badad00f7d?w=800&h=600&fit=crop",
-              kisaAciklama:
-                "Çin'in başkenti, tarihi yapıları ve modern gelişimiyle dünyanın en önemli şehirlerinden biri.",
-              tarih:
-                "M.Ö. 1045 yılında kurulan Pekin, Ming ve Qing hanedanlarına başkentlik yaptı. 1949'da Çin Halk Cumhuriyeti'nin başkenti oldu.",
-              gorulecekYerler: [
-                "Çin Seddi - Tarihi duvar",
-                "Yasak Şehir - İmparatorluk sarayı",
-                "Tiananmen Meydanı - Tarihi meydan",
-                "Temple of Heaven - Cennet tapınağı",
-                "Summer Palace - Yaz sarayı",
-                "Hutong - Geleneksel mahalleler",
-                "Wangfujing - Alışveriş caddesi",
-                "798 Art District - Sanat bölgesi",
-              ],
-              etkinlikler: [
-                "Pekin Film Festivali",
-                "Pekin Müzik Festivali",
-                "Pekin Fashion Week",
-                "Pekin Uluslararası Sanat Festivali",
-                "Pekin Maratonu",
-              ],
-              restoranlar: [
-                "Da Dong - Modern Pekin ördeği",
-                "Quanjude - Geleneksel Pekin ördeği",
-                "Haidilao - Hot pot",
-                "Din Tai Fung - Dim sum",
-                "Jing Yaa Tang - Modern Çin mutfağı",
-              ],
-            },
-            {
-              id: 10,
-              ad: "Seul",
-              ulke: "Güney Kore",
-              icon: "🏯",
-              foto: "https://cdn2.enuygun.com/media/lib/1200x675/uploads/image/sonbaharda-gyeongbokgung-sarayi-seul-guney-kore-65396.webp",
-              kisaAciklama:
-                "K-pop kültürünün merkezi, geleneksel hanok evleri ve ultra-modern gökdelenleri ile Doğu Asya'nın kalbi.",
-              tarih:
-                "M.Ö. 18 yılında kurulan Seul, Joseon Hanedanlığı'nın başkenti oldu. 20. yüzyılda hızla modernleşerek dünyanın en gelişmiş şehirlerinden biri haline geldi.",
-              gorulecekYerler: [
-                "Gyeongbokgung Palace - Ana saray",
-                "N Seoul Tower - Şehir kulesi",
-                "Myeongdong - Alışveriş caddesi",
-                "Bukchon Hanok Village - Geleneksel evler",
-                "Changdeokgung Palace - UNESCO mirası saray",
-                "Hongdae - Gençlik bölgesi",
-                "Dongdaemun Design Plaza - Modern mimari",
-                "Namsan Park - Şehir parkı",
-              ],
-              etkinlikler: [
-                "Seoul Lantern Festival - Fener festivali",
-                "Busan International Film Festival",
-                "K-pop World Festival",
-                "Seoul Fashion Week",
-                "Cherry Blossom Festivali",
-              ],
-              restoranlar: [
-                "Jungsik - Modern Kore mutfağı",
-                "Gwangjang Market - Geleneksel pazar",
-                "Myeongdong Kyoja - Kalguksu",
-                "Mapo Galmaegi - Barbekü",
-                "Isaac Toast - Kahvaltı",
-              ],
-            },
-          ];
+          $scope.asyaSehirleri = [];
+          $scope.loading = true;
+          $scope.error = null;
 
+          // Asya seyahatlerini API'den yükle
+          $http
+            .get("seyahat_api.php?asya=1")
+            .then(function (response) {
+              if (response.data.success) {
+                $scope.asyaSehirleri = response.data.seyahatler;
+                console.log("Asya seyahatleri yüklendi:", $scope.asyaSehirleri);
+              } else {
+                $scope.error = "Veriler yüklenirken hata oluştu";
+                console.error("API Hatası:", response.data);
+              }
+              $scope.loading = false;
+            })
+            .catch(function (error) {
+              $scope.error = "Bağlantı hatası oluştu";
+              console.error("HTTP Hatası:", error);
+              $scope.loading = false;
+            });
+
+          // Geri tuşu fonksiyonu
+          $scope.geriGit = function () {
+            console.log("Asya seyahatleri sayfasından geri tuşu");
+            window.location.href = "seyahat.html";
+          };
+
+          // TAMAMEN YENİ FONKSİYON - Cache sorununu çözmek için
           $scope.sehirDetayGit = function (sehir) {
-            // Şehir verilerini localStorage'a kaydet
+            console.log("=== YENİ FONKSİYON ÇALIŞIYOR ===");
+            console.log("Seçilen şehir:", sehir);
+
+            // LocalStorage'ı temizle
+            localStorage.removeItem("seciliSehir");
+
+            // Yeni şehir bilgisini kaydet
             localStorage.setItem("seciliSehir", JSON.stringify(sehir));
-            // Şehir detay sayfasına yönlendir
-            window.location.href = "sehir-detay.html";
+
+            // URL parametresi ile sehir-detay.html'e yönlendir
+            var sehirAdi = sehir.ad.toLowerCase().replace(/\s+/g, "-");
+            console.log(
+              "sehir-detay.html?sehir=" +
+                sehirAdi +
+                " sayfasına yönlendiriliyor..."
+            );
+            window.location.replace("sehir-detay.html?sehir=" + sehirAdi);
           };
         });
     </script>

@@ -2,6 +2,7 @@
 <html lang="tr" ng-app="GirisApp">
   <head>
     <meta charset="UTF-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Kamp ve Doğa - GLOW</title>
     <link rel="stylesheet" href="assets/css/style.css" />
@@ -12,11 +13,11 @@
         max-width: 100%;
         margin: 40px auto;
         padding: 32px 40px;
+        width: 100%;
         background: rgba(255, 255, 255, 0.92);
         border-radius: 18px;
-        box-shadow: 0 8px 32px rgba(124, 92, 74, 0.1);
+        box-shadow: 0 8px 32px rgba(34, 139, 34, 0.1);
         backdrop-filter: blur(10px);
-        width: 100%;
       }
 
       .page-header {
@@ -25,21 +26,21 @@
       }
 
       .page-title {
-        color: #7c5c4a;
+        color: #2d5016;
         font-size: 2.5rem;
         font-weight: 700;
         margin-bottom: 10px;
       }
 
       .page-subtitle {
-        color: #b48a78;
+        color: #4a7c59;
         font-size: 1.1rem;
         font-weight: 500;
       }
 
       .geri-btn {
-        background: linear-gradient(135deg, #e2d9d0, #b48a78);
-        color: #7c5c4a;
+        background: linear-gradient(135deg, #90ee90, #32cd32);
+        color: #2d5016;
         border: none;
         border-radius: 50%;
         width: 45px;
@@ -57,46 +58,68 @@
       }
 
       .geri-btn:hover {
-        background: linear-gradient(135deg, #b48a78, #e2d9d0);
+        background: linear-gradient(135deg, #32cd32, #90ee90);
         color: #fff;
         transform: scale(1.1);
       }
 
-      .destinasyonlar-grid {
+      .sehirler-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
         gap: 30px;
         margin-top: 40px;
       }
 
-      .destinasyon-card {
-        background: linear-gradient(135deg, #f0f8e8 0%, #e8f5e0 100%);
+      .sehir-card {
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
         border-radius: 16px;
         padding: 25px;
-        box-shadow: 0 6px 20px rgba(180, 138, 120, 0.1);
+        box-shadow: 0 6px 20px rgba(34, 139, 34, 0.1);
         transition: all 0.3s ease;
         cursor: pointer;
         position: relative;
         overflow: hidden;
+        min-height: 400px;
+        display: flex;
+        align-items: flex-end;
       }
 
-      .destinasyon-card:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 12px 30px rgba(180, 138, 120, 0.2);
+      .sehir-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 30px rgba(34, 139, 34, 0.2);
       }
 
-      .destinasyon-card::before {
+      .sehir-overlay {
+        background: linear-gradient(
+          to top,
+          rgba(45, 80, 22, 0.55) 0%,
+          rgba(45, 80, 22, 0.35) 50%,
+          rgba(45, 80, 22, 0.1) 100%
+        );
+        border-radius: 12px;
+        padding: 12px 18px 10px 18px;
+        box-shadow: 0 2px 12px rgba(45, 80, 22, 0.1);
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        z-index: 2;
+        transition: background 0.3s, backdrop-filter 0.3s;
+      }
+
+      .sehir-card::before {
         content: "";
         position: absolute;
         top: 0;
         left: 0;
         right: 0;
         height: 4px;
-        background: linear-gradient(90deg, #4caf50, #8bc34a, #cddc39);
+        background: linear-gradient(90deg, #228b22, #32cd32, #90ee90);
       }
 
-      .destinasyon-baslik {
-        color: #2e7d32;
+      .sehir-baslik {
+        color: white;
         font-size: 1.4rem;
         font-weight: 700;
         margin-bottom: 8px;
@@ -105,22 +128,22 @@
         gap: 10px;
       }
 
-      .destinasyon-doga {
-        color: #4caf50;
+      .sehir-ulke {
+        color: #90ee90;
         font-size: 0.95rem;
         font-weight: 500;
         margin-bottom: 15px;
       }
 
-      .destinasyon-aciklama {
-        color: #2e7d32;
+      .sehir-aciklama {
+        color: white;
         font-size: 0.95rem;
         line-height: 1.6;
         margin-bottom: 20px;
       }
 
       .detay-btn {
-        background: linear-gradient(135deg, #4caf50, #8bc34a) !important;
+        background: linear-gradient(135deg, #228b22, #32cd32) !important;
         color: white !important;
         border: none !important;
         border-radius: 10px !important;
@@ -135,25 +158,40 @@
       }
 
       .detay-btn:hover {
-        background: linear-gradient(135deg, #8bc34a, #4caf50) !important;
+        background: linear-gradient(135deg, #32cd32, #228b22) !important;
         transform: scale(1.02) !important;
       }
 
-      .destinasyon-icon {
+      .sehir-icon {
         font-size: 1.2rem;
+      }
+
+      .loading {
+        text-align: center;
+        padding: 40px;
+        font-size: 1.2rem;
+        color: #2d5016;
+      }
+
+      .error {
+        text-align: center;
+        padding: 40px;
+        color: #e74c3c;
+        font-size: 1.1rem;
       }
 
       @media (max-width: 768px) {
         .kamp-container {
           margin: 20px;
           padding: 20px;
+          max-width: 100%;
         }
 
         .page-title {
           font-size: 2rem;
         }
 
-        .destinasyonlar-grid {
+        .sehirler-grid {
           grid-template-columns: 1fr;
           gap: 20px;
         }
@@ -166,12 +204,6 @@
           font-size: 16px;
         }
       }
-      @media (max-width: 600px) {
-        .kamp-container {
-          padding: 20px;
-          max-width: 100%;
-        }
-      }
     </style>
   </head>
   <body>
@@ -179,35 +211,41 @@
 
     <main class="main-content">
       <div class="kamp-container" ng-controller="KampDogaController">
-        <button
-          class="geri-btn"
-          onclick="window.history.back()"
-          title="Geri Dön"
-        >
+        <button class="geri-btn" ng-click="geriGit()" title="Geri Dön">
           ←
         </button>
 
         <div class="page-header">
           <h1 class="page-title">🏕️ Kamp ve Doğa</h1>
-          <p class="page-subtitle">
-            Dünyanın En Büyüleyici 10 Doğa Destinasyonu
-          </p>
+          <p class="page-subtitle">Doğanın En Güzel Kamp Alanları</p>
         </div>
 
-        <div class="destinasyonlar-grid">
-          <div
-            class="destinasyon-card"
-            ng-repeat="destinasyon in kampDestinasyonlari"
-            ng-click="destinasyonDetayGit(destinasyon)"
-          >
-            <h3 class="destinasyon-baslik">
-              <span class="destinasyon-icon">{{destinasyon.icon}}</span>
-              {{destinasyon.ad}}
-            </h3>
-            <p class="destinasyon-doga">{{destinasyon.doga}}</p>
-            <p class="destinasyon-aciklama">{{destinasyon.kisaAciklama}}</p>
+        <!-- Loading durumu -->
+        <div ng-if="loading" class="loading">
+          🏕️ Kamp ve doğa alanları yükleniyor...
+        </div>
 
-            <button class="detay-btn">Detayları Gör</button>
+        <!-- Hata durumu -->
+        <div ng-if="error" class="error">❌ {{error}}</div>
+
+        <!-- Şehirler grid -->
+        <div class="sehirler-grid" ng-if="!loading && !error">
+          <div
+            class="sehir-card"
+            ng-repeat="sehir in kampAlanlari"
+            ng-click="sehirDetayGit(sehir)"
+            ng-style="{'background-image': 'url(' + sehir.foto + ')'}"
+          >
+            <div class="sehir-overlay">
+              <h3 class="sehir-baslik">
+                <span class="sehir-icon">{{sehir.icon}}</span>
+                {{sehir.ad}}
+              </h3>
+              <p class="sehir-ulke">{{sehir.ulke}}</p>
+              <p class="sehir-aciklama">{{sehir.aciklama}}</p>
+
+              <button class="detay-btn">Detayları Gör</button>
+            </div>
           </div>
         </div>
       </div>
@@ -218,358 +256,62 @@
     <script>
       angular
         .module("GirisApp")
-        .controller("KampDogaController", function ($scope) {
+        .controller("KampDogaController", function ($scope, $http) {
           $scope.kullanici = JSON.parse(
             localStorage.getItem("girisYapan") || "null"
           );
 
-          $scope.kampDestinasyonlari = [
-            {
-              id: 1,
-              ad: "Yellowstone National Park",
-              doga: "Milli Park",
-              icon: "🌋",
-              kisaAciklama:
-                "Dünyanın ilk milli parkı. Gayzerler, sıcak su kaynakları, vahşi yaşam ve muhteşem manzaralar ile doğanın en büyüleyici gösterisi.",
-              tarih:
-                "1872 yılında ABD'nin ilk milli parkı olarak kurulan Yellowstone, dünyanın en büyük süper volkanı üzerinde yer alır. UNESCO Dünya Mirası Listesi'nde.",
-              gorulecekYerler: [
-                "Old Faithful - Ünlü gayzer",
-                "Grand Prismatic Spring - Renkli sıcak su kaynağı",
-                "Yellowstone Lake - Büyük göl",
-                "Grand Canyon of Yellowstone - Kanyon",
-                "Mammoth Hot Springs - Sıcak su terasları",
-                "Lamar Valley - Vahşi yaşam vadisi",
-                "Norris Geyser Basin - Gayzer havzası",
-                "Hayden Valley - Bizon vadisi",
-              ],
-              etkinlikler: [
-                "Yellowstone Wildlife Festival",
-                "Yellowstone Photography Workshop",
-                "Yellowstone Hiking Festival",
-                "Yellowstone Camping Festival",
-                "Yellowstone Nature Festival",
-              ],
-              restoranlar: [
-                "Old Faithful Inn Dining Room - Tarihi restoran",
-                "Lake Yellowstone Hotel - Göl manzarası",
-                "Mammoth Hot Springs Hotel - Geleneksel",
-                "Canyon Lodge - Modern",
-                "Grant Village - Yerel",
-              ],
-            },
-            {
-              id: 2,
-              ad: "Banff National Park",
-              doga: "Milli Park",
-              icon: "🏔️",
-              kisaAciklama:
-                "Kanada'nın Rocky Dağları'ndaki cennet. Turkuaz göller, buzullar ve dağ manzaraları ile dünyanın en güzel doğa parklarından biri.",
-              tarih:
-                "1885 yılında Kanada'nın ilk milli parkı olarak kurulan Banff, UNESCO Dünya Mirası Listesi'nde. Rocky Dağları'nın kalbinde yer alır.",
-              gorulecekYerler: [
-                "Lake Louise - Turkuaz göl",
-                "Moraine Lake - On göl vadisi",
-                "Banff Town - Ana şehir",
-                "Johnston Canyon - Kanyon",
-                "Columbia Icefield - Buzul",
-                "Sulphur Mountain - Dağ",
-                "Bow Valley - Vadi",
-                "Vermilion Lakes - Göl sistemi",
-              ],
-              etkinlikler: [
-                "Banff Mountain Film Festival",
-                "Banff Centre Arts Festival",
-                "Banff Hiking Festival",
-                "Banff Wildlife Festival",
-                "Banff Photography Festival",
-              ],
-              restoranlar: [
-                "The Bison Restaurant - Yerel mutfak",
-                "Eden - Lüks restoran",
-                "Park Distillery - Distillery restoranı",
-                "The Grizzly House - Geleneksel",
-                "Saltlik - Modern",
-              ],
-            },
-            {
-              id: 3,
-              ad: "Patagonia",
-              doga: "Vahşi Doğa",
-              icon: "🗻",
-              kisaAciklama:
-                "Güney Amerika'nın vahşi kalbi. Torres del Paine, Fitz Roy ve muhteşem buzullar ile dünyanın en uzak doğa cenneti.",
-              tarih:
-                "1520 yılında Ferdinand Magellan tarafından keşfedilen Patagonia, Şili ve Arjantin arasında uzanır. Dünyanın en vahşi doğa bölgelerinden biri.",
-              gorulecekYerler: [
-                "Torres del Paine - Dağ kulesi",
-                "Mount Fitz Roy - Granit dağ",
-                "Perito Moreno Glacier - Buzul",
-                "El Chaltén - Dağcılık merkezi",
-                "Ushuaia - Dünyanın sonu",
-                "Punta Arenas - Tarihi şehir",
-                "Los Glaciares - Buzul parkı",
-                "Tierra del Fuego - Ateş toprakları",
-              ],
-              etkinlikler: [
-                "Patagonia International Marathon",
-                "Patagonia Film Festival",
-                "Patagonia Photography Festival",
-                "Patagonia Hiking Festival",
-                "Patagonia Wildlife Festival",
-              ],
-              restoranlar: [
-                "La Marmita - Yerel mutfak",
-                "Kau - Modern",
-                "La Tapera - Geleneksel",
-                "Parrilla Don Eloy - Et restoranı",
-                "Café Tante Sara - Kafe",
-              ],
-            },
-            {
-              id: 4,
-              ad: "Swiss Alps",
-              doga: "Alp Dağları",
-              icon: "⛷️",
-              kisaAciklama:
-                "Avrupa'nın çatısı. Jungfrau, Matterhorn ve muhteşem dağ manzaraları ile dünyanın en güzel dağ destinasyonu.",
-              tarih:
-                "Milyonlarca yıl önce oluşan Alp Dağları, Avrupa'nın en yüksek sıradağları. İsviçre Alpleri dünyanın en güzel dağ manzaralarını sunar.",
-              gorulecekYerler: [
-                "Jungfraujoch - Avrupa'nın çatısı",
-                "Matterhorn - Ünlü dağ",
-                "Zermatt - Kayak merkezi",
-                "Interlaken - Göl şehri",
-                "Lucerne - Tarihi şehir",
-                "Grindelwald - Dağ köyü",
-                "Montreux - Göl kenarı",
-                "St. Moritz - Lüks kayak merkezi",
-              ],
-              etkinlikler: [
-                "Zermatt Unplugged - Müzik festivali",
-                "Montreux Jazz Festival",
-                "Swiss Alpine Marathon",
-                "Interlaken Hiking Festival",
-                "St. Moritz Polo Festival",
-              ],
-              restoranlar: [
-                "Chez Vrony - Dağ restoranı",
-                "Schloss Schauenstein - Michelin yıldızlı",
-                "Restaurant de l'Hôtel de Ville - Lüks",
-                "Café du Jura - Geleneksel",
-                "Le Pont de Brent - Modern",
-              ],
-            },
-            {
-              id: 5,
-              ad: "New Zealand",
-              doga: "Adalar",
-              icon: "🌿",
-              kisaAciklama:
-                "Orta Dünya'nın gerçek yeri. Milford Sound, Tongariro ve muhteşem doğal güzellikler ile dünyanın en güzel ada ülkesi.",
-              tarih:
-                "1642 yılında Abel Tasman tarafından keşfedilen Yeni Zelanda, Maori kültürü ve muhteşem doğası ile tanınıyor. Lord of the Rings filmlerinin çekildiği yer.",
-              gorulecekYerler: [
-                "Milford Sound - Fiyord",
-                "Tongariro National Park - Volkanik park",
-                "Rotorua - Jeotermal bölge",
-                "Queenstown - Macera başkenti",
-                "Auckland - En büyük şehir",
-                "Wellington - Başkent",
-                "Franz Josef Glacier - Buzul",
-                "Lake Tekapo - Göl",
-              ],
-              etkinlikler: [
-                "Queenstown Winter Festival",
-                "Auckland Arts Festival",
-                "Wellington Jazz Festival",
-                "Rotorua Cultural Festival",
-                "New Zealand Music Festival",
-              ],
-              restoranlar: [
-                "The French Cafe - Michelin yıldızlı",
-                "Depot - Modern",
-                "Sidart - Fine dining",
-                "Ortega Fish Shack - Deniz ürünleri",
-                "Ponsonby Road Bistro - Geleneksel",
-              ],
-            },
-            {
-              id: 6,
-              ad: "Iceland",
-              doga: "Ada",
-              icon: "🧊",
-              kisaAciklama:
-                "Ateş ve buzun adası. Gayzerler, şelaleler, buzullar ve kuzey ışıkları ile dünyanın en büyüleyici doğa harikaları.",
-              tarih:
-                "874 yılında Vikingler tarafından yerleşilen İzlanda, Avrupa'nın en genç ada ülkesi. Volkanik aktivite ve buzulların buluştuğu yer.",
-              gorulecekYerler: [
-                "Blue Lagoon - Jeotermal spa",
-                "Golden Circle - Altın halka",
-                "Reykjavik - Başkent",
-                "Vik - Siyah kum plajı",
-                "Jökulsárlón - Buzul gölü",
-                "Gullfoss - Altın şelale",
-                "Geysir - Gayzer",
-                "Thingvellir - Tarihi park",
-              ],
-              etkinlikler: [
-                "Iceland Airwaves - Müzik festivali",
-                "Reykjavik Arts Festival",
-                "Northern Lights Festival",
-                "Iceland Food Festival",
-                "Iceland Photography Festival",
-              ],
-              restoranlar: [
-                "Dill Restaurant - Modern İzlanda",
-                "Matur og Drykkur - Geleneksel",
-                "Fiskmarkaðurinn - Deniz ürünleri",
-                "Grillmarkaðurinn - Et restoranı",
-                "Slippurinn - Yerel",
-              ],
-            },
-            {
-              id: 7,
-              ad: "Norwegian Fjords",
-              doga: "Fiyordlar",
-              icon: "🌊",
-              kisaAciklama:
-                "Norveç'in derin fiyordları. Geiranger, Nærøyfjord ve muhteşem dağ manzaraları ile dünyanın en güzel kıyı şeridi.",
-              tarih:
-                "Buzul çağında oluşan Norveç fiyordları, dünyanın en derin ve en güzel fiyordları. UNESCO Dünya Mirası Listesi'nde.",
-              gorulecekYerler: [
-                "Geirangerfjord - Ünlü fiyord",
-                "Nærøyfjord - Dar fiyord",
-                "Bergen - Tarihi şehir",
-                "Oslo - Başkent",
-                "Trolltunga - Troll dili",
-                "Preikestolen - Vaaz kürsüsü",
-                "Sognefjord - En uzun fiyord",
-                "Hardangerfjord - Elma fiyordu",
-              ],
-              etkinlikler: [
-                "Bergen International Festival",
-                "Oslo Jazz Festival",
-                "Norwegian Wood Festival",
-                "Bergen Food Festival",
-                "Norway Photography Festival",
-              ],
-              restoranlar: [
-                "Maaemo - Michelin yıldızlı",
-                "Kontrast - Modern",
-                "Lysverket - Geleneksel",
-                "Restaurant 1877 - Tarihi",
-                "Bare - Deniz ürünleri",
-              ],
-            },
-            {
-              id: 8,
-              ad: "Amazon Rainforest",
-              doga: "Tropik Orman",
-              icon: "🌴",
-              kisaAciklama:
-                "Dünyanın akciğerleri. Vahşi yaşam, nehirler ve muhteşem biyoçeşitlilik ile dünyanın en büyük tropik ormanı.",
-              tarih:
-                "Milyonlarca yıl önce oluşan Amazon yağmur ormanları, dünyanın en büyük tropik ormanı. Dünya oksijeninin %20'sini üretir.",
-              gorulecekYerler: [
-                "Manaus - Amazon başkenti",
-                "Iquitos - Peru'nun Amazon şehri",
-                "Leticia - Kolombiya'nın Amazon şehri",
-                "Amazon River - Ana nehir",
-                "Pacaya Samiria - Milli rezerv",
-                "Yasuni National Park - Ekvador",
-                "Madidi National Park - Bolivya",
-                "Tumucumaque - Brezilya",
-              ],
-              etkinlikler: [
-                "Amazonas Opera Festival",
-                "Manaus Jazz Festival",
-                "Amazon Cultural Festival",
-                "Amazon Wildlife Festival",
-                "Amazon Photography Festival",
-              ],
-              restoranlar: [
-                "Banzeiro - Amazon mutfağı",
-                "Canto da Peixada - Balık restoranı",
-                "Tacacá da Gisela - Geleneksel",
-                "Restaurante Regional - Yerel",
-                "Café da Manhã - Kahvaltı",
-              ],
-            },
-            {
-              id: 9,
-              ad: "Serengeti",
-              doga: "Safari",
-              icon: "🦁",
-              kisaAciklama:
-                "Afrika'nın vahşi kalbi. Büyük göç, aslanlar ve muhteşem vahşi yaşam ile dünyanın en ünlü safari destinasyonu.",
-              tarih:
-                "Milyonlarca yıldır var olan Serengeti, Afrika'nın en büyük vahşi yaşam ekosistemi. Büyük göç her yıl 2 milyon hayvanı içerir.",
-              gorulecekYerler: [
-                "Serengeti National Park - Ana park",
-                "Ngorongoro Crater - Krater",
-                "Tarangire National Park - Fil parkı",
-                "Lake Manyara - Göl",
-                "Arusha - Safari başkenti",
-                "Zanzibar - Ada",
-                "Mount Kilimanjaro - Dağ",
-                "Selous Game Reserve - Rezerv",
-              ],
-              etkinlikler: [
-                "Serengeti Wildlife Festival",
-                "Tanzania Cultural Festival",
-                "Zanzibar Film Festival",
-                "Kilimanjaro Marathon",
-                "Serengeti Photography Festival",
-              ],
-              restoranlar: [
-                "Serengeti Safari Lodge - Safari restoranı",
-                "Ngorongoro Crater Lodge - Lüks",
-                "Arusha Coffee Lodge - Kahve",
-                "Zanzibar Spice Restaurant - Baharat",
-                "Dar es Salaam Seafood - Deniz ürünleri",
-              ],
-            },
-            {
-              id: 10,
-              ad: "Galapagos Islands",
-              doga: "Ada Grubu",
-              icon: "🐢",
-              kisaAciklama:
-                "Darwin'in evrim laboratuvarı. Dev kaplumbağalar, iguanalar ve benzersiz vahşi yaşam ile dünyanın en özel ada grubu.",
-              tarih:
-                "1835 yılında Charles Darwin tarafından ziyaret edilen Galapagos, evrim teorisinin doğduğu yer. UNESCO Dünya Mirası Listesi'nde.",
-              gorulecekYerler: [
-                "Santa Cruz - Ana ada",
-                "San Cristobal - Darwin adası",
-                "Isabela - En büyük ada",
-                "Floreana - Posta adası",
-                "Española - Albatros adası",
-                "Genovesa - Kuş adası",
-                "Fernandina - Volkanik ada",
-                "Santiago - Lav adası",
-              ],
-              etkinlikler: [
-                "Galapagos Wildlife Festival",
-                "Galapagos Photography Festival",
-                "Galapagos Marine Festival",
-                "Galapagos Conservation Festival",
-                "Galapagos Science Festival",
-              ],
-              restoranlar: [
-                "Angermeyer Waterfront - Deniz manzarası",
-                "Isla Grill - Yerel mutfak",
-                "La Garrapata - Geleneksel",
-                "Muyu Galapagos - Modern",
-                "Café Hernán - Kafe",
-              ],
-            },
-          ];
+          $scope.kampAlanlari = [];
+          $scope.loading = true;
+          $scope.error = null;
 
-          $scope.destinasyonDetayGit = function (destinasyon) {
-            // Destinasyon detay sayfasına yönlendirme
-            localStorage.setItem("seciliSehir", JSON.stringify(destinasyon));
-            window.location.href = "sehir-detay.html";
+          // Kamp ve doğa alanlarını API'den yükle
+          $http
+            .get("seyahat_api.php?kamp=1")
+            .then(function (response) {
+              if (response.data.success) {
+                $scope.kampAlanlari = response.data.seyahatler;
+                console.log(
+                  "Kamp ve doğa alanları yüklendi:",
+                  $scope.kampAlanlari
+                );
+              } else {
+                $scope.error = "Veriler yüklenirken hata oluştu";
+                console.error("API Hatası:", response.data);
+              }
+              $scope.loading = false;
+            })
+            .catch(function (error) {
+              $scope.error = "Bağlantı hatası oluştu";
+              console.error("HTTP Hatası:", error);
+              $scope.loading = false;
+            });
+
+          // Geri tuşu fonksiyonu
+          $scope.geriGit = function () {
+            console.log("Kamp ve doğa sayfasından geri tuşu");
+            window.location.href = "seyahat.html";
+          };
+
+          // TAMAMEN YENİ FONKSİYON - Cache sorununu çözmek için
+          $scope.sehirDetayGit = function (sehir) {
+            console.log("=== YENİ FONKSİYON ÇALIŞIYOR ===");
+            console.log("Seçilen şehir:", sehir);
+
+            // LocalStorage'ı temizle
+            localStorage.removeItem("seciliSehir");
+
+            // Yeni şehir bilgisini kaydet
+            localStorage.setItem("seciliSehir", JSON.stringify(sehir));
+
+            // URL parametresi ile sehir-detay.html'e yönlendir
+            var sehirAdi = sehir.ad.toLowerCase().replace(/\s+/g, "-");
+            console.log(
+              "sehir-detay.html?sehir=" +
+                sehirAdi +
+                " sayfasına yönlendiriliyor..."
+            );
+            window.location.replace("sehir-detay.html?sehir=" + sehirAdi);
           };
         });
     </script>

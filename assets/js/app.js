@@ -1,3 +1,132 @@
+// ===== GLOBAL FADE FUNCTIONS =====
+// Tüm sayfalarda kullanılabilir header fade fonksiyonları
+window.headerFade = function () {
+  console.log("Global headerFade çağrıldı!");
+
+  // Sadece belirli elementleri saydamlaştır, kategorileri değil
+  var elementsToFade = document.querySelectorAll(
+    ".main-content, footer, #scrollTopBtn, .kitap-container"
+  );
+
+  elementsToFade.forEach(function (element) {
+    if (element) {
+      element.style.opacity = "0.3";
+      element.style.transition = "opacity 0.3s ease";
+    }
+  });
+
+  // Header'ı da saydamlaştır ama kategorileri koru
+  var header = document.querySelector(".site-header");
+  if (header) {
+    header.style.opacity = "0.3";
+    header.style.transition = "opacity 0.3s ease";
+  }
+
+  // Kategoriler menüsünü kesinlikle opak tut
+  var categoryElements = document.querySelectorAll(
+    ".category-menu, .category-text, .dropdown-menu, .dropdown-item, .submenu, .submenu-item, .dropdown-item-with-submenu"
+  );
+  categoryElements.forEach(function (element) {
+    if (element) {
+      element.style.opacity = "1";
+      element.style.zIndex = "999999";
+      element.style.pointerEvents = "auto";
+    }
+  });
+};
+
+window.headerNormal = function () {
+  console.log("Global headerNormal çağrıldı!");
+
+  // Tüm elementleri normale döndür
+  var elementsToFade = document.querySelectorAll(
+    ".main-content, footer, #scrollTopBtn, .kitap-container"
+  );
+
+  elementsToFade.forEach(function (element) {
+    if (element) {
+      element.style.opacity = "1";
+      element.style.transition = "opacity 0.3s ease";
+    }
+  });
+
+  // Header'ı da normale döndür
+  var header = document.querySelector(".site-header");
+  if (header) {
+    header.style.opacity = "1";
+    header.style.transition = "opacity 0.3s ease";
+  }
+
+  // Kategoriler menüsünü normale döndür
+  var categoryElements = document.querySelectorAll(
+    ".category-menu, .category-text, .dropdown-menu, .dropdown-item, .submenu, .submenu-item, .dropdown-item-with-submenu"
+  );
+  categoryElements.forEach(function (element) {
+    if (element) {
+      element.style.opacity = "1";
+      element.style.zIndex = "auto";
+      element.style.pointerEvents = "auto";
+    }
+  });
+};
+
+// ===== KATEGORİLER İÇİN ÖZEL FONKSİYONLAR =====
+window.categoryHover = function () {
+  console.log("Kategori hover başladı!");
+
+  // Sadece sayfa içeriğini saydamlaştır, header'ı değil
+  var elementsToFade = document.querySelectorAll(
+    ".main-content, footer, #scrollTopBtn, .kitap-container"
+  );
+
+  elementsToFade.forEach(function (element) {
+    if (element) {
+      element.style.opacity = "0.3";
+      element.style.transition = "opacity 0.2s ease";
+    }
+  });
+
+  // Kategoriler menüsünü kesinlikle opak tut
+  var categoryElements = document.querySelectorAll(
+    ".category-menu, .category-text, .dropdown-menu, .dropdown-item, .submenu, .submenu-item, .dropdown-item-with-submenu"
+  );
+  categoryElements.forEach(function (element) {
+    if (element) {
+      element.style.opacity = "1";
+      element.style.zIndex = "999999";
+      element.style.pointerEvents = "auto";
+    }
+  });
+};
+
+window.categoryLeave = function () {
+  console.log("Kategori hover bitti!");
+
+  // Tüm elementleri normale döndür
+  var elementsToFade = document.querySelectorAll(
+    ".main-content, footer, #scrollTopBtn, .kitap-container"
+  );
+
+  elementsToFade.forEach(function (element) {
+    if (element) {
+      element.style.opacity = "1";
+      element.style.transition = "opacity 0.2s ease";
+    }
+  });
+
+  // Kategoriler menüsünü normale döndür
+  var categoryElements = document.querySelectorAll(
+    ".category-menu, .category-text, .dropdown-menu, .dropdown-item, .submenu, .submenu-item, .dropdown-item-with-submenu"
+  );
+  categoryElements.forEach(function (element) {
+    if (element) {
+      element.style.opacity = "1";
+      element.style.zIndex = "auto";
+      element.style.pointerEvents = "auto";
+    }
+  });
+};
+
 // ===== ANGULAR APP MODULE =====
 angular
   .module("GirisApp", [])
@@ -153,7 +282,7 @@ angular
   })
 
   // ===== LOGIN CONTROLLER =====
-  .controller("GirisController", function ($scope, $http) {
+  .controller("GirisController", function ($scope, $http, $timeout) {
     $scope.formData = {
       username: "",
       password: "",
@@ -167,6 +296,9 @@ angular
     };
     $scope.girisKontrol();
     $scope.girisYap = function () {
+      // Önceki hata mesajını temizle
+      $scope.errorMessage = null;
+
       console.log("🔐 Giriş yapılıyor...");
       console.log("📤 Gönderilen veri:", {
         username: $scope.formData.username,
@@ -202,7 +334,9 @@ angular
             }
           } else {
             console.log("❌ Giriş başarısız:", response.data.message);
-            alert("Giriş başarısız: " + response.data.message);
+            $timeout(function () {
+              $scope.errorMessage = "Hatalı kullanıcı adı ya da şifre";
+            });
           }
         })
         .catch(function (error) {
@@ -214,11 +348,24 @@ angular
             config: error.config,
           });
 
-          if (error.data && error.data.message) {
-            alert("Bir hata oluştu: " + error.data.message);
-          } else {
-            alert("Sunucu bağlantı hatası! Lütfen tekrar deneyin.");
-          }
+          // Detaylı hata mesajları
+          $timeout(function () {
+            if (error.status === 0) {
+              $scope.errorMessage =
+                "Sunucuya bağlanılamıyor. XAMPP/WAMP çalışıyor mu?";
+            } else if (error.status === 404) {
+              $scope.errorMessage =
+                "API dosyası bulunamadı. api.php dosyası mevcut mu?";
+            } else if (error.status === 500) {
+              $scope.errorMessage =
+                "Sunucu hatası. Veritabanı bağlantısını kontrol edin.";
+            } else if (error.data && error.data.message) {
+              $scope.errorMessage = "Bir hata oluştu: " + error.data.message;
+            } else {
+              $scope.errorMessage =
+                "Sunucu bağlantı hatası! Lütfen tekrar deneyin.";
+            }
+          });
         });
     };
   })

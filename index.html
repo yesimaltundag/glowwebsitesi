@@ -88,15 +88,21 @@
         text-decoration: underline;
       }
 
-      /* Hata Mesajı Stilleri */
+      /* Hata Mesajı Stilleri - Sağ Üst Köşe */
       .error-message {
+        position: fixed;
+        top: 20px;
+        right: 20px;
         background: linear-gradient(135deg, #ffebee, #ffcdd2);
         border: 2px solid #f44336;
         border-radius: 8px;
         padding: 12px 16px;
-        margin-bottom: 20px;
-        box-shadow: 0 2px 8px rgba(244, 67, 54, 0.2);
-        animation: slideInDown 0.3s ease-out;
+        box-shadow: 0 4px 12px rgba(244, 67, 54, 0.3);
+        animation: slideInRight 0.3s ease-out;
+        z-index: 999999;
+        max-width: 300px;
+        min-width: 250px;
+        display: block !important;
       }
 
       .error-content {
@@ -112,19 +118,20 @@
 
       .error-text {
         color: #d32f2f;
-        font-weight: 500;
+        font-weight: 600;
         font-size: 14px;
         line-height: 1.4;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
       }
 
-      @keyframes slideInDown {
+      @keyframes slideInRight {
         from {
           opacity: 0;
-          transform: translateY(-10px);
+          transform: translateX(100%);
         }
         to {
           opacity: 1;
-          transform: translateY(0);
+          transform: translateX(0);
         }
       }
 
@@ -135,8 +142,12 @@
         }
 
         .error-message {
+          top: 10px;
+          right: 10px;
+          left: 10px;
+          max-width: none;
+          min-width: auto;
           padding: 10px 12px;
-          margin-bottom: 16px;
         }
 
         .error-text {
@@ -153,14 +164,6 @@
     <main class="main-content">
       <div class="login-container" ng-controller="GirisController">
         <h2>Giriş Yap</h2>
-
-        <!-- Hata Mesajı -->
-        <div class="error-message" ng-if="errorMessage" ng-show="errorMessage">
-          <div class="error-content">
-            <span class="error-icon">⚠️</span>
-            <span class="error-text">{{errorMessage}}</span>
-          </div>
-        </div>
 
         <form ng-submit="girisYap()">
           <div class="form-group">
@@ -181,6 +184,7 @@
           </div>
           <button type="submit" class="login-btn">Giriş Yap</button>
         </form>
+
         <div class="register-link">
           Hesabınız yok mu? <a href="kayit.html">Kayıt Ol</a>
         </div>
@@ -194,5 +198,17 @@
     <button id="scrollTopBtn" title="Yukarı Çık" ng-click="scrollToTop()">
       ↑
     </button>
+
+    <!-- Hata Mesajı - Global Scope -->
+    <div
+      class="error-message"
+      ng-if="$root.errorMessage"
+      ng-show="$root.errorMessage"
+    >
+      <div class="error-content">
+        <span class="error-icon">⚠️</span>
+        <span class="error-text">{{$root.errorMessage}}</span>
+      </div>
+    </div>
   </body>
 </html>

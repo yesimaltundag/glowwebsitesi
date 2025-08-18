@@ -508,11 +508,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_GET["yorum"])) {
         exit;
     }
     
-    if (strlen($yorum) < 10) {
-        http_response_code(400);
-        echo json_encode(["success" => false, "message" => "Yorum en az 10 karakter olmalıdır"]);
-        exit;
-    }
+
     
     // Spoiler sütunu varsa dinamik şekilde ekle
     $spoilerKolonuVar = false;
@@ -565,6 +561,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_GET["iletisim"])) {
     if (!isset($girdi["email"]) || empty($girdi["email"])) {
         http_response_code(400);
         echo json_encode(["success" => false, "message" => "E-posta alanı boş bırakılamaz."]);
+        exit;
+    }
+
+    // E-posta formatı kontrolü
+    if (!filter_var($girdi["email"], FILTER_VALIDATE_EMAIL)) {
+        http_response_code(400);
+        echo json_encode(["success" => false, "message" => "Geçerli bir e-posta adresi giriniz."]);
         exit;
     }
 
@@ -847,12 +850,13 @@ if ($_SERVER["REQUEST_METHOD"] === "PUT" && !isset($_GET["films"])) {
     $e_posta = isset($girdi["e_posta"]) ? $baglanti->real_escape_string($girdi["e_posta"]) : "";
     $rol = isset($girdi["rol"]) ? $baglanti->real_escape_string($girdi["rol"]) : "kullanici";
 
-    if ($rol === "admin") {
+    // Admin rolü kontrolü - sadece mevcut admin'i kullanıcı yapmaya çalışırken kontrol et
+    if ($rol === "kullanici") {
         $kontrol = $baglanti->query("SELECT COUNT(*) as sayi FROM kisiler WHERE rol = 'admin' AND id != $id");
         $veri = $kontrol->fetch_assoc();
-        if ($veri["sayi"] >= 1) {
+        if ($veri["sayi"] == 0) {
             http_response_code(403);
-            echo json_encode(["success" => false, "message" => "Zaten başka bir yönetici mevcut. Bu kullanıcı yönetici olarak güncellenemez."]);
+            echo json_encode(["success" => false, "message" => "Son admin kullanıcısını kaldıramazsınız. En az bir admin olmalıdır."]);
             exit;
         }
     }

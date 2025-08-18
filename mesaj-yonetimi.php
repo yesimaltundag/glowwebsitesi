@@ -328,7 +328,7 @@
 
       .delete-btn:hover {
         background: linear-gradient(135deg, #f44336, #ffebee);
-        transform: scale(1.05);
+        transform: scale(1.02);
       }
 
       .action-btn-group {

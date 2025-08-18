@@ -147,7 +147,8 @@
       }
 
       .form-group {
-        margin-bottom: 20px;
+        margin-bottom: 35px;
+        position: relative;
       }
 
       .form-group label {
@@ -178,9 +179,164 @@
         box-shadow: 0 0 0 3px rgba(180, 138, 120, 0.1);
       }
 
+      .form-group input:invalid:not(:placeholder-shown),
+      .form-group textarea:invalid:not(:placeholder-shown) {
+        border-color: #dc3545;
+        box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1);
+      }
+
+      /* Sadece e-posta alanı için geçerli durum */
+      .form-group input[type="email"]:valid:not(:placeholder-shown) {
+        border-color: #28a745;
+        box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.1);
+      }
+
+      .error-field {
+        border-color: #dc3545 !important;
+        box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1) !important;
+      }
+
+      .error-message {
+        color: #dc3545;
+        font-size: 14px;
+        margin-top: 5px;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        z-index: 10;
+        background: rgba(255, 255, 255, 0.95);
+        padding: 8px 12px;
+        border-radius: 6px;
+        box-shadow: 0 2px 8px rgba(220, 53, 69, 0.2);
+        backdrop-filter: blur(5px);
+        border: 1px solid rgba(220, 53, 69, 0.3);
+      }
+
+      .error-message::before {
+        content: "⚠️";
+        margin-right: 5px;
+        font-size: 12px;
+      }
+
+      /* Toast Notification Stilleri */
+      .toast-container {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 10000;
+        pointer-events: none;
+      }
+
+      .toast {
+        background: linear-gradient(135deg, #d4edda, #c3e6cb);
+        border: 2px solid #28a745;
+        border-radius: 12px;
+        padding: 15px 20px;
+        margin-bottom: 10px;
+        box-shadow: 0 8px 32px rgba(40, 167, 69, 0.3);
+        backdrop-filter: blur(10px);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        min-width: 300px;
+        max-width: 400px;
+        animation: slideInRight 0.3s ease-out;
+        pointer-events: auto;
+        position: relative;
+      }
+
+      .toast.error {
+        background: linear-gradient(135deg, #f8d7da, #f5c6cb);
+        border-color: #dc3545;
+        box-shadow: 0 8px 32px rgba(220, 53, 69, 0.3);
+      }
+
+      .toast.success {
+        background: linear-gradient(135deg, #d4edda, #c3e6cb);
+        border-color: #28a745;
+        box-shadow: 0 8px 32px rgba(40, 167, 69, 0.3);
+      }
+
+      .toast-icon {
+        font-size: 24px;
+        flex-shrink: 0;
+      }
+
+      .toast-content {
+        flex: 1;
+        color: #155724;
+        font-size: 14px;
+        line-height: 1.4;
+        font-weight: 500;
+      }
+
+      .toast.error .toast-content {
+        color: #721c24;
+      }
+
+      .toast-close {
+        background: none;
+        border: none;
+        color: #155724;
+        font-size: 20px;
+        cursor: pointer;
+        padding: 0;
+        width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        transition: all 0.2s ease;
+        flex-shrink: 0;
+      }
+
+      .toast.error .toast-close {
+        color: #721c24;
+      }
+
+      .toast-close:hover {
+        background: rgba(21, 87, 36, 0.1);
+        transform: scale(1.1);
+      }
+
+      .toast.error .toast-close:hover {
+        background: rgba(114, 28, 36, 0.1);
+      }
+
+      @keyframes slideInRight {
+        from {
+          opacity: 0;
+          transform: translateX(100%);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+
+      @keyframes slideOutRight {
+        from {
+          opacity: 1;
+          transform: translateX(0);
+        }
+        to {
+          opacity: 0;
+          transform: translateX(100%);
+        }
+      }
+
       .form-group textarea {
         resize: vertical;
         min-height: 120px;
+      }
+
+      /* Textarea için özel margin ayarı */
+      .form-group:has(textarea) {
+        margin-bottom: 40px;
       }
 
       .character-count {
@@ -429,8 +585,15 @@
                     id="username"
                     ng-model="mesajForm.username"
                     placeholder="Adınız ve soyadınız"
+                    ng-class="{'error-field': formErrors.username}"
                     required
                   />
+                  <div
+                    ng-if="formErrors.username && formSubmitted"
+                    class="error-message"
+                  >
+                    Ad soyad alanı zorunludur
+                  </div>
                 </div>
                 <div class="form-group">
                   <label for="email">E-posta</label>
@@ -439,8 +602,17 @@
                     id="email"
                     ng-model="mesajForm.email"
                     placeholder="E-posta adresiniz"
+                    pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+                    title="Geçerli bir e-posta adresi giriniz (örn: ornek@domain.com)"
+                    ng-class="{'error-field': formErrors.email}"
                     required
                   />
+                  <div
+                    ng-if="formErrors.email && formSubmitted"
+                    class="error-message"
+                  >
+                    Geçerli bir e-posta adresi giriniz
+                  </div>
                 </div>
               </div>
               <div class="form-group">
@@ -450,8 +622,15 @@
                   id="konu"
                   ng-model="mesajForm.konu"
                   placeholder="Mesajınızın konusu"
+                  ng-class="{'error-field': formErrors.konu}"
                   required
                 />
+                <div
+                  ng-if="formErrors.konu && formSubmitted"
+                  class="error-message"
+                >
+                  Konu alanı zorunludur
+                </div>
               </div>
               <div class="form-group">
                 <label for="message">Mesajınız</label>
@@ -461,10 +640,17 @@
                   placeholder="Mesajınızı yazın (en az 10 karakter)"
                   rows="5"
                   maxlength="300"
+                  ng-class="{'error-field': formErrors.message}"
                   required
                 ></textarea>
                 <div class="character-count">
                   {{ mesajForm.message ? mesajForm.message.length : 0 }}/300
+                </div>
+                <div
+                  ng-if="formErrors.message && formSubmitted"
+                  class="error-message"
+                >
+                  Mesaj en az 10 karakter olmalıdır
                 </div>
               </div>
               <button
@@ -481,6 +667,9 @@
         </div>
       </div>
     </main>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
 
     <!-- Footer Component -->
     <ng-include src="'components/footer.html'"></ng-include>
@@ -505,29 +694,81 @@
             message: "",
           };
 
+          // E-posta validasyon fonksiyonu
+          $scope.validateEmail = function (email) {
+            var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+          };
+
+          // Form validasyon durumu
+          $scope.formErrors = {
+            username: false,
+            email: false,
+            konu: false,
+            message: false,
+          };
+
+          // Form gönderilme durumu
+          $scope.formSubmitted = false;
+
           $scope.mesajGonder = function () {
-            if (!$scope.mesajForm.username) {
-              alert("Lütfen ad soyad bilginizi girin!");
-              return;
+            // Form gönderildi olarak işaretle
+            $scope.formSubmitted = true;
+
+            // Form validasyon durumlarını sıfırla
+            $scope.formErrors = {
+              username: false,
+              email: false,
+              konu: false,
+              message: false,
+            };
+
+            var hasError = false;
+
+            // Ad soyad kontrolü
+            if (
+              !$scope.mesajForm.username ||
+              $scope.mesajForm.username.trim() === ""
+            ) {
+              $scope.formErrors.username = true;
+              hasError = true;
             }
 
-            if (!$scope.mesajForm.email) {
-              alert("Lütfen e-posta adresinizi girin!");
-              return;
+            // E-posta kontrolü
+            if (
+              !$scope.mesajForm.email ||
+              $scope.mesajForm.email.trim() === ""
+            ) {
+              $scope.formErrors.email = true;
+              hasError = true;
+            } else if (!$scope.validateEmail($scope.mesajForm.email)) {
+              $scope.formErrors.email = true;
+              hasError = true;
             }
 
-            if (!$scope.mesajForm.konu) {
-              alert("Lütfen mesaj konusunu girin!");
-              return;
+            // Konu kontrolü
+            if (!$scope.mesajForm.konu || $scope.mesajForm.konu.trim() === "") {
+              $scope.formErrors.konu = true;
+              hasError = true;
             }
 
-            if (!$scope.mesajForm.message) {
-              alert("Lütfen mesajınızı yazın!");
-              return;
+            // Mesaj kontrolü
+            if (
+              !$scope.mesajForm.message ||
+              $scope.mesajForm.message.trim() === ""
+            ) {
+              $scope.formErrors.message = true;
+              hasError = true;
+            } else if ($scope.mesajForm.message.trim().length < 10) {
+              $scope.formErrors.message = true;
+              hasError = true;
             }
 
-            if ($scope.mesajForm.message.length < 10) {
-              alert("Mesaj en az 10 karakter olmalıdır!");
+            if (hasError) {
+              showToast(
+                "Lütfen tüm alanları doğru şekilde doldurunuz!",
+                "error"
+              );
               return;
             }
 
@@ -544,7 +785,7 @@
               .then(function (response) {
                 console.log("API yanıtı:", response);
                 if (response.data && response.data.success) {
-                  alert("Mesajınız başarıyla gönderildi!");
+                  showToast("Mesajınız başarıyla gönderildi!", "success");
                   // Formu tamamen temizle
                   $scope.mesajForm = {
                     username: "",
@@ -552,12 +793,21 @@
                     konu: "",
                     message: "",
                   };
+                  // Hata durumlarını temizle
+                  $scope.formErrors = {
+                    username: false,
+                    email: false,
+                    konu: false,
+                    message: false,
+                  };
+                  // Form gönderilme durumunu sıfırla
+                  $scope.formSubmitted = false;
                 } else {
                   var errorMsg = "Mesaj gönderilemedi";
                   if (response.data && response.data.message) {
                     errorMsg += ": " + response.data.message;
                   }
-                  alert(errorMsg);
+                  showToast(errorMsg, "error");
                 }
               })
               .catch(function (error) {
@@ -570,13 +820,45 @@
                 } else if (error.data && error.data.message) {
                   errorMessage += ": " + error.data.message;
                 }
-                alert(errorMessage);
+                showToast(errorMessage, "error");
               });
           };
 
           $scope.scrollToTop = function () {
             window.scrollTo({ top: 0, behavior: "smooth" });
           };
+
+          // Toast notification fonksiyonu
+          function showToast(message, type = "success") {
+            var container = document.getElementById("toastContainer");
+            if (!container) return;
+
+            var toast = document.createElement("div");
+            toast.className = "toast " + type;
+
+            var icon = type === "success" ? "✅" : "❌";
+            var content = message;
+
+            toast.innerHTML = `
+              <div class="toast-icon">${icon}</div>
+              <div class="toast-content">${content}</div>
+              <button class="toast-close" onclick="this.parentElement.remove()">×</button>
+            `;
+
+            container.appendChild(toast);
+
+            // 4 saniye sonra otomatik kaldır
+            setTimeout(function () {
+              if (toast.parentNode) {
+                toast.style.animation = "slideOutRight 0.3s ease-out";
+                setTimeout(function () {
+                  if (toast.parentNode) {
+                    toast.remove();
+                  }
+                }, 300);
+              }
+            }, 4000);
+          }
         });
     </script>
   </body>

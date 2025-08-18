@@ -9,14 +9,16 @@
     <script src="assets/js/app.js"></script>
     <style>
       .spor-container {
-        max-width: 900px;
-        margin: 40px auto;
-        padding: 32px;
+        max-width: 100%;
+        margin: 0;
+        padding: 60px 60px;
         background: rgba(255, 255, 255, 0.92);
-        border-radius: 18px;
-        box-shadow: 0 8px 32px rgba(124, 92, 74, 0.1);
+        border-radius: 0;
+        box-shadow: none;
         backdrop-filter: blur(10px);
         position: relative;
+        width: 100%;
+        min-height: 100vh;
       }
       .spor-title-row {
         display: flex;
@@ -34,27 +36,58 @@
       }
       .kategori-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-        gap: 18px;
-        margin-top: 36px;
-        margin-bottom: 10px;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 24px;
+        margin-top: 32px;
+        margin-bottom: 20px;
       }
       .kategori-card {
         background: linear-gradient(135deg, #f8e0e1 60%, #e2d9d0 100%);
-        border-radius: 14px;
-        box-shadow: 0 4px 16px rgba(180, 138, 120, 0.08);
-        padding: 24px 0;
+        border-radius: 16px;
+        box-shadow: 0 8px 24px rgba(180, 138, 120, 0.15);
+        padding: 45px 25px;
         text-align: center;
         color: #7c5c4a;
-        font-size: 1.08rem;
+        font-size: 1.2rem;
         font-weight: 600;
         letter-spacing: 0.5px;
-        transition: box-shadow 0.3s, transform 0.3s;
+        transition: all 0.4s ease;
         cursor: pointer;
+        min-height: 160px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+        border: 2px solid transparent;
+        margin-top: 35px;
+      }
+
+      .kategori-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.1),
+          rgba(255, 255, 255, 0.05)
+        );
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        border-radius: 18px;
+      }
+
+      .kategori-card:hover::before {
+        opacity: 1;
       }
       .kategori-card:hover {
-        box-shadow: 0 8px 32px rgba(180, 138, 120, 0.16);
-        transform: translateY(-3px) scale(1.04);
+        box-shadow: 0 15px 40px rgba(180, 138, 120, 0.25);
+        transform: translateY(-8px) scale(1.02);
+        border-color: rgba(180, 138, 120, 0.3);
       }
       .geri-btn {
         background: linear-gradient(135deg, #e2d9d0, #b48a78);

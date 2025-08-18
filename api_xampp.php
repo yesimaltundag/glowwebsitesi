@@ -218,11 +218,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_GET["yorum"])) {
         exit;
     }
     
-    if (strlen($yorum) < 10) {
-        http_response_code(400);
-        echo json_encode(["success" => false, "message" => "Yorum en az 10 karakter olmalıdır"]);
-        exit;
-    }
+
     
     $sql = "INSERT INTO yorumlar (kullanici_id, kullanici_adi, tur, icerik_id, icerik_adi, yorum, puan, created_at) 
             VALUES ($kullanici_id, '$kullanici_adi', '$tur', $icerik_id, '$icerik_adi', '$yorum', $puan, NOW())";
@@ -263,6 +259,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_GET["iletisim"])) {
     if (!isset($girdi["email"]) || empty($girdi["email"])) {
         http_response_code(400);
         echo json_encode(["success" => false, "message" => "E-posta alanı boş bırakılamaz."]);
+        exit;
+    }
+
+    // E-posta formatı kontrolü
+    if (!filter_var($girdi["email"], FILTER_VALIDATE_EMAIL)) {
+        http_response_code(400);
+        echo json_encode(["success" => false, "message" => "Geçerli bir e-posta adresi giriniz."]);
         exit;
     }
 
@@ -323,7 +326,28 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_GET["iletisim"])) {
                     VALUES ('$username', '$email', '$message', 'İletişim Formu')";
     
     if ($baglanti->query($insert_sql)) {
-        echo json_encode(["success" => true, "message" => "Mesaj başarıyla gönderildi."]);
+        // E-posta gönderme işlemi
+        $email_sent = false;
+        try {
+            // E-posta konfigürasyon dosyasını dahil et
+            require_once 'email_config.php';
+            
+            // E-posta gönderme fonksiyonunu çağır
+            $email_sent = sendContactEmail($username, $email, 'İletişim Formu', $message);
+            
+        } catch (Exception $e) {
+            error_log("❌ E-posta gönderme hatası: " . $e->getMessage());
+            // E-posta gönderilemese bile veritabanına kayıt başarılı olduğu için devam et
+        }
+
+        $response_message = "Mesaj başarıyla gönderildi.";
+        if ($email_sent) {
+            $response_message .= " E-posta bildirimi de gönderildi.";
+        } else {
+            $response_message .= " (E-posta bildirimi gönderilemedi)";
+        }
+        
+        echo json_encode(["success" => true, "message" => $response_message]);
     } else {
         http_response_code(500);
         $error_message = "Mesaj gönderilemedi";

@@ -282,93 +282,120 @@ angular
   })
 
   // ===== LOGIN CONTROLLER =====
-  .controller("GirisController", function ($scope, $http, $timeout) {
-    $scope.formData = {
-      username: "",
-      password: "",
-    };
-    $scope.girisKontrol = function () {
-      var girisYapan = localStorage.getItem("girisYapan");
-      if (girisYapan != null) {
-        window.location.href = "anasayfa.html";
-      }
-      console.log(girisYapan);
-    };
-    $scope.girisKontrol();
-    $scope.girisYap = function () {
-      // Önceki hata mesajını temizle
-      $scope.errorMessage = null;
+  .controller(
+    "GirisController",
+    function ($scope, $http, $timeout, $rootScope) {
+      $scope.formData = {
+        username: "",
+        password: "",
+      };
+      $scope.girisKontrol = function () {
+        var girisYapan = localStorage.getItem("girisYapan");
+        if (girisYapan != null) {
+          window.location.href = "anasayfa.html";
+        }
+        console.log(girisYapan);
+      };
+      $scope.girisKontrol();
 
-      console.log("🔐 Giriş yapılıyor...");
-      console.log("📤 Gönderilen veri:", {
-        username: $scope.formData.username,
-        sifre: $scope.formData.password,
-      });
+      $scope.girisYap = function () {
+        // Önceki hata mesajını temizle
+        $scope.errorMessage = null;
+        $rootScope.errorMessage = null;
 
-      $http
-        .post("api.php?login=1", {
+        console.log("🔐 Giriş yapılıyor...");
+        console.log("📤 Gönderilen veri:", {
           username: $scope.formData.username,
           sifre: $scope.formData.password,
-        })
-        .then(function (response) {
-          console.log("📥 API yanıtı:", response);
-          console.log("📊 Response data:", response.data);
-
-          if (response.data.success) {
-            console.log("✅ Giriş başarılı!");
-            localStorage.setItem(
-              "girisYapan",
-              JSON.stringify(response.data.kullanici)
-            );
-            console.log("👤 Kullanıcı bilgileri:", response.data.kullanici);
-
-            if (
-              response.data.kullanici.rol === "admin" ||
-              response.data.kullanici.rol === "Yönetici"
-            ) {
-              console.log("👑 Admin olarak yönlendiriliyor...");
-              window.location.href = "liste.html";
-            } else {
-              console.log("👤 Normal kullanıcı olarak yönlendiriliyor...");
-              window.location.href = "anasayfa.html";
-            }
-          } else {
-            console.log("❌ Giriş başarısız:", response.data.message);
-            $timeout(function () {
-              $scope.errorMessage = "Hatalı kullanıcı adı ya da şifre";
-            });
-          }
-        })
-        .catch(function (error) {
-          console.error("❌ Giriş hatası:", error);
-          console.error("🔍 Error details:", {
-            status: error.status,
-            statusText: error.statusText,
-            data: error.data,
-            config: error.config,
-          });
-
-          // Detaylı hata mesajları
-          $timeout(function () {
-            if (error.status === 0) {
-              $scope.errorMessage =
-                "Sunucuya bağlanılamıyor. XAMPP/WAMP çalışıyor mu?";
-            } else if (error.status === 404) {
-              $scope.errorMessage =
-                "API dosyası bulunamadı. api.php dosyası mevcut mu?";
-            } else if (error.status === 500) {
-              $scope.errorMessage =
-                "Sunucu hatası. Veritabanı bağlantısını kontrol edin.";
-            } else if (error.data && error.data.message) {
-              $scope.errorMessage = "Bir hata oluştu: " + error.data.message;
-            } else {
-              $scope.errorMessage =
-                "Sunucu bağlantı hatası! Lütfen tekrar deneyin.";
-            }
-          });
         });
-    };
-  })
+
+        $http
+          .post("api.php?login=1", {
+            username: $scope.formData.username,
+            sifre: $scope.formData.password,
+          })
+          .then(function (response) {
+            console.log("📥 API yanıtı:", response);
+            console.log("📊 Response data:", response.data);
+
+            if (response.data.success) {
+              console.log("✅ Giriş başarılı!");
+              localStorage.setItem(
+                "girisYapan",
+                JSON.stringify(response.data.kullanici)
+              );
+              console.log("👤 Kullanıcı bilgileri:", response.data.kullanici);
+
+              if (
+                response.data.kullanici.rol === "admin" ||
+                response.data.kullanici.rol === "Yönetici"
+              ) {
+                console.log("👑 Admin olarak yönlendiriliyor...");
+                window.location.href = "liste.html";
+              } else {
+                console.log("👤 Normal kullanıcı olarak yönlendiriliyor...");
+                window.location.href = "anasayfa.html";
+              }
+            } else {
+              console.log("❌ Giriş başarısız:", response.data.message);
+              $timeout(function () {
+                $scope.errorMessage = "Hatalı kullanıcı adı ya da şifre";
+                $rootScope.errorMessage = "Hatalı kullanıcı adı ya da şifre";
+                // 5 saniye sonra hata mesajını kaldır
+                $timeout(function () {
+                  $scope.errorMessage = null;
+                  $rootScope.errorMessage = null;
+                }, 5000);
+              });
+            }
+          })
+          .catch(function (error) {
+            console.error("❌ Giriş hatası:", error);
+            console.error("🔍 Error details:", {
+              status: error.status,
+              statusText: error.statusText,
+              data: error.data,
+              config: error.config,
+            });
+
+            // Detaylı hata mesajları
+            $timeout(function () {
+              if (error.status === 0) {
+                $scope.errorMessage =
+                  "Sunucuya bağlanılamıyor. XAMPP/WAMP çalışıyor mu?";
+                $rootScope.errorMessage =
+                  "Sunucuya bağlanılamıyor. XAMPP/WAMP çalışıyor mu?";
+              } else if (error.status === 404) {
+                $scope.errorMessage =
+                  "API dosyası bulunamadı. api.php dosyası mevcut mu?";
+                $rootScope.errorMessage =
+                  "API dosyası bulunamadı. api.php dosyası mevcut mu?";
+              } else if (error.status === 500) {
+                $scope.errorMessage =
+                  "Sunucu hatası. Veritabanı bağlantısını kontrol edin.";
+                $rootScope.errorMessage =
+                  "Sunucu hatası. Veritabanı bağlantısını kontrol edin.";
+              } else if (error.data && error.data.message) {
+                $scope.errorMessage = "Bir hata oluştu: " + error.data.message;
+                $rootScope.errorMessage =
+                  "Bir hata oluştu: " + error.data.message;
+              } else {
+                $scope.errorMessage =
+                  "Sunucu bağlantı hatası! Lütfen tekrar deneyin.";
+                $rootScope.errorMessage =
+                  "Sunucu bağlantı hatası! Lütfen tekrar deneyin.";
+              }
+
+              // 5 saniye sonra hata mesajını kaldır
+              $timeout(function () {
+                $scope.errorMessage = null;
+                $rootScope.errorMessage = null;
+              }, 5000);
+            });
+          });
+      };
+    }
+  )
 
   // ===== REGISTER CONTROLLER =====
   .controller("KayitController", function ($scope, $http) {
@@ -896,17 +923,33 @@ angular
           return;
         }
 
+        // Karakter uyarısını gizle (başlangıçta)
+        var karakterUyari = document.querySelector("#global-karakter-uyari");
+        if (karakterUyari) {
+          karakterUyari.classList.remove("show");
+        }
+
         if (!$scope.yeniYorum.yorum || $scope.yeniYorum.yorum.length < 10) {
-          // Titreme animasyonu ekle
-          console.log("🔍 Tiyatro: Titreme animasyonu tetikleniyor...");
+          // Karakter uyarısını göster ve titreme animasyonu ekle
+          console.log("🔍 Tiyatro: Karakter uyarısı gösteriliyor...");
 
           $timeout(function () {
-            var karakterUyari = document.querySelector(".karakter-uyari");
+            var karakterUyari = document.querySelector(
+              "#global-karakter-uyari"
+            );
             if (karakterUyari) {
               console.log(
-                "✅ Tiyatro: Element bulundu, shake sınıfı ekleniyor..."
+                "✅ Tiyatro: Element bulundu, show ve shake sınıfı ekleniyor..."
               );
-              karakterUyari.classList.add("shake");
+              karakterUyari.classList.add("show", "shake");
+
+              // 3 saniye sonra uyarıyı gizle
+              $timeout(function () {
+                console.log("🔄 Tiyatro: Karakter uyarısı gizleniyor...");
+                karakterUyari.classList.remove("show");
+              }, 3000);
+
+              // Shake animasyonunu kaldır
               $timeout(function () {
                 karakterUyari.classList.remove("shake");
               }, 500);
@@ -945,7 +988,7 @@ angular
           .then(function (response) {
             console.log("📥 API yanıtı:", response);
             if (response.data.success) {
-              alert("Yorum başarıyla eklendi!");
+              showMessage("Yorum başarıyla eklendi!", "success");
               // Formu temizle
               $scope.yeniYorum = {
                 yorum: "",
@@ -959,13 +1002,19 @@ angular
                 location.reload();
               }, 1000);
             } else {
-              alert("Yorum eklenirken hata: " + response.data.message);
+              showMessage(
+                "Yorum eklenirken hata: " + response.data.message,
+                "error"
+              );
             }
           })
           .catch(function (error) {
             console.error("❌ Yorum ekleme hatası:", error);
             console.error("❌ Hata detayı:", error.data);
-            alert("Yorum eklenirken hata oluştu: " + error.statusText);
+            showMessage(
+              "Yorum eklenirken hata oluştu: " + error.statusText,
+              "error"
+            );
           });
       };
 
@@ -1299,17 +1348,33 @@ angular
           return;
         }
 
+        // Karakter uyarısını gizle (başlangıçta)
+        var karakterUyari = document.querySelector("#global-karakter-uyari");
+        if (karakterUyari) {
+          karakterUyari.classList.remove("show");
+        }
+
         if (!$scope.yeniYorum.yorum || $scope.yeniYorum.yorum.length < 10) {
-          // Titreme animasyonu ekle
-          console.log("🔍 Belgesel: Titreme animasyonu tetikleniyor...");
+          // Karakter uyarısını göster ve titreme animasyonu ekle
+          console.log("🔍 Belgesel: Karakter uyarısı gösteriliyor...");
 
           $timeout(function () {
-            var karakterUyari = document.querySelector(".karakter-uyari");
+            var karakterUyari = document.querySelector(
+              "#global-karakter-uyari"
+            );
             if (karakterUyari) {
               console.log(
-                "✅ Belgesel: Element bulundu, shake sınıfı ekleniyor..."
+                "✅ Belgesel: Element bulundu, show ve shake sınıfı ekleniyor..."
               );
-              karakterUyari.classList.add("shake");
+              karakterUyari.classList.add("show", "shake");
+
+              // 3 saniye sonra uyarıyı gizle
+              $timeout(function () {
+                console.log("🔄 Belgesel: Karakter uyarısı gizleniyor...");
+                karakterUyari.classList.remove("show");
+              }, 3000);
+
+              // Shake animasyonunu kaldır
               $timeout(function () {
                 karakterUyari.classList.remove("shake");
               }, 500);
@@ -1340,7 +1405,7 @@ angular
           .post("api.php?yorum=1", yorumData)
           .then(function (response) {
             if (response.data.success) {
-              alert("Yorum başarıyla eklendi!");
+              showMessage("Yorum başarıyla eklendi!", "success");
               // Formu temizle
               $scope.yeniYorum = {
                 yorum: "",
@@ -1350,11 +1415,17 @@ angular
               // Yorumları yeniden yükle
               $scope.yorumlariGetir();
             } else {
-              alert("Yorum eklenirken hata: " + response.data.message);
+              showMessage(
+                "Yorum eklenirken hata: " + response.data.message,
+                "error"
+              );
             }
           })
           .catch(function (error) {
-            alert("Yorum eklenirken hata oluştu: " + error.statusText);
+            showMessage(
+              "Yorum eklenirken hata oluştu: " + error.statusText,
+              "error"
+            );
           });
       };
 
@@ -1509,17 +1580,33 @@ angular
           return;
         }
 
+        // Karakter uyarısını gizle (başlangıçta)
+        var karakterUyari = document.querySelector("#global-karakter-uyari");
+        if (karakterUyari) {
+          karakterUyari.classList.remove("show");
+        }
+
         if (!$scope.yeniYorum.yorum || $scope.yeniYorum.yorum.length < 10) {
-          // Titreme animasyonu ekle
-          console.log("🔍 Anime: Titreme animasyonu tetikleniyor...");
+          // Karakter uyarısını göster ve titreme animasyonu ekle
+          console.log("🔍 Anime: Karakter uyarısı gösteriliyor...");
 
           $timeout(function () {
-            var karakterUyari = document.querySelector(".karakter-uyari");
+            var karakterUyari = document.querySelector(
+              "#global-karakter-uyari"
+            );
             if (karakterUyari) {
               console.log(
-                "✅ Anime: Element bulundu, shake sınıfı ekleniyor..."
+                "✅ Anime: Element bulundu, show ve shake sınıfı ekleniyor..."
               );
-              karakterUyari.classList.add("shake");
+              karakterUyari.classList.add("show", "shake");
+
+              // 3 saniye sonra uyarıyı gizle
+              $timeout(function () {
+                console.log("🔄 Anime: Karakter uyarısı gizleniyor...");
+                karakterUyari.classList.remove("show");
+              }, 3000);
+
+              // Shake animasyonunu kaldır
               $timeout(function () {
                 karakterUyari.classList.remove("shake");
               }, 500);
@@ -1550,7 +1637,7 @@ angular
           .post("api.php?yorum=1", yorumData)
           .then(function (response) {
             if (response.data.success) {
-              alert("Yorum başarıyla eklendi!");
+              showMessage("Yorum başarıyla eklendi!", "success");
               // Formu temizle
               $scope.yeniYorum = {
                 yorum: "",
@@ -1560,11 +1647,17 @@ angular
               // Yorumları yeniden yükle
               $scope.yorumlariGetir();
             } else {
-              alert("Yorum eklenirken hata: " + response.data.message);
+              showMessage(
+                "Yorum eklenirken hata: " + response.data.message,
+                "error"
+              );
             }
           })
           .catch(function (error) {
-            alert("Yorum eklenirken hata oluştu: " + error.statusText);
+            showMessage(
+              "Yorum eklenirken hata oluştu: " + error.statusText,
+              "error"
+            );
           });
       };
 
@@ -1926,6 +2019,12 @@ angular
         return;
       }
 
+      // Karakter uyarısını gizle (başlangıçta)
+      var karakterUyari = document.querySelector("#global-karakter-uyari");
+      if (karakterUyari) {
+        karakterUyari.classList.remove("show");
+      }
+
       // Buton disabled durumunda ise işlemi durdur
       if (
         !$scope.yeniYorum.yorum ||
@@ -1933,26 +2032,33 @@ angular
         !$scope.yeniYorum.puan ||
         $scope.yeniYorum.puan < 1
       ) {
-        // Titreme animasyonu ekle
-        console.log("🔍 Titreme animasyonu tetikleniyor...");
+        // Karakter uyarısını göster ve titreme animasyonu ekle
+        console.log("🔍 Karakter uyarısı gösteriliyor...");
 
         // AngularJS digest cycle'ını bekle
         $timeout(function () {
-          var karakterUyari = document.querySelector(".karakter-uyari");
+          var karakterUyari = document.querySelector("#global-karakter-uyari");
           console.log("🔍 Bulunan element:", karakterUyari);
 
           if (karakterUyari) {
-            console.log("✅ Element bulundu, shake sınıfı ekleniyor...");
-            karakterUyari.classList.add("shake");
+            console.log(
+              "✅ Element bulundu, show ve shake sınıfı ekleniyor..."
+            );
+            karakterUyari.classList.add("show", "shake");
+
+            // 3 saniye sonra uyarıyı gizle
+            $timeout(function () {
+              console.log("🔄 Karakter uyarısı gizleniyor...");
+              karakterUyari.classList.remove("show");
+            }, 3000);
+
+            // Shake animasyonunu kaldır
             $timeout(function () {
               console.log("🔄 Shake sınıfı kaldırılıyor...");
               karakterUyari.classList.remove("shake");
             }, 500);
           } else {
             console.log("❌ Karakter uyarı elementi bulunamadı!");
-            // Alternatif yöntem dene
-            var allElements = document.querySelectorAll(".karakter-uyari");
-            console.log("🔍 Tüm karakter-uyari elementleri:", allElements);
           }
         }, 100);
 
@@ -1982,7 +2088,7 @@ angular
         .then(function (response) {
           console.log("✅ API yanıtı:", response.data); // Debug log
           if (response.data.success) {
-            alert("Yorum başarıyla eklendi!");
+            showMessage("Yorum başarıyla eklendi!", "success");
             // Formu temizle
             $scope.yeniYorum = {
               yorum: "",
@@ -1996,12 +2102,18 @@ angular
             // Yorumları yeniden yükle
             $scope.yorumlariGetir();
           } else {
-            alert("Yorum eklenirken hata: " + response.data.message);
+            showMessage(
+              "Yorum eklenirken hata: " + response.data.message,
+              "error"
+            );
           }
         })
         .catch(function (error) {
           console.error("❌ Yorum ekleme hatası:", error); // Debug log
-          alert("Yorum eklenirken hata oluştu: " + error.statusText);
+          showMessage(
+            "Yorum eklenirken hata oluştu: " + error.statusText,
+            "error"
+          );
         });
     };
 
@@ -2113,6 +2225,12 @@ angular
         return;
       }
 
+      // Karakter uyarısını gizle (başlangıçta)
+      var karakterUyari = document.querySelector("#global-karakter-uyari");
+      if (karakterUyari) {
+        karakterUyari.classList.remove("show");
+      }
+
       // Buton disabled durumunda ise işlemi durdur
       if (
         !$scope.yeniYorum.yorum ||
@@ -2120,25 +2238,40 @@ angular
         !$scope.yeniYorum.puan ||
         $scope.yeniYorum.puan < 1
       ) {
-        // Titreme animasyonu ekle
-        console.log("🔍 Dizi: Titreme animasyonu tetikleniyor...");
+        // Karakter uyarısını göster ve titreme animasyonu ekle
+        console.log("🔍 Dizi: Karakter uyarısı gösteriliyor...");
 
         $timeout(function () {
-          var karakterUyari = document.querySelector(".karakter-uyari");
+          var karakterUyari = document.querySelector("#global-karakter-uyari");
           if (karakterUyari) {
-            console.log("✅ Dizi: Element bulundu, shake sınıfı ekleniyor...");
-            karakterUyari.classList.add("shake");
+            console.log(
+              "✅ Dizi: Element bulundu, show ve shake sınıfı ekleniyor..."
+            );
+            karakterUyari.classList.add("show", "shake");
+
+            // 3 saniye sonra uyarıyı gizle
+            $timeout(function () {
+              console.log("🔄 Dizi: Karakter uyarısı gizleniyor...");
+              karakterUyari.classList.remove("show");
+            }, 3000);
+
+            // Shake animasyonunu kaldır
             $timeout(function () {
               karakterUyari.classList.remove("shake");
             }, 500);
           }
         }, 100);
 
-        if (!$scope.yeniYorum.yorum || $scope.yeniYorum.yorum.length < 10) {
-          alert("Yorum en az 10 karakter olmalıdır!");
-        } else if (!$scope.yeniYorum.puan || $scope.yeniYorum.puan < 1) {
+        if (!$scope.yeniYorum.puan || $scope.yeniYorum.puan < 1) {
           alert("Lütfen bir puan seçin!");
+          return;
         }
+
+        // Karakter sınırı kontrolü için return ekle
+        if (!$scope.yeniYorum.yorum || $scope.yeniYorum.yorum.length < 10) {
+          return;
+        }
+
         return;
       }
 
@@ -2159,7 +2292,7 @@ angular
         .post("api.php?yorum=1", yorumData)
         .then(function (response) {
           if (response.data.success) {
-            alert("Yorum başarıyla eklendi!");
+            showMessage("Yorum başarıyla eklendi!", "success");
             // Formu temizle
             $scope.yeniYorum = {
               yorum: "",
@@ -2169,11 +2302,17 @@ angular
             // Yorumları yeniden yükle
             $scope.yorumlariGetir();
           } else {
-            alert("Yorum eklenirken hata: " + response.data.message);
+            showMessage(
+              "Yorum eklenirken hata: " + response.data.message,
+              "error"
+            );
           }
         })
         .catch(function (error) {
-          alert("Yorum eklenirken hata oluştu: " + error.statusText);
+          showMessage(
+            "Yorum eklenirken hata oluştu: " + error.statusText,
+            "error"
+          );
         });
     };
 

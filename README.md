@@ -72,6 +72,8 @@ test2/
 - ✅ Yorum Sistemi
 - ✅ Kullanıcı Girişi
 - ✅ Like/Dislike Sistemi
+- ✅ **🌍 Çok Dilli Saat Dilimi Desteği**
+- ✅ **📧 Akıllı E-posta Sistemi**
 
 ## 🔧 **Teknolojiler**
 
@@ -98,6 +100,59 @@ test2/
 
 - Password hashing (PHP PASSWORD_DEFAULT)
 - Input validation
+- E-posta doğrulama sistemi
+
+## 🌍 **Saat Dilimi Sistemi**
+
+### **Özellikler**
+
+- **Otomatik Ülke Tespiti**: E-posta adresinden ülke kodu otomatik belirlenir
+- **17 Ülke Desteği**: Türkiye, ABD, İngiltere, Almanya, Fransa, İtalya, İspanya, Hollanda, Kanada, Avustralya, Japonya, Güney Kore, Çin, Hindistan, Brezilya, Meksika, Rusya
+- **Akıllı Domain Analizi**: Yaygın e-posta sağlayıcıları için ülke tespiti
+- **Türkçe Açıklamalar**: Her saat dilimi için Türkçe açıklama
+
+### **Desteklenen E-posta Sağlayıcıları**
+
+- **Türkiye**: gmail.com, hotmail.com, outlook.com, yahoo.com, yandex.com
+- **İngiltere**: yahoo.co.uk, hotmail.co.uk, outlook.co.uk
+- **Almanya**: web.de, gmx.de, t-online.de
+- **Fransa**: orange.fr, laposte.net, free.fr
+- **İtalya**: libero.it, virgilio.it, tiscali.it
+- **İspanya**: hotmail.es, yahoo.es, outlook.es
+- **Hollanda**: hotmail.nl, outlook.nl, yahoo.nl
+- **Kanada**: hotmail.ca, outlook.ca, yahoo.ca
+- **Avustralya**: hotmail.com.au, outlook.com.au, yahoo.com.au
+- **Japonya**: yahoo.co.jp, hotmail.co.jp
+- **Güney Kore**: naver.com, daum.net
+- **Çin**: qq.com, 163.com, 126.com
+- **Hindistan**: yahoo.in, hotmail.in
+- **Brezilya**: hotmail.com.br, outlook.com.br
+- **Meksika**: hotmail.com.mx, outlook.com.mx
+- **Rusya**: yandex.ru, mail.ru, rambler.ru
+
+### **Kullanım**
+
+```php
+// E-posta adresinden ülke kodunu al
+$countryCode = getCountryFromEmail($email);
+
+// Ülke kodunu saat dilimine çevir
+$timezone = getTimezoneByCountry($countryCode);
+
+// Saat diliminde tarihi formatla
+$formattedDate = getFormattedDate($timezone);
+
+// Türkçe açıklamayı al
+$description = getTimezoneDescription($timezone);
+```
+
+### **Test Etme**
+
+```bash
+# Test dosyasını çalıştırın
+http://app.test2.local/test_timezone.php
+```
+
 - SQL injection koruması
 - XSS koruması
 

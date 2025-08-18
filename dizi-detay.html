@@ -258,59 +258,6 @@
         box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
       }
 
-      .karakter-uyari {
-        color: #dc3545;
-        font-size: 0.9rem;
-        font-weight: 500;
-        margin: 8px 0;
-        text-align: center;
-        padding: 8px;
-        background: linear-gradient(135deg, #fff5f5, #ffe6e6);
-        border: 1px solid #ffcccc;
-        border-radius: 8px;
-        display: none;
-      }
-
-      .karakter-uyari.show {
-        display: block;
-        animation: fadeIn 0.3s ease-in;
-      }
-
-      .karakter-uyari.shake {
-        animation: shake 0.5s ease-in-out;
-      }
-
-      @keyframes fadeIn {
-        from {
-          opacity: 0;
-          transform: translateY(-10px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-
-      @keyframes shake {
-        0%,
-        100% {
-          transform: translateX(0);
-        }
-        10%,
-        30%,
-        50%,
-        70%,
-        90% {
-          transform: translateX(-5px);
-        }
-        20%,
-        40%,
-        60%,
-        80% {
-          transform: translateX(5px);
-        }
-      }
-
       .yorum-btn {
         background: linear-gradient(135deg, #dc3545, #c82333);
         color: white;
@@ -590,7 +537,7 @@
 
       button.delete-btn:hover {
         background: linear-gradient(135deg, #f8e0e1, #e2d9d0) !important;
-        transform: scale(1.05) !important;
+        transform: scale(1.02) !important;
       }
 
       .yorum-actions {
@@ -601,6 +548,11 @@
     </style>
   </head>
   <body ng-controller="DiziDetayController">
+    <!-- Global Karakter Uyarısı -->
+    <div class="karakter-uyari" id="global-karakter-uyari">
+      ⚠️ Lütfen en az 10 karakter kullanınız
+    </div>
+
     <ng-include src="'components/header.html'"></ng-include>
 
     <div class="detay-container">
@@ -731,12 +683,7 @@
                 rows="4"
                 maxlength="500"
               ></textarea>
-              <div
-                class="karakter-uyari"
-                ng-class="{ 'show': yeniYorum.yorum && yeniYorum.yorum.length < 10 }"
-              >
-                ⚠️ Lütfen en az 10 karakter kullanınız
-              </div>
+
               <button
                 type="button"
                 class="spoiler-toggle"

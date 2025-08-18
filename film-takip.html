@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="tr" ng-app="GirisApp">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Film Takip Sistemi - GLOW</title>
+
+    <!-- AngularJS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="/assets/js/app.js"></script>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="/assets/css/style.css" />
+
+    <!-- Components -->
+    <div ng-include="'components/header.html'"></div>
+    <div ng-include="'components/page-css.html'"></div>
+  </head>
+  <body ng-controller="FilmTakipController">
+    <!-- Main Content -->
+    <main class="main-content">
+      <div class="film-takip-container">
+        <!-- Header Section -->
+        <div class="film-takip-header">
+          <h1 class="page-title">🎬 Film Takip Sistemi</h1>
+          <p class="page-subtitle">
+            İzlediğin filmleri takip et, puanla ve yorumla
+          </p>
+        </div>
+
+        <!-- Stats Section -->
+        <div class="stats-section">
+          <div class="stat-card">
+            <div class="stat-number">{{stats.izlenen}}</div>
+            <div class="stat-label">İzlenen</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number">{{stats.izlenecek}}</div>
+            <div class="stat-label">İzlenecek</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number">{{stats.favori}}</div>
+            <div class="stat-label">Favori</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number">{{stats.ortalama}}</div>
+            <div class="stat-label">Ortalama Puan</div>
+          </div>
+        </div>
+
+        <!-- Search and Filter Section -->
+        <div class="search-filter-section">
+          <div class="search-box">
+            <input
+              type="text"
+              ng-model="searchText"
+              placeholder="Film ara..."
+              class="search-input"
+            />
+            <svg class="search-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+              />
+            </svg>
+          </div>
+
+          <div class="filter-buttons">
+            <button
+              ng-class="{'active': activeFilter === 'all'}"
+              ng-click="setFilter('all')"
+              class="filter-btn"
+            >
+              Tümü
+            </button>
+            <button
+              ng-class="{'active': activeFilter === 'watched'}"
+              ng-click="setFilter('watched')"
+              class="filter-btn"
+            >
+              İzlenen
+            </button>
+            <button
+              ng-class="{'active': activeFilter === 'watchlist'}"
+              ng-click="setFilter('watchlist')"
+              class="filter-btn"
+            >
+              İzlenecek
+            </button>
+            <button
+              ng-class="{'active': activeFilter === 'favorite'}"
+              ng-click="setFilter('favorite')"
+              class="filter-btn"
+            >
+              Favoriler
+            </button>
+          </div>
+        </div>
+
+        <!-- Films Grid -->
+        <div class="films-grid" ng-if="filteredFilms.length > 0">
+          <div
+            class="film-card"
+            ng-repeat="film in filteredFilms | filter:searchText"
+            ng-click="openFilmDetail(film)"
+          >
+            <div class="film-poster">
+              <img
+                ng-src="{{film.poster}}"
+                alt="{{film.title}}"
+                class="poster-img"
+              />
+            </div>
+
+            <div class="film-info">
+              <h3 class="film-title">{{film.title}}</h3>
+              <p class="film-year">{{film.year}}</p>
+              <div class="film-rating" ng-if="film.rating">
+                <div class="stars">
+                  <span
+                    ng-repeat="star in [1,2,3,4,5]"
+                    class="star"
+                    ng-class="{'filled': star <= film.rating}"
+                  >
+                    ★
+                  </span>
+                </div>
+                <span class="rating-text">{{film.rating}}/5</span>
+              </div>
+              <p class="film-genre">{{film.genre}}</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Empty State -->
+        <div class="empty-state" ng-if="filteredFilms.length === 0">
+          <div class="empty-icon">🎬</div>
+          <h3>Henüz film eklenmemiş</h3>
+          <p>
+            Film detay sayfalarından filmleri favorilere ekleyerek takip etmeye
+            başla!
+          </p>
+        </div>
+      </div>
+    </main>
+
+    <!-- Components -->
+    <div ng-include="'components/footer.html'"></div>
+    <div ng-include="'components/page-scripts.html'"></div>
+  </body>
+</html>

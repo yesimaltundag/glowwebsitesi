@@ -43,6 +43,48 @@
             onerror="this.src='assets/images/logo.jpg'"
           />
           <div class="film-icerik">
+            <!-- Film Takip Butonları -->
+            <div class="film-takip-actions" ng-if="kullanici" ng-click="$event.stopPropagation()">
+              <button 
+                class="film-takip-btn film-favori-btn" 
+                ng-class="{'active': film.takipDurumu && film.takipDurumu.isFavorite}"
+                ng-click="toggleFilmFavorite(film)"
+                ng-disabled="film.takipLoading"
+                title="Favorilere Ekle/Çıkar"
+              >
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                </svg>
+                {{film.takipDurumu && film.takipDurumu.isFavorite ? '❤️' : '🤍'}}
+              </button>
+              
+              <button 
+                class="film-takip-btn film-izlenen-btn" 
+                ng-class="{'active': film.takipDurumu && film.takipDurumu.isWatched}"
+                ng-click="toggleFilmWatched(film)"
+                ng-disabled="film.takipLoading"
+                title="İzlendi Olarak İşaretle"
+              >
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                </svg>
+                {{film.takipDurumu && film.takipDurumu.isWatched ? '✅' : '⭕'}}
+              </button>
+              
+              <button 
+                class="film-takip-btn film-izlenecek-btn" 
+                ng-class="{'active': film.takipDurumu && film.takipDurumu.isWatchlist}"
+                ng-click="toggleFilmWatchlist(film)"
+                ng-disabled="film.takipLoading"
+                title="İzlenecekler Listesine Ekle"
+              >
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                </svg>
+                {{film.takipDurumu && film.takipDurumu.isWatchlist ? '📝' : '➕'}}
+              </button>
+            </div>
+            
             <div class="film-baslik">{{ film.film_adi }}</div>
             <div class="film-yil">{{ film.yil }}</div>
             <div class="film-imdb">IMDb: {{ film.imdb_puani }}</div>
@@ -67,6 +109,7 @@
   angular
     .module("GirisApp")
     .controller("AksiyonFilmlerController", function ($scope, $http) {
+      $scope.kullanici = JSON.parse(localStorage.getItem("girisYapan") || "null");
       $scope.loading = true;
       $scope.error = null;
       $scope.filmler = [];
@@ -77,12 +120,145 @@
         .then(function (response) {
           $scope.filmler = response.data;
           $scope.loading = false;
+          // Filmler yüklendikten sonra takip durumlarını yükle
+          $scope.filmTakipDurumlariniYukle();
         })
         .catch(function (error) {
           $scope.error =
             "Filmler yüklenirken hata oluştu: " + error.data.message;
           $scope.loading = false;
         });
+
+      // Film takip durumlarını yükle
+      $scope.filmTakipDurumlariniYukle = function() {
+        if (!$scope.kullanici) return;
+        
+        $http.get('film_takip_api.php?user_id=' + $scope.kullanici.id)
+          .then(function(response) {
+            var filmler = response.data || [];
+            $scope.filmler.forEach(function(film) {
+              var mevcutFilm = filmler.find(function(f) {
+                return f.title.toLowerCase() === film.film_adi.toLowerCase();
+              });
+              
+              if (mevcutFilm) {
+                film.takipDurumu = {
+                  isFavorite: mevcutFilm.isFavorite,
+                  isWatched: mevcutFilm.isWatched,
+                  isWatchlist: !mevcutFilm.isWatched
+                };
+              } else {
+                film.takipDurumu = {
+                  isFavorite: false,
+                  isWatched: false,
+                  isWatchlist: false
+                };
+              }
+              film.takipLoading = false;
+            });
+          })
+          .catch(function(error) {
+            console.error('Film takip durumları yüklenirken hata:', error);
+          });
+      };
+
+      // Favori durumunu değiştir
+      $scope.toggleFilmFavorite = function(film) {
+        if (!$scope.kullanici || film.takipLoading) return;
+        
+        film.takipLoading = true;
+        var filmData = {
+          user_id: $scope.kullanici.id,
+          title: film.film_adi,
+          year: film.yil,
+          genre: film.tur,
+          poster: film.poster_url,
+          isFavorite: !film.takipDurumu.isFavorite,
+          isWatched: film.takipDurumu.isWatched,
+          rating: 0,
+          review: ''
+        };
+
+        $http.post('film_takip_api.php', filmData)
+          .then(function(response) {
+            if (response.data.success) {
+              film.takipDurumu.isFavorite = !film.takipDurumu.isFavorite;
+              showMessage(film.takipDurumu.isFavorite ? 'Film favorilere eklendi' : 'Film favorilerden çıkarıldı', 'success');
+            }
+          })
+          .catch(function(error) {
+            showMessage('İşlem sırasında hata oluştu', 'error');
+          })
+          .finally(function() {
+            film.takipLoading = false;
+          });
+      };
+
+      // İzlendi durumunu değiştir
+      $scope.toggleFilmWatched = function(film) {
+        if (!$scope.kullanici || film.takipLoading) return;
+        
+        film.takipLoading = true;
+        var filmData = {
+          user_id: $scope.kullanici.id,
+          title: film.film_adi,
+          year: film.yil,
+          genre: film.tur,
+          poster: film.poster_url,
+          isFavorite: film.takipDurumu.isFavorite,
+          isWatched: !film.takipDurumu.isWatched,
+          rating: 0,
+          review: ''
+        };
+
+        $http.post('film_takip_api.php', filmData)
+          .then(function(response) {
+            if (response.data.success) {
+              film.takipDurumu.isWatched = !film.takipDurumu.isWatched;
+              film.takipDurumu.isWatchlist = !film.takipDurumu.isWatched;
+              showMessage(film.takipDurumu.isWatched ? 'Film izlendi olarak işaretlendi' : 'Film izlendi listesinden çıkarıldı', 'success');
+            }
+          })
+          .catch(function(error) {
+            showMessage('İşlem sırasında hata oluştu', 'error');
+          })
+          .finally(function() {
+            film.takipLoading = false;
+          });
+      };
+
+      // İzlenecek durumunu değiştir
+      $scope.toggleFilmWatchlist = function(film) {
+        if (!$scope.kullanici || film.takipLoading) return;
+        
+        film.takipLoading = true;
+        var filmData = {
+          user_id: $scope.kullanici.id,
+          title: film.film_adi,
+          year: film.yil,
+          genre: film.tur,
+          poster: film.poster_url,
+          isFavorite: film.takipDurumu.isFavorite,
+          isWatched: false,
+          rating: 0,
+          review: ''
+        };
+
+        $http.post('film_takip_api.php', filmData)
+          .then(function(response) {
+            if (response.data.success) {
+              film.takipDurumu.isWatchlist = !film.takipDurumu.isWatchlist;
+              film.takipDurumu.isWatched = false;
+              showMessage(film.takipDurumu.isWatchlist ? 'Film izlenecekler listesine eklendi' : 'Film izlenecekler listesinden çıkarıldı', 'success');
+            }
+          })
+          .catch(function(error) {
+            showMessage('İşlem sırasında hata oluştu', 'error');
+          })
+          .finally(function() {
+            film.takipLoading = false;
+          });
+      };
 
       $scope.filmDetay = function (filmId) {
         window.location.href = "film-detay.html?id=" + filmId;

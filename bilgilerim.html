@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="tr" ng-app="GirisApp">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bilgilerim - GLOW</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="assets/css/style.css" />
+
+    <!-- AngularJS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="assets/js/app.js"></script>
+
+    <!-- Page Specific CSS -->
+    <style>
+      /* Modern Background Gradient */
+      .main-content {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 20px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .main-content::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="1" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+        opacity: 0.3;
+        pointer-events: none;
+      }
+
+      /* Modern Form Container */
+      .bilgilerim-container {
+        max-width: 700px;
+        margin: 40px auto;
+        background: rgba(255, 255, 255, 0.15);
+        border-radius: 24px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1),
+          0 0 0 1px rgba(255, 255, 255, 0.2);
+        padding: 40px;
+        backdrop-filter: blur(20px);
+        position: relative;
+        width: 100%;
+        animation: slideInUp 0.6s ease-out;
+      }
+
+      @keyframes slideInUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* Modern Header */
+      .bilgilerim-header {
+        text-align: center;
+        margin-bottom: 40px;
+        position: relative;
+      }
+
+      .bilgilerim-header::after {
+        content: "";
+        position: absolute;
+        bottom: -15px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60px;
+        height: 3px;
+        background: linear-gradient(90deg, #667eea, #764ba2);
+        border-radius: 2px;
+      }
+
+      .bilgilerim-header h1 {
+        color: #2c3e50;
+        font-size: 32px;
+        margin-bottom: 10px;
+        font-weight: 700;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        letter-spacing: -0.5px;
+      }
+
+      .bilgilerim-header p {
+        color: #34495e;
+        font-size: 16px;
+        margin: 0;
+      }
+
+      /* Modern Form Groups */
+      .form-group {
+        margin-bottom: 24px;
+        position: relative;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        color: #2c3e50;
+        font-weight: 600;
+        font-size: 14px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        opacity: 0.9;
+      }
+
+      .form-input {
+        width: 100%;
+        padding: 16px 20px;
+        border: 2px solid rgba(255, 255, 255, 0.2);
+        border-radius: 12px;
+        font-size: 16px;
+        background: rgba(255, 255, 255, 0.9);
+        color: #2c3e50;
+        box-sizing: border-box;
+        backdrop-filter: blur(10px);
+        font-weight: 500;
+        transition: all 0.3s ease;
+      }
+
+      .form-input:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        background: rgba(255, 255, 255, 0.95);
+      }
+
+      .form-input::placeholder {
+        color: #95a5a6;
+        opacity: 0.7;
+      }
+
+      /* Password Strength Indicator */
+      .password-strength {
+        margin-top: 8px;
+        height: 4px;
+        border-radius: 2px;
+        background: #ecf0f1;
+        overflow: hidden;
+      }
+
+      .password-strength-bar {
+        height: 100%;
+        transition: all 0.3s ease;
+        border-radius: 2px;
+      }
+
+      .strength-weak {
+        background: #e74c3c;
+        width: 25%;
+      }
+      .strength-medium {
+        background: #f39c12;
+        width: 50%;
+      }
+      .strength-strong {
+        background: #27ae60;
+        width: 75%;
+      }
+      .strength-very-strong {
+        background: #2ecc71;
+        width: 100%;
+      }
+
+      /* Modern Action Buttons */
+      .form-actions {
+        margin-top: 40px;
+        display: flex;
+        gap: 16px;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      .btn {
+        padding: 16px 32px;
+        border: none;
+        border-radius: 12px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .btn-primary {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+      }
+
+      .btn-primary:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        background: linear-gradient(135deg, #5a6fd8, #6a4190);
+      }
+
+      .btn-secondary {
+        background: linear-gradient(135deg, #95a5a6, #7f8c8d);
+        color: white;
+        box-shadow: 0 4px 15px rgba(149, 165, 166, 0.3);
+      }
+
+      .btn-secondary:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(149, 165, 166, 0.4);
+        background: linear-gradient(135deg, #859395, #6c7b7d);
+      }
+
+      .btn:active {
+        transform: translateY(-1px);
+      }
+
+      /* Success/Error Messages */
+      .message {
+        padding: 12px 20px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        font-weight: 500;
+        text-align: center;
+      }
+
+      .message-success {
+        background: rgba(46, 204, 113, 0.1);
+        color: #27ae60;
+        border: 1px solid rgba(46, 204, 113, 0.2);
+      }
+
+      .message-error {
+        background: rgba(231, 76, 60, 0.1);
+        color: #e74c3c;
+        border: 1px solid rgba(231, 76, 60, 0.2);
+      }
+
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        .bilgilerim-container {
+          margin: 20px auto;
+          padding: 30px 20px;
+          border-radius: 20px;
+        }
+
+        .bilgilerim-header h1 {
+          font-size: 28px;
+        }
+
+        .form-input {
+          padding: 14px 16px;
+        }
+
+        .form-actions {
+          flex-direction: column;
+          gap: 12px;
+        }
+
+        .btn {
+          padding: 14px 24px;
+          width: 100%;
+        }
+      }
+
+      /* Floating Elements Animation */
+      .floating {
+        animation: floating 3s ease-in-out infinite;
+      }
+
+      @keyframes floating {
+        0%,
+        100% {
+          transform: translateY(0px);
+        }
+        50% {
+          transform: translateY(-10px);
+        }
+      }
+    </style>
+  </head>
+  <body ng-controller="MainController">
+    <!-- Header Component -->
+    <ng-include src="'components/header.html'"></ng-include>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <div
+        class="bilgilerim-container floating"
+        ng-controller="BilgilerimController"
+      >
+        <div class="bilgilerim-header">
+          <h1>📝 Bilgilerimi Düzenle</h1>
+          <p>Hesap bilgilerinizi güncelleyin</p>
+        </div>
+
+        <!-- Success/Error Messages -->
+        <div ng-if="message" class="message" ng-class="messageClass">
+          {{ message }}
+        </div>
+
+        <form ng-submit="bilgileriKaydet()" novalidate>
+          <div class="form-group">
+            <label>👤 Kullanıcı Adı</label>
+            <input
+              type="text"
+              class="form-input"
+              ng-model="kullanici.username"
+              placeholder="Kullanıcı adınızı girin"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label>📝 Ad Soyad</label>
+            <input
+              type="text"
+              class="form-input"
+              ng-model="kullanici.adsoyad"
+              placeholder="Ad ve soyadınızı girin"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label>🔐 Yeni Şifre (Opsiyonel)</label>
+            <input
+              type="password"
+              class="form-input"
+              ng-model="yeniSifre"
+              placeholder="Yeni şifrenizi girin (6-10 karakter)"
+              minlength="6"
+              maxlength="10"
+            />
+            <div class="password-strength" ng-if="yeniSifre">
+              <div class="password-strength-bar" ng-class="sifreGucu"></div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>📧 E-posta Adresi</label>
+            <input
+              type="email"
+              class="form-input"
+              ng-model="kullanici.email"
+              placeholder="E-posta adresinizi girin"
+              required
+            />
+          </div>
+
+          <div class="form-actions">
+            <button
+              type="submit"
+              class="btn btn-primary"
+              ng-disabled="kaydetiliyor"
+            >
+              {{ kaydetiliyor ? '💾 Kaydediliyor...' : '💾 Bilgileri Kaydet' }}
+            </button>
+            <button
+              type="button"
+              class="btn btn-secondary"
+              ng-click="profilSayfasinaDon()"
+            >
+              🔙 Geri Dön
+            </button>
+          </div>
+        </form>
+      </div>
+    </main>
+
+    <!-- Footer Component -->
+    <ng-include src="'components/footer.html'"></ng-include>
+
+    <!-- Scroll to Top Button -->
+    <button id="scrollTopBtn" title="Yukarı Çık" ng-click="scrollToTop()">
+      ↑
+    </button>
+  </body>
+</html>

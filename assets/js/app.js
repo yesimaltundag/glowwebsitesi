@@ -686,6 +686,135 @@ angular
       localStorage.removeItem("girisYapan");
       window.location.href = "anasayfa.html";
     };
+
+    $scope.bilgilerimSayfasi = function () {
+      window.location.href = "bilgilerim.html";
+    };
+  })
+
+  // ===== BILGILERIM CONTROLLER =====
+  .controller("BilgilerimController", function ($scope, $http, $timeout) {
+    // Kullanıcı kontrolü
+    $scope.kullanici = JSON.parse(localStorage.getItem("girisYapan") || "null");
+
+    if (!$scope.kullanici || !$scope.kullanici.id) {
+      alert("Giriş yapılmamış. Lütfen tekrar giriş yapın.");
+      window.location.href = "index.html";
+      return;
+    }
+
+    // E-posta alanını ekle (eğer yoksa)
+    if (!$scope.kullanici.email) {
+      $scope.kullanici.email = $scope.kullanici.e_posta || "";
+    }
+
+    $scope.yeniSifre = "";
+    $scope.kaydetiliyor = false;
+    $scope.message = "";
+    $scope.messageClass = "";
+
+    // Şifre gücü kontrolü
+    $scope.$watch("yeniSifre", function (newVal) {
+      if (newVal) {
+        $scope.sifreGucu = sifreGucuHesapla(newVal);
+      }
+    });
+
+    function sifreGucuHesapla(sifre) {
+      if (sifre.length < 6) return "strength-weak";
+      if (sifre.length < 8) return "strength-medium";
+      if (sifre.length < 10) return "strength-strong";
+      return "strength-very-strong";
+    }
+
+    $scope.bilgileriKaydet = function () {
+      // Form validasyonu
+      if (
+        !$scope.kullanici.username ||
+        !$scope.kullanici.adsoyad ||
+        !$scope.kullanici.email
+      ) {
+        $scope.message = "❌ Lütfen tüm zorunlu alanları doldurun!";
+        $scope.messageClass = "message-error";
+        return;
+      }
+
+      // E-posta formatı kontrolü
+      var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test($scope.kullanici.email)) {
+        $scope.message = "❌ Lütfen geçerli bir e-posta adresi girin!";
+        $scope.messageClass = "message-error";
+        return;
+      }
+
+      // Şifre kontrolü
+      if (
+        $scope.yeniSifre &&
+        ($scope.yeniSifre.length < 6 || $scope.yeniSifre.length > 10)
+      ) {
+        $scope.message = "❌ Şifre 6-10 karakter arasında olmalıdır!";
+        $scope.messageClass = "message-error";
+        return;
+      }
+
+      $scope.kaydetiliyor = true;
+      $scope.message = "";
+
+      var gonderilecek = angular.copy($scope.kullanici);
+
+      // E-posta alanını doğru şekilde gönder
+      gonderilecek.e_posta = $scope.kullanici.email;
+
+      // Şifre güncelleme
+      if ($scope.yeniSifre) {
+        gonderilecek.sifre = $scope.yeniSifre;
+      }
+
+      $http
+        .put("api.php", gonderilecek)
+        .then(function (response) {
+          if (response.data.success) {
+            // LocalStorage'ı güncelle - email alanını da ekle
+            $scope.kullanici.e_posta = $scope.kullanici.email;
+            localStorage.setItem(
+              "girisYapan",
+              JSON.stringify($scope.kullanici)
+            );
+
+            $scope.message = "✅ Bilgileriniz başarıyla güncellendi!";
+            $scope.messageClass = "message-success";
+
+            // Şifre alanını temizle
+            $scope.yeniSifre = "";
+
+            // 3 saniye sonra mesajı kaldır
+            $timeout(function () {
+              $scope.message = "";
+            }, 3000);
+          } else {
+            $scope.message =
+              "❌ Güncelleme başarısız: " +
+              (response.data.message || "Bilinmeyen hata");
+            $scope.messageClass = "message-error";
+          }
+        })
+        .catch(function (error) {
+          console.error("Bilgilerim güncelleme hatası:", error);
+          $scope.message = "❌ Sunucu hatası! Lütfen tekrar deneyin.";
+          $scope.messageClass = "message-error";
+        })
+        .finally(function () {
+          $scope.kaydetiliyor = false;
+        });
+    };
+
+    $scope.profilSayfasinaDon = function () {
+      window.location.href = "profil.html";
+    };
+
+    $scope.scrollToTop = function () {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    };
   })
 
   // ===== DIZI KATEGORILER CONTROLLER =====
@@ -1927,20 +2056,36 @@ angular
       spoiler: false,
     };
 
-    // URL'den film ID'sini al
+    // Film takip durumu
+    $scope.filmTakipDurumu = {
+      isFavorite: false,
+      isWatched: false,
+      isWatchlist: false,
+    };
+    $scope.takipLoading = false;
+
+    // URL'den film ID'sini veya film adını al
     var urlParams = new URLSearchParams(window.location.search);
     var filmId = urlParams.get("id");
+    var filmTitle = urlParams.get("title");
 
-    if (!filmId) {
-      $scope.error = "Film ID'si bulunamadı!";
+    if (!filmId && !filmTitle) {
+      $scope.error = "Film ID'si veya film adı bulunamadı!";
       $scope.loading = false;
       return;
     }
 
     // Film detaylarını yükle
     $scope.filmDetayiniYukle = function () {
+      var apiUrl = "api.php?films=1";
+      if (filmId) {
+        apiUrl += "&id=" + filmId;
+      } else if (filmTitle) {
+        apiUrl += "&title=" + encodeURIComponent(filmTitle);
+      }
+
       $http
-        .get("api.php?films=1&id=" + filmId)
+        .get(apiUrl)
         .then(function (response) {
           if (response.data && !response.data.error) {
             $scope.film = response.data;
@@ -1971,14 +2116,23 @@ angular
 
     // Yorumları getir
     $scope.yorumlariGetir = function () {
-      console.log("🔍 Yorumlar getiriliyor... Film ID:", filmId);
+      var yorumApiUrl = "api.php?yorum=1&tur=film";
+      if (filmId) {
+        yorumApiUrl += "&icerik_id=" + filmId;
+      } else if (filmTitle) {
+        yorumApiUrl += "&title=" + encodeURIComponent(filmTitle);
+      }
+
       console.log(
-        "🔍 API URL:",
-        "api.php?yorum=1&tur=film&icerik_id=" + filmId
+        "🔍 Yorumlar getiriliyor... Film ID:",
+        filmId,
+        "Film Title:",
+        filmTitle
       );
+      console.log("🔍 API URL:", yorumApiUrl);
 
       $http
-        .get("api.php?yorum=1&tur=film&icerik_id=" + filmId)
+        .get(yorumApiUrl)
         .then(function (response) {
           console.log("📊 API'den gelen yorumlar:", response.data); // Debug log
           console.log("📊 Yorum sayısı:", response.data.length); // Debug log
@@ -2142,8 +2296,261 @@ angular
       }
     };
 
+    // Film takip durumunu kontrol et
+    $scope.filmTakipDurumunuKontrolEt = function () {
+      if (!$scope.kullanici || !$scope.film) return;
+
+      $http
+        .get("film_takip_api.php?user_id=" + $scope.kullanici.id)
+        .then(function (response) {
+          var filmler = response.data || [];
+          var mevcutFilm = filmler.find(function (f) {
+            return f.title.toLowerCase() === $scope.film.film_adi.toLowerCase();
+          });
+
+          if (mevcutFilm) {
+            $scope.filmTakipDurumu = {
+              isFavorite: mevcutFilm.isFavorite,
+              isWatched: mevcutFilm.isWatched,
+              isWatchlist: !mevcutFilm.isWatched,
+            };
+          } else {
+            $scope.filmTakipDurumu = {
+              isFavorite: false,
+              isWatched: false,
+              isWatchlist: false,
+            };
+          }
+        })
+        .catch(function (error) {
+          console.error("Film takip durumu kontrol edilirken hata:", error);
+        });
+    };
+
+    // Favori durumunu değiştir
+    $scope.toggleFavorite = function () {
+      if (!$scope.kullanici || $scope.takipLoading) return;
+
+      $scope.takipLoading = true;
+      var filmData = {
+        user_id: $scope.kullanici.id,
+        title: $scope.film.film_adi,
+        year: $scope.film.yil,
+        genre: $scope.film.tur,
+        poster: $scope.film.poster_url,
+        isFavorite: !$scope.filmTakipDurumu.isFavorite,
+        isWatched: $scope.filmTakipDurumu.isWatched,
+        rating: 0,
+        review: "",
+      };
+
+      if ($scope.filmTakipDurumu.isFavorite) {
+        // Favorilerden çıkar - eğer izlenecek değilse tamamen sil
+        if (!$scope.filmTakipDurumu.isWatchlist) {
+          // Film izlenecek değilse tamamen sil
+          $http
+            .delete(
+              "film_takip_api.php?user_id=" +
+                $scope.kullanici.id +
+                "&title=" +
+                encodeURIComponent($scope.film.film_adi)
+            )
+            .then(function (response) {
+              if (response.data.success) {
+                $scope.filmTakipDurumu.isFavorite = false;
+                $scope.filmTakipDurumu.isWatchlist = false;
+                showMessage("Film favorilerden çıkarıldı", "success");
+              }
+            })
+            .catch(function (error) {
+              showMessage("İşlem sırasında hata oluştu", "error");
+            })
+            .finally(function () {
+              $scope.takipLoading = false;
+            });
+        } else {
+          // Film izlenecek ise sadece favori durumunu güncelle
+          $http
+            .put("film_takip_api.php", filmData)
+            .then(function (response) {
+              if (response.data.success) {
+                $scope.filmTakipDurumu.isFavorite = false;
+                showMessage("Film favorilerden çıkarıldı", "success");
+              }
+            })
+            .catch(function (error) {
+              showMessage("İşlem sırasında hata oluştu", "error");
+            })
+            .finally(function () {
+              $scope.takipLoading = false;
+            });
+        }
+      } else {
+        // Favorilere ekle
+        $http
+          .post("film_takip_api.php", filmData)
+          .then(function (response) {
+            if (response.data.success) {
+              $scope.filmTakipDurumu.isFavorite = true;
+              showMessage("Film favorilere eklendi", "success");
+            }
+          })
+          .catch(function (error) {
+            showMessage("İşlem sırasında hata oluştu", "error");
+          })
+          .finally(function () {
+            $scope.takipLoading = false;
+          });
+      }
+    };
+
+    // İzlendi durumunu değiştir
+    $scope.toggleWatched = function () {
+      if (!$scope.kullanici || $scope.takipLoading) return;
+
+      $scope.takipLoading = true;
+      var filmData = {
+        user_id: $scope.kullanici.id,
+        title: $scope.film.film_adi,
+        year: $scope.film.yil,
+        genre: $scope.film.tur,
+        poster: $scope.film.poster_url,
+        isFavorite: $scope.filmTakipDurumu.isFavorite,
+        isWatched: !$scope.filmTakipDurumu.isWatched,
+        rating: 0,
+        review: "",
+      };
+
+      if ($scope.filmTakipDurumu.isWatched) {
+        // İzlendi durumunu kaldır
+        $http
+          .put("film_takip_api.php", filmData)
+          .then(function (response) {
+            if (response.data.success) {
+              $scope.filmTakipDurumu.isWatched = false;
+              $scope.filmTakipDurumu.isWatchlist = true;
+              showMessage("Film izlendi listesinden çıkarıldı", "success");
+            }
+          })
+          .catch(function (error) {
+            showMessage("İşlem sırasında hata oluştu", "error");
+          })
+          .finally(function () {
+            $scope.takipLoading = false;
+          });
+      } else {
+        // İzlendi olarak işaretle
+        $http
+          .post("film_takip_api.php", filmData)
+          .then(function (response) {
+            if (response.data.success) {
+              $scope.filmTakipDurumu.isWatched = true;
+              $scope.filmTakipDurumu.isWatchlist = false;
+              showMessage("Film izlendi olarak işaretlendi", "success");
+            }
+          })
+          .catch(function (error) {
+            showMessage("İşlem sırasında hata oluştu", "error");
+          })
+          .finally(function () {
+            $scope.takipLoading = false;
+          });
+      }
+    };
+
+    // İzlenecek durumunu değiştir
+    $scope.toggleWatchlist = function () {
+      if (!$scope.kullanici || $scope.takipLoading) return;
+
+      $scope.takipLoading = true;
+      var filmData = {
+        user_id: $scope.kullanici.id,
+        title: $scope.film.film_adi,
+        year: $scope.film.yil,
+        genre: $scope.film.tur,
+        poster: $scope.film.poster_url,
+        isFavorite: $scope.filmTakipDurumu.isFavorite,
+        isWatched: false,
+        rating: 0,
+        review: "",
+      };
+
+      if ($scope.filmTakipDurumu.isWatchlist) {
+        // İzleneceklerden çıkar - eğer favori değilse tamamen sil
+        if (!$scope.filmTakipDurumu.isFavorite) {
+          // Film favori değilse tamamen sil
+          $http
+            .delete(
+              "film_takip_api.php?user_id=" +
+                $scope.kullanici.id +
+                "&title=" +
+                encodeURIComponent($scope.film.film_adi)
+            )
+            .then(function (response) {
+              if (response.data.success) {
+                $scope.filmTakipDurumu.isWatchlist = false;
+                $scope.filmTakipDurumu.isFavorite = false;
+                showMessage(
+                  "Film izlenecekler listesinden çıkarıldı",
+                  "success"
+                );
+              }
+            })
+            .catch(function (error) {
+              showMessage("İşlem sırasında hata oluştu", "error");
+            })
+            .finally(function () {
+              $scope.takipLoading = false;
+            });
+        } else {
+          // Film favori ise sadece watchlist durumunu güncelle
+          $http
+            .put("film_takip_api.php", filmData)
+            .then(function (response) {
+              if (response.data.success) {
+                $scope.filmTakipDurumu.isWatchlist = false;
+                showMessage(
+                  "Film izlenecekler listesinden çıkarıldı",
+                  "success"
+                );
+              }
+            })
+            .catch(function (error) {
+              showMessage("İşlem sırasında hata oluştu", "error");
+            })
+            .finally(function () {
+              $scope.takipLoading = false;
+            });
+        }
+      } else {
+        // İzleneceklere ekle
+        $http
+          .post("film_takip_api.php", filmData)
+          .then(function (response) {
+            if (response.data.success) {
+              $scope.filmTakipDurumu.isWatchlist = true;
+              $scope.filmTakipDurumu.isWatched = false;
+              showMessage("Film izlenecekler listesine eklendi", "success");
+            }
+          })
+          .catch(function (error) {
+            showMessage("İşlem sırasında hata oluştu", "error");
+          })
+          .finally(function () {
+            $scope.takipLoading = false;
+          });
+      }
+    };
+
     // Sayfa yüklendiğinde film detaylarını yükle
     $scope.filmDetayiniYukle();
+
+    // Film yüklendikten sonra takip durumunu kontrol et
+    $scope.$watch("film", function (newVal) {
+      if (newVal) {
+        $scope.filmTakipDurumunuKontrolEt();
+      }
+    });
 
     // Yukarı çık fonksiyonu
     $scope.scrollToTop = function () {
@@ -3447,3 +3854,203 @@ angular.module("GirisApp").controller("BoksDetayController", function ($scope) {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 });
+
+// ===== FILM TAKIP CONTROLLER =====
+angular
+  .module("GirisApp")
+  .controller("FilmTakipController", function ($scope, $http) {
+    // Kullanıcı kontrolü
+    $scope.kullanici = JSON.parse(localStorage.getItem("girisYapan") || "null");
+
+    if (!$scope.kullanici) {
+      window.location.href = "index.html";
+      return;
+    }
+
+    // Film listesi
+    $scope.films = [];
+    $scope.filteredFilms = [];
+    $scope.activeFilter = "all";
+    $scope.searchText = "";
+
+    // Modal durumları
+    $scope.showAddFilmModal = false;
+    $scope.showFilmDetailModal = false;
+    $scope.selectedFilm = null;
+
+    // Yeni film formu
+    $scope.newFilm = {
+      title: "",
+      year: new Date().getFullYear(),
+      genre: "",
+      poster: "",
+      rating: 0,
+      review: "",
+      isWatched: false,
+      isFavorite: false,
+    };
+
+    // İstatistikler
+    $scope.stats = {
+      izlenen: 0,
+      izlenecek: 0,
+      favori: 0,
+      ortalama: 0,
+    };
+
+    // Filmleri yükle
+    $scope.loadFilms = function () {
+      $http
+        .get("film_takip_api.php?user_id=" + $scope.kullanici.id)
+        .then(function (response) {
+          $scope.films = response.data;
+          $scope.updateFilteredFilms();
+          $scope.updateStats();
+        })
+        .catch(function (error) {
+          console.error("Filmler yüklenirken hata:", error);
+          showMessage("Filmler yüklenirken hata oluştu", "error");
+        });
+    };
+
+    // Filtrelenmiş filmleri güncelle
+    $scope.updateFilteredFilms = function () {
+      switch ($scope.activeFilter) {
+        case "watched":
+          $scope.filteredFilms = $scope.films.filter((film) => film.isWatched);
+          break;
+        case "watchlist":
+          $scope.filteredFilms = $scope.films.filter((film) => !film.isWatched);
+          break;
+        case "favorite":
+          $scope.filteredFilms = $scope.films.filter((film) => film.isFavorite);
+          break;
+        default:
+          $scope.filteredFilms = $scope.films;
+      }
+    };
+
+    // İstatistikleri güncelle
+    $scope.updateStats = function () {
+      $scope.stats.izlenen = $scope.films.filter(
+        (film) => film.isWatched
+      ).length;
+      $scope.stats.izlenecek = $scope.films.filter(
+        (film) => !film.isWatched
+      ).length;
+      $scope.stats.favori = $scope.films.filter(
+        (film) => film.isFavorite
+      ).length;
+
+      const ratedFilms = $scope.films.filter((film) => film.rating > 0);
+      if (ratedFilms.length > 0) {
+        const totalRating = ratedFilms.reduce(
+          (sum, film) => sum + film.rating,
+          0
+        );
+        $scope.stats.ortalama = (totalRating / ratedFilms.length).toFixed(1);
+      } else {
+        $scope.stats.ortalama = 0;
+      }
+    };
+
+    // Filtre değiştir
+    $scope.setFilter = function (filter) {
+      $scope.activeFilter = filter;
+      $scope.updateFilteredFilms();
+    };
+
+    // Favori durumunu değiştir
+    $scope.toggleFavorite = function (film) {
+      film.isFavorite = !film.isFavorite;
+      $scope.updateFilm(film);
+    };
+
+    // İzleme durumunu değiştir
+    $scope.toggleWatchStatus = function (film) {
+      film.isWatched = !film.isWatched;
+      $scope.updateFilm(film);
+    };
+
+    // Film güncelle
+    $scope.updateFilm = function (film) {
+      $http
+        .put("film_takip_api.php", film)
+        .then(function (response) {
+          if (response.data.success) {
+            $scope.updateStats();
+          } else {
+            showMessage(
+              response.data.message || "Film güncellenirken hata oluştu",
+              "error"
+            );
+          }
+        })
+        .catch(function (error) {
+          console.error("Film güncellenirken hata:", error);
+          showMessage("Film güncellenirken hata oluştu", "error");
+        });
+    };
+
+    // Film detayını aç
+    $scope.openFilmDetail = function (film) {
+      // Film detay sayfasına yönlendir
+      if (film.film_id) {
+        window.location.href = "film-detay.html?id=" + film.film_id;
+      } else {
+        // Eğer film_id yoksa film adına göre arama yap
+        window.location.href =
+          "film-detay.html?title=" + encodeURIComponent(film.title);
+      }
+    };
+
+    // Mesaj gösterme fonksiyonu
+    function showMessage(message, type) {
+      const messageDiv = document.createElement("div");
+      messageDiv.className = `message ${type}`;
+      messageDiv.textContent = message;
+      messageDiv.style.cssText = `
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 15px 25px;
+      border-radius: 8px;
+      color: white;
+      font-weight: 600;
+      z-index: 10001;
+      animation: slideIn 0.3s ease;
+    `;
+
+      if (type === "success") {
+        messageDiv.style.background = "#51cf66";
+      } else {
+        messageDiv.style.background = "#ff6b6b";
+      }
+
+      document.body.appendChild(messageDiv);
+
+      setTimeout(() => {
+        messageDiv.style.animation = "slideOut 0.3s ease";
+        setTimeout(() => {
+          document.body.removeChild(messageDiv);
+        }, 300);
+      }, 3000);
+    }
+
+    // CSS animasyonları
+    const style = document.createElement("style");
+    style.textContent = `
+    @keyframes slideIn {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+    @keyframes slideOut {
+      from { transform: translateX(0); opacity: 1; }
+      to { transform: translateX(100%); opacity: 0; }
+    }
+  `;
+    document.head.appendChild(style);
+
+    // Sayfa yüklendiğinde filmleri yükle
+    $scope.loadFilms();
+  });

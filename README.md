@@ -39,13 +39,29 @@
 # 4. Yorumların görüntülendiğini kontrol edin
 ```
 
-### **4. Sorun Giderme**
+### **4. Film Takip Sistemi**
+
+```bash
+# 1. Giriş yapın
+# 2. Header'daki "Favoriler" linkine tıklayın
+# 3. Film ekle butonuna tıklayın
+# 4. Film bilgilerini doldurun ve kaydedin
+# 5. Filmleri favori/izlendi olarak işaretleyin
+# 6. Filmleri puanlayın ve yorum yazın
+```
+
+### **5. Sorun Giderme**
 
 ```bash
 # Eğer yorum sistemi çalışmıyorsa:
 # 1. Veritabanı tablolarını kontrol edin
 # 2. api.php error loglarını kontrol edin
 # 3. Tarayıcı console'unda hataları kontrol edin
+
+# Eğer film takip sistemi çalışmıyorsa:
+# 1. film_takip_api.php dosyasının varlığını kontrol edin
+# 2. film_takip tablosunun oluştuğunu kontrol edin
+# 3. Kullanıcı girişi yapıldığından emin olun
 ```
 
 ## 📁 **Proje Yapısı**
@@ -53,14 +69,18 @@
 ```
 test2/
 ├── api.php                 # Backend API
+├── film_takip_api.php     # Film takip API
 ├── index.html             # Ana sayfa
 ├── film-detay.html        # Film detay sayfası
+├── film-takip.html        # Film takip sistemi
 ├── components/            # Component klasörü
 │   ├── header.html       # Header component
 │   └── footer.html       # Footer component
 ├── assets/
 │   ├── css/style.css     # Ana CSS
-│   └── js/app.js         # AngularJS controller'lar
+│   ├── js/app.js         # AngularJS controller'lar
+│   └── images/
+│       └── default-poster.jpg  # Varsayılan film posteri
 └── database_setup.sql    # Veritabanı kurulum dosyası
 ```
 
@@ -74,6 +94,7 @@ test2/
 - ✅ Like/Dislike Sistemi
 - ✅ **🌍 Çok Dilli Saat Dilimi Desteği**
 - ✅ **📧 Akıllı E-posta Sistemi**
+- ✅ **🎬 Letterboxd Tarzı Film Takip Sistemi**
 
 ## 🔧 **Teknolojiler**
 

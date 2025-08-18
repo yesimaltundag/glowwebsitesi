@@ -50,6 +50,139 @@
         color: #fff;
         transform: scale(1.1);
       }
+
+      /* Film Takip Butonları */
+      .film-takip-buttons {
+        position: absolute;
+        top: 20px;
+        right: 80px;
+        display: flex;
+        gap: 10px;
+        z-index: 10;
+      }
+
+      .takip-btn {
+        display: flex !important;
+        align-items: center !important;
+        gap: 8px !important;
+        padding: 10px 16px !important;
+        border: none !important;
+        border-radius: 25px !important;
+        font-size: 0.9rem !important;
+        font-weight: 600 !important;
+        cursor: pointer !important;
+        transition: all 0.3s ease !important;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1) !important;
+        backdrop-filter: blur(10px) !important;
+      }
+
+      .favori-btn {
+        background: linear-gradient(135deg, #f8e0e1, #e2d9d0) !important;
+        color: #7c5c4a !important;
+        border: 2px solid rgba(124, 92, 74, 0.2) !important;
+      }
+
+      .favori-btn:hover {
+        background: linear-gradient(135deg, #e2d9d0, #d1c6b1) !important;
+        transform: translateY(-2px) !important;
+        box-shadow: 0 6px 20px rgba(124, 92, 74, 0.2) !important;
+      }
+
+      .favori-btn.active {
+        background: linear-gradient(135deg, #7c5c4a, #b48a78) !important;
+        color: white !important;
+        box-shadow: 0 6px 20px rgba(124, 92, 74, 0.3) !important;
+        transform: scale(1.05) !important;
+        border: 2px solid #fff !important;
+        position: relative;
+      }
+
+      .izlenen-btn {
+        background: linear-gradient(135deg, #f8e0e1, #e2d9d0) !important;
+        color: #7c5c4a !important;
+        border: 2px solid rgba(124, 92, 74, 0.2) !important;
+      }
+
+      .izlenen-btn:hover {
+        background: linear-gradient(135deg, #e2d9d0, #d1c6b1) !important;
+        transform: translateY(-2px) !important;
+        box-shadow: 0 6px 20px rgba(124, 92, 74, 0.2) !important;
+      }
+
+      .izlenen-btn.active {
+        background: linear-gradient(135deg, #7c5c4a, #b48a78) !important;
+        color: white !important;
+        box-shadow: 0 6px 20px rgba(124, 92, 74, 0.3) !important;
+        transform: scale(1.05) !important;
+        border: 2px solid #fff !important;
+        position: relative;
+      }
+
+      .izlenecek-btn {
+        background: linear-gradient(135deg, #f8e0e1, #e2d9d0) !important;
+        color: #7c5c4a !important;
+        border: 2px solid rgba(124, 92, 74, 0.2) !important;
+      }
+
+      .izlenecek-btn:hover {
+        background: linear-gradient(135deg, #e2d9d0, #d1c6b1) !important;
+        transform: translateY(-2px) !important;
+        box-shadow: 0 6px 20px rgba(124, 92, 74, 0.2) !important;
+      }
+
+      .izlenecek-btn.active {
+        background: linear-gradient(135deg, #7c5c4a, #b48a78) !important;
+        color: white !important;
+        box-shadow: 0 6px 20px rgba(124, 92, 74, 0.3) !important;
+        transform: scale(1.05) !important;
+        border: 2px solid #fff !important;
+        position: relative;
+      }
+
+      /* Aktif buton göstergesi */
+      .takip-btn.active::after {
+        content: "✓" !important;
+        position: absolute !important;
+        top: -8px !important;
+        right: -8px !important;
+        background: #fff !important;
+        color: #333 !important;
+        border-radius: 50% !important;
+        width: 24px !important;
+        height: 24px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        font-size: 14px !important;
+        font-weight: bold !important;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3) !important;
+        z-index: 10 !important;
+      }
+
+      .takip-btn svg {
+        width: 16px !important;
+        height: 16px !important;
+      }
+
+      .takip-btn:disabled {
+        opacity: 0.6 !important;
+        cursor: not-allowed !important;
+        transform: none !important;
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .film-takip-buttons {
+          position: static;
+          margin-bottom: 20px;
+          justify-content: center;
+        }
+
+        .takip-btn {
+          padding: 8px 12px;
+          font-size: 0.8rem;
+        }
+      }
       .film-header {
         display: grid;
         grid-template-columns: 300px 1fr;
@@ -566,6 +699,54 @@
       <button class="geri-btn" onclick="window.history.back()" title="Geri Dön">
         ←
       </button>
+
+      <!-- Film Takip Butonları -->
+      <div
+        class="film-takip-buttons"
+        ng-if="kullanici && !loading && !error && film"
+      >
+        <button
+          class="takip-btn favori-btn"
+          ng-class="{'active': filmTakipDurumu.isFavorite}"
+          ng-click="toggleFavorite()"
+          ng-disabled="takipLoading"
+          title="Favorilere Ekle/Çıkar"
+        >
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path
+              d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
+            />
+          </svg>
+          {{filmTakipDurumu.isFavorite ? 'Favorilerde' : 'Favorilere Ekle'}}
+        </button>
+
+        <button
+          class="takip-btn izlenen-btn"
+          ng-class="{'active': filmTakipDurumu.isWatched}"
+          ng-click="toggleWatched()"
+          ng-disabled="takipLoading"
+          title="İzlendi Olarak İşaretle"
+        >
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+          </svg>
+          {{filmTakipDurumu.isWatched ? 'İzlendi' : 'İzlendi Olarak İşaretle'}}
+        </button>
+
+        <button
+          class="takip-btn izlenecek-btn"
+          ng-class="{'active': filmTakipDurumu.isWatchlist}"
+          ng-click="toggleWatchlist()"
+          ng-disabled="takipLoading"
+          title="İzlenecekler Listesine Ekle"
+        >
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+          </svg>
+          {{filmTakipDurumu.isWatchlist ? 'İzleneceklerde' : 'İzleneceklere
+          Ekle'}}
+        </button>
+      </div>
 
       <!-- Loading -->
       <div class="loading" ng-if="loading">

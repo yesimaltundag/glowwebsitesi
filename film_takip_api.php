@@ -24,6 +24,18 @@ try {
     exit();
 }
 
+// Film bilgilerini filmler tablosundan al
+function getFilmImdbRating($pdo, $filmTitle) {
+    try {
+        $stmt = $pdo->prepare("SELECT imdb_puani FROM filmler WHERE film_adi = ? LIMIT 1");
+        $stmt->execute([$filmTitle]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result ? floatval($result['imdb_puani']) : 0;
+    } catch(PDOException $e) {
+        return 0; // Hata durumunda 0 döndür
+    }
+}
+
 // Film tablosunu oluştur (eğer yoksa)
 try {
     $pdo->exec("CREATE TABLE IF NOT EXISTS film_takip (
@@ -33,14 +45,24 @@ try {
         year INT,
         genre VARCHAR(100),
         poster TEXT,
-        rating INT DEFAULT 0,
+        rating DECIMAL(3,1) DEFAULT 0.0,
         review TEXT,
         is_watched BOOLEAN DEFAULT FALSE,
         is_favorite BOOLEAN DEFAULT FALSE,
+        is_watchlist BOOLEAN DEFAULT FALSE,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         FOREIGN KEY (user_id) REFERENCES kullanicilar(id) ON DELETE CASCADE
     )");
+    
+    // Mevcut tabloya is_watchlist alanını ekle (eğer yoksa)
+    $stmt = $pdo->prepare("SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = ? AND TABLE_NAME = 'film_takip' AND COLUMN_NAME = 'is_watchlist'");
+    $stmt->execute(['basit_sistem']);
+    $columnExists = $stmt->fetchColumn() > 0;
+    
+    if (!$columnExists) {
+        $pdo->exec("ALTER TABLE film_takip ADD COLUMN is_watchlist BOOLEAN DEFAULT FALSE");
+    }
 } catch(PDOException $e) {
     echo json_encode(['success' => false, 'message' => 'Tablo oluşturma hatası: ' . $e->getMessage()]);
     exit();
@@ -63,7 +85,8 @@ switch($method) {
                 foreach ($films as &$film) {
                     $film['isWatched'] = (bool)$film['is_watched'];
                     $film['isFavorite'] = (bool)$film['is_favorite'];
-                    $film['rating'] = intval($film['rating']);
+                    $film['isWatchlist'] = (bool)$film['is_watchlist'];
+                    $film['rating'] = floatval($film['rating']);
                     $film['year'] = intval($film['year']);
                     // Film detay sayfası için film_id'yi kullan
                     $film['film_id'] = intval($film['film_id']);
@@ -86,7 +109,8 @@ switch($method) {
                 if ($film) {
                     $film['isWatched'] = (bool)$film['is_watched'];
                     $film['isFavorite'] = (bool)$film['is_favorite'];
-                    $film['rating'] = intval($film['rating']);
+                    $film['isWatchlist'] = (bool)$film['is_watchlist'];
+                    $film['rating'] = floatval($film['rating']);
                     $film['year'] = intval($film['year']);
                     echo json_encode($film);
                 } else {
@@ -118,34 +142,38 @@ switch($method) {
         }
         
         try {
+            // IMDb puanını filmler tablosundan al
+            $imdbRating = getFilmImdbRating($pdo, $input['title']);
+            
             // Önce filmi kontrol et
             $stmt = $pdo->prepare("SELECT id FROM film_takip WHERE user_id = ? AND title = ?");
             $stmt->execute([intval($input['user_id']), $input['title']]);
             $existingFilm = $stmt->fetch(PDO::FETCH_ASSOC);
             
             if ($existingFilm) {
-                // Mevcut filmi güncelle
-                $stmt = $pdo->prepare("UPDATE film_takip SET year = ?, genre = ?, poster = ?, rating = ?, review = ?, is_watched = ?, is_favorite = ? WHERE id = ?");
+                // Mevcut filmi güncelle - IMDb puanını güncelle
+                $stmt = $pdo->prepare("UPDATE film_takip SET year = ?, genre = ?, poster = ?, rating = ?, review = ?, is_watched = ?, is_favorite = ?, is_watchlist = ? WHERE id = ?");
                 
                 $result = $stmt->execute([
                     isset($input['year']) ? intval($input['year']) : null,
                     isset($input['genre']) ? $input['genre'] : null,
                     isset($input['poster']) ? $input['poster'] : null,
-                    isset($input['rating']) ? intval($input['rating']) : 0,
+                    $imdbRating, // IMDb puanını otomatik olarak set et
                     isset($input['review']) ? $input['review'] : null,
                     isset($input['isWatched']) ? (bool)$input['isWatched'] : false,
                     isset($input['isFavorite']) ? (bool)$input['isFavorite'] : false,
+                    isset($input['isWatchlist']) ? (bool)$input['isWatchlist'] : false,
                     $existingFilm['id']
                 ]);
                 
                 if ($result) {
-                    echo json_encode(['success' => true, 'message' => 'Film başarıyla güncellendi', 'id' => $existingFilm['id']]);
+                    echo json_encode(['success' => true, 'message' => 'Film başarıyla güncellendi (IMDb: ' . $imdbRating . ')', 'id' => $existingFilm['id']]);
                 } else {
                     echo json_encode(['success' => false, 'message' => 'Film güncellenirken hata oluştu']);
                 }
             } else {
-                // Yeni film ekle
-                $stmt = $pdo->prepare("INSERT INTO film_takip (user_id, title, year, genre, poster, rating, review, is_watched, is_favorite) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                // Yeni film ekle - IMDb puanı ile
+                $stmt = $pdo->prepare("INSERT INTO film_takip (user_id, title, year, genre, poster, rating, review, is_watched, is_favorite, is_watchlist) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
                 
                 $result = $stmt->execute([
                     intval($input['user_id']),
@@ -153,14 +181,15 @@ switch($method) {
                     isset($input['year']) ? intval($input['year']) : null,
                     isset($input['genre']) ? $input['genre'] : null,
                     isset($input['poster']) ? $input['poster'] : null,
-                    isset($input['rating']) ? intval($input['rating']) : 0,
+                    $imdbRating, // IMDb puanını otomatik olarak set et
                     isset($input['review']) ? $input['review'] : null,
                     isset($input['isWatched']) ? (bool)$input['isWatched'] : false,
-                    isset($input['isFavorite']) ? (bool)$input['isFavorite'] : false
+                    isset($input['isFavorite']) ? (bool)$input['isFavorite'] : false,
+                    isset($input['isWatchlist']) ? (bool)$input['isWatchlist'] : false
                 ]);
                 
                 if ($result) {
-                    echo json_encode(['success' => true, 'message' => 'Film başarıyla eklendi', 'id' => $pdo->lastInsertId()]);
+                    echo json_encode(['success' => true, 'message' => 'Film başarıyla eklendi (IMDb: ' . $imdbRating . ')', 'id' => $pdo->lastInsertId()]);
                 } else {
                     echo json_encode(['success' => false, 'message' => 'Film eklenirken hata oluştu']);
                 }
@@ -180,28 +209,32 @@ switch($method) {
         }
         
         try {
+            // IMDb puanını filmler tablosundan al
+            $imdbRating = getFilmImdbRating($pdo, $input['title']);
+            
             // Önce filmi bul
             $stmt = $pdo->prepare("SELECT id FROM film_takip WHERE user_id = ? AND title = ?");
             $stmt->execute([intval($input['user_id']), $input['title']]);
             $existingFilm = $stmt->fetch(PDO::FETCH_ASSOC);
             
             if ($existingFilm) {
-                // Mevcut filmi güncelle
-                $stmt = $pdo->prepare("UPDATE film_takip SET year = ?, genre = ?, poster = ?, rating = ?, review = ?, is_watched = ?, is_favorite = ? WHERE id = ?");
+                // Mevcut filmi güncelle - IMDb puanını güncelle
+                $stmt = $pdo->prepare("UPDATE film_takip SET year = ?, genre = ?, poster = ?, rating = ?, review = ?, is_watched = ?, is_favorite = ?, is_watchlist = ? WHERE id = ?");
                 
                 $result = $stmt->execute([
                     isset($input['year']) ? intval($input['year']) : null,
                     isset($input['genre']) ? $input['genre'] : null,
                     isset($input['poster']) ? $input['poster'] : null,
-                    isset($input['rating']) ? intval($input['rating']) : 0,
+                    $imdbRating, // IMDb puanını otomatik olarak set et
                     isset($input['review']) ? $input['review'] : null,
                     isset($input['isWatched']) ? (bool)$input['isWatched'] : false,
                     isset($input['isFavorite']) ? (bool)$input['isFavorite'] : false,
+                    isset($input['isWatchlist']) ? (bool)$input['isWatchlist'] : false,
                     $existingFilm['id']
                 ]);
                 
                 if ($result) {
-                    echo json_encode(['success' => true, 'message' => 'Film başarıyla güncellendi']);
+                    echo json_encode(['success' => true, 'message' => 'Film başarıyla güncellendi (IMDb: ' . $imdbRating . ')']);
                 } else {
                     echo json_encode(['success' => false, 'message' => 'Film güncellenirken hata oluştu']);
                 }

@@ -42,8 +42,9 @@
         transition: all 0.3s;
         position: absolute;
         top: 20px;
-        right: 20px;
+        left: 20px; /* Sola taşındı */
         margin: 0;
+        z-index: 100; /* Yüksek z-index */
       }
       .geri-btn:hover {
         background: linear-gradient(135deg, #b48a78, #e2d9d0);
@@ -54,8 +55,8 @@
       /* Film Takip Butonları */
       .film-takip-buttons {
         position: absolute;
-        top: 20px;
-        right: 80px;
+        top: 20px; /* Orijinal konuma döndürüldü */
+        right: 20px; /* Sağa taşındı */
         display: flex;
         gap: 10px;
         z-index: 10;
@@ -172,6 +173,18 @@
 
       /* Responsive */
       @media (max-width: 768px) {
+        .film-header {
+          grid-template-columns: 1fr;
+          gap: 20px;
+          margin-left: 0; /* Mobilde margin kaldır */
+          text-align: center;
+        }
+
+        .film-title {
+          margin-top: 20px; /* Mobilde daha az margin-top */
+          margin-bottom: 15px;
+        }
+
         .film-takip-buttons {
           position: static;
           margin-bottom: 20px;
@@ -182,6 +195,11 @@
           padding: 8px 12px;
           font-size: 0.8rem;
         }
+
+        .geri-btn {
+          left: 10px; /* Mobilde daha yakın */
+          top: 10px;
+        }
       }
       .film-header {
         display: grid;
@@ -189,6 +207,7 @@
         gap: 40px;
         margin-bottom: 40px;
         align-items: start;
+        margin-left: 60px; /* Geri butonu için boşluk */
       }
       .film-poster {
         width: 100%;
@@ -205,6 +224,7 @@
         font-size: 2.5rem;
         font-weight: 700;
         color: #2c3e50;
+        margin-top: 80px; /* Butonların altından başla */
         margin-bottom: 15px;
         line-height: 1.2;
       }

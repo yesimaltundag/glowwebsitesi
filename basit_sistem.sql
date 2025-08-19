@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Anamakine: 127.0.0.1:3306
--- Üretim Zamanı: 15 Ağu 2025, 14:24:18
+-- Üretim Zamanı: 19 Ağu 2025, 07:33:39
 -- Sunucu sürümü: 9.1.0
 -- PHP Sürümü: 8.3.14
 
@@ -64,6 +64,37 @@ INSERT INTO `animeler` (`id`, `anime_adi`, `yonetmen`, `yil`, `tur`, `puan`, `ac
 (10, 'Hunter x Hunter', 'Hiroshi Kōjina', 2011, 'Aksiyon, Macera, Fantastik', 9.0, 'Gon Freecss, babası gibi Hunter olmak için sınavlara girer. Arkadaşlarıyla birlikte tehlikeli maceralar yaşar.', '148 Bölüm', '24 dk', 'Madhouse', 'Tamamlandı', 7000000, '2025-07-31 06:42:38', 'https://m.media-amazon.com/images/I/71aoeOhdNnL._AC_SL1000_.jpg', 'https://www.youtube.com/embed/d6kBeJjTGnY'),
 (11, 'Tokyo Ghoul', 'Shuhei Morita', 2014, 'Aksiyon, Dram, Korku', 7.8, 'Kaneki Ken, bir ghoul tarafından saldırıya uğrar ve yarı ghoul olur. İnsan ve ghoul dünyası arasında sıkışır.', '12 Bölüm', '24 dk', 'Studio Pierrot', 'Tamamlandı', 6500000, '2025-07-31 06:42:38', 'https://images.justwatch.com/poster/102012613/s718/tokyo-ghoul.jpg', 'https://www.youtube.com/embed/vGuQeQsoRgU'),
 (12, 'Steins Gate', 'Hiroshi Hamasaki', 2011, 'Bilim Kurgu, Gerilim, Dram', 8.8, 'Rintaro Okabe, zaman makinesi icat eder ve geçmişi değiştirmeye çalışır. Ancak her değişiklik beklenmedik sonuçlar doğurur.', '24 Bölüm', '24 dk', 'White Fox', 'Tamamlandı', 6000000, '2025-07-31 06:42:38', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT87i1y_-CTEA4IM6wh38c7DqvSZn3IW6UXsg&s', 'https://www.youtube.com/embed/uMYhjVwp0Fk');
+
+-- --------------------------------------------------------
+
+--
+-- Tablo için tablo yapısı `basari_rozetleri`
+--
+
+DROP TABLE IF EXISTS `basari_rozetleri`;
+CREATE TABLE IF NOT EXISTS `basari_rozetleri` (
+  `id` int NOT NULL AUTO_INCREMENT COMMENT 'Benzersiz rozet kimliği',
+  `kullanici_id` int NOT NULL COMMENT 'Kullanıcı kimliği',
+  `rozet_adi` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Rozet adı',
+  `rozet_aciklama` text COLLATE utf8mb4_unicode_ci COMMENT 'Rozet açıklaması',
+  `rozet_ikonu` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Rozet ikonu URL',
+  `kazanma_tarihi` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Rozet kazanma tarihi',
+  `rozet_tipi` enum('izleme','puanlama','liste','ozel') COLLATE utf8mb4_unicode_ci DEFAULT 'izleme' COMMENT 'Rozet tipi',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unique_user_badge` (`kullanici_id`,`rozet_adi`),
+  KEY `idx_kullanici_id` (`kullanici_id`),
+  KEY `idx_rozet_tipi` (`rozet_tipi`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Başarı rozetleri tablosu';
+
+--
+-- Tablo döküm verisi `basari_rozetleri`
+--
+
+INSERT INTO `basari_rozetleri` (`id`, `kullanici_id`, `rozet_adi`, `rozet_aciklama`, `rozet_ikonu`, `kazanma_tarihi`, `rozet_tipi`) VALUES
+(1, 104, 'İlk Film', 'İlk filmini izledin!', '🎬', '2025-08-18 10:54:38', 'izleme'),
+(2, 104, 'Film Sever', '10 film izledin!', '🎭', '2025-08-18 10:54:38', 'izleme'),
+(3, 104, 'Kritik Göz', '5 film puanladın!', '⭐', '2025-08-18 10:54:38', 'puanlama'),
+(4, 104, 'Liste Yaratıcısı', 'İlk listeni oluşturdun!', '📝', '2025-08-18 10:54:38', 'liste');
 
 -- --------------------------------------------------------
 
@@ -232,6 +263,30 @@ INSERT INTO `diziler` (`id`, `dizi_adi`, `aciklama`, `yonetmen`, `oyuncular`, `d
 -- --------------------------------------------------------
 
 --
+-- Tablo için tablo yapısı `dizi_takip`
+--
+
+DROP TABLE IF EXISTS `dizi_takip`;
+CREATE TABLE IF NOT EXISTS `dizi_takip` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `year` int DEFAULT NULL,
+  `genre` varchar(100) DEFAULT NULL,
+  `poster` text,
+  `rating` int DEFAULT '0',
+  `review` text,
+  `is_watched` tinyint(1) DEFAULT '0',
+  `is_favorite` tinyint(1) DEFAULT '0',
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Tablo için tablo yapısı `dunya_mutfagi`
 --
 
@@ -386,6 +441,110 @@ INSERT INTO `filmler` (`id`, `film_adi`, `yil`, `sure`, `imdb_puani`, `poster_ur
 -- --------------------------------------------------------
 
 --
+-- Tablo için tablo yapısı `film_listeleri`
+--
+
+DROP TABLE IF EXISTS `film_listeleri`;
+CREATE TABLE IF NOT EXISTS `film_listeleri` (
+  `id` int NOT NULL AUTO_INCREMENT COMMENT 'Benzersiz liste kimliği',
+  `kullanici_id` int NOT NULL COMMENT 'Liste sahibi kullanıcı kimliği',
+  `liste_adi` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Liste adı',
+  `aciklama` text COLLATE utf8mb4_unicode_ci COMMENT 'Liste açıklaması',
+  `gizli` tinyint(1) DEFAULT '0' COMMENT 'Liste gizli mi?',
+  `film_sayisi` int DEFAULT '0' COMMENT 'Listedeki film sayısı',
+  `begeni_sayisi` int DEFAULT '0' COMMENT 'Liste beğeni sayısı',
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Liste oluşturma tarihi',
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Son güncelleme tarihi',
+  PRIMARY KEY (`id`),
+  KEY `idx_kullanici_id` (`kullanici_id`),
+  KEY `idx_gizli` (`gizli`),
+  KEY `idx_created_at` (`created_at`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Film listeleri tablosu';
+
+--
+-- Tablo döküm verisi `film_listeleri`
+--
+
+INSERT INTO `film_listeleri` (`id`, `kullanici_id`, `liste_adi`, `aciklama`, `gizli`, `film_sayisi`, `begeni_sayisi`, `created_at`, `updated_at`) VALUES
+(1, 104, 'En Sevdiğim Filmler', 'Tüm zamanların en sevdiğim filmleri', 0, 0, 0, '2025-08-18 10:54:38', '2025-08-18 10:54:38'),
+(2, 104, 'İzleyeceklerim', 'Bu ay izlemeyi planladığım filmler', 0, 0, 0, '2025-08-18 10:54:38', '2025-08-18 10:54:38'),
+(3, 104, 'Klasikler', 'Mutlaka izlenmesi gereken klasik filmler', 0, 0, 0, '2025-08-18 10:54:38', '2025-08-18 10:54:38'),
+(4, 103, 'Aksiyon Filmleri', 'En iyi aksiyon filmleri listesi', 0, 0, 0, '2025-08-18 10:54:38', '2025-08-18 10:54:38');
+
+-- --------------------------------------------------------
+
+--
+-- Tablo için tablo yapısı `film_takip`
+--
+
+DROP TABLE IF EXISTS `film_takip`;
+CREATE TABLE IF NOT EXISTS `film_takip` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `year` int DEFAULT NULL,
+  `genre` varchar(100) DEFAULT NULL,
+  `poster` text,
+  `rating` int DEFAULT '0',
+  `review` text,
+  `is_watched` tinyint(1) DEFAULT '0',
+  `is_favorite` tinyint(1) DEFAULT '0',
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`)
+) ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Tablo döküm verisi `film_takip`
+--
+
+INSERT INTO `film_takip` (`id`, `user_id`, `title`, `year`, `genre`, `poster`, `rating`, `review`, `is_watched`, `is_favorite`, `created_at`, `updated_at`) VALUES
+(1, 106, 'The Dark Knight', 2008, 'Aksiyon, Dram', 'https://m.media-amazon.com/images/M/MV5BMTMxNTMwODM0NF5BMl5BanBnXkFtZTcwODAyMTk2Mw@@._V1_SX300.jpg', 0, '', 0, 1, '2025-08-18 11:46:34', '2025-08-18 11:47:12'),
+(4, 114, 'Jurassic Park', 1993, 'Macera, Bilim Kurgu', 'https://m.media-amazon.com/images/M/MV5BMjM2MDgxMDg0Nl5BMl5BanBnXkFtZTgwNTM2OTM5NDE@._V1_FMjpg_UX1000_.jpg', 0, '', 0, 0, '2025-08-18 13:45:36', '2025-08-18 13:45:48'),
+(9, 114, 'The Dark Knight', 2008, 'Aksiyon, Dram', 'https://m.media-amazon.com/images/M/MV5BMTMxNTMwODM0NF5BMl5BanBnXkFtZTcwODAyMTk2Mw@@._V1_SX300.jpg', 0, '', 0, 1, '2025-08-18 14:35:01', '2025-08-18 14:35:01'),
+(6, 114, 'The Matrix', 1999, 'Aksiyon, Bilim Kurgu', 'https://m.media-amazon.com/images/M/MV5BNzQzOTk3OTAtNDQ0Zi00ZTVkLWI0MTEtMDllZjNkYzNjNTc4L2ltYWdlXkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_SX300.jpg', 0, '', 0, 0, '2025-08-18 13:51:35', '2025-08-18 13:51:35'),
+(7, 114, 'Die Hard', 1988, 'Aksiyon, Gerilim', 'https://media.posterlounge.com/img/products/710000/705263/705263_poster.jpg', 0, '', 0, 0, '2025-08-18 13:51:41', '2025-08-18 13:51:41'),
+(8, 114, 'Mad Max: Fury Road', 2015, 'Aksiyon, Macera', 'https://m.media-amazon.com/images/M/MV5BN2EwM2I5OWMtMGQyMi00Zjg1LWJkNTctZTdjYTA4OGUwZjMyXkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_SX300.jpg', 0, '', 0, 0, '2025-08-18 13:51:51', '2025-08-18 13:51:51');
+
+-- --------------------------------------------------------
+
+--
+-- Tablo için tablo yapısı `dizi_takip`
+--
+
+DROP TABLE IF EXISTS `dizi_takip`;
+CREATE TABLE IF NOT EXISTS `dizi_takip` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `year` int DEFAULT NULL,
+  `genre` varchar(100) DEFAULT NULL,
+  `poster` text,
+  `rating` decimal(3,1) DEFAULT '0.0',
+  `review` text,
+  `season_count` int DEFAULT '1',
+  `episode_count` int DEFAULT '1',
+  `current_season` int DEFAULT '1',
+  `current_episode` int DEFAULT '1',
+  `is_watched` tinyint(1) DEFAULT '0',
+  `is_favorite` tinyint(1) DEFAULT '0',
+  `is_watchlist` tinyint(1) DEFAULT '0',
+  `is_watching` tinyint(1) DEFAULT '0',
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`)
+) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Tablo döküm verisi `dizi_takip`
+--
+
+
+-- --------------------------------------------------------
+
+--
 -- Tablo için tablo yapısı `fotograflar`
 --
 
@@ -463,7 +622,7 @@ CREATE TABLE IF NOT EXISTS `iletisim_formu` (
   `adisoyadi` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=31 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=35 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Tablo döküm verisi `iletisim_formu`
@@ -497,7 +656,11 @@ INSERT INTO `iletisim_formu` (`id`, `konu`, `mesaj`, `eposta`, `adisoyadi`, `cre
 (27, 'dsadsadsadas', 'dsadsadsadsadsa', 'emresabahat@outlook.com', 'emre', '2025-08-13 07:16:04'),
 (28, 'adsadasdsa', 'dsadasdsadsad', 'dsadsadsa@outlook.com', 'tech', '2025-08-14 08:37:43'),
 (29, 'dsadsadsadsa', 'sadsaddsadsadsa', 'dsadsadsadsa@hotmail.com', 'dsadsadsa', '2025-08-15 12:48:00'),
-(30, 'dsaddsadsa', 'sadsadsadsa', 'sadsadsadsa@outlook.com', 'dsadsadsa', '2025-08-15 13:28:58');
+(30, 'dsaddsadsa', 'sadsadsadsa', 'sadsadsadsa@outlook.com', 'dsadsadsa', '2025-08-15 13:28:58'),
+(31, 'test', 'test', 'test@outlook.com', 'test', '2025-08-18 09:40:57'),
+(32, 'test', 'test', 'test@outlook.com', 'test', '2025-08-18 09:44:20'),
+(33, 'test', 'test', 'emresabahat@outlook.com', 'test', '2025-08-18 09:44:38'),
+(34, 'dsa', 'asdsadsadasdsa', 'dsadsad@outlook.com', 'dsadas', '2025-08-18 10:19:32');
 
 -- --------------------------------------------------------
 
@@ -514,7 +677,7 @@ CREATE TABLE IF NOT EXISTS `kisiler` (
   `rol` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `e_posta` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=114 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=118 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Tablo döküm verisi `kisiler`
@@ -524,10 +687,13 @@ INSERT INTO `kisiler` (`id`, `username`, `adsoyad`, `sifre`, `rol`, `e_posta`) V
 (104, 'yeşim', 'altundağ', '$2y$10$1UBmeKf4OPoKM79FKBt0TesmWhOjksbjy3FdLBVdBaZKCoV4qLfpW', 'admin', 'yesimaltundag00@gmail.com'),
 (103, 'eray', 'altundağ', '$2y$10$Ef2MGTDKTviUE7gv93LTpu67Q.ai6k3m04p2W/CLpDGfSqcgJuSHe', 'kullanici', 'erayalt@posta.com'),
 (105, 'irem', 'altundağ', '$2y$10$03FZx.W19rPAhrygVdB5xOWTg9pVl1efrE.WxXTq4PYQUp0lVwg3a', 'kullanici', 'iremalt@posta.com'),
-(106, 'emre', 'şabahat', '$2y$10$6lsvigYtLwjyiGWU53SXmORzAX7butfRbVyYjuaOy/nw1NFX/Yswy', 'kullanici', 'emres@posta.com'),
+(106, 'emre', 'şabahat', '$2y$10$RdxLXJzBYmAj9NmUwkFwnepgaRML7MtMTBwxsTAE9qcQzIAVVnq5y', 'admin', 'emres@posta.com'),
 (107, 'gizem', 'alt', '$2y$10$SqXUXB3WlDTfX2L0wrbieekl7uqa9haQXvvkzOVTSZNyCCdIPyWMm', 'kullanici', 'gizemalt@posta.com'),
 (108, 'ekber', 'ekber h', '$2y$10$7S/0Ng/m.8AzUUWxT3FU5eGihxZ2MmbqosIPcHT459eNsZVVLuyiO', 'kullanici', 'ekhas@posta.com.tr'),
-(113, 'test', 'test', '$2y$10$l.XPxPMpnqGk1ZeUD1IL0Oes1UGG/Y/IrN4JLKzNsHGoV5I2EgdWC', 'kullanici', 'test@posta.com');
+(114, 'test2', 'test', '$2y$10$ayjqBbCnMFjXohH38.ZSi.kfozFVr2zggqHe5bcDPuNkMb140iQge', 'kullanici', 'test@test.com'),
+(115, 'testt', 'test', '$2y$10$lcTrrMpiFTrf9P8aZ75kK.QqU7hdbYbVA7AHH2xwyqLyUPLuTKEc.', 'kullanici', 'test@posta.com'),
+(116, 'testtt', 'test', '$2y$10$wU.yJ4INADPsc2SwYMIB1.PkveEcKk4JcxD0Y4qn.RNp7IXC6RX1a', 'kullanici', 'testt@posta.com'),
+(117, 'test2', 'test', '$2y$10$4QCZVYOIUqHJUIAXk3E6zeN0HWfr2lmU7BVfz9Egvx1ghy7aGk3Qa', 'kullanici', 'testtt@posta.com');
 
 -- --------------------------------------------------------
 
@@ -601,6 +767,103 @@ INSERT INTO `kitaplar` (`id`, `kitap_adi`, `yazar`, `basim_yili`, `kategori`, `s
 -- --------------------------------------------------------
 
 --
+-- Tablo için tablo yapısı `kullanici_filmler`
+--
+
+DROP TABLE IF EXISTS `kullanici_filmler`;
+CREATE TABLE IF NOT EXISTS `kullanici_filmler` (
+  `id` int NOT NULL AUTO_INCREMENT COMMENT 'Benzersiz kayıt kimliği',
+  `kullanici_id` int NOT NULL COMMENT 'Kullanıcı kimliği (kisiler tablosundan)',
+  `film_id` int NOT NULL COMMENT 'Film kimliği (filmler tablosundan)',
+  `izleme_durumu` enum('izlendi','izlenecek','yarida') COLLATE utf8mb4_unicode_ci DEFAULT 'izlenecek' COMMENT 'İzleme durumu',
+  `kullanici_puani` decimal(2,1) DEFAULT NULL COMMENT 'Kullanıcının verdiği puan (0.5 - 5.0)',
+  `izleme_tarihi` date DEFAULT NULL COMMENT 'Film izleme tarihi',
+  `yorum` text COLLATE utf8mb4_unicode_ci COMMENT 'Kullanıcının film hakkındaki yorumu',
+  `favori` tinyint(1) DEFAULT '0' COMMENT 'Favori film mi?',
+  `izleme_sayisi` int DEFAULT '1' COMMENT 'Kaç kez izlendi',
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Kayıt oluşturma tarihi',
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Son güncelleme tarihi',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unique_user_film` (`kullanici_id`,`film_id`),
+  KEY `idx_kullanici_id` (`kullanici_id`),
+  KEY `idx_film_id` (`film_id`),
+  KEY `idx_izleme_durumu` (`izleme_durumu`),
+  KEY `idx_izleme_tarihi` (`izleme_tarihi`),
+  KEY `idx_kullanici_filmler_durum_tarih` (`izleme_durumu`,`izleme_tarihi`),
+  KEY `idx_kullanici_filmler_puan` (`kullanici_puani`),
+  KEY `idx_kullanici_filmler_favori` (`favori`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Kullanıcı film takip tablosu';
+
+--
+-- Tablo döküm verisi `kullanici_filmler`
+--
+
+INSERT INTO `kullanici_filmler` (`id`, `kullanici_id`, `film_id`, `izleme_durumu`, `kullanici_puani`, `izleme_tarihi`, `yorum`, `favori`, `izleme_sayisi`, `created_at`, `updated_at`) VALUES
+(1, 104, 28, 'izlendi', 5.0, '2025-01-15', 'Muhteşem bir başyapıt! Marlon Brando\'nun performansı unutulmaz.', 1, 1, '2025-08-18 10:54:38', '2025-08-18 10:54:38'),
+(2, 104, 29, 'izlendi', 4.5, '2025-01-20', 'Çok etkileyici bir film. Jüri odasındaki gerilim mükemmel.', 0, 1, '2025-08-18 10:54:38', '2025-08-18 10:54:38'),
+(3, 104, 27, 'izlendi', 5.0, '2025-01-25', 'Tarihi bir dram. Liam Neeson\'ın performansı çok güçlü.', 1, 1, '2025-08-18 10:54:38', '2025-08-18 10:54:38'),
+(4, 104, 12, 'izlendi', 4.0, '2025-02-01', 'Klasik aksiyon filmi. Bruce Willis mükemmel.', 0, 1, '2025-08-18 10:54:38', '2025-08-18 10:54:38'),
+(5, 104, 54, 'izlenecek', NULL, NULL, NULL, 0, 1, '2025-08-18 10:54:38', '2025-08-18 10:54:38'),
+(6, 104, 55, 'izlenecek', NULL, NULL, NULL, 0, 1, '2025-08-18 10:54:38', '2025-08-18 10:54:38'),
+(7, 103, 28, 'izlendi', 4.5, '2025-01-10', 'Gerçekten harika bir film.', 0, 1, '2025-08-18 10:54:38', '2025-08-18 10:54:38'),
+(8, 103, 16, 'izlendi', 5.0, '2025-01-18', 'Heath Ledger\'ın Joker\'i unutulmaz!', 1, 1, '2025-08-18 10:54:38', '2025-08-18 10:54:38');
+
+-- --------------------------------------------------------
+
+--
+-- Tablo için tablo yapısı `kullanici_istatistikleri`
+--
+
+DROP TABLE IF EXISTS `kullanici_istatistikleri`;
+CREATE TABLE IF NOT EXISTS `kullanici_istatistikleri` (
+  `id` int NOT NULL AUTO_INCREMENT COMMENT 'Benzersiz kayıt kimliği',
+  `kullanici_id` int NOT NULL COMMENT 'Kullanıcı kimliği',
+  `toplam_izlenen` int DEFAULT '0' COMMENT 'Toplam izlenen film sayısı',
+  `toplam_izlenecek` int DEFAULT '0' COMMENT 'İzlenecek film sayısı',
+  `toplam_yarida` int DEFAULT '0' COMMENT 'Yarıda bırakılan film sayısı',
+  `ortalama_puan` decimal(3,2) DEFAULT '0.00' COMMENT 'Ortalama verilen puan',
+  `favori_film_sayisi` int DEFAULT '0' COMMENT 'Favori film sayısı',
+  `toplam_izleme_saati` int DEFAULT '0' COMMENT 'Toplam izleme saati',
+  `en_cok_izlenen_tur` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'En çok izlenen film türü',
+  `en_cok_izlenen_yil` int DEFAULT NULL COMMENT 'En çok film izlenen yıl',
+  `son_guncelleme` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Son istatistik güncelleme tarihi',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unique_kullanici_stats` (`kullanici_id`),
+  KEY `idx_kullanici_id` (`kullanici_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Kullanıcı istatistikleri tablosu';
+
+--
+-- Tablo döküm verisi `kullanici_istatistikleri`
+--
+
+INSERT INTO `kullanici_istatistikleri` (`id`, `kullanici_id`, `toplam_izlenen`, `toplam_izlenecek`, `toplam_yarida`, `ortalama_puan`, `favori_film_sayisi`, `toplam_izleme_saati`, `en_cok_izlenen_tur`, `en_cok_izlenen_yil`, `son_guncelleme`) VALUES
+(1, 104, 4, 2, 0, 4.63, 2, 720, 'Dram', 2025, '2025-08-18 10:54:38'),
+(2, 103, 2, 0, 0, 4.75, 1, 304, 'Dram', 2025, '2025-08-18 10:54:38');
+
+-- --------------------------------------------------------
+
+--
+-- Tablo için tablo yapısı `liste_filmler`
+--
+
+DROP TABLE IF EXISTS `liste_filmler`;
+CREATE TABLE IF NOT EXISTS `liste_filmler` (
+  `id` int NOT NULL AUTO_INCREMENT COMMENT 'Benzersiz kayıt kimliği',
+  `liste_id` int NOT NULL COMMENT 'Liste kimliği',
+  `film_id` int NOT NULL COMMENT 'Film kimliği',
+  `sira_no` int DEFAULT '0' COMMENT 'Listedeki sıra numarası',
+  `ekleme_tarihi` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Listeye ekleme tarihi',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unique_liste_film` (`liste_id`,`film_id`),
+  KEY `idx_liste_id` (`liste_id`),
+  KEY `idx_film_id` (`film_id`),
+  KEY `idx_sira_no` (`sira_no`),
+  KEY `idx_liste_filmler_ekleme` (`ekleme_tarihi`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Liste-film ilişki tablosu';
+
+-- --------------------------------------------------------
+
+--
 -- Tablo için tablo yapısı `mesaj_cevaplari`
 --
 
@@ -615,7 +878,7 @@ CREATE TABLE IF NOT EXISTS `mesaj_cevaplari` (
   PRIMARY KEY (`id`),
   KEY `idx_iletisim_formu_id` (`iletisim_formu_id`),
   KEY `idx_cevap_veren_user_id` (`cevap_veren_yonetici_user_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=33 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=34 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Tablo döküm verisi `mesaj_cevaplari`
@@ -652,7 +915,8 @@ INSERT INTO `mesaj_cevaplari` (`id`, `iletisim_formu_id`, `cevap_id`, `cevap_mes
 (29, 24, 2, 'dsadsadsadsa', 104, '2025-08-12 07:20:58'),
 (30, 26, 1, 'Survivor ne zaman başlayacak acun bey merakla bekliyoruz.', 104, '2025-08-12 09:54:34'),
 (31, 26, 2, 'Survivor ne zaman başlayacak acun bey merakla bekliyoruz.', 104, '2025-08-12 09:54:36'),
-(32, 27, 1, 'dasdsadsadsadas', 104, '2025-08-13 07:16:13');
+(32, 27, 1, 'dasdsadsadsadas', 104, '2025-08-13 07:16:13'),
+(33, 33, 1, 'test', 104, '2025-08-18 09:44:56');
 
 -- --------------------------------------------------------
 
@@ -1141,7 +1405,7 @@ CREATE TABLE IF NOT EXISTS `yorumlar` (
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `kullanici_id` (`kullanici_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=77 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=85 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Tablo döküm verisi `yorumlar`
@@ -1193,7 +1457,14 @@ INSERT INTO `yorumlar` (`id`, `kullanici_id`, `kullanici_adi`, `tur`, `icerik_id
 (73, 104, 'yeşim', 'film', 16, 'The Dark Knight', 'asdsadasds', 7, 0, '2025-08-13 13:58:48'),
 (74, 104, 'yeşim', 'film', 16, 'The Dark Knight', 'dsadsdasdsad', 8, 1, '2025-08-13 14:16:22'),
 (75, 104, 'yeşim', 'film', 16, 'The Dark Knight', 'dsadsadsadsa', 8, 1, '2025-08-15 13:32:15'),
-(76, 104, 'yeşim', 'tiyatro', 2, 'Romeo ve Juliet', 'dasdsa6552525', 8, 0, '2025-08-15 13:33:16');
+(76, 104, 'yeşim', 'tiyatro', 2, 'Romeo ve Juliet', 'dasdsa6552525', 8, 0, '2025-08-15 13:33:16'),
+(80, 104, 'yeşim', 'dizi', 5, 'The Queen\'s Gambit', 'dsadsa', 5, 0, '2025-08-18 08:03:16'),
+(78, 104, 'yeşim', 'dizi', 8, 'Brooklyn Nine-Nine', 'dadsad', 4, 0, '2025-08-18 07:51:08'),
+(79, 104, 'yeşim', 'dizi', 8, 'Brooklyn Nine-Nine', 'asdas', 2, 0, '2025-08-18 07:51:14'),
+(81, 104, 'yeşim', 'dizi', 5, 'The Queen\'s Gambit', 'dsadds', 4, 0, '2025-08-18 08:04:26'),
+(82, 104, 'yeşim', 'film', 16, 'The Dark Knight', 'asdsadsaasdsa', 6, 0, '2025-08-18 08:33:01'),
+(83, 104, 'yeşim', 'dizi', 8, 'Brooklyn Nine-Nine', 'dasdasdasdasdsa', 4, 0, '2025-08-18 08:49:49'),
+(84, 104, 'yeşim', 'dizi', 8, 'Brooklyn Nine-Nine', 'dasdsadasdsadas', 4, 0, '2025-08-18 09:02:47');
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

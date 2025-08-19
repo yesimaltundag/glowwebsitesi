@@ -133,13 +133,13 @@
         </li>
         <li><a href="/hakkimizda.html" class="nav-link">Hakkımızda</a></li>
         <li><a href="/iletisim.html" class="nav-link">İletişim</a></li>
-        <li ng-if="kullanici" class="user-menu">
-          <a
-            href=""
-            class="nav-link user-link"
-            ng-if="kullanici"
-            ng-click="hesapGit($event)"
-          >
+        <li
+          ng-if="kullanici"
+          class="user-menu"
+          onmouseenter="userMenuHover()"
+          onmouseleave="userMenuLeave()"
+        >
+          <a href="" class="nav-link user-link" ng-if="kullanici">
             <svg class="user-icon" viewBox="0 0 24 24" fill="currentColor">
               <circle cx="12" cy="8" r="4" />
               <path
@@ -147,17 +147,34 @@
               />
             </svg>
             <span>Hesabım</span>
-          </a>
-        </li>
-        <li ng-if="kullanici" class="favorites-menu">
-          <a href="/film-takip.html" class="nav-link favorites-link">
-            <svg class="favorites-icon" viewBox="0 0 24 24" fill="currentColor">
-              <path
-                d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
-              />
+            <svg class="dropdown-arrow" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M7 10l5 5 5-5z" />
             </svg>
-            <span>Favoriler</span>
           </a>
+          <div class="user-dropdown-menu">
+            <a href="" class="dropdown-item" ng-click="hesapGit($event)">
+              <span
+                ng-if="kullanici.rol === 'admin' || kullanici.rol === 'Yönetici'"
+                >👑 Admin Paneli</span
+              >
+              <span
+                ng-if="kullanici.rol !== 'admin' && kullanici.rol !== 'Yönetici'"
+                >👤 Profilim</span
+              >
+            </a>
+            <div class="dropdown-item-with-submenu">
+              <span class="dropdown-item">❤️ Favoriler</span>
+              <div class="submenu">
+                <a href="/film-takip.html" class="submenu-item"
+                  >🎬 Film Takip</a
+                >
+                <a href="/dizi-takip.html" class="submenu-item"
+                  >📺 Dizi Takip</a
+                >
+                <a href="/kitaplar.html" class="submenu-item">📚 Kitap Takip</a>
+              </div>
+            </div>
+          </div>
         </li>
       </ul>
     </nav>

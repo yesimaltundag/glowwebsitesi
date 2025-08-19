@@ -127,6 +127,49 @@ window.categoryLeave = function () {
   });
 };
 
+// ===== USER DROPDOWN MENU FUNCTIONS =====
+window.userMenuHover = function () {
+  console.log("User menu hover başladı!");
+
+  // User dropdown menüsünü kesinlikle opak tut
+  var userElements = document.querySelectorAll(
+    ".user-menu, .user-link, .user-dropdown-menu, .dropdown-arrow, .dropdown-item-with-submenu, .submenu"
+  );
+  userElements.forEach(function (element) {
+    if (element) {
+      element.style.opacity = "1";
+      element.style.zIndex = "99999";
+      element.style.pointerEvents = "auto";
+      element.style.overflow = "visible";
+    }
+  });
+
+  // Submenu'yu özellikle görünür yap
+  var submenus = document.querySelectorAll(".user-dropdown-menu .submenu");
+  submenus.forEach(function (submenu) {
+    if (submenu) {
+      submenu.style.zIndex = "99999";
+      submenu.style.overflow = "visible";
+    }
+  });
+};
+
+window.userMenuLeave = function () {
+  console.log("User menu hover bitti!");
+
+  // User dropdown menüsünü normale döndür
+  var userElements = document.querySelectorAll(
+    ".user-menu, .user-link, .user-dropdown-menu, .dropdown-arrow, .dropdown-item-with-submenu, .submenu"
+  );
+  userElements.forEach(function (element) {
+    if (element) {
+      element.style.opacity = "1";
+      element.style.zIndex = "auto";
+      element.style.pointerEvents = "auto";
+    }
+  });
+};
+
 // ===== ANGULAR APP MODULE =====
 angular
   .module("GirisApp", [])
@@ -401,7 +444,7 @@ angular
   .controller("KayitController", function ($scope, $http) {
     $scope.kayitOl = function () {
       if ($scope.sifre.length < 6 || $scope.sifre.length > 10) {
-        alert("Şifre 6 ile 10 karakter arasında olmalıdır!");
+        showMessage("Şifre 6 ile 10 karakter arasında olmalıdır!", "error");
         return;
       }
 
@@ -415,18 +458,26 @@ angular
         })
         .then(function (response) {
           if (response.data.success) {
-            alert("Kayıt başarılı! Giriş yapabilirsiniz.");
-            window.location.href = "index.html";
+            showMessage("Kayıt başarılı! Giriş yapabilirsiniz.", "success");
+            setTimeout(function () {
+              window.location.href = "index.html";
+            }, 2000);
           } else {
-            alert("Kayıt işlemi başarısız: " + response.data.message);
+            showMessage(
+              "Kayıt işlemi başarısız: " + response.data.message,
+              "error"
+            );
           }
         })
         .catch(function (error) {
           console.error("Kayıt hatası:", error);
           if (error.data && error.data.message) {
-            alert("Bir hata oluştu: " + error.data.message);
+            showMessage("Bir hata oluştu: " + error.data.message, "error");
           } else {
-            alert("Sunucu bağlantı hatası! Lütfen tekrar deneyin.");
+            showMessage(
+              "Sunucu bağlantı hatası! Lütfen tekrar deneyin.",
+              "error"
+            );
           }
         });
     };
@@ -2312,7 +2363,7 @@ angular
             $scope.filmTakipDurumu = {
               isFavorite: mevcutFilm.isFavorite,
               isWatched: mevcutFilm.isWatched,
-              isWatchlist: !mevcutFilm.isWatched,
+              isWatchlist: mevcutFilm.isWatchlist || false,
             };
           } else {
             $scope.filmTakipDurumu = {
@@ -2340,7 +2391,8 @@ angular
         poster: $scope.film.poster_url,
         isFavorite: !$scope.filmTakipDurumu.isFavorite,
         isWatched: $scope.filmTakipDurumu.isWatched,
-        rating: 0,
+        isWatchlist: $scope.filmTakipDurumu.isWatchlist, // İzlenecek durumunu koru
+        rating: parseFloat($scope.film.imdb_puani) || 0, // IMDb puanını kullan
         review: "",
       };
 
@@ -2417,7 +2469,7 @@ angular
         poster: $scope.film.poster_url,
         isFavorite: $scope.filmTakipDurumu.isFavorite,
         isWatched: !$scope.filmTakipDurumu.isWatched,
-        rating: 0,
+        rating: parseFloat($scope.film.imdb_puani) || 0, // IMDb puanını kullan
         review: "",
       };
 
@@ -2428,7 +2480,7 @@ angular
           .then(function (response) {
             if (response.data.success) {
               $scope.filmTakipDurumu.isWatched = false;
-              $scope.filmTakipDurumu.isWatchlist = true;
+              // İzleneceklere otomatik ekleme kaldırıldı - kullanıcı manuel olarak seçsin
               showMessage("Film izlendi listesinden çıkarıldı", "success");
             }
           })
@@ -2445,7 +2497,7 @@ angular
           .then(function (response) {
             if (response.data.success) {
               $scope.filmTakipDurumu.isWatched = true;
-              $scope.filmTakipDurumu.isWatchlist = false;
+              // İzleneceklerden otomatik çıkarma kaldırıldı - kullanıcı manuel karar versin
               showMessage("Film izlendi olarak işaretlendi", "success");
             }
           })
@@ -2470,8 +2522,9 @@ angular
         genre: $scope.film.tur,
         poster: $scope.film.poster_url,
         isFavorite: $scope.filmTakipDurumu.isFavorite,
-        isWatched: false,
-        rating: 0,
+        isWatched: $scope.filmTakipDurumu.isWatched, // Mevcut durumu koru
+        isWatchlist: !$scope.filmTakipDurumu.isWatchlist, // Toggle watchlist
+        rating: parseFloat($scope.film.imdb_puani) || 0, // IMDb puanını kullan
         review: "",
       };
 
@@ -2489,7 +2542,7 @@ angular
             .then(function (response) {
               if (response.data.success) {
                 $scope.filmTakipDurumu.isWatchlist = false;
-                $scope.filmTakipDurumu.isFavorite = false;
+                // Favori durumunu otomatik değiştirme - sadece izleneceklerden çıkar
                 showMessage(
                   "Film izlenecekler listesinden çıkarıldı",
                   "success"
@@ -2529,7 +2582,7 @@ angular
           .then(function (response) {
             if (response.data.success) {
               $scope.filmTakipDurumu.isWatchlist = true;
-              $scope.filmTakipDurumu.isWatched = false;
+              // İzlendi durumunu otomatik değiştirme - kullanıcı manuel karar versin
               showMessage("Film izlenecekler listesine eklendi", "success");
             }
           })
@@ -2748,8 +2801,382 @@ angular
       }
     };
 
+    // Dizi takip durumu
+    $scope.diziTakipDurumu = {
+      isFavorite: false,
+      isWatched: false,
+      isWatchlist: false,
+      isWatching: false,
+      current_season: 1,
+      current_episode: 1,
+    };
+    $scope.takipLoading = false;
+
+    // Dizi takip durumunu kontrol et
+    $scope.diziTakipDurumuKontrolEt = function () {
+      if (!$scope.kullanici || !$scope.dizi) return;
+
+      $http
+        .get(
+          "dizi_takip_api.php?check_dizi=" +
+            encodeURIComponent($scope.dizi.dizi_adi) +
+            "&user_id=" +
+            $scope.kullanici.id
+        )
+        .then(function (response) {
+          if (response.data) {
+            $scope.diziTakipDurumu = {
+              isFavorite: response.data.isFavorite || false,
+              isWatched: response.data.isWatched || false,
+              isWatchlist: response.data.isWatchlist || false,
+              isWatching: response.data.isWatching || false,
+              current_season: response.data.current_season || 1,
+              current_episode: response.data.current_episode || 1,
+            };
+          }
+        })
+        .catch(function (error) {
+          console.error("Dizi takip durumu kontrol edilirken hata:", error);
+        });
+    };
+
+    // Favori durumunu değiştir
+    $scope.toggleFavorite = function () {
+      if (!$scope.kullanici || $scope.takipLoading) return;
+
+      $scope.takipLoading = true;
+      var diziData = {
+        user_id: $scope.kullanici.id,
+        title: $scope.dizi.dizi_adi,
+        year: $scope.dizi.yil,
+        genre: $scope.dizi.kategori,
+        poster: $scope.dizi.poster_url,
+        season_count: $scope.dizi.toplam_sezon_sayisi || 1,
+        episode_count: $scope.dizi.toplam_bolum_sayisi || 1,
+        current_season: $scope.diziTakipDurumu.current_season,
+        current_episode: $scope.diziTakipDurumu.current_episode,
+        isFavorite: !$scope.diziTakipDurumu.isFavorite,
+        isWatched: $scope.diziTakipDurumu.isWatched,
+        isWatchlist: $scope.diziTakipDurumu.isWatchlist,
+        isWatching: $scope.diziTakipDurumu.isWatching,
+        rating: parseFloat($scope.dizi.imdb_puani) || 0,
+        review: "",
+      };
+
+      if ($scope.diziTakipDurumu.isFavorite) {
+        // Favorilerden çıkar - eğer başka durum yoksa tamamen sil
+        if (
+          !$scope.diziTakipDurumu.isWatchlist &&
+          !$scope.diziTakipDurumu.isWatching &&
+          !$scope.diziTakipDurumu.isWatched
+        ) {
+          $http
+            .delete(
+              "dizi_takip_api.php?user_id=" +
+                $scope.kullanici.id +
+                "&title=" +
+                encodeURIComponent($scope.dizi.dizi_adi)
+            )
+            .then(function (response) {
+              if (response.data.success) {
+                $scope.diziTakipDurumu.isFavorite = false;
+                showMessage("Dizi favorilerden çıkarıldı", "success");
+              } else {
+                showMessage(
+                  response.data.message || "İşlem başarısız",
+                  "error"
+                );
+              }
+              $scope.takipLoading = false;
+            })
+            .catch(function (error) {
+              console.error("Dizi favorilerden çıkarılırken hata:", error);
+              showMessage("İşlem başarısız", "error");
+              $scope.takipLoading = false;
+            });
+        } else {
+          // Sadece favori durumunu güncelle
+          $http
+            .put("dizi_takip_api.php", diziData)
+            .then(function (response) {
+              if (response.data.success) {
+                $scope.diziTakipDurumu.isFavorite = false;
+                showMessage("Dizi favorilerden çıkarıldı", "success");
+              } else {
+                showMessage(
+                  response.data.message || "İşlem başarısız",
+                  "error"
+                );
+              }
+              $scope.takipLoading = false;
+            })
+            .catch(function (error) {
+              console.error("Dizi güncellenirken hata:", error);
+              showMessage("İşlem başarısız", "error");
+              $scope.takipLoading = false;
+            });
+        }
+      } else {
+        // Favorilere ekle
+        $http
+          .post("dizi_takip_api.php", diziData)
+          .then(function (response) {
+            if (response.data.success) {
+              $scope.diziTakipDurumu.isFavorite = true;
+              showMessage("Dizi favorilere eklendi", "success");
+            } else {
+              showMessage(response.data.message || "İşlem başarısız", "error");
+            }
+            $scope.takipLoading = false;
+          })
+          .catch(function (error) {
+            console.error("Dizi favorilere eklenirken hata:", error);
+            showMessage("İşlem başarısız", "error");
+            $scope.takipLoading = false;
+          });
+      }
+    };
+
+    // İzleniyor durumunu değiştir
+    $scope.toggleWatching = function () {
+      if (!$scope.kullanici || $scope.takipLoading) return;
+
+      $scope.takipLoading = true;
+      var diziData = {
+        user_id: $scope.kullanici.id,
+        title: $scope.dizi.dizi_adi,
+        year: $scope.dizi.yil,
+        genre: $scope.dizi.kategori,
+        poster: $scope.dizi.poster_url,
+        season_count: $scope.dizi.toplam_sezon_sayisi || 1,
+        episode_count: $scope.dizi.toplam_bolum_sayisi || 1,
+        current_season: $scope.diziTakipDurumu.current_season,
+        current_episode: $scope.diziTakipDurumu.current_episode,
+        isFavorite: $scope.diziTakipDurumu.isFavorite,
+        isWatched: $scope.diziTakipDurumu.isWatched,
+        isWatchlist: !$scope.diziTakipDurumu.isWatching
+          ? false
+          : $scope.diziTakipDurumu.isWatchlist, // İzleniyorsa watchlist'i kapat
+        isWatching: !$scope.diziTakipDurumu.isWatching,
+        rating: parseFloat($scope.dizi.imdb_puani) || 0,
+        review: "",
+      };
+
+      $http
+        .post("dizi_takip_api.php", diziData)
+        .then(function (response) {
+          if (response.data.success) {
+            $scope.diziTakipDurumu.isWatching =
+              !$scope.diziTakipDurumu.isWatching;
+            if ($scope.diziTakipDurumu.isWatching) {
+              $scope.diziTakipDurumu.isWatchlist = false;
+              showMessage("Dizi izleniyor listesine eklendi", "success");
+            } else {
+              showMessage("Dizi izleniyor listesinden çıkarıldı", "success");
+            }
+          } else {
+            showMessage(response.data.message || "İşlem başarısız", "error");
+          }
+          $scope.takipLoading = false;
+        })
+        .catch(function (error) {
+          console.error("Dizi izleniyor durumu güncellenirken hata:", error);
+          showMessage("İşlem başarısız", "error");
+          $scope.takipLoading = false;
+        });
+    };
+
+    // İzlenecek durumunu değiştir
+    $scope.toggleWatchlist = function () {
+      if (!$scope.kullanici || $scope.takipLoading) return;
+
+      $scope.takipLoading = true;
+      var diziData = {
+        user_id: $scope.kullanici.id,
+        title: $scope.dizi.dizi_adi,
+        year: $scope.dizi.yil,
+        genre: $scope.dizi.kategori,
+        poster: $scope.dizi.poster_url,
+        season_count: $scope.dizi.toplam_sezon_sayisi || 1,
+        episode_count: $scope.dizi.toplam_bolum_sayisi || 1,
+        current_season: $scope.diziTakipDurumu.current_season,
+        current_episode: $scope.diziTakipDurumu.current_episode,
+        isFavorite: $scope.diziTakipDurumu.isFavorite,
+        isWatched: $scope.diziTakipDurumu.isWatched,
+        isWatchlist: !$scope.diziTakipDurumu.isWatchlist,
+        isWatching: $scope.diziTakipDurumu.isWatching,
+        rating: parseFloat($scope.dizi.imdb_puani) || 0,
+        review: "",
+      };
+
+      if ($scope.diziTakipDurumu.isWatchlist) {
+        // İzleneceklerden çıkar - eğer başka durum yoksa tamamen sil
+        if (
+          !$scope.diziTakipDurumu.isFavorite &&
+          !$scope.diziTakipDurumu.isWatching &&
+          !$scope.diziTakipDurumu.isWatched
+        ) {
+          $http
+            .delete(
+              "dizi_takip_api.php?user_id=" +
+                $scope.kullanici.id +
+                "&title=" +
+                encodeURIComponent($scope.dizi.dizi_adi)
+            )
+            .then(function (response) {
+              if (response.data.success) {
+                $scope.diziTakipDurumu.isWatchlist = false;
+                showMessage("Dizi izleneceklerden çıkarıldı", "success");
+              } else {
+                showMessage(
+                  response.data.message || "İşlem başarısız",
+                  "error"
+                );
+              }
+              $scope.takipLoading = false;
+            })
+            .catch(function (error) {
+              console.error("Dizi izleneceklerden çıkarılırken hata:", error);
+              showMessage("İşlem başarısız", "error");
+              $scope.takipLoading = false;
+            });
+        } else {
+          // Sadece watchlist durumunu güncelle
+          $http
+            .put("dizi_takip_api.php", diziData)
+            .then(function (response) {
+              if (response.data.success) {
+                $scope.diziTakipDurumu.isWatchlist = false;
+                showMessage("Dizi izleneceklerden çıkarıldı", "success");
+              } else {
+                showMessage(
+                  response.data.message || "İşlem başarısız",
+                  "error"
+                );
+              }
+              $scope.takipLoading = false;
+            })
+            .catch(function (error) {
+              console.error("Dizi güncellenirken hata:", error);
+              showMessage("İşlem başarısız", "error");
+              $scope.takipLoading = false;
+            });
+        }
+      } else {
+        // İzleneceklere ekle
+        $http
+          .post("dizi_takip_api.php", diziData)
+          .then(function (response) {
+            if (response.data.success) {
+              $scope.diziTakipDurumu.isWatchlist = true;
+              showMessage("Dizi izleneceklere eklendi", "success");
+            } else {
+              showMessage(response.data.message || "İşlem başarısız", "error");
+            }
+            $scope.takipLoading = false;
+          })
+          .catch(function (error) {
+            console.error("Dizi izleneceklere eklenirken hata:", error);
+            showMessage("İşlem başarısız", "error");
+            $scope.takipLoading = false;
+          });
+      }
+    };
+
+    // Tamamlandı durumunu değiştir
+    $scope.toggleWatched = function () {
+      if (!$scope.kullanici || $scope.takipLoading) return;
+
+      $scope.takipLoading = true;
+      var diziData = {
+        user_id: $scope.kullanici.id,
+        title: $scope.dizi.dizi_adi,
+        year: $scope.dizi.yil,
+        genre: $scope.dizi.kategori,
+        poster: $scope.dizi.poster_url,
+        season_count: $scope.dizi.toplam_sezon_sayisi || 1,
+        episode_count: $scope.dizi.toplam_bolum_sayisi || 1,
+        current_season: $scope.dizi.toplam_sezon_sayisi || 1,
+        current_episode: $scope.dizi.toplam_bolum_sayisi || 1,
+        isFavorite: $scope.diziTakipDurumu.isFavorite,
+        isWatched: !$scope.diziTakipDurumu.isWatched,
+        isWatchlist: false, // Tamamlanmışsa watchlist'i kapat
+        isWatching: false, // Tamamlanmışsa izleniyor durumunu kapat
+        rating: parseFloat($scope.dizi.imdb_puani) || 0,
+        review: "",
+      };
+
+      $http
+        .post("dizi_takip_api.php", diziData)
+        .then(function (response) {
+          if (response.data.success) {
+            $scope.diziTakipDurumu.isWatched =
+              !$scope.diziTakipDurumu.isWatched;
+            if ($scope.diziTakipDurumu.isWatched) {
+              $scope.diziTakipDurumu.isWatching = false;
+              $scope.diziTakipDurumu.isWatchlist = false;
+              $scope.diziTakipDurumu.current_season =
+                $scope.dizi.toplam_sezon_sayisi || 1;
+              $scope.diziTakipDurumu.current_episode =
+                $scope.dizi.toplam_bolum_sayisi || 1;
+              showMessage("Dizi tamamlandı olarak işaretlendi", "success");
+            } else {
+              showMessage("Dizi tamamlandı listesinden çıkarıldı", "success");
+            }
+          } else {
+            showMessage(response.data.message || "İşlem başarısız", "error");
+          }
+          $scope.takipLoading = false;
+        })
+        .catch(function (error) {
+          console.error("Dizi tamamlandı durumu güncellenirken hata:", error);
+          showMessage("İşlem başarısız", "error");
+          $scope.takipLoading = false;
+        });
+    };
+
+    // Mesaj gösterme fonksiyonu
+    function showMessage(message, type) {
+      const messageDiv = document.createElement("div");
+      messageDiv.className = `message ${type}`;
+      messageDiv.textContent = message;
+      messageDiv.style.cssText = `
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 15px 25px;
+      border-radius: 8px;
+      color: white;
+      font-weight: 600;
+      z-index: 10001;
+      animation: slideIn 0.3s ease;
+    `;
+
+      if (type === "success") {
+        messageDiv.style.background = "#51cf66";
+      } else if (type === "error") {
+        messageDiv.style.background = "#ff6b6b";
+      } else if (type === "warning") {
+        messageDiv.style.background = "#ffd43b";
+        messageDiv.style.color = "#333";
+      }
+
+      document.body.appendChild(messageDiv);
+
+      setTimeout(() => {
+        messageDiv.remove();
+      }, 3000);
+    }
+
     // Sayfa yüklendiğinde dizi detaylarını yükle
     $scope.diziDetayiniYukle();
+
+    // Dizi yüklendikten sonra takip durumunu kontrol et
+    $scope.$watch("dizi", function (newVal) {
+      if (newVal && $scope.kullanici) {
+        $scope.diziTakipDurumuKontrolEt();
+      }
+    });
 
     // Yukarı çık fonksiyonu
     $scope.scrollToTop = function () {
@@ -3920,7 +4347,9 @@ angular
           $scope.filteredFilms = $scope.films.filter((film) => film.isWatched);
           break;
         case "watchlist":
-          $scope.filteredFilms = $scope.films.filter((film) => !film.isWatched);
+          $scope.filteredFilms = $scope.films.filter(
+            (film) => film.isWatchlist
+          );
           break;
         case "favorite":
           $scope.filteredFilms = $scope.films.filter((film) => film.isFavorite);
@@ -3936,7 +4365,7 @@ angular
         (film) => film.isWatched
       ).length;
       $scope.stats.izlenecek = $scope.films.filter(
-        (film) => !film.isWatched
+        (film) => film.isWatchlist
       ).length;
       $scope.stats.favori = $scope.films.filter(
         (film) => film.isFavorite
@@ -3945,12 +4374,12 @@ angular
       const ratedFilms = $scope.films.filter((film) => film.rating > 0);
       if (ratedFilms.length > 0) {
         const totalRating = ratedFilms.reduce(
-          (sum, film) => sum + film.rating,
+          (sum, film) => sum + parseFloat(film.rating),
           0
         );
         $scope.stats.ortalama = (totalRating / ratedFilms.length).toFixed(1);
       } else {
-        $scope.stats.ortalama = 0;
+        $scope.stats.ortalama = "0.0";
       }
     };
 
@@ -3969,6 +4398,12 @@ angular
     // İzleme durumunu değiştir
     $scope.toggleWatchStatus = function (film) {
       film.isWatched = !film.isWatched;
+      $scope.updateFilm(film);
+    };
+
+    // İzlenecek durumunu değiştir
+    $scope.toggleWatchlist = function (film) {
+      film.isWatchlist = !film.isWatchlist;
       $scope.updateFilm(film);
     };
 
@@ -4053,4 +4488,238 @@ angular
 
     // Sayfa yüklendiğinde filmleri yükle
     $scope.loadFilms();
+  });
+
+// ===== DİZİ TAKIP CONTROLLER =====
+angular
+  .module("GirisApp")
+  .controller("DiziTakipController", function ($scope, $http) {
+    // Kullanıcı kontrolü
+    $scope.kullanici = JSON.parse(localStorage.getItem("girisYapan") || "null");
+
+    if (!$scope.kullanici) {
+      window.location.href = "index.html";
+      return;
+    }
+
+    // Dizi listesi
+    $scope.dizis = [];
+    $scope.filteredDizis = [];
+    $scope.activeFilter = "all";
+    $scope.searchText = "";
+
+    // Modal durumları
+    $scope.showAddDiziModal = false;
+    $scope.showDiziDetailModal = false;
+    $scope.selectedDizi = null;
+
+    // Yeni dizi formu
+    $scope.newDizi = {
+      title: "",
+      year: new Date().getFullYear(),
+      genre: "",
+      poster: "",
+      rating: 0,
+      review: "",
+      season_count: 1,
+      episode_count: 1,
+      current_season: 1,
+      current_episode: 1,
+      isWatched: false,
+      isFavorite: false,
+      isWatchlist: false,
+      isWatching: false,
+    };
+
+    // İstatistikler
+    $scope.stats = {
+      izlenen: 0,
+      izleniyor: 0,
+      izlenecek: 0,
+      favori: 0,
+      ortalama: 0,
+    };
+
+    // Dizileri yükle
+    $scope.loadDizis = function () {
+      $http
+        .get("dizi_takip_api.php?user_id=" + $scope.kullanici.id)
+        .then(function (response) {
+          $scope.dizis = response.data;
+          $scope.updateFilteredDizis();
+          $scope.updateStats();
+        })
+        .catch(function (error) {
+          console.error("Diziler yüklenirken hata:", error);
+          showMessage("Diziler yüklenirken hata oluştu", "error");
+        });
+    };
+
+    // Filtrelenmiş dizileri güncelle
+    $scope.updateFilteredDizis = function () {
+      switch ($scope.activeFilter) {
+        case "watching":
+          $scope.filteredDizis = $scope.dizis.filter((dizi) => dizi.isWatching);
+          break;
+        case "watched":
+          $scope.filteredDizis = $scope.dizis.filter((dizi) => dizi.isWatched);
+          break;
+        case "watchlist":
+          $scope.filteredDizis = $scope.dizis.filter(
+            (dizi) => dizi.isWatchlist
+          );
+          break;
+        case "favorite":
+          $scope.filteredDizis = $scope.dizis.filter((dizi) => dizi.isFavorite);
+          break;
+        default:
+          $scope.filteredDizis = $scope.dizis;
+      }
+    };
+
+    // İstatistikleri güncelle
+    $scope.updateStats = function () {
+      $scope.stats.izlenen = $scope.dizis.filter(
+        (dizi) => dizi.isWatched
+      ).length;
+      $scope.stats.izleniyor = $scope.dizis.filter(
+        (dizi) => dizi.isWatching
+      ).length;
+      $scope.stats.izlenecek = $scope.dizis.filter(
+        (dizi) => dizi.isWatchlist
+      ).length;
+      $scope.stats.favori = $scope.dizis.filter(
+        (dizi) => dizi.isFavorite
+      ).length;
+
+      const ratedDizis = $scope.dizis.filter((dizi) => dizi.rating > 0);
+      if (ratedDizis.length > 0) {
+        const totalRating = ratedDizis.reduce(
+          (sum, dizi) => sum + parseFloat(dizi.rating),
+          0
+        );
+        $scope.stats.ortalama = (totalRating / ratedDizis.length).toFixed(1);
+      } else {
+        $scope.stats.ortalama = "0.0";
+      }
+    };
+
+    // Filtre değiştir
+    $scope.setFilter = function (filter) {
+      $scope.activeFilter = filter;
+      $scope.updateFilteredDizis();
+    };
+
+    // Favori durumunu değiştir
+    $scope.toggleFavorite = function (dizi) {
+      dizi.isFavorite = !dizi.isFavorite;
+      $scope.updateDizi(dizi);
+    };
+
+    // İzleme durumunu değiştir
+    $scope.toggleWatchStatus = function (dizi) {
+      dizi.isWatched = !dizi.isWatched;
+      if (dizi.isWatched) {
+        dizi.isWatching = false; // Tamamlanmışsa izleniyor durumunu kapat
+      }
+      $scope.updateDizi(dizi);
+    };
+
+    // İzlenecek durumunu değiştir
+    $scope.toggleWatchlist = function (dizi) {
+      dizi.isWatchlist = !dizi.isWatchlist;
+      $scope.updateDizi(dizi);
+    };
+
+    // İzleniyor durumunu değiştir
+    $scope.toggleWatchingStatus = function (dizi) {
+      dizi.isWatching = !dizi.isWatching;
+      if (dizi.isWatching) {
+        dizi.isWatched = false; // İzleniyorsa tamamlandı durumunu kapat
+        dizi.isWatchlist = false; // İzleniyorsa izlenecek durumunu kapat
+      }
+      $scope.updateDizi(dizi);
+    };
+
+    // Dizi güncelle
+    $scope.updateDizi = function (dizi) {
+      $http
+        .put("dizi_takip_api.php", dizi)
+        .then(function (response) {
+          if (response.data.success) {
+            $scope.updateStats();
+            $scope.updateFilteredDizis();
+          } else {
+            showMessage(
+              response.data.message || "Dizi güncellenirken hata oluştu",
+              "error"
+            );
+          }
+        })
+        .catch(function (error) {
+          console.error("Dizi güncellenirken hata:", error);
+          showMessage("Dizi güncellenirken hata oluştu", "error");
+        });
+    };
+
+    // İlerleme yüzdesini hesapla
+    $scope.getProgressPercentage = function (dizi) {
+      if (!dizi.episode_count || dizi.episode_count === 0) return 0;
+
+      const totalEpisodes = dizi.episode_count;
+      const watchedEpisodes =
+        (dizi.current_season - 1) *
+          Math.floor(totalEpisodes / dizi.season_count) +
+        dizi.current_episode;
+
+      return Math.min(Math.round((watchedEpisodes / totalEpisodes) * 100), 100);
+    };
+
+    // Dizi detayını aç
+    $scope.openDiziDetail = function (dizi) {
+      // Dizi detay sayfasına yönlendir
+      if (dizi.dizi_id) {
+        window.location.href = "dizi-detay.html?id=" + dizi.dizi_id;
+      } else {
+        // Eğer dizi_id yoksa dizi adına göre arama yap
+        window.location.href =
+          "dizi-detay.html?title=" + encodeURIComponent(dizi.title);
+      }
+    };
+
+    // Mesaj gösterme fonksiyonu
+    function showMessage(message, type) {
+      const messageDiv = document.createElement("div");
+      messageDiv.className = `message ${type}`;
+      messageDiv.textContent = message;
+      messageDiv.style.cssText = `
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 15px 25px;
+      border-radius: 8px;
+      color: white;
+      font-weight: 600;
+      z-index: 10001;
+      animation: slideIn 0.3s ease;
+    `;
+
+      if (type === "success") {
+        messageDiv.style.background = "#51cf66";
+      } else if (type === "error") {
+        messageDiv.style.background = "#ff6b6b";
+      } else if (type === "warning") {
+        messageDiv.style.background = "#ffd43b";
+        messageDiv.style.color = "#333";
+      }
+
+      document.body.appendChild(messageDiv);
+
+      setTimeout(() => {
+        messageDiv.remove();
+      }, 3000);
+    }
+
+    // Sayfa yüklendiğinde dizileri yükle
+    $scope.loadDizis();
   });

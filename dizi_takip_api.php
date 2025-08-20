@@ -98,7 +98,7 @@ switch($method) {
             $user_id = intval($_GET['user_id']);
             
             try {
-                $stmt = $pdo->prepare("SELECT dt.*, d.id as dizi_id FROM dizi_takip dt LEFT JOIN diziler d ON dt.title = d.dizi_adi WHERE dt.user_id = ? ORDER BY dt.created_at DESC");
+                $stmt = $pdo->prepare("SELECT dt.*, d.id as dizi_id FROM dizi_takip dt LEFT JOIN diziler d ON dt.title COLLATE utf8mb4_0900_ai_ci = d.dizi_adi COLLATE utf8mb4_0900_ai_ci WHERE dt.user_id = ? ORDER BY dt.created_at DESC");
                 $stmt->execute([$user_id]);
                 $dizis = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 

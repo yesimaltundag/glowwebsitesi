@@ -78,6 +78,61 @@
         font-weight: 500;
       }
 
+      .form-group input.error-field {
+        border-color: #dc3545;
+        box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1);
+      }
+
+      .error-message {
+        color: #dc3545;
+        font-size: 14px;
+        margin-top: 5px;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        z-index: 10;
+        background: rgba(255, 255, 255, 0.95);
+        padding: 8px 12px;
+        border-radius: 6px;
+        box-shadow: 0 2px 8px rgba(220, 53, 69, 0.2);
+        backdrop-filter: blur(5px);
+        border: 1px solid rgba(220, 53, 69, 0.3);
+      }
+
+      .error-message::before {
+        content: "⚠️";
+        margin-right: 5px;
+        font-size: 12px;
+      }
+
+      .form-group {
+        position: relative;
+      }
+
+      .register-btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none !important;
+      }
+
+      .loading-spinner {
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        border: 2px solid #ffffff;
+        border-radius: 50%;
+        border-top-color: transparent;
+        animation: spin 1s ease-in-out infinite;
+        margin-right: 8px;
+      }
+
+      @keyframes spin {
+        to { transform: rotate(360deg); }
+      }
+
       .login-link {
         text-align: center;
         margin-top: 20px;
@@ -110,32 +165,50 @@
     <main class="main-content">
       <div class="register-container" ng-controller="KayitController">
         <h2>Kayıt Ol</h2>
-        <form ng-submit="kayitOl()">
+        <form ng-submit="kayitOl()" novalidate>
           <div class="form-group">
             <input
               type="text"
               ng-model="username"
               placeholder="Kullanıcı Adı"
+              ng-class="{'error-field': formErrors.username && formSubmitted}"
               required
             />
+            <div
+              ng-if="formErrors.username && formSubmitted"
+              class="error-message"
+            >
+              Kullanıcı adı alanı zorunludur
+            </div>
           </div>
           <div class="form-group">
             <input
               type="text"
               ng-model="adsoyad"
               placeholder="Ad Soyad"
+              ng-class="{'error-field': formErrors.adsoyad && formSubmitted}"
               required
             />
+            <div
+              ng-if="formErrors.adsoyad && formSubmitted"
+              class="error-message"
+            >
+              Ad soyad alanı zorunludur
+            </div>
           </div>
           <div class="form-group">
             <input
               type="password"
               ng-model="sifre"
               placeholder="Şifre (6-10 karakter)"
+              ng-class="{'error-field': formErrors.sifre && formSubmitted}"
               required
             />
-            <div class="error-text">
-              Şifre 6 ile 10 karakter arasında olmalıdır.
+            <div
+              ng-if="formErrors.sifre && formSubmitted"
+              class="error-message"
+            >
+              Şifre 6 ile 10 karakter arasında olmalıdır
             </div>
           </div>
           <div class="form-group">
@@ -143,10 +216,24 @@
               type="email"
               ng-model="eposta"
               placeholder="E-posta Adresi"
+              ng-class="{'error-field': formErrors.eposta && formSubmitted}"
               required
             />
+            <div
+              ng-if="formErrors.eposta && formSubmitted"
+              class="error-message"
+            >
+              Geçerli bir e-posta adresi giriniz
+            </div>
           </div>
-          <button type="submit" class="register-btn">Kayıt Ol</button>
+          <button 
+            type="submit" 
+            class="register-btn" 
+            ng-disabled="loading"
+          >
+            <span ng-if="loading" class="loading-spinner"></span>
+            {{ loading ? 'Kayıt Yapılıyor...' : 'Kayıt Ol' }}
+          </button>
         </form>
         <div class="login-link">
           Zaten hesabınız var mı? <a href="index.html">Giriş Yap</a>

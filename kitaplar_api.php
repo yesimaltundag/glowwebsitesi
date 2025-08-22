@@ -28,9 +28,10 @@ $method = $_SERVER['REQUEST_METHOD'];
 switch($method) {
     case 'GET':
         try {
-            // Kitap adı ve kategori parametrelerini kontrol et
+            // Kitap adı, kategori ve alt kategori parametrelerini kontrol et
             $kitapAd = $_GET['kitap'] ?? null;
             $kategori = $_GET['kategori'] ?? null;
+            $altKategori = $_GET['alt_kategori'] ?? null;
             
             if ($kitapAd) {
                 // Belirli bir kitap ara - daha esnek arama
@@ -62,6 +63,41 @@ switch($method) {
                     'searched_for' => $kitapAd,
                     'found_count' => count($kitaplar)
                 ]);
+            } elseif ($kategori && $altKategori) {
+                // Alt kategoriye göre kitaplar ara
+                $cleanKategori = trim($kategori);
+                $cleanAltKategori = trim($altKategori);
+                
+                // Alt kategori mapping'i
+                $altKategoriMapping = [
+                    'turk-edebiyati' => 'Türk Edebiyatı',
+                    'yabanci-edebiyat' => 'Yabancı Edebiyat',
+                    'klasik-edebiyat' => 'Klasik Edebiyat'
+                ];
+                
+                $mappedAltKategori = $altKategoriMapping[$cleanAltKategori] ?? $cleanAltKategori;
+                
+                // Önce exact match dene
+                $stmt = $pdo->prepare("SELECT * FROM kitaplar WHERE kategori = ? AND alt_kategori = ?");
+                $stmt->execute([$cleanKategori, $mappedAltKategori]);
+                $kitaplar = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                
+                // Eğer bulunamazsa, LIKE ile ara
+                if (count($kitaplar) == 0) {
+                    $stmt = $pdo->prepare("SELECT * FROM kitaplar WHERE kategori LIKE ? AND alt_kategori LIKE ?");
+                    $likeKategori = '%' . $cleanKategori . '%';
+                    $likeAltKategori = '%' . $mappedAltKategori . '%';
+                    $stmt->execute([$likeKategori, $likeAltKategori]);
+                    $kitaplar = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                }
+                
+                echo json_encode([
+                    'success' => true,
+                    'kitaplar' => $kitaplar,
+                    'searched_for_category' => $kategori,
+                    'searched_for_subcategory' => $mappedAltKategori,
+                    'found_count' => count($kitaplar)
+                ]);
             } elseif ($kategori) {
                 // Kategoriye göre kitaplar ara
                 $cleanKategori = trim($kategori);
@@ -90,7 +126,8 @@ switch($method) {
                 echo json_encode([
                     'success' => true,
                     'kitaplar' => $kitaplar,
-                    'searched_for_category' => $kategori
+                    'searched_for_category' => $kategori,
+                    'found_count' => count($kitaplar)
                 ]);
             } else {
                 // Her çağrıda rastgele 8 kitap getir
@@ -101,56 +138,22 @@ switch($method) {
                 echo json_encode([
                     'success' => true,
                     'kitaplar' => $kitaplar,
-                    'timestamp' => time(),
-                    'random_seed' => $randomSeed,
-                    'count' => count($kitaplar)
+                    'found_count' => count($kitaplar)
                 ]);
             }
         } catch(PDOException $e) {
             echo json_encode([
-                'error' => 'Kitaplar getirilirken hata: ' . $e->getMessage()
-            ]);
-        }
-        break;
-        
-    case 'POST':
-        // Yeni kitap ekle
-        $data = json_decode(file_get_contents('php://input'), true);
-        
-        if (!$data) {
-            echo json_encode(['error' => 'Geçersiz veri']);
-            break;
-        }
-        
-        try {
-            $stmt = $pdo->prepare("INSERT INTO kitaplar (kitap_adi, yazar, basim_yili, kategori, sayfa_sayisi, basim_yeri, isbn, tanitim, kapak_url) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
-            
-            $stmt->execute([
-                $data['kitap_adi'] ?? '',
-                $data['yazar'] ?? '',
-                $data['basim_yili'] ?? null,
-                $data['kategori'] ?? '',
-                $data['sayfa_sayisi'] ?? null,
-                $data['basim_yeri'] ?? '',
-                $data['isbn'] ?? null,
-                $data['tanitim'] ?? '',
-                $data['kapak_url'] ?? ''
-            ]);
-            
-            echo json_encode([
-                'success' => true,
-                'message' => 'Kitap başarıyla eklendi',
-                'id' => $pdo->lastInsertId()
-            ]);
-        } catch(PDOException $e) {
-            echo json_encode([
-                'error' => 'Kitap eklenirken hata: ' . $e->getMessage()
+                'success' => false,
+                'error' => 'Veritabanı hatası: ' . $e->getMessage()
             ]);
         }
         break;
         
     default:
-        echo json_encode(['error' => 'Desteklenmeyen HTTP metodu']);
+        echo json_encode([
+            'success' => false,
+            'error' => 'Sadece GET metodu destekleniyor'
+        ]);
         break;
 }
 ?>

@@ -9,58 +9,6 @@ header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Methods: POST, GET, DELETE, PUT");
 header("Access-Control-Allow-Headers: Content-Type");
-/*
-
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
-
-require 'C:\Users\Fatih BEKDAS\Desktop\WORKSPACE\PHP\test2\PHPMailer\src\Exception.php';
-require 'C:\Users\Fatih BEKDAS\Desktop\WORKSPACE\PHP\test2\PHPMailer\src\PHPMailer.php';
-require 'C:\Users\Fatih BEKDAS\Desktop\WORKSPACE\PHP\test2\PHPMailer\src\SMTP.php';
-
-require 'vendor/autoload.php';
-
-//Create an instance; passing `true` enables exceptions
-$mail = new PHPMailer(true);
-
-
-
-try {
-    //Server settings
-   
-    $mail->SMTPDebug = SMTP::DEBUG_SERVER;                      //Enable verbose debug output
-    $mail->isSMTP();                                            //Send using SMTP
-    $mail->Host       = 'smtp.gmail.com';                     //Set the SMTP server to send through
-    $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
-    $mail->Username   = 'yesim.altundag00@gmail.com';                     //SMTP username
-    $mail->Password   = 'secret';                               //SMTP password
-    $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;            //Enable implicit TLS encryption
-    $mail->Port       = 465;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
-
-    //Recipients
-    $mail->setFrom('from@example.com', 'Mailer');
-    $mail->addAddress('joe@example.net', 'Joe User');     //Add a recipient
-    $mail->addAddress('ellen@example.com');               //Name is optional
-    $mail->addReplyTo('info@example.com', 'Information');
-    $mail->addCC('cc@example.com');
-    $mail->addBCC('bcc@example.com');
-
-    //Attachments
-    $mail->addAttachment('/var/tmp/file.tar.gz');         //Add attachments
-    $mail->addAttachment('/tmp/image.jpg', 'new.jpg');    //Optional name
-
-    //Content
-    $mail->isHTML(true);                                  //Set email format to HTML
-    $mail->Subject = 'Here is the subject';
-    $mail->Body    = 'This is the HTML message body <b>in bold!</b>';
-    $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
-
-    //$mail->send();
-    echo 'Message has been sent';
-} catch (Exception $e) {
-    echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
-}
-    */
 $baglanti = new mysqli("localhost", "root", "", "basit_sistem");
 
 if ($baglanti->connect_error) {
@@ -444,7 +392,7 @@ if ($_SERVER["REQUEST_METHOD"] === "GET" && isset($_GET["kisiler"])) {
     header("Content-Type: application/json");
     error_log("Kisiler endpoint çağrıldı");
     
-    $sonuc = $baglanti->query("SELECT id, username, adsoyad, e_posta, rol FROM kisiler ORDER BY id ASC");
+    $sonuc = $baglanti->query("SELECT id, username, adsoyad, e_posta, rol FROM kisiler ORDER BY CASE WHEN rol = 'admin' THEN 0 ELSE 1 END, id ASC");
     $kisiler = [];
     while ($satir = $sonuc->fetch_assoc()) {
         $kisiler[] = $satir;
@@ -455,8 +403,8 @@ if ($_SERVER["REQUEST_METHOD"] === "GET" && isset($_GET["kisiler"])) {
 }
 
         // GET: Listeleme (varsayılan) - Sadece belirli parametreler yoksa
-        if ($_SERVER["REQUEST_METHOD"] === "GET" && !isset($_GET["yorum"]) && !isset($_GET["films"]) && !isset($_GET["tiyatro"]) && !isset($_GET["belgesel"]) && !isset($_GET["anime"]) && !isset($_GET["son_yorumlar"]) && !isset($_GET["tum_yorumlar"]) && !isset($_GET["kisiler"]) && !isset($_GET["heykel"]) && !isset($_GET["muzik"]) && !isset($_GET["muzik_turleri"]) && !isset($_GET["mimari"]) && !isset($_GET["fotograf"]) && !isset($_GET["dans"]) && !isset($_GET["yemek"]) && !isset($_GET["dunya_mutfagi"]) && !isset($_GET["tatlilar_hamur"]) && !isset($_GET["pratik_tarifler"]) && !isset($_GET["saglikli_besinler"])) {
-    $sonuc = $baglanti->query("SELECT id, username, adsoyad, e_posta, rol FROM kisiler ORDER BY id ASC");
+        if ($_SERVER["REQUEST_METHOD"] === "GET" && !isset($_GET["yorum"]) && !isset($_GET["films"]) && !isset($_GET["tiyatro"]) && !isset($_GET["belgesel"]) && !isset($_GET["anime"]) && !isset($_GET["son_yorumlar"]) && !isset($_GET["tum_yorumlar"]) && !isset($_GET["kisiler"]) && !isset($_GET["muzik"]) && !isset($_GET["muzik_turleri"]) && !isset($_GET["mimari"]) && !isset($_GET["fotograf"]) && !isset($_GET["dans"]) && !isset($_GET["yemek"]) && !isset($_GET["dunya_mutfagi"]) && !isset($_GET["tatlilar_hamur"]) && !isset($_GET["pratik_tarifler"]) && !isset($_GET["saglikli_besinler"])) {
+    $sonuc = $baglanti->query("SELECT id, username, adsoyad, e_posta, rol FROM kisiler ORDER BY CASE WHEN rol = 'admin' THEN 0 ELSE 1 END, id ASC");
     $kisiler = [];
     while ($satir = $sonuc->fetch_assoc()) {
         $kisiler[] = $satir;
@@ -706,6 +654,34 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_GET["kayit"])) {
     }
     $sifre = password_hash($girdi["sifre"], PASSWORD_DEFAULT);
     $rol = $baglanti->real_escape_string($girdi["rol"]);
+
+    // Kullanıcı adı kontrolü - zaten var mı?
+    $username_check = $baglanti->query("SELECT COUNT(*) as sayi FROM kisiler WHERE username = '$username'");
+    if (!$username_check) {
+        http_response_code(500);
+        echo json_encode(["success" => false, "message" => "Veritabanı hatası: " . $baglanti->error]);
+        exit;
+    }
+    $username_data = $username_check->fetch_assoc();
+    if ($username_data["sayi"] > 0) {
+        http_response_code(400);
+        echo json_encode(["success" => false, "message" => "Bu kullanıcı adı zaten kullanılıyor. Lütfen farklı bir kullanıcı adı seçin."]);
+        exit;
+    }
+
+    // E-posta kontrolü - zaten var mı?
+    $email_check = $baglanti->query("SELECT COUNT(*) as sayi FROM kisiler WHERE e_posta = '$eposta'");
+    if (!$email_check) {
+        http_response_code(500);
+        echo json_encode(["success" => false, "message" => "Veritabanı hatası: " . $baglanti->error]);
+        exit;
+    }
+    $email_data = $email_check->fetch_assoc();
+    if ($email_data["sayi"] > 0) {
+        http_response_code(400);
+        echo json_encode(["success" => false, "message" => "Bu e-posta adresi zaten kullanılıyor. Lütfen farklı bir e-posta adresi seçin."]);
+        exit;
+    }
 
     // Yönetici kontrolü
     if ($rol === "admin") {

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Anamakine: 127.0.0.1:3306
--- Üretim Zamanı: 19 Ağu 2025, 07:33:39
+-- Üretim Zamanı: 22 Ağu 2025, 08:09:58
 -- Sunucu sürümü: 9.1.0
 -- PHP Sürümü: 8.3.14
 
@@ -75,11 +75,11 @@ DROP TABLE IF EXISTS `basari_rozetleri`;
 CREATE TABLE IF NOT EXISTS `basari_rozetleri` (
   `id` int NOT NULL AUTO_INCREMENT COMMENT 'Benzersiz rozet kimliği',
   `kullanici_id` int NOT NULL COMMENT 'Kullanıcı kimliği',
-  `rozet_adi` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Rozet adı',
-  `rozet_aciklama` text COLLATE utf8mb4_unicode_ci COMMENT 'Rozet açıklaması',
-  `rozet_ikonu` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Rozet ikonu URL',
+  `rozet_adi` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Rozet adı',
+  `rozet_aciklama` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT 'Rozet açıklaması',
+  `rozet_ikonu` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Rozet ikonu URL',
   `kazanma_tarihi` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Rozet kazanma tarihi',
-  `rozet_tipi` enum('izleme','puanlama','liste','ozel') COLLATE utf8mb4_unicode_ci DEFAULT 'izleme' COMMENT 'Rozet tipi',
+  `rozet_tipi` enum('izleme','puanlama','liste','ozel') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT 'izleme' COMMENT 'Rozet tipi',
   PRIMARY KEY (`id`),
   UNIQUE KEY `unique_user_badge` (`kullanici_id`,`rozet_adi`),
   KEY `idx_kullanici_id` (`kullanici_id`),
@@ -174,32 +174,32 @@ INSERT INTO `danslar` (`id`, `ad`, `koreograf`, `tarih`, `yer`, `tur`, `aciklama
 DROP TABLE IF EXISTS `diziler`;
 CREATE TABLE IF NOT EXISTS `diziler` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `dizi_adi` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `aciklama` text COLLATE utf8mb4_unicode_ci,
-  `yonetmen` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `oyuncular` text COLLATE utf8mb4_unicode_ci,
-  `dil` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `ulke` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `kategori` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `dizi_adi` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `aciklama` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `yonetmen` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `oyuncular` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `dil` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `ulke` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `kategori` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `yil` int DEFAULT NULL,
   `sezon_sayisi` int DEFAULT '1',
   `bolum_sayisi` int DEFAULT '1',
   `imdb_puani` decimal(3,1) DEFAULT NULL,
-  `poster_url` varchar(500) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `trailer_url` varchar(500) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `durum` enum('devam_ediyor','tamamlandi','iptal_edildi') COLLATE utf8mb4_unicode_ci DEFAULT 'devam_ediyor',
-  `yayin_kanali` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `poster_url` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `trailer_url` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `durum` enum('devam_ediyor','tamamlandi','iptal_edildi') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT 'devam_ediyor',
+  `yayin_kanali` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `toplam_sezon_sayisi` int DEFAULT '1',
   `toplam_bolum_sayisi` int DEFAULT '1',
   `ortalama_bolum_suresi` int DEFAULT '45',
-  `cekim_yeri` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `muzik` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `yapimci` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `senaryo` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `cekim_yeri` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `muzik` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `yapimci` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `senaryo` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `yayin_tarihi` date DEFAULT NULL,
   `bitis_tarihi` date DEFAULT NULL,
-  `oduller` text COLLATE utf8mb4_unicode_ci,
-  `etiketler` varchar(500) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `oduller` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `etiketler` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
@@ -213,52 +213,283 @@ CREATE TABLE IF NOT EXISTS `diziler` (
 --
 
 INSERT INTO `diziler` (`id`, `dizi_adi`, `aciklama`, `yonetmen`, `oyuncular`, `dil`, `ulke`, `kategori`, `yil`, `sezon_sayisi`, `bolum_sayisi`, `imdb_puani`, `poster_url`, `trailer_url`, `durum`, `yayin_kanali`, `toplam_sezon_sayisi`, `toplam_bolum_sayisi`, `ortalama_bolum_suresi`, `cekim_yeri`, `muzik`, `yapimci`, `senaryo`, `yayin_tarihi`, `bitis_tarihi`, `oduller`, `etiketler`, `created_at`, `updated_at`) VALUES
-(1, 'Breaking Bad', 'Kimya öğretmeni Walter White\'ın kanser teşhisi sonrası uyuşturucu üretimine başlaması ve suç dünyasına adım atması.', 'Vince Gilligan', 'Bryan Cranston, Aaron Paul, Anna Gunn, RJ Mitte, Dean Norris, Betsy Brandt, Bob Odenkirk', 'İngilizce', 'ABD', 'dram', 2008, 5, 62, 9.5, 'https://thumbor.evrimagaci.org/QESXEkks0JE4VVm7Evgv_9aI-tc=/old%2Fmi_media%2Fa3bb95fb0057fdc5eb4685f6ad39e7ee.jpeg', 'https://www.youtube.com/embed/HhesaQXLuRY', 'tamamlandi', 'AMC', 1, 1, 47, 'Albuquerque, New Mexico, ABD', 'Dave Porter', 'Vince Gilligan, Mark Johnson, Michelle MacLaren', 'Vince Gilligan', '2008-01-20', '2013-09-29', NULL, 'dram, suç, uyuşturucu, aile, dönüşüm', '2025-07-30 07:08:14', '2025-08-05 14:44:03'),
-(2, 'The Crown', 'İngiltere Kraliçesi II. Elizabeth\'in hayatını ve saltanatını anlatan dizi.', NULL, NULL, NULL, NULL, 'dram', 2016, 6, 60, 8.7, 'https://m.media-amazon.com/images/M/MV5BMGU2MjdjODQtZDk5Ny00NzgwLWI2MTMtYzViNDU5MDNjMGU2XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg', 'https://www.youtube.com/embed/JWtnJjn6ng0', 'tamamlandi', NULL, 1, 1, 45, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-30 07:08:14', '2025-08-05 14:15:40'),
-(3, 'Narcos', 'Kolombiyalı uyuşturucu baronu Pablo Escobar\'ın hayatını anlatan dizi.', NULL, NULL, NULL, NULL, 'dram', 2015, 3, 30, 8.8, 'https://m.media-amazon.com/images/I/91jkF8kLQqL.jpg', 'https://www.youtube.com/embed/xl8zdCY-abw', 'tamamlandi', NULL, 1, 1, 45, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-30 07:08:14', '2025-08-05 13:56:47'),
-(4, 'Ozark', 'Para aklama işine bulaşan bir ailenin hayatta kalma mücadelesini anlatan dizi.', NULL, NULL, NULL, NULL, 'dram', 2017, 4, 44, 8.5, 'https://m.media-amazon.com/images/M/MV5BZDk1ZTdjOWItNTJmYS00MGIzLThmY2ItZWNiOGY5MzJlNTA5XkEyXkFqcGc@._V1_.jpg', 'https://www.youtube.com/embed/5hAXVqrljbs', 'tamamlandi', NULL, 1, 1, 45, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-30 07:08:14', '2025-08-05 13:57:07'),
-(5, 'The Queen\'s Gambit', 'Satranç dahisi Beth Harmon\'ın hayatını anlatan dizi.', NULL, NULL, NULL, NULL, 'dram', 2020, 1, 7, 8.6, 'https://m.media-amazon.com/images/M/MV5BMmRlNjQxNWQtMjk1OS00N2QxLTk0YWQtMzRhYjY5YTFhNjMxXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg', 'https://www.youtube.com/embed/oZn3qSgmLqI', 'tamamlandi', NULL, 1, 1, 45, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-30 07:08:14', '2025-08-13 09:03:57'),
-(6, 'Friends', 'Altı arkadaşın New York\'ta yaşadığı eğlenceli ve duygusal maceralar.', 'David Crane, Marta Kauffman', 'Jennifer Aniston, Courteney Cox, Lisa Kudrow, Matt LeBlanc, Matthew Perry, David Schwimmer', 'İngilizce', 'ABD', 'komedi', 1994, 10, 236, 8.9, 'https://diziyleogren.com/img/BFriends.c05b593a.jpg', 'https://www.youtube.com/embed/IEEbUzffzrk', 'tamamlandi', 'NBC', 1, 1, 22, 'Los Angeles, California, ABD', 'Michael Skloff, Allee Willis', 'David Crane, Marta Kauffman, Kevin S. Bright', 'David Crane, Marta Kauffman', '1994-09-22', '2004-05-06', NULL, 'komedi, arkadaşlık, romantik, New York, 90lar', '2025-07-30 07:08:14', '2025-08-05 13:57:56'),
-(7, 'The Office', 'Bir ofis ortamında geçen mokümanter tarzı komedi dizisi.', NULL, NULL, NULL, NULL, 'komedi', 2005, 9, 201, 8.9, 'https://m.media-amazon.com/images/M/MV5BZjQwYzBlYzUtZjhhOS00ZDQ0LWE0NzAtYTk4MjgzZTNkZWEzXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg', 'https://www.youtube.com/embed/LHOtME2DL4g', 'tamamlandi', NULL, 1, 1, 45, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-30 07:08:14', '2025-08-05 13:58:19'),
-(8, 'Brooklyn Nine-Nine', 'Brooklyn\'deki bir polis karakolunda geçen komedi dizisi.', NULL, NULL, NULL, NULL, 'komedi', 2013, 8, 153, 8.4, 'https://m.media-amazon.com/images/M/MV5BNzBiODQxZTUtNjc0MC00Yzc1LThmYTMtN2YwYTU3NjgxMmI4XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg', 'https://www.youtube.com/embed/sEOuJ4z5aTc', 'tamamlandi', NULL, 1, 1, 45, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-30 07:08:14', '2025-08-05 13:58:42'),
-(9, 'Parks and Recreation', 'Küçük bir kasabanın park ve rekreasyon departmanında geçen komedi dizisi. Leslie Knope\'un belediye başkanı olma hayali ve arkadaşlarıyla yaşadığı eğlenceli maceralar.', 'Greg Daniels, Michael Schur', 'Amy Poehler, Nick Offerman, Aziz Ansari, Aubrey Plaza, Chris Pratt, Adam Scott, Rob Lowe, Rashida Jones', 'İngilizce', 'ABD', 'komedi', 2009, 7, 125, 8.6, 'https://m.media-amazon.com/images/M/MV5BNDlhMzAwNTAtNTk2NS00MTdkLWE3ZWYtMDU0MTFiYmU2ZTc0XkEyXkFqcGc@._V1_.jpg', 'https://www.youtube.com/embed/5IZWeAwdJ-s', 'tamamlandi', 'NBC', 1, 1, 22, 'Pasadena, California, ABD', 'Gaby Moreno, Vincent Jones', 'Greg Daniels, Michael Schur, Howard Klein', 'Greg Daniels, Michael Schur', '2009-04-09', '2015-02-24', NULL, 'komedi, belediye, arkadaşlık, iyimserlik, hükümet', '2025-07-30 07:08:14', '2025-08-13 09:05:39'),
-(10, 'The Good Place', 'Ölümden sonraki hayatı anlatan felsefi komedi dizisi.', NULL, NULL, NULL, NULL, 'komedi', 2016, 4, 53, 8.2, 'https://m.media-amazon.com/images/M/MV5BNjI3ZGRhNDYtNDFjOS00OGFlLTg4NTEtYjZjYTViY2ZiMzBkXkEyXkFqcGc@._V1_.jpg', 'https://www.youtube.com/embed/9QxRbzFk3zk', 'tamamlandi', NULL, 1, 1, 20, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-30 07:08:14', '2025-08-13 09:04:56'),
-(11, 'The Boys', 'Süper kahramanların karanlık yüzünü gösteren aksiyon dizisi.', NULL, NULL, NULL, NULL, 'aksiyon', 2019, 4, 32, 8.7, 'https://preview.redd.it/2kzjj8l0om391.jpg?width=640&crop=smart&auto=webp&s=c3b05285bc3be26a383e2c4f4ec30024221a6016', 'https://www.youtube.com/embed/koiPxheoIPQ', 'devam_ediyor', NULL, 1, 1, 45, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-30 07:08:14', '2025-08-05 13:59:55'),
-(12, 'Daredevil', 'Kör bir avukatın gece süper kahraman olarak mücadele ettiği dizi.', NULL, NULL, NULL, NULL, 'aksiyon', 2015, 3, 39, 8.6, 'https://m.media-amazon.com/images/M/MV5BMDRiNTBlY2EtZmRiZC00Mzc4LTljZDctNWQ5ZGY2NjUwNjE4XkEyXkFqcGc@._V1_.jpg', 'https://www.youtube.com/embed/koiPxheoIPQ', 'iptal_edildi', NULL, 1, 1, 45, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-30 07:08:14', '2025-08-05 14:00:18'),
-(13, 'Punisher', 'Frank Castle\'ın intikam hikayesini anlatan aksiyon dizisi.', NULL, NULL, NULL, NULL, 'aksiyon', 2017, 2, 26, 8.5, 'https://m.media-amazon.com/images/M/MV5BZTI2NDllMjgtOWEyYi00Y2YxLThhYjQtNTQ0NTgwNDE1YmYzXkEyXkFqcGc@._V1_.jpg', 'https://www.youtube.com/embed/koiPxheoIPQ', 'iptal_edildi', NULL, 1, 1, 45, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-30 07:08:14', '2025-08-05 14:00:41'),
-(14, 'Arrow', 'Oliver Queen\'in Green Arrow olarak mücadele ettiği dizi.', NULL, NULL, NULL, NULL, 'aksiyon', 2012, 8, 170, 7.5, 'https://m.media-amazon.com/images/I/817wYg0c57L._UF1000,1000_QL80_.jpg', 'https://www.youtube.com/embed/hTvNXTxXXkM', 'tamamlandi', NULL, 1, 1, 45, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-30 07:08:14', '2025-08-05 14:01:01'),
-(15, 'The Flash', 'Barry Allen\'in Flash olarak süper hızla mücadele ettiği dizi.', NULL, NULL, NULL, NULL, 'aksiyon', 2014, 9, 184, 7.6, 'https://m.media-amazon.com/images/M/MV5BMjU0ZjZhNDQtMDhkYi00OWQyLWE3NGYtNzBlY2VmM2I4ZDg5XkEyXkFqcGc@._V1_.jpg', 'https://www.youtube.com/embed/Yj0l7iGKh8g', 'devam_ediyor', NULL, 1, 1, 45, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-30 07:08:14', '2025-08-05 14:01:25'),
-(16, 'Stranger Things', '1980\'lerde kaybolan bir çocuğu arayan arkadaşlarının karşılaştığı doğaüstü olayları anlatır.', NULL, NULL, NULL, NULL, 'bilim_kurgu', 2016, 4, 34, 8.7, 'https://m.media-amazon.com/images/M/MV5BMjg2NmM0MTEtYWY2Yy00NmFlLTllNTMtMjVkZjEwMGVlNzdjXkEyXkFqcGc@._V1_.jpg', 'https://www.youtube.com/embed/b9EkMc79ZSU', 'devam_ediyor', NULL, 1, 1, 45, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-30 07:08:14', '2025-08-05 14:01:44'),
-(17, 'Black Mirror', 'Yedi krallığın tahtı için verilen mücadele ve fantastik dünyada geçen epik hikaye.', 'David Benioff, D.B. Weiss', 'Peter Dinklage, Emilia Clarke, Kit Harington, Lena Headey, Nikolaj Coster-Waldau, Maisie Williams, Sophie Turner', 'İngilizce', 'ABD', 'bilim_kurgu', 2011, 8, 73, 8.8, 'https://resizing.flixster.com/yL-MXHM_ttXdnKBofDnTdOQf_WE=/ems.cHJkLWVtcy1hc3NldHMvdHZzZXJpZXMvZmQ5YTcxMDgtZWI5My00MmQzLWI1OGMtNTI0Zjk1NGYyYTBhLmpwZw==', 'https://www.youtube.com/embed/jDiYGjp5iFg', 'tamamlandi', 'HBO', 1, 1, 60, 'Kuzey İrlanda, Malta, İspanya, Hırvatistan', 'Ramin Djawadi', 'David Benioff, D.B. Weiss, George R.R. Martin', 'David Benioff, D.B. Weiss', '2011-04-17', '2019-05-19', NULL, 'fantastik, dram, savaş, taht mücadelesi, epik', '2025-07-30 07:08:14', '2025-08-05 14:18:47'),
-(18, 'The Mandalorian', 'Star Wars evreninde geçen, bir ödül avcısının maceralarını anlatan dizi.', NULL, NULL, NULL, NULL, 'bilim_kurgu', 2019, 3, 24, 8.8, 'https://cdn.apollo.ee/o/apollo/e/c/d/e/ecdea1313691f1efe87313609227e0fc8dd2e283_9781419756511.jpg', 'https://www.youtube.com/embed/b9EkMc79ZSU', 'devam_ediyor', NULL, 1, 1, 45, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-30 07:08:14', '2025-08-05 14:02:45'),
-(19, 'Westworld', 'Yapay zeka ve bilinç konularını işleyen bilim kurgu dizisi.', NULL, NULL, NULL, NULL, 'bilim_kurgu', 2016, 4, 36, 8.6, 'https://m.media-amazon.com/images/I/81Xpd7dGVmL._UF894,1000_QL80_.jpg', 'https://www.youtube.com/embed/0zZcBv0gPKs', 'tamamlandi', NULL, 1, 1, 45, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-30 07:08:14', '2025-08-05 14:03:19'),
-(20, 'Altered Carbon', 'Beyin yükleme teknolojisi ile ölümsüzlüğü konu alan dizi.', NULL, NULL, NULL, NULL, 'bilim_kurgu', 2018, 2, 18, 8.0, 'https://m.media-amazon.com/images/I/81cBfx1WC+L._UF1000,1000_QL80_.jpg', 'https://www.youtube.com/embed/ehM5s7qXjVk', 'iptal_edildi', NULL, 1, 1, 45, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-30 07:08:14', '2025-08-05 14:03:39'),
-(21, 'The Walking Dead', '1980\'lerde geçen, doğaüstü güçler ve gizli devlet deneyleriyle dolu bilim kurgu dizisi.', 'The Duffer Brothers', 'Millie Bobby Brown, Finn Wolfhard, Noah Schnapp, Caleb McLaughlin, Gaten Matarazzo, Winona Ryder, David Harbour', 'İngilizce', 'ABD', 'gerilim', 2010, 4, 34, 8.2, 'https://upload.wikimedia.org/wikipedia/en/thumb/4/4f/TWD_Season_11_poster.jpg/250px-TWD_Season_11_poster.jpg', 'https://www.youtube.com/embed/R1v0uFms68U', 'devam_ediyor', 'Netflix', 1, 1, 50, 'Atlanta, Georgia, ABD', 'Kyle Dixon, Michael Stein', 'The Duffer Brothers, Shawn Levy, Dan Cohen', 'The Duffer Brothers', '2016-07-15', NULL, NULL, 'bilim kurgu, 80ler, çocuklar, doğaüstü, retro', '2025-07-30 07:08:14', '2025-08-05 14:04:43'),
-(22, 'The Haunting of Hill House', 'Bir ailenin hayaletli evde yaşadığı korku dolu deneyimleri anlatan dizi.', NULL, NULL, NULL, NULL, 'gerilim', 2018, 1, 10, 8.6, 'https://m.media-amazon.com/images/M/MV5BMTU4NzA4MDEwNF5BMl5BanBnXkFtZTgwMTQxODYzNjM@._V1_FMjpg_UX1000_.jpg', 'https://www.youtube.com/embed/R1v0uFms68U', 'tamamlandi', NULL, 1, 1, 45, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-30 07:08:14', '2025-08-05 14:05:08'),
-(23, 'American Horror Story', 'Her sezonu farklı korku hikayesi anlatan antoloji dizisi.', NULL, NULL, NULL, NULL, 'gerilim', 2011, 12, 130, 8.0, 'https://m.media-amazon.com/images/M/MV5BZmU1NWFhODQtZjgyNy00NDg0LTk5MDQtYzc5ZGEzYzZmMGIyXkEyXkFqcGc@._V1_.jpg', 'https://www.youtube.com/embed/R1v0uFms68U', 'devam_ediyor', NULL, 1, 1, 45, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-30 07:08:14', '2025-08-05 14:05:30'),
-(24, 'The Haunting of Bly Manor', 'İngiltere\'de geçen hayalet hikayesi.', NULL, NULL, NULL, NULL, 'gerilim', 2020, 1, 9, 7.4, 'https://dnm.nflximg.net/api/v6/mAcAr9TxZIVbINe88xb3Teg5_OA/AAAABXGLJzhRg2kvnsYAHuI1cGcTqEJnejJfuXxh-Pu0h-7ma_DOyBsZT37-znb7Hal9W2FAqMoA6YdH9FfLX2UT4BTOv8CSm3U5NQe8t_KxF7A5KcqtVn465GhGOnRhR4_I0TTOHQ.jpg?r=d89', 'https://www.youtube.com/embed/R1v0uFms68U', 'tamamlandi', NULL, 1, 1, 45, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-30 07:08:14', '2025-08-05 14:05:54'),
-(25, 'Midnight Mass', 'Küçük bir adada geçen dini korku hikayesi.', NULL, NULL, NULL, NULL, 'gerilim', 2021, 1, 7, 7.7, 'https://m.media-amazon.com/images/M/MV5BYWFjMDM5MzgtZWI3OC00ZWRmLThlNTktN2ZkMTc3ZTA5NGEzXkEyXkFqcGc@._V1_.jpg', 'https://www.youtube.com/embed/R1v0uFms68U', 'tamamlandi', NULL, 1, 1, 45, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-30 07:08:14', '2025-08-05 14:06:24'),
-(26, 'Game of Thrones', 'Yedi krallığın tahtı için verilen mücadeleyi anlatan epik fantastik dizi.', NULL, NULL, NULL, NULL, 'fantastik', 2011, 8, 73, 9.3, 'https://m.media-amazon.com/images/M/MV5BMTNhMDJmNmYtNDQ5OS00ODdlLWE0ZDAtZTgyYTIwNDY3OTU3XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg', 'https://www.youtube.com/embed/BpJYNVhGf1s', 'tamamlandi', NULL, 1, 1, 45, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-30 07:08:14', '2025-08-05 14:06:58'),
-(27, 'The Witcher', 'Fantastik dünyada geçen, canavar avcısı Geralt\'ın maceralarını anlatan dizi.', NULL, NULL, NULL, NULL, 'fantastik', 2019, 3, 24, 8.0, 'https://m.media-amazon.com/images/M/MV5BMTQ5MDU5MTktMDZkMy00NDU1LWIxM2UtODg5OGFiNmRhNDBjXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg', 'https://www.youtube.com/embed/ndl1W4ltcmg', 'devam_ediyor', NULL, 1, 1, 45, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-30 07:08:14', '2025-08-05 14:08:01'),
-(28, 'Wednesday', 'Addams Ailesi\'nin kızı Wednesday\'in hayatını anlatan fantastik dizi.', NULL, NULL, NULL, NULL, 'fantastik', 2022, 1, 8, 8.1, 'https://m.media-amazon.com/images/M/MV5BZGQxYWFlNzgtODZjMS00YmM5LWEzZWMtOGVmODMzYjIyODZiXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg', 'https://www.youtube.com/embed/BpJYNVhGf1s', 'devam_ediyor', NULL, 1, 1, 45, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-30 07:08:14', '2025-08-05 14:08:17'),
-(29, 'Shadow and Bone', 'Grishaverse evreninde geçen fantastik dizi.', NULL, NULL, NULL, NULL, 'fantastik', 2021, 2, 16, 7.6, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS3YOsrkLsWniNOMzPCVtHQyLX2ZOeLGrH8rw&s', 'https://www.youtube.com/embed/b1WHQTbJ7vE', 'devam_ediyor', NULL, 1, 1, 45, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-30 07:08:14', '2025-08-05 14:08:34'),
-(30, 'The Wheel of Time', 'Robert Jordan\'ın fantastik roman serisinden uyarlanan dizi.', NULL, NULL, NULL, NULL, 'fantastik', 2021, 2, 16, 7.1, 'https://m.media-amazon.com/images/M/MV5BNmQ5Y2U2MWYtZDcyMi00YTk5LWEyYjItNTI3ODg4MTdlMjYwXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg', 'https://www.youtube.com/embed/4M7LIcH16C0', 'devam_ediyor', NULL, 1, 1, 45, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-30 07:08:14', '2025-08-05 14:09:01'),
-(31, 'True Detective', 'Her sezonu farklı cinayet vakası anlatan polisiye dizi.', NULL, NULL, NULL, NULL, 'polisiye', 2014, 4, 30, 8.9, 'https://m.media-amazon.com/images/M/MV5BYjgwYzA1NWMtNDYyZi00ZGQyLWI5NTktMDYwZjE2OTIwZWEwXkEyXkFqcGc@._V1_.jpg', 'https://www.youtube.com/embed/TXwCoNwBSkQ', 'devam_ediyor', NULL, 1, 1, 45, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-30 07:08:14', '2025-08-05 14:09:44'),
-(32, 'Mindhunter', 'FBI\'ın seri katilleri anlamaya çalıştığı dizi.', NULL, NULL, NULL, NULL, 'polisiye', 2017, 2, 19, 8.6, 'https://m.media-amazon.com/images/M/MV5BYTk4NDA4MGMtNjliOC00MjExLWI1YzctOTc4NWIxM2I1YjM5XkEyXkFqcGc@._V1_.jpg', 'https://www.youtube.com/embed/evd8j6K6obM', 'iptal_edildi', NULL, 1, 1, 45, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-30 07:08:14', '2025-08-05 14:10:01'),
-(33, 'Broadchurch', 'Küçük bir kasabada geçen cinayet vakası.', NULL, NULL, NULL, NULL, 'polisiye', 2013, 3, 24, 8.4, 'https://image.pbs.org/contentchannels/XcQa04i-show-poster2x3-5cvWGhZ.jpg', 'https://www.youtube.com/embed/4M7LIcH16C0', 'tamamlandi', NULL, 1, 1, 45, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-30 07:08:14', '2025-08-05 14:10:21'),
-(34, 'The Killing', 'Seattle\'da geçen cinayet vakası.', NULL, NULL, NULL, NULL, 'polisiye', 2011, 4, 44, 8.3, 'https://m.media-amazon.com/images/M/MV5BMTQ5MTUxMzU3Ml5BMl5BanBnXkFtZTgwMDU3NDYxMjE@._V1_.jpg', 'https://www.youtube.com/embed/4M7LIcH16C0', 'tamamlandi', NULL, 1, 1, 45, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-30 07:08:14', '2025-08-05 14:10:44'),
-(35, 'Luther', 'Londra\'da geçen polisiye dizi.', NULL, NULL, NULL, NULL, 'polisiye', 2010, 5, 20, 8.4, 'https://m.media-amazon.com/images/M/MV5BNmViZjE1MjEtZjRlZC00MWMzLTg0ODItYjI1ODZiNzk5YzBiXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg', 'https://www.youtube.com/embed/4M7LIcH16C0', 'tamamlandi', NULL, 1, 1, 45, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-30 07:08:14', '2025-08-05 14:11:02'),
-(36, 'Diriliş Ertuğrul', 'Osmanlı İmparatorluğu\'nun kuruluş dönemini anlatan tarihi dizi.', NULL, NULL, NULL, NULL, 'yerli', 2014, 5, 150, 8.3, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTHqr0n5VqIihxVYPIzeiPXbYx0VHNPd69M3g&s', 'https://www.youtube.com/embed/4M7LIcH16C0', 'tamamlandi', NULL, 1, 1, 45, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-30 07:08:14', '2025-08-05 14:11:23'),
-(37, 'Kuruluş Osman', 'Osman Bey\'in hayatını anlatan tarihi dizi.', NULL, NULL, NULL, NULL, 'yerli', 2019, 4, 120, 7.8, 'https://yt3.googleusercontent.com/t0Mglt5gjtPzlc0vd5H5Q6HB2BLlVYj3F8KrWV5RKPAdR0AvpYQJrYji0AKU58GQBo6WNrMU5As=s900-c-k-c0x00ffffff-no-rj', 'https://www.youtube.com/embed/8jLOx1hD3_o', 'devam_ediyor', NULL, 1, 1, 45, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-30 07:08:14', '2025-08-05 14:11:43'),
-(38, 'Çukur', 'İstanbul\'da geçen mafya dizisi.', NULL, NULL, NULL, NULL, 'yerli', 2017, 4, 131, 8.1, 'https://www.ayyapim.com/media/images/posterler/cukur-f71c6546a18ecb1376ca1af80deff3c5.jpg', 'https://www.youtube.com/embed/4M7LIcH16C0', 'tamamlandi', NULL, 1, 1, 45, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-30 07:08:14', '2025-08-05 14:12:08'),
-(39, 'Eşkıya Dünyaya Hükümdar Olmaz', 'Eşkıya Baran\'ın hikayesini anlatan dizi.', NULL, NULL, NULL, NULL, 'yerli', 2015, 6, 200, 8.0, 'https://m.media-amazon.com/images/M/MV5BYTEwYWIzM2YtNTcwYy00NDRmLWFiOWYtNjE1MzYwZWU0OTEyXkEyXkFqcGc@._V1_QL75_UX190_CR0,27,190,281_.jpg', 'https://www.youtube.com/embed/8jLOx1hD3_o', 'tamamlandi', NULL, 1, 1, 45, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-30 07:08:14', '2025-08-05 14:12:42'),
-(40, 'Kara Para Aşk', 'Polis memuru Elif ile mafya babası Ömer\'in aşk hikayesi.', NULL, NULL, NULL, NULL, 'yerli', 2014, 2, 54, 7.9, 'https://iaatv.tmgrup.com.tr/d6515a/0/0/0/0/0/0?u=https://iatv.tmgrup.com.tr/2021/06/24/500x268/1624538401048.jpg', 'https://www.youtube.com/embed/8jLOx1hD3_o', 'tamamlandi', NULL, 1, 1, 45, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-30 07:08:14', '2025-08-05 14:13:04'),
-(41, 'Outlander', 'Zaman yolculuğu ile geçmişte yaşanan aşk hikayesi.', NULL, NULL, NULL, NULL, 'romantik', 2014, 7, 83, 8.4, 'https://m.media-amazon.com/images/I/81RzXWg9GiL._UF1000,1000_QL80_.jpg', 'https://www.youtube.com/embed/1Cjj89czelE', 'devam_ediyor', NULL, 1, 1, 45, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-30 07:08:14', '2025-08-05 14:13:27'),
-(42, 'Bridgerton', 'Regency döneminde geçen romantik dizi.', NULL, NULL, NULL, NULL, 'romantik', 2020, 3, 24, 7.3, 'https://resizing.flixster.com/Zdvk-xZ3cN7uIJGvqPcuAijAb1U=/ems.cHJkLWVtcy1hc3NldHMvdHZzZXJpZXMvOWQyNzdiMGEtZmZhYi00YmZjLTkxZDktNDFlMjFhNjZkZmYwLmpwZw==', 'https://www.youtube.com/embed/q1zk8vW2YtI', 'devam_ediyor', NULL, 1, 1, 45, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-30 07:08:14', '2025-08-05 14:13:48'),
-(43, 'Virgin River', 'Küçük bir kasabada geçen romantik dizi.', NULL, NULL, NULL, NULL, 'romantik', 2019, 5, 50, 7.4, 'https://m.media-amazon.com/images/M/MV5BMWYyOTU0ZWMtMzEzOS00NWZlLTg2NzYtNTk5ZWQyZmVmOTk4XkEyXkFqcGc@._V1_.jpg', 'https://www.youtube.com/embed/4M7LIcH16C0', 'devam_ediyor', NULL, 1, 1, 45, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-30 07:08:14', '2025-08-05 14:14:05'),
-(44, 'Sweet Magnolias', 'Güney kasabasında geçen romantik dizi.', NULL, NULL, NULL, NULL, 'romantik', 2020, 3, 30, 7.3, 'https://m.media-amazon.com/images/M/MV5BNDRmZWEyY2MtMmM5Mi00N2UwLWE2MzQtZGU0OWJhY2IxNThmXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg', 'https://www.youtube.com/embed/q1zk8vW2YtI', 'devam_ediyor', NULL, 1, 1, 45, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-30 07:08:14', '2025-08-05 14:14:24'),
-(45, 'Emily in Paris', 'Paris\'te yaşayan Amerikalı kızın romantik maceraları.', NULL, NULL, NULL, NULL, 'romantik', 2020, 3, 30, 7.1, 'https://m.media-amazon.com/images/M/MV5BODI5Y2YxM2UtZjhjYy00ZjM0LTg3NjQtYjQxMTBmZjM4ZTlkXkEyXkFqcGc@._V1_.jpg', 'https://www.youtube.com/embed/q1zk8vW2YtI', 'devam_ediyor', NULL, 1, 1, 45, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-30 07:08:14', '2025-08-05 14:14:49'),
+(1, 'Breaking Bad', 'Kimya öğretmeni Walter White\'ın kanser teşhisi sonrası uyuşturucu üretimine başlaması ve suç dünyasına adım atması.', 'Vince Gilligan', 'Bryan Cranston, Aaron Paul, Anna Gunn, RJ Mitte, Dean Norris, Betsy Brandt, Bob Odenkirk', 'İngilizce', 'ABD', 'dram', 2008, 5, 62, 9.5, 'https://thumbor.evrimagaci.org/QESXEkks0JE4VVm7Evgv_9aI-tc=/old%2Fmi_media%2Fa3bb95fb0057fdc5eb4685f6ad39e7ee.jpeg', 'https://www.youtube.com/embed/HhesaQXLuRY', 'tamamlandi', 'AMC', 5, 62, 47, 'Albuquerque, New Mexico, ABD', 'Dave Porter', 'Vince Gilligan, Mark Johnson, Michelle MacLaren', 'Vince Gilligan', '2008-01-20', '2013-09-29', NULL, 'dram, suç, uyuşturucu, aile, dönüşüm', '2025-07-30 07:08:14', '2025-08-20 22:26:21'),
+(2, 'The Crown', 'İngiltere Kraliçesi II. Elizabeth\'in hayatını ve saltanatını anlatan dizi.', NULL, NULL, NULL, NULL, 'dram', 2016, 6, 60, 8.7, 'https://m.media-amazon.com/images/M/MV5BMGU2MjdjODQtZDk5Ny00NzgwLWI2MTMtYzViNDU5MDNjMGU2XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg', 'https://www.youtube.com/embed/JWtnJjn6ng0', 'tamamlandi', NULL, 6, 60, 45, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-30 07:08:14', '2025-08-20 22:26:21'),
+(3, 'Narcos', 'Kolombiyalı uyuşturucu baronu Pablo Escobar\'ın hayatını anlatan dizi.', NULL, NULL, NULL, NULL, 'dram', 2015, 3, 30, 8.8, 'https://m.media-amazon.com/images/I/91jkF8kLQqL.jpg', 'https://www.youtube.com/embed/xl8zdCY-abw', 'tamamlandi', NULL, 3, 30, 45, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-30 07:08:14', '2025-08-20 22:26:21'),
+(4, 'Ozark', 'Para aklama işine bulaşan bir ailenin hayatta kalma mücadelesini anlatan dizi.', NULL, NULL, NULL, NULL, 'dram', 2017, 4, 44, 8.5, 'https://m.media-amazon.com/images/M/MV5BZDk1ZTdjOWItNTJmYS00MGIzLThmY2ItZWNiOGY5MzJlNTA5XkEyXkFqcGc@._V1_.jpg', 'https://www.youtube.com/embed/5hAXVqrljbs', 'tamamlandi', NULL, 4, 44, 45, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-30 07:08:14', '2025-08-20 22:26:21'),
+(5, 'The Queen\'s Gambit', 'Satranç dahisi Beth Harmon\'ın hayatını anlatan dizi.', NULL, NULL, NULL, NULL, 'dram', 2020, 1, 7, 8.6, 'https://m.media-amazon.com/images/M/MV5BMmRlNjQxNWQtMjk1OS00N2QxLTk0YWQtMzRhYjY5YTFhNjMxXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg', 'https://www.youtube.com/embed/oZn3qSgmLqI', 'tamamlandi', NULL, 1, 7, 45, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-30 07:08:14', '2025-08-20 22:26:21'),
+(6, 'Friends', 'Altı arkadaşın New York\'ta yaşadığı eğlenceli ve duygusal maceralar.', 'David Crane, Marta Kauffman', 'Jennifer Aniston, Courteney Cox, Lisa Kudrow, Matt LeBlanc, Matthew Perry, David Schwimmer', 'İngilizce', 'ABD', 'komedi', 1994, 10, 236, 8.9, 'https://diziyleogren.com/img/BFriends.c05b593a.jpg', 'https://www.youtube.com/embed/IEEbUzffzrk', 'tamamlandi', 'NBC', 10, 236, 22, 'Los Angeles, California, ABD', 'Michael Skloff, Allee Willis', 'David Crane, Marta Kauffman, Kevin S. Bright', 'David Crane, Marta Kauffman', '1994-09-22', '2004-05-06', NULL, 'komedi, arkadaşlık, romantik, New York, 90lar', '2025-07-30 07:08:14', '2025-08-20 22:26:21'),
+(7, 'The Office', 'Bir ofis ortamında geçen mokümanter tarzı komedi dizisi.', NULL, NULL, NULL, NULL, 'komedi', 2005, 9, 201, 8.9, 'https://m.media-amazon.com/images/M/MV5BZjQwYzBlYzUtZjhhOS00ZDQ0LWE0NzAtYTk4MjgzZTNkZWEzXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg', 'https://www.youtube.com/embed/LHOtME2DL4g', 'tamamlandi', NULL, 9, 201, 45, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-30 07:08:14', '2025-08-20 22:26:21'),
+(8, 'Brooklyn Nine-Nine', 'Brooklyn\'deki bir polis karakolunda geçen komedi dizisi.', NULL, NULL, NULL, NULL, 'komedi', 2013, 8, 153, 8.4, 'https://m.media-amazon.com/images/M/MV5BNzBiODQxZTUtNjc0MC00Yzc1LThmYTMtN2YwYTU3NjgxMmI4XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg', 'https://www.youtube.com/embed/sEOuJ4z5aTc', 'tamamlandi', NULL, 8, 153, 45, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-30 07:08:14', '2025-08-20 22:26:21'),
+(9, 'Parks and Recreation', 'Küçük bir kasabanın park ve rekreasyon departmanında geçen komedi dizisi. Leslie Knope\'un belediye başkanı olma hayali ve arkadaşlarıyla yaşadığı eğlenceli maceralar.', 'Greg Daniels, Michael Schur', 'Amy Poehler, Nick Offerman, Aziz Ansari, Aubrey Plaza, Chris Pratt, Adam Scott, Rob Lowe, Rashida Jones', 'İngilizce', 'ABD', 'komedi', 2009, 7, 125, 8.6, 'https://m.media-amazon.com/images/M/MV5BNDlhMzAwNTAtNTk2NS00MTdkLWE3ZWYtMDU0MTFiYmU2ZTc0XkEyXkFqcGc@._V1_.jpg', 'https://www.youtube.com/embed/5IZWeAwdJ-s', 'tamamlandi', 'NBC', 7, 125, 22, 'Pasadena, California, ABD', 'Gaby Moreno, Vincent Jones', 'Greg Daniels, Michael Schur, Howard Klein', 'Greg Daniels, Michael Schur', '2009-04-09', '2015-02-24', NULL, 'komedi, belediye, arkadaşlık, iyimserlik, hükümet', '2025-07-30 07:08:14', '2025-08-20 22:26:21'),
+(10, 'The Good Place', 'Ölümden sonraki hayatı anlatan felsefi komedi dizisi.', NULL, NULL, NULL, NULL, 'komedi', 2016, 4, 53, 8.2, 'https://m.media-amazon.com/images/M/MV5BNjI3ZGRhNDYtNDFjOS00OGFlLTg4NTEtYjZjYTViY2ZiMzBkXkEyXkFqcGc@._V1_.jpg', 'https://www.youtube.com/embed/9QxRbzFk3zk', 'tamamlandi', NULL, 4, 53, 20, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-30 07:08:14', '2025-08-20 22:26:21'),
+(11, 'The Boys', 'Süper kahramanların karanlık yüzünü gösteren aksiyon dizisi.', NULL, NULL, NULL, NULL, 'aksiyon', 2019, 4, 32, 8.7, 'https://preview.redd.it/2kzjj8l0om391.jpg?width=640&crop=smart&auto=webp&s=c3b05285bc3be26a383e2c4f4ec30024221a6016', 'https://www.youtube.com/embed/koiPxheoIPQ', 'devam_ediyor', NULL, 4, 32, 45, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-30 07:08:14', '2025-08-20 22:26:21'),
+(12, 'Daredevil', 'Kör bir avukatın gece süper kahraman olarak mücadele ettiği dizi.', NULL, NULL, NULL, NULL, 'aksiyon', 2015, 3, 39, 8.6, 'https://m.media-amazon.com/images/M/MV5BMDRiNTBlY2EtZmRiZC00Mzc4LTljZDctNWQ5ZGY2NjUwNjE4XkEyXkFqcGc@._V1_.jpg', 'https://www.youtube.com/embed/koiPxheoIPQ', 'iptal_edildi', NULL, 3, 39, 45, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-30 07:08:14', '2025-08-20 22:26:21'),
+(13, 'Punisher', 'Frank Castle\'ın intikam hikayesini anlatan aksiyon dizisi.', NULL, NULL, NULL, NULL, 'aksiyon', 2017, 2, 26, 8.5, 'https://m.media-amazon.com/images/M/MV5BZTI2NDllMjgtOWEyYi00Y2YxLThhYjQtNTQ0NTgwNDE1YmYzXkEyXkFqcGc@._V1_.jpg', 'https://www.youtube.com/embed/koiPxheoIPQ', 'iptal_edildi', NULL, 2, 26, 45, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-30 07:08:14', '2025-08-20 22:26:21'),
+(14, 'Arrow', 'Oliver Queen\'in Green Arrow olarak mücadele ettiği dizi.', NULL, NULL, NULL, NULL, 'aksiyon', 2012, 8, 170, 7.5, 'https://m.media-amazon.com/images/I/817wYg0c57L._UF1000,1000_QL80_.jpg', 'https://www.youtube.com/embed/hTvNXTxXXkM', 'tamamlandi', NULL, 8, 170, 45, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-30 07:08:14', '2025-08-20 22:26:21'),
+(15, 'The Flash', 'Barry Allen\'in Flash olarak süper hızla mücadele ettiği dizi.', NULL, NULL, NULL, NULL, 'aksiyon', 2014, 9, 184, 7.6, 'https://m.media-amazon.com/images/M/MV5BMjU0ZjZhNDQtMDhkYi00OWQyLWE3NGYtNzBlY2VmM2I4ZDg5XkEyXkFqcGc@._V1_.jpg', 'https://www.youtube.com/embed/Yj0l7iGKh8g', 'devam_ediyor', NULL, 9, 184, 45, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-30 07:08:14', '2025-08-20 22:26:21'),
+(16, 'Stranger Things', '1980\'lerde kaybolan bir çocuğu arayan arkadaşlarının karşılaştığı doğaüstü olayları anlatır.', NULL, NULL, NULL, NULL, 'bilim_kurgu', 2016, 4, 34, 8.7, 'https://m.media-amazon.com/images/M/MV5BMjg2NmM0MTEtYWY2Yy00NmFlLTllNTMtMjVkZjEwMGVlNzdjXkEyXkFqcGc@._V1_.jpg', 'https://www.youtube.com/embed/b9EkMc79ZSU', 'devam_ediyor', NULL, 4, 34, 45, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-30 07:08:14', '2025-08-20 22:26:21'),
+(17, 'Black Mirror', 'Yedi krallığın tahtı için verilen mücadele ve fantastik dünyada geçen epik hikaye.', 'David Benioff, D.B. Weiss', 'Peter Dinklage, Emilia Clarke, Kit Harington, Lena Headey, Nikolaj Coster-Waldau, Maisie Williams, Sophie Turner', 'İngilizce', 'ABD', 'bilim_kurgu', 2011, 8, 73, 8.8, 'https://resizing.flixster.com/yL-MXHM_ttXdnKBofDnTdOQf_WE=/ems.cHJkLWVtcy1hc3NldHMvdHZzZXJpZXMvZmQ5YTcxMDgtZWI5My00MmQzLWI1OGMtNTI0Zjk1NGYyYTBhLmpwZw==', 'https://www.youtube.com/embed/jDiYGjp5iFg', 'tamamlandi', 'HBO', 8, 73, 60, 'Kuzey İrlanda, Malta, İspanya, Hırvatistan', 'Ramin Djawadi', 'David Benioff, D.B. Weiss, George R.R. Martin', 'David Benioff, D.B. Weiss', '2011-04-17', '2019-05-19', NULL, 'fantastik, dram, savaş, taht mücadelesi, epik', '2025-07-30 07:08:14', '2025-08-20 22:26:21'),
+(18, 'The Mandalorian', 'Star Wars evreninde geçen, bir ödül avcısının maceralarını anlatan dizi.', NULL, NULL, NULL, NULL, 'bilim_kurgu', 2019, 3, 24, 8.8, 'https://cdn.apollo.ee/o/apollo/e/c/d/e/ecdea1313691f1efe87313609227e0fc8dd2e283_9781419756511.jpg', 'https://www.youtube.com/embed/b9EkMc79ZSU', 'devam_ediyor', NULL, 3, 24, 45, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-30 07:08:14', '2025-08-20 22:26:21'),
+(19, 'Westworld', 'Yapay zeka ve bilinç konularını işleyen bilim kurgu dizisi.', NULL, NULL, NULL, NULL, 'bilim_kurgu', 2016, 4, 36, 8.6, 'https://m.media-amazon.com/images/I/81Xpd7dGVmL._UF894,1000_QL80_.jpg', 'https://www.youtube.com/embed/0zZcBv0gPKs', 'tamamlandi', NULL, 4, 36, 45, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-30 07:08:14', '2025-08-20 22:26:21'),
+(20, 'Altered Carbon', 'Beyin yükleme teknolojisi ile ölümsüzlüğü konu alan dizi.', NULL, NULL, NULL, NULL, 'bilim_kurgu', 2018, 2, 18, 8.0, 'https://m.media-amazon.com/images/I/81cBfx1WC+L._UF1000,1000_QL80_.jpg', 'https://www.youtube.com/embed/ehM5s7qXjVk', 'iptal_edildi', NULL, 2, 18, 45, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-30 07:08:14', '2025-08-20 22:26:21'),
+(21, 'The Walking Dead', '1980\'lerde geçen, doğaüstü güçler ve gizli devlet deneyleriyle dolu bilim kurgu dizisi.', 'The Duffer Brothers', 'Millie Bobby Brown, Finn Wolfhard, Noah Schnapp, Caleb McLaughlin, Gaten Matarazzo, Winona Ryder, David Harbour', 'İngilizce', 'ABD', 'gerilim', 2010, 4, 34, 8.2, 'https://upload.wikimedia.org/wikipedia/en/thumb/4/4f/TWD_Season_11_poster.jpg/250px-TWD_Season_11_poster.jpg', 'https://www.youtube.com/embed/R1v0uFms68U', 'devam_ediyor', 'Netflix', 4, 34, 50, 'Atlanta, Georgia, ABD', 'Kyle Dixon, Michael Stein', 'The Duffer Brothers, Shawn Levy, Dan Cohen', 'The Duffer Brothers', '2016-07-15', NULL, NULL, 'bilim kurgu, 80ler, çocuklar, doğaüstü, retro', '2025-07-30 07:08:14', '2025-08-20 22:26:21'),
+(22, 'The Haunting of Hill House', 'Bir ailenin hayaletli evde yaşadığı korku dolu deneyimleri anlatan dizi.', NULL, NULL, NULL, NULL, 'gerilim', 2018, 1, 10, 8.6, 'https://m.media-amazon.com/images/M/MV5BMTU4NzA4MDEwNF5BMl5BanBnXkFtZTgwMTQxODYzNjM@._V1_FMjpg_UX1000_.jpg', 'https://www.youtube.com/embed/R1v0uFms68U', 'tamamlandi', NULL, 1, 10, 45, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-30 07:08:14', '2025-08-20 22:26:21'),
+(23, 'American Horror Story', 'Her sezonu farklı korku hikayesi anlatan antoloji dizisi.', NULL, NULL, NULL, NULL, 'gerilim', 2011, 12, 130, 8.0, 'https://m.media-amazon.com/images/M/MV5BZmU1NWFhODQtZjgyNy00NDg0LTk5MDQtYzc5ZGEzYzZmMGIyXkEyXkFqcGc@._V1_.jpg', 'https://www.youtube.com/embed/R1v0uFms68U', 'devam_ediyor', NULL, 12, 130, 45, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-30 07:08:14', '2025-08-20 22:26:21'),
+(24, 'The Haunting of Bly Manor', 'İngiltere\'de geçen hayalet hikayesi.', NULL, NULL, NULL, NULL, 'gerilim', 2020, 1, 9, 7.4, 'https://dnm.nflximg.net/api/v6/mAcAr9TxZIVbINe88xb3Teg5_OA/AAAABXGLJzhRg2kvnsYAHuI1cGcTqEJnejJfuXxh-Pu0h-7ma_DOyBsZT37-znb7Hal9W2FAqMoA6YdH9FfLX2UT4BTOv8CSm3U5NQe8t_KxF7A5KcqtVn465GhGOnRhR4_I0TTOHQ.jpg?r=d89', 'https://www.youtube.com/embed/R1v0uFms68U', 'tamamlandi', NULL, 1, 9, 45, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-30 07:08:14', '2025-08-20 22:26:21'),
+(25, 'Midnight Mass', 'Küçük bir adada geçen dini korku hikayesi.', NULL, NULL, NULL, NULL, 'gerilim', 2021, 1, 7, 7.7, 'https://m.media-amazon.com/images/M/MV5BYWFjMDM5MzgtZWI3OC00ZWRmLThlNTktN2ZkMTc3ZTA5NGEzXkEyXkFqcGc@._V1_.jpg', 'https://www.youtube.com/embed/R1v0uFms68U', 'tamamlandi', NULL, 1, 7, 45, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-30 07:08:14', '2025-08-20 22:26:21'),
+(26, 'Game of Thrones', 'Yedi krallığın tahtı için verilen mücadeleyi anlatan epik fantastik dizi.', NULL, NULL, NULL, NULL, 'fantastik', 2011, 8, 73, 9.3, 'https://m.media-amazon.com/images/M/MV5BMTNhMDJmNmYtNDQ5OS00ODdlLWE0ZDAtZTgyYTIwNDY3OTU3XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg', 'https://www.youtube.com/embed/BpJYNVhGf1s', 'tamamlandi', NULL, 8, 73, 45, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-30 07:08:14', '2025-08-20 22:26:21'),
+(27, 'The Witcher', 'Fantastik dünyada geçen, canavar avcısı Geralt\'ın maceralarını anlatan dizi.', NULL, NULL, NULL, NULL, 'fantastik', 2019, 3, 24, 8.0, 'https://m.media-amazon.com/images/M/MV5BMTQ5MDU5MTktMDZkMy00NDU1LWIxM2UtODg5OGFiNmRhNDBjXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg', 'https://www.youtube.com/embed/ndl1W4ltcmg', 'devam_ediyor', NULL, 3, 24, 45, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-30 07:08:14', '2025-08-20 22:26:21'),
+(28, 'Wednesday', 'Addams Ailesi\'nin kızı Wednesday\'in hayatını anlatan fantastik dizi.', NULL, NULL, NULL, NULL, 'fantastik', 2022, 1, 8, 8.1, 'https://m.media-amazon.com/images/M/MV5BZGQxYWFlNzgtODZjMS00YmM5LWEzZWMtOGVmODMzYjIyODZiXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg', 'https://www.youtube.com/embed/BpJYNVhGf1s', 'devam_ediyor', NULL, 1, 8, 45, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-30 07:08:14', '2025-08-20 22:26:21'),
+(29, 'Shadow and Bone', 'Grishaverse evreninde geçen fantastik dizi.', NULL, NULL, NULL, NULL, 'fantastik', 2021, 2, 16, 7.6, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS3YOsrkLsWniNOMzPCVtHQyLX2ZOeLGrH8rw&s', 'https://www.youtube.com/embed/b1WHQTbJ7vE', 'devam_ediyor', NULL, 2, 16, 45, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-30 07:08:14', '2025-08-20 22:26:21'),
+(30, 'The Wheel of Time', 'Robert Jordan\'ın fantastik roman serisinden uyarlanan dizi.', NULL, NULL, NULL, NULL, 'fantastik', 2021, 2, 16, 7.1, 'https://m.media-amazon.com/images/M/MV5BNmQ5Y2U2MWYtZDcyMi00YTk5LWEyYjItNTI3ODg4MTdlMjYwXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg', 'https://www.youtube.com/embed/4M7LIcH16C0', 'devam_ediyor', NULL, 2, 16, 45, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-30 07:08:14', '2025-08-20 22:26:21'),
+(31, 'True Detective', 'Her sezonu farklı cinayet vakası anlatan polisiye dizi.', NULL, NULL, NULL, NULL, 'polisiye', 2014, 4, 30, 8.9, 'https://m.media-amazon.com/images/M/MV5BYjgwYzA1NWMtNDYyZi00ZGQyLWI5NTktMDYwZjE2OTIwZWEwXkEyXkFqcGc@._V1_.jpg', 'https://www.youtube.com/embed/TXwCoNwBSkQ', 'devam_ediyor', NULL, 4, 30, 45, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-30 07:08:14', '2025-08-20 22:26:21'),
+(32, 'Mindhunter', 'FBI\'ın seri katilleri anlamaya çalıştığı dizi.', NULL, NULL, NULL, NULL, 'polisiye', 2017, 2, 19, 8.6, 'https://m.media-amazon.com/images/M/MV5BYTk4NDA4MGMtNjliOC00MjExLWI1YzctOTc4NWIxM2I1YjM5XkEyXkFqcGc@._V1_.jpg', 'https://www.youtube.com/embed/evd8j6K6obM', 'iptal_edildi', NULL, 2, 19, 45, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-30 07:08:14', '2025-08-20 22:26:21'),
+(33, 'Broadchurch', 'Küçük bir kasabada geçen cinayet vakası.', NULL, NULL, NULL, NULL, 'polisiye', 2013, 3, 24, 8.4, 'https://image.pbs.org/contentchannels/XcQa04i-show-poster2x3-5cvWGhZ.jpg', 'https://www.youtube.com/embed/4M7LIcH16C0', 'tamamlandi', NULL, 3, 24, 45, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-30 07:08:14', '2025-08-20 22:26:21'),
+(34, 'The Killing', 'Seattle\'da geçen cinayet vakası.', NULL, NULL, NULL, NULL, 'polisiye', 2011, 4, 44, 8.3, 'https://m.media-amazon.com/images/M/MV5BMTQ5MTUxMzU3Ml5BMl5BanBnXkFtZTgwMDU3NDYxMjE@._V1_.jpg', 'https://www.youtube.com/embed/4M7LIcH16C0', 'tamamlandi', NULL, 4, 44, 45, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-30 07:08:14', '2025-08-20 22:26:21'),
+(35, 'Luther', 'Londra\'da geçen polisiye dizi.', NULL, NULL, NULL, NULL, 'polisiye', 2010, 5, 20, 8.4, 'https://m.media-amazon.com/images/M/MV5BNmViZjE1MjEtZjRlZC00MWMzLTg0ODItYjI1ODZiNzk5YzBiXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg', 'https://www.youtube.com/embed/4M7LIcH16C0', 'tamamlandi', NULL, 5, 20, 45, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-30 07:08:14', '2025-08-20 22:26:21'),
+(36, 'Diriliş Ertuğrul', 'Osmanlı İmparatorluğu\'nun kuruluş dönemini anlatan tarihi dizi.', NULL, NULL, NULL, NULL, 'yerli', 2014, 5, 150, 8.3, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTHqr0n5VqIihxVYPIzeiPXbYx0VHNPd69M3g&s', 'https://www.youtube.com/embed/4M7LIcH16C0', 'tamamlandi', NULL, 5, 150, 45, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-30 07:08:14', '2025-08-20 22:26:21'),
+(37, 'Kuruluş Osman', 'Osman Bey\'in hayatını anlatan tarihi dizi.', NULL, NULL, NULL, NULL, 'yerli', 2019, 4, 120, 7.8, 'https://yt3.googleusercontent.com/t0Mglt5gjtPzlc0vd5H5Q6HB2BLlVYj3F8KrWV5RKPAdR0AvpYQJrYji0AKU58GQBo6WNrMU5As=s900-c-k-c0x00ffffff-no-rj', 'https://www.youtube.com/embed/8jLOx1hD3_o', 'devam_ediyor', NULL, 4, 120, 45, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-30 07:08:14', '2025-08-20 22:26:21'),
+(38, 'Çukur', 'İstanbul\'da geçen mafya dizisi.', NULL, NULL, NULL, NULL, 'yerli', 2017, 4, 131, 8.1, 'https://www.ayyapim.com/media/images/posterler/cukur-f71c6546a18ecb1376ca1af80deff3c5.jpg', 'https://www.youtube.com/embed/4M7LIcH16C0', 'tamamlandi', NULL, 4, 131, 45, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-30 07:08:14', '2025-08-20 22:26:21'),
+(39, 'Eşkıya Dünyaya Hükümdar Olmaz', 'Eşkıya Baran\'ın hikayesini anlatan dizi.', NULL, NULL, NULL, NULL, 'yerli', 2015, 6, 200, 8.0, 'https://m.media-amazon.com/images/M/MV5BYTEwYWIzM2YtNTcwYy00NDRmLWFiOWYtNjE1MzYwZWU0OTEyXkEyXkFqcGc@._V1_QL75_UX190_CR0,27,190,281_.jpg', 'https://www.youtube.com/embed/8jLOx1hD3_o', 'tamamlandi', NULL, 6, 200, 45, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-30 07:08:14', '2025-08-20 22:26:21'),
+(40, 'Kara Para Aşk', 'Polis memuru Elif ile mafya babası Ömer\'in aşk hikayesi.', NULL, NULL, NULL, NULL, 'yerli', 2014, 2, 54, 7.9, 'https://iaatv.tmgrup.com.tr/d6515a/0/0/0/0/0/0?u=https://iatv.tmgrup.com.tr/2021/06/24/500x268/1624538401048.jpg', 'https://www.youtube.com/embed/8jLOx1hD3_o', 'tamamlandi', NULL, 2, 54, 45, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-30 07:08:14', '2025-08-20 22:26:21'),
+(41, 'Outlander', 'Zaman yolculuğu ile geçmişte yaşanan aşk hikayesi.', NULL, NULL, NULL, NULL, 'romantik', 2014, 7, 83, 8.4, 'https://m.media-amazon.com/images/I/81RzXWg9GiL._UF1000,1000_QL80_.jpg', 'https://www.youtube.com/embed/1Cjj89czelE', 'devam_ediyor', NULL, 7, 83, 45, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-30 07:08:14', '2025-08-20 22:26:21'),
+(42, 'Bridgerton', 'Regency döneminde geçen romantik dizi.', NULL, NULL, NULL, NULL, 'romantik', 2020, 3, 24, 7.3, 'https://resizing.flixster.com/Zdvk-xZ3cN7uIJGvqPcuAijAb1U=/ems.cHJkLWVtcy1hc3NldHMvdHZzZXJpZXMvOWQyNzdiMGEtZmZhYi00YmZjLTkxZDktNDFlMjFhNjZkZmYwLmpwZw==', 'https://www.youtube.com/embed/q1zk8vW2YtI', 'devam_ediyor', NULL, 3, 24, 45, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-30 07:08:14', '2025-08-20 22:26:21'),
+(43, 'Virgin River', 'Küçük bir kasabada geçen romantik dizi.', NULL, NULL, NULL, NULL, 'romantik', 2019, 5, 50, 7.4, 'https://m.media-amazon.com/images/M/MV5BMWYyOTU0ZWMtMzEzOS00NWZlLTg2NzYtNTk5ZWQyZmVmOTk4XkEyXkFqcGc@._V1_.jpg', 'https://www.youtube.com/embed/4M7LIcH16C0', 'devam_ediyor', NULL, 5, 50, 45, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-30 07:08:14', '2025-08-20 22:26:21'),
+(44, 'Sweet Magnolias', 'Güney kasabasında geçen romantik dizi.', NULL, NULL, NULL, NULL, 'romantik', 2020, 3, 30, 7.3, 'https://m.media-amazon.com/images/M/MV5BNDRmZWEyY2MtMmM5Mi00N2UwLWE2MzQtZGU0OWJhY2IxNThmXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg', 'https://www.youtube.com/embed/q1zk8vW2YtI', 'devam_ediyor', NULL, 3, 30, 45, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-30 07:08:14', '2025-08-20 22:26:21'),
+(45, 'Emily in Paris', 'Paris\'te yaşayan Amerikalı kızın romantik maceraları.', NULL, NULL, NULL, NULL, 'romantik', 2020, 3, 30, 7.1, 'https://m.media-amazon.com/images/M/MV5BODI5Y2YxM2UtZjhjYy00ZjM0LTg3NjQtYjQxMTBmZjM4ZTlkXkEyXkFqcGc@._V1_.jpg', 'https://www.youtube.com/embed/q1zk8vW2YtI', 'devam_ediyor', NULL, 3, 30, 45, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-30 07:08:14', '2025-08-20 22:26:21'),
 (46, 'How I Met Your Mother', 'Dizi, 2030 yılında, Ted Mosby\'nin çocuklarına anneleri (kendi eşi) ile nasıl tanıştığını anlatmasıyla başlar. Bob Saget\'in seslendirmesiyle asıl karakteri Ted \"Size annenizle nasıl tanıştığımı anlatacağım.\" der ve dizi 2005 yılına döner.', 'Pamela Fryman', '', 'İngilizce', 'ABD', 'Komedi', 2005, 9, 208, 8.3, 'https://disney.images.edge.bamgrid.com/ripcut-delivery/v2/variant/disney/559b4b05-9c8e-4e19-89d2-30a74febb0c0/compose?aspectRatio=1.78&format=webp&width=1200', 'https://www.youtube.com/embed/cjJLEYMzpjc', 'tamamlandi', NULL, 9, 208, 20, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-08-05 14:34:15', '2025-08-13 09:06:27');
+
+-- --------------------------------------------------------
+
+--
+-- Tablo için tablo yapısı `dizi_sezonlar`
+--
+
+DROP TABLE IF EXISTS `dizi_sezonlar`;
+CREATE TABLE IF NOT EXISTS `dizi_sezonlar` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `dizi_id` int NOT NULL,
+  `sezon_no` int NOT NULL,
+  `bolum_sayisi` int NOT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `idx_dizi_sezon` (`dizi_id`,`sezon_no`)
+) ENGINE=InnoDB AUTO_INCREMENT=209 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Tablo döküm verisi `dizi_sezonlar`
+--
+
+INSERT INTO `dizi_sezonlar` (`id`, `dizi_id`, `sezon_no`, `bolum_sayisi`, `created_at`) VALUES
+(1, 1, 1, 7, '2025-08-22 07:45:30'),
+(2, 1, 2, 13, '2025-08-22 07:45:30'),
+(3, 1, 3, 13, '2025-08-22 07:45:30'),
+(4, 1, 4, 13, '2025-08-22 07:45:30'),
+(5, 1, 5, 16, '2025-08-22 07:45:30'),
+(6, 6, 1, 24, '2025-08-22 07:45:30'),
+(7, 6, 2, 24, '2025-08-22 07:45:30'),
+(8, 6, 3, 25, '2025-08-22 07:45:30'),
+(9, 6, 4, 24, '2025-08-22 07:45:30'),
+(10, 6, 5, 22, '2025-08-22 07:45:30'),
+(11, 6, 6, 25, '2025-08-22 07:45:30'),
+(12, 6, 7, 24, '2025-08-22 07:45:30'),
+(13, 6, 8, 24, '2025-08-22 07:45:30'),
+(14, 6, 9, 24, '2025-08-22 07:45:30'),
+(15, 6, 10, 18, '2025-08-22 07:45:30'),
+(16, 26, 1, 10, '2025-08-22 07:45:30'),
+(17, 26, 2, 10, '2025-08-22 07:45:30'),
+(18, 26, 3, 10, '2025-08-22 07:45:30'),
+(19, 26, 4, 10, '2025-08-22 07:45:30'),
+(20, 26, 5, 10, '2025-08-22 07:45:30'),
+(21, 26, 6, 10, '2025-08-22 07:45:30'),
+(22, 26, 7, 7, '2025-08-22 07:45:30'),
+(23, 26, 8, 6, '2025-08-22 07:45:30'),
+(24, 7, 1, 6, '2025-08-22 07:45:30'),
+(25, 7, 2, 22, '2025-08-22 07:45:30'),
+(26, 7, 3, 25, '2025-08-22 07:45:30'),
+(27, 7, 4, 19, '2025-08-22 07:45:30'),
+(28, 7, 5, 28, '2025-08-22 07:45:30'),
+(29, 7, 6, 26, '2025-08-22 07:45:30'),
+(30, 7, 7, 24, '2025-08-22 07:45:30'),
+(31, 7, 8, 24, '2025-08-22 07:45:30'),
+(32, 7, 9, 25, '2025-08-22 07:45:30'),
+(33, 16, 1, 8, '2025-08-22 07:45:30'),
+(34, 16, 2, 9, '2025-08-22 07:45:30'),
+(35, 16, 3, 8, '2025-08-22 07:45:30'),
+(36, 16, 4, 9, '2025-08-22 07:45:30'),
+(37, 2, 1, 10, '2025-08-22 07:45:30'),
+(38, 2, 2, 10, '2025-08-22 07:45:30'),
+(39, 2, 3, 10, '2025-08-22 07:45:30'),
+(40, 2, 4, 10, '2025-08-22 07:45:30'),
+(41, 2, 5, 10, '2025-08-22 07:45:30'),
+(42, 2, 6, 10, '2025-08-22 07:45:30'),
+(43, 3, 1, 10, '2025-08-22 07:45:30'),
+(44, 3, 2, 10, '2025-08-22 07:45:30'),
+(45, 3, 3, 10, '2025-08-22 07:45:30'),
+(46, 4, 1, 10, '2025-08-22 07:45:30'),
+(47, 4, 2, 10, '2025-08-22 07:45:30'),
+(48, 4, 3, 10, '2025-08-22 07:45:30'),
+(49, 4, 4, 14, '2025-08-22 07:45:30'),
+(50, 5, 1, 7, '2025-08-22 07:45:30'),
+(51, 8, 1, 22, '2025-08-22 07:45:30'),
+(52, 8, 2, 23, '2025-08-22 07:45:30'),
+(53, 8, 3, 23, '2025-08-22 07:45:30'),
+(54, 8, 4, 22, '2025-08-22 07:45:30'),
+(55, 8, 5, 22, '2025-08-22 07:45:30'),
+(56, 8, 6, 18, '2025-08-22 07:45:30'),
+(57, 8, 7, 13, '2025-08-22 07:45:30'),
+(58, 8, 8, 10, '2025-08-22 07:45:30'),
+(59, 9, 1, 6, '2025-08-22 07:45:30'),
+(60, 9, 2, 24, '2025-08-22 07:45:30'),
+(61, 9, 3, 16, '2025-08-22 07:45:30'),
+(62, 9, 4, 22, '2025-08-22 07:45:30'),
+(63, 9, 5, 22, '2025-08-22 07:45:30'),
+(64, 9, 6, 22, '2025-08-22 07:45:30'),
+(65, 9, 7, 13, '2025-08-22 07:45:30'),
+(66, 10, 1, 13, '2025-08-22 07:45:30'),
+(67, 10, 2, 13, '2025-08-22 07:45:30'),
+(68, 10, 3, 14, '2025-08-22 07:45:30'),
+(69, 10, 4, 13, '2025-08-22 07:45:30'),
+(70, 11, 1, 8, '2025-08-22 07:45:30'),
+(71, 11, 2, 8, '2025-08-22 07:45:30'),
+(72, 11, 3, 8, '2025-08-22 07:45:30'),
+(73, 11, 4, 8, '2025-08-22 07:45:30'),
+(74, 12, 1, 13, '2025-08-22 07:45:30'),
+(75, 12, 2, 13, '2025-08-22 07:45:30'),
+(76, 12, 3, 13, '2025-08-22 07:45:30'),
+(77, 13, 1, 13, '2025-08-22 07:45:30'),
+(78, 13, 2, 13, '2025-08-22 07:45:30'),
+(79, 14, 1, 23, '2025-08-22 07:45:30'),
+(80, 14, 2, 23, '2025-08-22 07:45:30'),
+(81, 14, 3, 23, '2025-08-22 07:45:30'),
+(82, 14, 4, 23, '2025-08-22 07:45:30'),
+(83, 14, 5, 23, '2025-08-22 07:45:30'),
+(84, 14, 6, 23, '2025-08-22 07:45:30'),
+(85, 14, 7, 22, '2025-08-22 07:45:30'),
+(86, 14, 8, 10, '2025-08-22 07:45:30'),
+(87, 15, 1, 23, '2025-08-22 07:45:30'),
+(88, 15, 2, 23, '2025-08-22 07:45:30'),
+(89, 15, 3, 23, '2025-08-22 07:45:30'),
+(90, 15, 4, 23, '2025-08-22 07:45:30'),
+(91, 15, 5, 22, '2025-08-22 07:45:30'),
+(92, 15, 6, 22, '2025-08-22 07:45:30'),
+(93, 15, 7, 18, '2025-08-22 07:45:30'),
+(94, 15, 8, 20, '2025-08-22 07:45:30'),
+(95, 15, 9, 13, '2025-08-22 07:45:30'),
+(96, 17, 1, 3, '2025-08-22 07:45:30'),
+(97, 17, 2, 3, '2025-08-22 07:45:30'),
+(98, 17, 3, 6, '2025-08-22 07:45:30'),
+(99, 17, 4, 6, '2025-08-22 07:45:30'),
+(100, 17, 5, 3, '2025-08-22 07:45:30'),
+(101, 17, 6, 5, '2025-08-22 07:45:30'),
+(102, 17, 7, 6, '2025-08-22 07:45:30'),
+(103, 17, 8, 5, '2025-08-22 07:45:30'),
+(104, 18, 1, 8, '2025-08-22 07:45:30'),
+(105, 18, 2, 8, '2025-08-22 07:45:30'),
+(106, 18, 3, 8, '2025-08-22 07:45:30'),
+(107, 19, 1, 10, '2025-08-22 07:45:30'),
+(108, 19, 2, 10, '2025-08-22 07:45:30'),
+(109, 19, 3, 8, '2025-08-22 07:45:30'),
+(110, 19, 4, 8, '2025-08-22 07:45:30'),
+(111, 20, 1, 10, '2025-08-22 07:45:31'),
+(112, 20, 2, 8, '2025-08-22 07:45:31'),
+(113, 21, 1, 8, '2025-08-22 07:45:31'),
+(114, 21, 2, 9, '2025-08-22 07:45:31'),
+(115, 21, 3, 8, '2025-08-22 07:45:31'),
+(116, 21, 4, 9, '2025-08-22 07:45:31'),
+(117, 22, 1, 10, '2025-08-22 07:45:31'),
+(118, 23, 1, 12, '2025-08-22 07:45:31'),
+(119, 23, 2, 13, '2025-08-22 07:45:31'),
+(120, 23, 3, 13, '2025-08-22 07:45:31'),
+(121, 23, 4, 13, '2025-08-22 07:45:31'),
+(122, 23, 5, 12, '2025-08-22 07:45:31'),
+(123, 23, 6, 10, '2025-08-22 07:45:31'),
+(124, 23, 7, 11, '2025-08-22 07:45:31'),
+(125, 23, 8, 10, '2025-08-22 07:45:31'),
+(126, 23, 9, 9, '2025-08-22 07:45:31'),
+(127, 23, 10, 10, '2025-08-22 07:45:31'),
+(128, 23, 11, 10, '2025-08-22 07:45:31'),
+(129, 23, 12, 10, '2025-08-22 07:45:31'),
+(130, 24, 1, 9, '2025-08-22 07:45:31'),
+(131, 25, 1, 7, '2025-08-22 07:45:31'),
+(132, 27, 1, 8, '2025-08-22 07:45:31'),
+(133, 27, 2, 8, '2025-08-22 07:45:31'),
+(134, 27, 3, 8, '2025-08-22 07:45:31'),
+(135, 28, 1, 8, '2025-08-22 07:45:31'),
+(136, 29, 1, 8, '2025-08-22 07:45:31'),
+(137, 29, 2, 8, '2025-08-22 07:45:31'),
+(138, 30, 1, 8, '2025-08-22 07:45:31'),
+(139, 30, 2, 8, '2025-08-22 07:45:31'),
+(140, 31, 1, 8, '2025-08-22 07:45:31'),
+(141, 31, 2, 8, '2025-08-22 07:45:31'),
+(142, 31, 3, 8, '2025-08-22 07:45:31'),
+(143, 31, 4, 6, '2025-08-22 07:45:31'),
+(144, 32, 1, 10, '2025-08-22 07:45:31'),
+(145, 32, 2, 9, '2025-08-22 07:45:31'),
+(146, 33, 1, 8, '2025-08-22 07:45:31'),
+(147, 33, 2, 8, '2025-08-22 07:45:31'),
+(148, 33, 3, 8, '2025-08-22 07:45:31'),
+(149, 34, 1, 13, '2025-08-22 07:45:31'),
+(150, 34, 2, 13, '2025-08-22 07:45:31'),
+(151, 34, 3, 12, '2025-08-22 07:45:31'),
+(152, 34, 4, 6, '2025-08-22 07:45:31'),
+(153, 35, 1, 6, '2025-08-22 07:45:31'),
+(154, 35, 2, 6, '2025-08-22 07:45:31'),
+(155, 35, 3, 6, '2025-08-22 07:45:31'),
+(156, 35, 4, 6, '2025-08-22 07:45:31'),
+(157, 35, 5, 4, '2025-08-22 07:45:31'),
+(158, 36, 1, 30, '2025-08-22 07:45:31'),
+(159, 36, 2, 30, '2025-08-22 07:45:31'),
+(160, 36, 3, 30, '2025-08-22 07:45:31'),
+(161, 36, 4, 30, '2025-08-22 07:45:31'),
+(162, 36, 5, 30, '2025-08-22 07:45:31'),
+(163, 37, 1, 30, '2025-08-22 07:45:31'),
+(164, 37, 2, 30, '2025-08-22 07:45:31'),
+(165, 37, 3, 30, '2025-08-22 07:45:31'),
+(166, 37, 4, 30, '2025-08-22 07:45:31'),
+(167, 38, 1, 32, '2025-08-22 07:45:31'),
+(168, 38, 2, 33, '2025-08-22 07:45:31'),
+(169, 38, 3, 33, '2025-08-22 07:45:31'),
+(170, 38, 4, 33, '2025-08-22 07:45:31'),
+(171, 39, 1, 33, '2025-08-22 07:45:31'),
+(172, 39, 2, 33, '2025-08-22 07:45:31'),
+(173, 39, 3, 33, '2025-08-22 07:45:31'),
+(174, 39, 4, 33, '2025-08-22 07:45:31'),
+(175, 39, 5, 33, '2025-08-22 07:45:31'),
+(176, 39, 6, 35, '2025-08-22 07:45:31'),
+(177, 40, 1, 27, '2025-08-22 07:45:31'),
+(178, 40, 2, 27, '2025-08-22 07:45:31'),
+(179, 41, 1, 16, '2025-08-22 07:45:31'),
+(180, 41, 2, 13, '2025-08-22 07:45:31'),
+(181, 41, 3, 13, '2025-08-22 07:45:31'),
+(182, 41, 4, 13, '2025-08-22 07:45:31'),
+(183, 41, 5, 12, '2025-08-22 07:45:31'),
+(184, 41, 6, 8, '2025-08-22 07:45:31'),
+(185, 41, 7, 16, '2025-08-22 07:45:31'),
+(186, 42, 1, 8, '2025-08-22 07:45:31'),
+(187, 42, 2, 8, '2025-08-22 07:45:31'),
+(188, 42, 3, 8, '2025-08-22 07:45:31'),
+(189, 43, 1, 10, '2025-08-22 07:45:31'),
+(190, 43, 2, 10, '2025-08-22 07:45:31'),
+(191, 43, 3, 10, '2025-08-22 07:45:31'),
+(192, 43, 4, 12, '2025-08-22 07:45:31'),
+(193, 43, 5, 10, '2025-08-22 07:45:31'),
+(194, 44, 1, 10, '2025-08-22 07:45:31'),
+(195, 44, 2, 10, '2025-08-22 07:45:31'),
+(196, 44, 3, 10, '2025-08-22 07:45:31'),
+(197, 45, 1, 10, '2025-08-22 07:45:31'),
+(198, 45, 2, 10, '2025-08-22 07:45:31'),
+(199, 45, 3, 10, '2025-08-22 07:45:31'),
+(200, 46, 1, 22, '2025-08-22 07:45:31'),
+(201, 46, 2, 22, '2025-08-22 07:45:31'),
+(202, 46, 3, 20, '2025-08-22 07:45:31'),
+(203, 46, 4, 24, '2025-08-22 07:45:31'),
+(204, 46, 5, 24, '2025-08-22 07:45:31'),
+(205, 46, 6, 24, '2025-08-22 07:45:31'),
+(206, 46, 7, 24, '2025-08-22 07:45:31'),
+(207, 46, 8, 24, '2025-08-22 07:45:31'),
+(208, 46, 9, 24, '2025-08-22 07:45:31');
 
 -- --------------------------------------------------------
 
@@ -274,15 +505,38 @@ CREATE TABLE IF NOT EXISTS `dizi_takip` (
   `year` int DEFAULT NULL,
   `genre` varchar(100) DEFAULT NULL,
   `poster` text,
-  `rating` int DEFAULT '0',
+  `rating` decimal(3,1) DEFAULT '0.0',
   `review` text,
+  `season_count` int DEFAULT '1',
+  `episode_count` int DEFAULT '1',
+  `current_season` int DEFAULT '1',
+  `current_episode` int DEFAULT '1',
   `is_watched` tinyint(1) DEFAULT '0',
   `is_favorite` tinyint(1) DEFAULT '0',
+  `is_watchlist` tinyint(1) DEFAULT '0',
+  `is_watching` tinyint(1) DEFAULT '0',
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Tablo döküm verisi `dizi_takip`
+--
+
+INSERT INTO `dizi_takip` (`id`, `user_id`, `title`, `year`, `genre`, `poster`, `rating`, `review`, `season_count`, `episode_count`, `current_season`, `current_episode`, `is_watched`, `is_favorite`, `is_watchlist`, `is_watching`, `created_at`, `updated_at`) VALUES
+(10, 104, 'Friends', 1994, 'komedi', 'https://diziyleogren.com/img/BFriends.c05b593a.jpg', 8.9, '', 10, 236, 10, 2, 0, 0, 1, 0, '2025-08-20 22:27:32', '2025-08-20 22:31:14'),
+(11, 104, 'Game of Thrones', 2011, 'fantastik', 'https://m.media-amazon.com/images/M/MV5BMTNhMDJmNmYtNDQ5OS00ODdlLWE0ZDAtZTgyYTIwNDY3OTU3XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg', 9.3, '', 8, 73, 1, 1, 0, 1, 0, 0, '2025-08-20 22:31:51', '2025-08-20 22:31:51'),
+(12, 118, 'The Queen\'s Gambit', 2020, 'dram', 'https://m.media-amazon.com/images/M/MV5BMmRlNjQxNWQtMjk1OS00N2QxLTk0YWQtMzRhYjY5YTFhNjMxXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg', 8.6, '', 1, 7, 1, 7, 1, 0, 0, 0, '2025-08-21 10:59:57', '2025-08-21 10:59:57'),
+(13, 118, 'Breaking Bad', 2008, 'dram', 'https://thumbor.evrimagaci.org/QESXEkks0JE4VVm7Evgv_9aI-tc=/old%2Fmi_media%2Fa3bb95fb0057fdc5eb4685f6ad39e7ee.jpeg', 9.5, '', 5, 62, 5, 62, 1, 0, 0, 0, '2025-08-21 11:00:07', '2025-08-21 11:00:07'),
+(14, 118, 'How I Met Your Mother', 2005, 'Komedi', 'https://disney.images.edge.bamgrid.com/ripcut-delivery/v2/variant/disney/559b4b05-9c8e-4e19-89d2-30a74febb0c0/compose?aspectRatio=1.78&format=webp&width=1200', 8.3, '', 9, 208, 9, 208, 1, 0, 0, 0, '2025-08-21 11:00:15', '2025-08-21 11:00:15'),
+(15, 118, 'The Office', 2005, 'komedi', 'https://m.media-amazon.com/images/M/MV5BZjQwYzBlYzUtZjhhOS00ZDQ0LWE0NzAtYTk4MjgzZTNkZWEzXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg', 8.9, '', 9, 201, 9, 201, 1, 0, 0, 0, '2025-08-21 11:00:19', '2025-08-21 11:00:19'),
+(16, 118, 'Friends', 1994, 'komedi', 'https://diziyleogren.com/img/BFriends.c05b593a.jpg', 8.9, '', 10, 236, 10, 236, 1, 1, 0, 0, '2025-08-21 11:00:22', '2025-08-21 11:01:29'),
+(17, 118, 'The Boys', 2019, 'aksiyon', 'https://preview.redd.it/2kzjj8l0om391.jpg?width=640&crop=smart&auto=webp&s=c3b05285bc3be26a383e2c4f4ec30024221a6016', 8.7, '', 4, 32, 4, 32, 1, 0, 0, 0, '2025-08-21 11:00:32', '2025-08-21 11:00:32'),
+(18, 118, 'The Witcher', 2019, 'fantastik', 'https://m.media-amazon.com/images/M/MV5BMTQ5MDU5MTktMDZkMy00NDU1LWIxM2UtODg5OGFiNmRhNDBjXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg', 8.0, '', 3, 24, 3, 24, 1, 0, 0, 0, '2025-08-21 11:01:07', '2025-08-21 11:01:07'),
+(19, 104, 'Brooklyn Nine-Nine', 2013, 'komedi', 'https://m.media-amazon.com/images/M/MV5BNzBiODQxZTUtNjc0MC00Yzc1LThmYTMtN2YwYTU3NjgxMmI4XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg', 8.4, '', 8, 153, 8, 153, 0, 0, 0, 0, '2025-08-21 13:31:42', '2025-08-21 13:31:54'),
+(21, 104, 'Breaking Bad', 2008, 'dram', 'https://thumbor.evrimagaci.org/QESXEkks0JE4VVm7Evgv_9aI-tc=/old%2Fmi_media%2Fa3bb95fb0057fdc5eb4685f6ad39e7ee.jpeg', 9.5, '', 5, 62, 2, 10, 0, 0, 0, 1, '2025-08-22 07:58:41', '2025-08-22 08:09:04');
 
 -- --------------------------------------------------------
 
@@ -448,8 +702,8 @@ DROP TABLE IF EXISTS `film_listeleri`;
 CREATE TABLE IF NOT EXISTS `film_listeleri` (
   `id` int NOT NULL AUTO_INCREMENT COMMENT 'Benzersiz liste kimliği',
   `kullanici_id` int NOT NULL COMMENT 'Liste sahibi kullanıcı kimliği',
-  `liste_adi` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Liste adı',
-  `aciklama` text COLLATE utf8mb4_unicode_ci COMMENT 'Liste açıklaması',
+  `liste_adi` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Liste adı',
+  `aciklama` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT 'Liste açıklaması',
   `gizli` tinyint(1) DEFAULT '0' COMMENT 'Liste gizli mi?',
   `film_sayisi` int DEFAULT '0' COMMENT 'Listedeki film sayısı',
   `begeni_sayisi` int DEFAULT '0' COMMENT 'Liste beğeni sayısı',
@@ -491,56 +745,37 @@ CREATE TABLE IF NOT EXISTS `film_takip` (
   `is_favorite` tinyint(1) DEFAULT '0',
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `is_watchlist` tinyint(1) DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Tablo döküm verisi `film_takip`
 --
 
-INSERT INTO `film_takip` (`id`, `user_id`, `title`, `year`, `genre`, `poster`, `rating`, `review`, `is_watched`, `is_favorite`, `created_at`, `updated_at`) VALUES
-(1, 106, 'The Dark Knight', 2008, 'Aksiyon, Dram', 'https://m.media-amazon.com/images/M/MV5BMTMxNTMwODM0NF5BMl5BanBnXkFtZTcwODAyMTk2Mw@@._V1_SX300.jpg', 0, '', 0, 1, '2025-08-18 11:46:34', '2025-08-18 11:47:12'),
-(4, 114, 'Jurassic Park', 1993, 'Macera, Bilim Kurgu', 'https://m.media-amazon.com/images/M/MV5BMjM2MDgxMDg0Nl5BMl5BanBnXkFtZTgwNTM2OTM5NDE@._V1_FMjpg_UX1000_.jpg', 0, '', 0, 0, '2025-08-18 13:45:36', '2025-08-18 13:45:48'),
-(9, 114, 'The Dark Knight', 2008, 'Aksiyon, Dram', 'https://m.media-amazon.com/images/M/MV5BMTMxNTMwODM0NF5BMl5BanBnXkFtZTcwODAyMTk2Mw@@._V1_SX300.jpg', 0, '', 0, 1, '2025-08-18 14:35:01', '2025-08-18 14:35:01'),
-(6, 114, 'The Matrix', 1999, 'Aksiyon, Bilim Kurgu', 'https://m.media-amazon.com/images/M/MV5BNzQzOTk3OTAtNDQ0Zi00ZTVkLWI0MTEtMDllZjNkYzNjNTc4L2ltYWdlXkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_SX300.jpg', 0, '', 0, 0, '2025-08-18 13:51:35', '2025-08-18 13:51:35'),
-(7, 114, 'Die Hard', 1988, 'Aksiyon, Gerilim', 'https://media.posterlounge.com/img/products/710000/705263/705263_poster.jpg', 0, '', 0, 0, '2025-08-18 13:51:41', '2025-08-18 13:51:41'),
-(8, 114, 'Mad Max: Fury Road', 2015, 'Aksiyon, Macera', 'https://m.media-amazon.com/images/M/MV5BN2EwM2I5OWMtMGQyMi00Zjg1LWJkNTctZTdjYTA4OGUwZjMyXkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_SX300.jpg', 0, '', 0, 0, '2025-08-18 13:51:51', '2025-08-18 13:51:51');
-
--- --------------------------------------------------------
-
---
--- Tablo için tablo yapısı `dizi_takip`
---
-
-DROP TABLE IF EXISTS `dizi_takip`;
-CREATE TABLE IF NOT EXISTS `dizi_takip` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `user_id` int NOT NULL,
-  `title` varchar(255) NOT NULL,
-  `year` int DEFAULT NULL,
-  `genre` varchar(100) DEFAULT NULL,
-  `poster` text,
-  `rating` decimal(3,1) DEFAULT '0.0',
-  `review` text,
-  `season_count` int DEFAULT '1',
-  `episode_count` int DEFAULT '1',
-  `current_season` int DEFAULT '1',
-  `current_episode` int DEFAULT '1',
-  `is_watched` tinyint(1) DEFAULT '0',
-  `is_favorite` tinyint(1) DEFAULT '0',
-  `is_watchlist` tinyint(1) DEFAULT '0',
-  `is_watching` tinyint(1) DEFAULT '0',
-  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  KEY `user_id` (`user_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Tablo döküm verisi `dizi_takip`
---
-
+INSERT INTO `film_takip` (`id`, `user_id`, `title`, `year`, `genre`, `poster`, `rating`, `review`, `is_watched`, `is_favorite`, `created_at`, `updated_at`, `is_watchlist`) VALUES
+(1, 106, 'The Dark Knight', 2008, 'Aksiyon, Dram', 'https://m.media-amazon.com/images/M/MV5BMTMxNTMwODM0NF5BMl5BanBnXkFtZTcwODAyMTk2Mw@@._V1_SX300.jpg', 0, '', 0, 1, '2025-08-18 11:46:34', '2025-08-18 11:47:12', 0),
+(4, 114, 'Jurassic Park', 1993, 'Macera, Bilim Kurgu', 'https://m.media-amazon.com/images/M/MV5BMjM2MDgxMDg0Nl5BMl5BanBnXkFtZTgwNTM2OTM5NDE@._V1_FMjpg_UX1000_.jpg', 0, '', 0, 0, '2025-08-18 13:45:36', '2025-08-18 13:45:48', 0),
+(9, 114, 'The Dark Knight', 2008, 'Aksiyon, Dram', 'https://m.media-amazon.com/images/M/MV5BMTMxNTMwODM0NF5BMl5BanBnXkFtZTcwODAyMTk2Mw@@._V1_SX300.jpg', 0, '', 0, 1, '2025-08-18 14:35:01', '2025-08-18 14:35:01', 0),
+(6, 114, 'The Matrix', 1999, 'Aksiyon, Bilim Kurgu', 'https://m.media-amazon.com/images/M/MV5BNzQzOTk3OTAtNDQ0Zi00ZTVkLWI0MTEtMDllZjNkYzNjNTc4L2ltYWdlXkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_SX300.jpg', 0, '', 0, 0, '2025-08-18 13:51:35', '2025-08-18 13:51:35', 0),
+(7, 114, 'Die Hard', 1988, 'Aksiyon, Gerilim', 'https://media.posterlounge.com/img/products/710000/705263/705263_poster.jpg', 0, '', 0, 0, '2025-08-18 13:51:41', '2025-08-18 13:51:41', 0),
+(8, 114, 'Mad Max: Fury Road', 2015, 'Aksiyon, Macera', 'https://m.media-amazon.com/images/M/MV5BN2EwM2I5OWMtMGQyMi00Zjg1LWJkNTctZTdjYTA4OGUwZjMyXkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_SX300.jpg', 0, '', 0, 0, '2025-08-18 13:51:51', '2025-08-18 13:51:51', 0),
+(12, 118, 'The Dark Knight', 2008, 'Aksiyon, Dram', 'https://m.media-amazon.com/images/M/MV5BMTMxNTMwODM0NF5BMl5BanBnXkFtZTcwODAyMTk2Mw@@._V1_SX300.jpg', 9, '', 1, 0, '2025-08-21 11:02:04', '2025-08-21 11:02:04', 0),
+(13, 118, 'The Matrix', 1999, 'Aksiyon, Bilim Kurgu', 'https://m.media-amazon.com/images/M/MV5BNzQzOTk3OTAtNDQ0Zi00ZTVkLWI0MTEtMDllZjNkYzNjNTc4L2ltYWdlXkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_SX300.jpg', 9, '', 1, 0, '2025-08-21 11:02:07', '2025-08-21 11:02:07', 0),
+(14, 118, 'The Godfather', 1972, 'Dram, Suç', 'https://m.media-amazon.com/images/M/MV5BM2MyNjYxNmUtYTAwNi00MTYxLWJmNWYtYzZlODY3ZTk3OTFlXkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_SX300.jpg', 9, '', 1, 0, '2025-08-21 11:02:25', '2025-08-21 11:02:25', 0),
+(15, 118, '12 Angry Men', 1957, 'Dram, Suç', 'https://m.media-amazon.com/images/M/MV5BMWU4N2FjNzYtNTVkNC00NzQ0LTg0MjAtYTJlMjFhNGUxZDFmXkEyXkFqcGdeQXVyNjc1NTYyMjg@._V1_SX300.jpg', 9, '', 1, 0, '2025-08-21 11:02:29', '2025-08-21 11:02:29', 0),
+(16, 118, 'Forrest Gump', 1994, 'Dram, Romantik', 'https://m.media-amazon.com/images/M/MV5BNWIwODRlZTUtY2U3ZS00Yzg1LWJhNzYtMmZiYmEyNmU1NjMzXkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_SX300.jpg', 9, '', 1, 0, '2025-08-21 11:02:36', '2025-08-21 11:02:36', 0),
+(17, 118, 'The Green Mile', 1999, 'Dram, Suç', 'https://images.plex.tv/photo?size=large-1920&scale=1&url=https%3A%2F%2Fmetadata-static.plex.tv%2Fd%2Fgracenote%2Fd725648c20cb167cc7a5487c4948b984.jpg', 9, '', 1, 0, '2025-08-21 11:02:39', '2025-08-21 11:02:39', 0),
+(18, 118, 'Eternal Sunshine of the Spotless Mind', 2004, 'Romantik, Bilim Kurgu', 'https://m.media-amazon.com/images/M/MV5BYzE2MzI2NTUtMmFlNS00ZTY5LTkxOTgtODVmZDc4ODhkMWM0XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg', 8, '', 1, 0, '2025-08-21 11:02:52', '2025-08-21 11:02:52', 0),
+(19, 118, 'Se7en', 1995, 'Gerilim, Suç', 'https://m.media-amazon.com/images/S/pv-target-images/9a1f76c8ebf47d788ae303713f73a7afd6576142d4292a7008e2657f266f824c.jpg', 9, '', 1, 0, '2025-08-21 11:03:12', '2025-08-21 11:03:12', 0),
+(20, 118, 'Memento', 2000, 'Gerilim, Suç', 'https://m.media-amazon.com/images/M/MV5BZTcyNjk1MjgtOWI3Mi00YzQwLWI5MTktMzY4ZmI2NDAyNzYzXkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_SX300.jpg', 8, '', 1, 0, '2025-08-21 11:03:16', '2025-08-21 11:03:16', 0),
+(21, 118, 'Inception', 2010, 'Bilim Kurgu, Aksiyon', 'https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_SX300.jpg', 9, '', 1, 0, '2025-08-21 11:03:26', '2025-08-21 11:03:26', 0),
+(22, 118, 'Interstellar', 2014, 'Bilim Kurgu, Dram', 'https://m.media-amazon.com/images/M/MV5BZjdkOTU3MDktN2IxOS00OGEyLWFmMjktY2FiMmZkNWIyODZiXkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_SX300.jpg', 9, '', 1, 0, '2025-08-21 11:03:29', '2025-08-21 11:03:29', 0),
+(23, 118, 'The Lord of the Rings: The Return of the King', 2003, 'Fantastik, Macera', 'https://m.media-amazon.com/images/M/MV5BNzA5ZDNlZWMtM2NhNS00NDJjLTk4NDItYTRmY2EwMWZlMTY3XkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_SX300.jpg', 9, '', 1, 0, '2025-08-21 11:03:44', '2025-08-21 11:03:44', 0),
+(24, 118, 'Toy Story 3', 2010, 'Animasyon, Macera', 'https://m.media-amazon.com/images/M/MV5BMTgxOTY4Mjc0MF5BMl5BanBnXkFtZTcwNTA4MDQyMw@@._V1_SX300.jpg', 8, '', 1, 0, '2025-08-21 11:03:59', '2025-08-21 11:03:59', 0),
+(25, 118, 'Up', 2009, 'Animasyon, Macera', 'https://upload.wikimedia.org/wikipedia/en/0/05/Up_%282009_film%29.jpg', 8, '', 1, 0, '2025-08-21 11:04:02', '2025-08-21 11:04:02', 0),
+(26, 118, 'Pulp Fiction', 1994, 'Suç, Dram', 'https://m.media-amazon.com/images/M/MV5BNGNhMDIzZTUtNTBlZi00MTRlLWFjM2ItYzViMjE3YzI5MjljXkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_SX300.jpg', 9, '', 1, 0, '2025-08-21 11:04:18', '2025-08-21 11:04:18', 0);
 
 -- --------------------------------------------------------
 
@@ -622,7 +857,7 @@ CREATE TABLE IF NOT EXISTS `iletisim_formu` (
   `adisoyadi` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=35 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=37 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Tablo döküm verisi `iletisim_formu`
@@ -660,7 +895,9 @@ INSERT INTO `iletisim_formu` (`id`, `konu`, `mesaj`, `eposta`, `adisoyadi`, `cre
 (31, 'test', 'test', 'test@outlook.com', 'test', '2025-08-18 09:40:57'),
 (32, 'test', 'test', 'test@outlook.com', 'test', '2025-08-18 09:44:20'),
 (33, 'test', 'test', 'emresabahat@outlook.com', 'test', '2025-08-18 09:44:38'),
-(34, 'dsa', 'asdsadsadasdsa', 'dsadsad@outlook.com', 'dsadas', '2025-08-18 10:19:32');
+(34, 'dsa', 'asdsadsadasdsa', 'dsadsad@outlook.com', 'dsadas', '2025-08-18 10:19:32'),
+(35, 'asdsadsa', 'dasdsadasdas', 'dsadsadsa@outlook.com', 'dsadsa', '2025-08-21 12:39:59'),
+(36, 'asdsdas', 'dasdsadasdasdas', 'emresabahat@outlook.com', 'test', '2025-08-21 12:41:11');
 
 -- --------------------------------------------------------
 
@@ -677,7 +914,7 @@ CREATE TABLE IF NOT EXISTS `kisiler` (
   `rol` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `e_posta` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=118 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=120 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Tablo döküm verisi `kisiler`
@@ -687,7 +924,7 @@ INSERT INTO `kisiler` (`id`, `username`, `adsoyad`, `sifre`, `rol`, `e_posta`) V
 (104, 'yeşim', 'altundağ', '$2y$10$1UBmeKf4OPoKM79FKBt0TesmWhOjksbjy3FdLBVdBaZKCoV4qLfpW', 'admin', 'yesimaltundag00@gmail.com'),
 (103, 'eray', 'altundağ', '$2y$10$Ef2MGTDKTviUE7gv93LTpu67Q.ai6k3m04p2W/CLpDGfSqcgJuSHe', 'kullanici', 'erayalt@posta.com'),
 (105, 'irem', 'altundağ', '$2y$10$03FZx.W19rPAhrygVdB5xOWTg9pVl1efrE.WxXTq4PYQUp0lVwg3a', 'kullanici', 'iremalt@posta.com'),
-(106, 'emre', 'şabahat', '$2y$10$RdxLXJzBYmAj9NmUwkFwnepgaRML7MtMTBwxsTAE9qcQzIAVVnq5y', 'admin', 'emres@posta.com'),
+(118, 'emre', 'şabahat', '$2y$10$vBXcWQLWjlxJEUkd2QFuKeubdv/9He3UJ3JB5FSaHOIXNhPlorXQC', 'admin', 'emresabahat@outlook.com'),
 (107, 'gizem', 'alt', '$2y$10$SqXUXB3WlDTfX2L0wrbieekl7uqa9haQXvvkzOVTSZNyCCdIPyWMm', 'kullanici', 'gizemalt@posta.com'),
 (108, 'ekber', 'ekber h', '$2y$10$7S/0Ng/m.8AzUUWxT3FU5eGihxZ2MmbqosIPcHT459eNsZVVLuyiO', 'kullanici', 'ekhas@posta.com.tr'),
 (114, 'test2', 'test', '$2y$10$ayjqBbCnMFjXohH38.ZSi.kfozFVr2zggqHe5bcDPuNkMb140iQge', 'kullanici', 'test@test.com'),
@@ -767,78 +1004,31 @@ INSERT INTO `kitaplar` (`id`, `kitap_adi`, `yazar`, `basim_yili`, `kategori`, `s
 -- --------------------------------------------------------
 
 --
--- Tablo için tablo yapısı `kullanici_filmler`
+-- Tablo için tablo yapısı `kitap_takip`
 --
 
-DROP TABLE IF EXISTS `kullanici_filmler`;
-CREATE TABLE IF NOT EXISTS `kullanici_filmler` (
-  `id` int NOT NULL AUTO_INCREMENT COMMENT 'Benzersiz kayıt kimliği',
-  `kullanici_id` int NOT NULL COMMENT 'Kullanıcı kimliği (kisiler tablosundan)',
-  `film_id` int NOT NULL COMMENT 'Film kimliği (filmler tablosundan)',
-  `izleme_durumu` enum('izlendi','izlenecek','yarida') COLLATE utf8mb4_unicode_ci DEFAULT 'izlenecek' COMMENT 'İzleme durumu',
-  `kullanici_puani` decimal(2,1) DEFAULT NULL COMMENT 'Kullanıcının verdiği puan (0.5 - 5.0)',
-  `izleme_tarihi` date DEFAULT NULL COMMENT 'Film izleme tarihi',
-  `yorum` text COLLATE utf8mb4_unicode_ci COMMENT 'Kullanıcının film hakkındaki yorumu',
-  `favori` tinyint(1) DEFAULT '0' COMMENT 'Favori film mi?',
-  `izleme_sayisi` int DEFAULT '1' COMMENT 'Kaç kez izlendi',
-  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Kayıt oluşturma tarihi',
-  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Son güncelleme tarihi',
+DROP TABLE IF EXISTS `kitap_takip`;
+CREATE TABLE IF NOT EXISTS `kitap_takip` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int NOT NULL,
+  `title` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `author` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `year` int DEFAULT NULL,
+  `genre` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `cover` text COLLATE utf8mb4_unicode_ci,
+  `rating` decimal(3,1) DEFAULT '0.0',
+  `review` text COLLATE utf8mb4_unicode_ci,
+  `is_read` tinyint(1) DEFAULT '0',
+  `is_favorite` tinyint(1) DEFAULT '0',
+  `is_wishlist` tinyint(1) DEFAULT '0',
+  `pages` int DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `is_reading` tinyint(1) DEFAULT '0',
+  `current_page` int DEFAULT '0',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `unique_user_film` (`kullanici_id`,`film_id`),
-  KEY `idx_kullanici_id` (`kullanici_id`),
-  KEY `idx_film_id` (`film_id`),
-  KEY `idx_izleme_durumu` (`izleme_durumu`),
-  KEY `idx_izleme_tarihi` (`izleme_tarihi`),
-  KEY `idx_kullanici_filmler_durum_tarih` (`izleme_durumu`,`izleme_tarihi`),
-  KEY `idx_kullanici_filmler_puan` (`kullanici_puani`),
-  KEY `idx_kullanici_filmler_favori` (`favori`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Kullanıcı film takip tablosu';
-
---
--- Tablo döküm verisi `kullanici_filmler`
---
-
-INSERT INTO `kullanici_filmler` (`id`, `kullanici_id`, `film_id`, `izleme_durumu`, `kullanici_puani`, `izleme_tarihi`, `yorum`, `favori`, `izleme_sayisi`, `created_at`, `updated_at`) VALUES
-(1, 104, 28, 'izlendi', 5.0, '2025-01-15', 'Muhteşem bir başyapıt! Marlon Brando\'nun performansı unutulmaz.', 1, 1, '2025-08-18 10:54:38', '2025-08-18 10:54:38'),
-(2, 104, 29, 'izlendi', 4.5, '2025-01-20', 'Çok etkileyici bir film. Jüri odasındaki gerilim mükemmel.', 0, 1, '2025-08-18 10:54:38', '2025-08-18 10:54:38'),
-(3, 104, 27, 'izlendi', 5.0, '2025-01-25', 'Tarihi bir dram. Liam Neeson\'ın performansı çok güçlü.', 1, 1, '2025-08-18 10:54:38', '2025-08-18 10:54:38'),
-(4, 104, 12, 'izlendi', 4.0, '2025-02-01', 'Klasik aksiyon filmi. Bruce Willis mükemmel.', 0, 1, '2025-08-18 10:54:38', '2025-08-18 10:54:38'),
-(5, 104, 54, 'izlenecek', NULL, NULL, NULL, 0, 1, '2025-08-18 10:54:38', '2025-08-18 10:54:38'),
-(6, 104, 55, 'izlenecek', NULL, NULL, NULL, 0, 1, '2025-08-18 10:54:38', '2025-08-18 10:54:38'),
-(7, 103, 28, 'izlendi', 4.5, '2025-01-10', 'Gerçekten harika bir film.', 0, 1, '2025-08-18 10:54:38', '2025-08-18 10:54:38'),
-(8, 103, 16, 'izlendi', 5.0, '2025-01-18', 'Heath Ledger\'ın Joker\'i unutulmaz!', 1, 1, '2025-08-18 10:54:38', '2025-08-18 10:54:38');
-
--- --------------------------------------------------------
-
---
--- Tablo için tablo yapısı `kullanici_istatistikleri`
---
-
-DROP TABLE IF EXISTS `kullanici_istatistikleri`;
-CREATE TABLE IF NOT EXISTS `kullanici_istatistikleri` (
-  `id` int NOT NULL AUTO_INCREMENT COMMENT 'Benzersiz kayıt kimliği',
-  `kullanici_id` int NOT NULL COMMENT 'Kullanıcı kimliği',
-  `toplam_izlenen` int DEFAULT '0' COMMENT 'Toplam izlenen film sayısı',
-  `toplam_izlenecek` int DEFAULT '0' COMMENT 'İzlenecek film sayısı',
-  `toplam_yarida` int DEFAULT '0' COMMENT 'Yarıda bırakılan film sayısı',
-  `ortalama_puan` decimal(3,2) DEFAULT '0.00' COMMENT 'Ortalama verilen puan',
-  `favori_film_sayisi` int DEFAULT '0' COMMENT 'Favori film sayısı',
-  `toplam_izleme_saati` int DEFAULT '0' COMMENT 'Toplam izleme saati',
-  `en_cok_izlenen_tur` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'En çok izlenen film türü',
-  `en_cok_izlenen_yil` int DEFAULT NULL COMMENT 'En çok film izlenen yıl',
-  `son_guncelleme` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Son istatistik güncelleme tarihi',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `unique_kullanici_stats` (`kullanici_id`),
-  KEY `idx_kullanici_id` (`kullanici_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Kullanıcı istatistikleri tablosu';
-
---
--- Tablo döküm verisi `kullanici_istatistikleri`
---
-
-INSERT INTO `kullanici_istatistikleri` (`id`, `kullanici_id`, `toplam_izlenen`, `toplam_izlenecek`, `toplam_yarida`, `ortalama_puan`, `favori_film_sayisi`, `toplam_izleme_saati`, `en_cok_izlenen_tur`, `en_cok_izlenen_yil`, `son_guncelleme`) VALUES
-(1, 104, 4, 2, 0, 4.63, 2, 720, 'Dram', 2025, '2025-08-18 10:54:38'),
-(2, 103, 2, 0, 0, 4.75, 1, 304, 'Dram', 2025, '2025-08-18 10:54:38');
+  KEY `user_id` (`user_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -878,7 +1068,7 @@ CREATE TABLE IF NOT EXISTS `mesaj_cevaplari` (
   PRIMARY KEY (`id`),
   KEY `idx_iletisim_formu_id` (`iletisim_formu_id`),
   KEY `idx_cevap_veren_user_id` (`cevap_veren_yonetici_user_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=34 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=38 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Tablo döküm verisi `mesaj_cevaplari`
@@ -916,7 +1106,11 @@ INSERT INTO `mesaj_cevaplari` (`id`, `iletisim_formu_id`, `cevap_id`, `cevap_mes
 (30, 26, 1, 'Survivor ne zaman başlayacak acun bey merakla bekliyoruz.', 104, '2025-08-12 09:54:34'),
 (31, 26, 2, 'Survivor ne zaman başlayacak acun bey merakla bekliyoruz.', 104, '2025-08-12 09:54:36'),
 (32, 27, 1, 'dasdsadsadsadas', 104, '2025-08-13 07:16:13'),
-(33, 33, 1, 'test', 104, '2025-08-18 09:44:56');
+(33, 33, 1, 'test', 104, '2025-08-18 09:44:56'),
+(34, 36, 1, 'dsadasdsadsadsa', 104, '2025-08-21 12:41:37'),
+(35, 35, 1, 'dasdsadssa', 104, '2025-08-21 12:46:19'),
+(36, 34, 1, 'sadsadsadsa', 104, '2025-08-21 12:46:25'),
+(37, 32, 1, 'sadsadsa', 104, '2025-08-21 12:48:29');
 
 -- --------------------------------------------------------
 
@@ -1132,21 +1326,21 @@ INSERT INTO `resimler` (`id`, `resim_adi`, `sanatci`, `tarih`, `resim_url`, `aci
 DROP TABLE IF EXISTS `saglikli_besinler`;
 CREATE TABLE IF NOT EXISTS `saglikli_besinler` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `ad` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `kategori` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `aciklama` text COLLATE utf8mb4_unicode_ci,
-  `sure` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `zorluk` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `porsiyon` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `kalori` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `protein` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `karbonhidrat` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `yag` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `lif` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `resim` varchar(500) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `malzemeler` text COLLATE utf8mb4_unicode_ci,
-  `hazirlanis` text COLLATE utf8mb4_unicode_ci,
-  `puf_noktalari` text COLLATE utf8mb4_unicode_ci,
+  `ad` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `kategori` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `aciklama` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `sure` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `zorluk` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `porsiyon` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `kalori` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `protein` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `karbonhidrat` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `yag` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `lif` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `resim` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `malzemeler` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `hazirlanis` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `puf_noktalari` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
@@ -1172,15 +1366,15 @@ INSERT INTO `saglikli_besinler` (`id`, `ad`, `kategori`, `aciklama`, `sure`, `zo
 DROP TABLE IF EXISTS `seyahatler`;
 CREATE TABLE IF NOT EXISTS `seyahatler` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `ad` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `ulke` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `icon` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `foto` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `aciklama` text COLLATE utf8mb4_unicode_ci,
-  `gorulecekYerler` text COLLATE utf8mb4_unicode_ci,
-  `etkinlikler` text COLLATE utf8mb4_unicode_ci,
-  `restoranlar` text COLLATE utf8mb4_unicode_ci,
-  `kategori` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `ad` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `ulke` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `icon` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `foto` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `aciklama` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `gorulecekYerler` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `etkinlikler` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `restoranlar` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `kategori` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=79 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -1465,6 +1659,16 @@ INSERT INTO `yorumlar` (`id`, `kullanici_id`, `kullanici_adi`, `tur`, `icerik_id
 (82, 104, 'yeşim', 'film', 16, 'The Dark Knight', 'asdsadsaasdsa', 6, 0, '2025-08-18 08:33:01'),
 (83, 104, 'yeşim', 'dizi', 8, 'Brooklyn Nine-Nine', 'dasdasdasdasdsa', 4, 0, '2025-08-18 08:49:49'),
 (84, 104, 'yeşim', 'dizi', 8, 'Brooklyn Nine-Nine', 'dasdsadasdsadas', 4, 0, '2025-08-18 09:02:47');
+
+--
+-- Dökümü yapılmış tablolar için kısıtlamalar
+--
+
+--
+-- Tablo kısıtlamaları `dizi_sezonlar`
+--
+ALTER TABLE `dizi_sezonlar`
+  ADD CONSTRAINT `dizi_sezonlar_ibfk_1` FOREIGN KEY (`dizi_id`) REFERENCES `diziler` (`id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

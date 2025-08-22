@@ -14,6 +14,39 @@
 
     <!-- Popup JavaScript -->
     <script>
+      // Mesaj gösterme fonksiyonu
+      function showMessage(message, type) {
+        const messageDiv = document.createElement("div");
+        messageDiv.className = `message ${type}`;
+        messageDiv.textContent = message;
+        messageDiv.style.cssText = `
+          position: fixed;
+          top: 20px;
+          right: 20px;
+          padding: 15px 25px;
+          border-radius: 8px;
+          color: white;
+          font-weight: 600;
+          z-index: 10001;
+          animation: slideIn 0.3s ease;
+        `;
+
+        if (type === "success") {
+          messageDiv.style.background = "#51cf66";
+        } else if (type === "error") {
+          messageDiv.style.background = "#ff6b6b";
+        } else if (type === "warning") {
+          messageDiv.style.background = "#ffd43b";
+          messageDiv.style.color = "#333";
+        }
+
+        document.body.appendChild(messageDiv);
+
+        setTimeout(() => {
+          messageDiv.remove();
+        }, 4000);
+      }
+
       // Test fonksiyonu
       function testPopup() {
         console.log('Test popup çalışıyor!');
@@ -117,7 +150,7 @@
           })
           .catch(error => {
             console.error('Hata:', error);
-            alert('Mesaj detayları yüklenirken hata oluştu!');
+            showMessage('Mesaj detayları yüklenirken hata oluştu!', 'error');
           });
       }
 
@@ -129,7 +162,7 @@
         const replyText = document.getElementById('replyText').value.trim();
         
         if (!replyText) {
-          alert('Lütfen bir cevap yazın!');
+          showMessage('Lütfen bir cevap yazın!', 'warning');
           return;
         }
 
@@ -164,17 +197,19 @@
         .then(response => response.json())
         .then(data => {
           if (data.success) {
-            alert('✅ Cevap başarıyla gönderildi!');
+            showMessage('✅ Cevap başarıyla gönderildi!', 'success');
             closeMessagePopup();
-            // Sayfayı yenile
-            location.reload();
+            // Uyarıyı göstermek için 2 saniye bekle, sonra sayfayı yenile
+            setTimeout(() => {
+              location.reload();
+            }, 2000);
           } else {
-            alert('❌ Cevap gönderilirken hata: ' + data.message);
+            showMessage('❌ Cevap gönderilirken hata: ' + data.message, 'error');
           }
         })
         .catch(error => {
           console.error('Hata:', error);
-          alert('❌ Cevap gönderilirken hata oluştu!');
+          showMessage('❌ Cevap gönderilirken hata oluştu!', 'error');
         });
       }
 
@@ -779,6 +814,27 @@
         .reply-actions {
           flex-direction: column;
         }
+      }
+
+      /* Mesaj animasyonu */
+      @keyframes slideIn {
+        from {
+          transform: translateX(100%);
+          opacity: 0;
+        }
+        to {
+          transform: translateX(0);
+          opacity: 1;
+        }
+      }
+
+      .message {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        transition: all 0.3s ease;
+      }
+
+      .message:hover {
+        transform: translateX(-5px);
       }
     </style>
   </head>

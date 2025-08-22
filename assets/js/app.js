@@ -442,40 +442,102 @@ angular
 
   // ===== REGISTER CONTROLLER =====
   .controller("KayitController", function ($scope, $http) {
+    // Form validasyon durumu
+    $scope.formErrors = {
+      username: false,
+      adsoyad: false,
+      sifre: false,
+      eposta: false
+    };
+
+    // Form gönderilme durumu
+    $scope.formSubmitted = false;
+
+    // E-posta validasyon fonksiyonu
+    $scope.validateEmail = function (email) {
+      var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return emailRegex.test(email);
+    };
+
     $scope.kayitOl = function () {
-      if ($scope.sifre.length < 6 || $scope.sifre.length > 10) {
-        showMessage("Şifre 6 ile 10 karakter arasında olmalıdır!", "error");
+      // Form gönderildi olarak işaretle
+      $scope.formSubmitted = true;
+
+      // Form validasyon durumlarını sıfırla
+      $scope.formErrors = {
+        username: false,
+        adsoyad: false,
+        sifre: false,
+        eposta: false
+      };
+
+      var hasError = false;
+
+      // Kullanıcı adı kontrolü
+      if (!$scope.username || $scope.username.trim() === "") {
+        $scope.formErrors.username = true;
+        hasError = true;
+      }
+
+      // Ad soyad kontrolü
+      if (!$scope.adsoyad || $scope.adsoyad.trim() === "") {
+        $scope.formErrors.adsoyad = true;
+        hasError = true;
+      }
+
+      // Şifre kontrolü
+      if (!$scope.sifre || $scope.sifre.length < 6 || $scope.sifre.length > 10) {
+        $scope.formErrors.sifre = true;
+        hasError = true;
+      }
+
+      // E-posta kontrolü
+      if (!$scope.eposta || $scope.eposta.trim() === "") {
+        $scope.formErrors.eposta = true;
+        hasError = true;
+      } else if (!$scope.validateEmail($scope.eposta)) {
+        $scope.formErrors.eposta = true;
+        hasError = true;
+      }
+
+      if (hasError) {
+        showMessage("Lütfen tüm alanları doğru şekilde doldurunuz!", "error");
         return;
       }
 
+      // Loading durumu
+      $scope.loading = true;
+
       $http
         .post("api.php?kayit=1", {
-          username: $scope.username,
-          adsoyad: $scope.adsoyad,
+          username: $scope.username.trim(),
+          adsoyad: $scope.adsoyad.trim(),
           sifre: $scope.sifre,
-          eposta: $scope.eposta,
+          eposta: $scope.eposta.trim(),
           rol: "kullanici",
         })
         .then(function (response) {
+          $scope.loading = false;
           if (response.data.success) {
-            showMessage("Kayıt başarılı! Giriş yapabilirsiniz.", "success");
+            showMessage("🎉 Kayıt başarılı! Giriş yapabilirsiniz.", "success");
             setTimeout(function () {
               window.location.href = "index.html";
             }, 2000);
           } else {
             showMessage(
-              "Kayıt işlemi başarısız: " + response.data.message,
+              "❌ Kayıt işlemi başarısız: " + response.data.message,
               "error"
             );
           }
         })
         .catch(function (error) {
+          $scope.loading = false;
           console.error("Kayıt hatası:", error);
           if (error.data && error.data.message) {
-            showMessage("Bir hata oluştu: " + error.data.message, "error");
+            showMessage("❌ " + error.data.message, "error");
           } else {
             showMessage(
-              "Sunucu bağlantı hatası! Lütfen tekrar deneyin.",
+              "❌ Sunucu bağlantı hatası! Lütfen tekrar deneyin.",
               "error"
             );
           }
@@ -646,7 +708,7 @@ angular
       window.location.href = "yazilar.html";
     };
     $scope.gotoKitaplar = function () {
-      window.location.href = "kitaplar.html";
+      window.location.href = "/kitaplar";
     };
     $scope.gotoSeyahat = function () {
       window.location.href = "seyahat.html";
@@ -1933,11 +1995,19 @@ angular
           );
 
           if (Array.isArray(response.data)) {
-            $scope.kisiler = response.data;
+            // Adminleri en başa taşı
+            var adminler = response.data.filter(function(k) { return k.rol === 'admin'; });
+            var kullanicilar = response.data.filter(function(k) { return k.rol !== 'admin'; });
+            
+            // Adminleri önce, sonra kullanıcıları ekle
+            $scope.kisiler = adminler.concat(kullanicilar);
+            
             console.log(
               "✅ Kullanıcılar yüklendi. Toplam:",
               $scope.kisiler.length
             );
+            console.log("👑 Admin sayısı:", adminler.length);
+            console.log("👤 Kullanıcı sayısı:", kullanicilar.length);
             console.log("📋 İlk kullanıcı:", $scope.kisiler[0]);
           } else {
             console.error("❌ Gelen veri array değil:", response.data);
@@ -2624,6 +2694,16 @@ angular
       spoiler: false,
     };
 
+    // Modal değişkenleri
+    $scope.showWatchingModal = false;
+    $scope.modalData = {
+      currentSeason: 1,
+      currentEpisode: 1
+    };
+    
+    // Sezon bilgilerini cache'lemek için
+    $scope.sezonCache = {};
+
     // URL'den dizi ID'sini al
     var urlParams = new URLSearchParams(window.location.search);
     var diziId = urlParams.get("id");
@@ -2645,6 +2725,8 @@ angular
             document.title = $scope.dizi.dizi_adi + " - GLOW";
             // Dizi yüklendikten sonra yorumları getir
             $scope.yorumlariGetir();
+            // Sezon bilgilerini yükle
+            $scope.sezonBilgileriniYukle();
           } else {
             $scope.error = response.data.message || "Dizi bulunamadı!";
           }
@@ -2654,6 +2736,25 @@ angular
           $scope.error = "Dizi yüklenirken hata oluştu: " + error.statusText;
           $scope.loading = false;
         });
+    };
+    
+    // Sezon bilgilerini yükle ve cache'le
+    $scope.sezonBilgileriniYukle = function() {
+      if ($scope.dizi && $scope.dizi.id) {
+        $http.get('dizi_sezon_api.php?dizi_id=' + $scope.dizi.id)
+          .then(function(response) {
+            if (response.data.success && response.data.sezonlar) {
+              // Sezon bilgilerini cache'le
+              response.data.sezonlar.forEach(function(sezon) {
+                $scope.sezonCache[sezon.sezon_no] = sezon.bolum_sayisi;
+              });
+              console.log("✅ Sezon bilgileri yüklendi:", $scope.sezonCache);
+            }
+          })
+          .catch(function(error) {
+            console.log("ℹ️ Sezon bilgileri yüklenemedi, varsayılan değerler kullanılacak");
+          });
+      }
     };
 
     // Yorumları getir
@@ -2817,21 +2918,30 @@ angular
       if (!$scope.kullanici || !$scope.dizi) return;
 
       $http
-        .get(
-          "dizi_takip_api.php?check_dizi=" +
-            encodeURIComponent($scope.dizi.dizi_adi) +
-            "&user_id=" +
-            $scope.kullanici.id
-        )
+        .get("dizi_takip_api.php?user_id=" + $scope.kullanici.id)
         .then(function (response) {
-          if (response.data) {
+          var diziler = response.data || [];
+          var mevcutDizi = diziler.find(function (d) {
+            return d.title.toLowerCase() === $scope.dizi.dizi_adi.toLowerCase();
+          });
+
+          if (mevcutDizi) {
             $scope.diziTakipDurumu = {
-              isFavorite: response.data.isFavorite || false,
-              isWatched: response.data.isWatched || false,
-              isWatchlist: response.data.isWatchlist || false,
-              isWatching: response.data.isWatching || false,
-              current_season: response.data.current_season || 1,
-              current_episode: response.data.current_episode || 1,
+              isFavorite: mevcutDizi.isFavorite,
+              isWatched: mevcutDizi.isWatched,
+              isWatchlist: mevcutDizi.isWatchlist || false,
+              isWatching: mevcutDizi.isWatching || false,
+              current_season: mevcutDizi.current_season || 1,
+              current_episode: mevcutDizi.current_episode || 1,
+            };
+          } else {
+            $scope.diziTakipDurumu = {
+              isFavorite: false,
+              isWatched: false,
+              isWatchlist: false,
+              isWatching: false,
+              current_season: 1,
+              current_episode: 1,
             };
           }
         })
@@ -2937,8 +3047,113 @@ angular
       }
     };
 
-    // İzleniyor durumunu değiştir
-    $scope.toggleWatching = function () {
+    // Modal fonksiyonları
+    $scope.openWatchingModal = function() {
+      if (!$scope.kullanici) {
+        showMessage("Giriş yapmanız gerekiyor", "error");
+        return;
+      }
+
+      // Mevcut değerleri modal'a yükle
+      if ($scope.diziTakipDurumu.isWatching) {
+        $scope.modalData.currentSeason = $scope.diziTakipDurumu.current_season || 1;
+        $scope.modalData.currentEpisode = $scope.diziTakipDurumu.current_episode || 1;
+      } else {
+        $scope.modalData.currentSeason = 1;
+        $scope.modalData.currentEpisode = 1;
+      }
+      
+      $scope.showWatchingModal = true;
+      
+      console.log("✅ Modal açıldı");
+    };
+
+    $scope.closeWatchingModal = function() {
+      $scope.showWatchingModal = false;
+    };
+
+    // Sezon ve bölüm değişikliklerini dinle
+    $scope.$watch('modalData.currentSeason', function(newVal, oldVal) {
+      if (newVal !== oldVal) {
+        console.log("✅ Sezon değişti:", oldVal, "→", newVal);
+      }
+    });
+
+    $scope.$watch('modalData.currentEpisode', function(newVal, oldVal) {
+      if (newVal !== oldVal) {
+        console.log("✅ Bölüm değişti:", oldVal, "→", newVal);
+      }
+    });
+
+    // Sezon ve bölüm array'lerini oluştur
+    $scope.getSeasonArray = function() {
+      var seasons = [];
+      var maxSeasons = $scope.dizi ? ($scope.dizi.toplam_sezon_sayisi || 10) : 10;
+      for (var i = 1; i <= maxSeasons; i++) {
+        seasons.push(i);
+      }
+      return seasons;
+    };
+
+
+
+    $scope.getEpisodeArray = function() {
+      var episodes = [];
+      var selectedSeason = $scope.modalData.currentSeason;
+      var maxEpisodes = 20; // Varsayılan değer
+      
+      if ($scope.dizi && selectedSeason) {
+        // Eğer sezon bilgisi cache'de varsa kullan
+        if ($scope.sezonCache && $scope.sezonCache[selectedSeason]) {
+          maxEpisodes = $scope.sezonCache[selectedSeason];
+        } else {
+          // Eğer sezon bilgisi yoksa, genel mantık kullan
+          var toplamBolum = $scope.dizi.toplam_bolum_sayisi || 20;
+          var toplamSezon = $scope.dizi.toplam_sezon_sayisi || 1;
+          maxEpisodes = Math.ceil(toplamBolum / toplamSezon);
+        }
+      }
+      
+      // Bölüm array'ini oluştur
+      for (var i = 1; i <= maxEpisodes; i++) {
+        episodes.push(i);
+      }
+      
+      return episodes;
+    };
+
+    // Sezon değiştiğinde bölüm seçimini sıfırla
+    $scope.$watch('modalData.currentSeason', function(newVal, oldVal) {
+      if (newVal !== oldVal && newVal) {
+        $scope.modalData.currentEpisode = 1; // Bölüm seçimini sıfırla
+        console.log("✅ Sezon değişti:", oldVal, "→", newVal);
+      }
+    });
+
+    // Sezon değiştiğinde çağrılacak fonksiyon
+    $scope.onSeasonChange = function() {
+      // Bölüm seçimini sıfırla
+      $scope.modalData.currentEpisode = 1;
+      
+      console.log("🎬 Sezon değişti, bölüm sayısı güncellendi:", 
+        "Sezon:", $scope.modalData.currentSeason, 
+        "Bölüm Sayısı:", $scope.getEpisodeArray().length
+      );
+    };
+
+    $scope.confirmWatchingUpdate = function() {
+      if (!$scope.modalData.currentSeason || !$scope.modalData.currentEpisode) {
+        showMessage("Lütfen sezon ve bölüm numarasını girin", "error");
+        return;
+      }
+
+      // Modal'dan alınan değerlerle toggleWatching'i çağır
+      $scope.toggleWatchingWithData($scope.modalData.currentSeason, $scope.modalData.currentEpisode);
+      $scope.closeWatchingModal();
+    };
+
+    // İzleniyor durumunu değiştir (yeni versiyon - modal'dan veri alır)
+    $scope.toggleWatchingWithData = function(season, episode) {
       if (!$scope.kullanici || $scope.takipLoading) return;
 
       $scope.takipLoading = true;
@@ -2950,8 +3165,8 @@ angular
         poster: $scope.dizi.poster_url,
         season_count: $scope.dizi.toplam_sezon_sayisi || 1,
         episode_count: $scope.dizi.toplam_bolum_sayisi || 1,
-        current_season: $scope.diziTakipDurumu.current_season,
-        current_episode: $scope.diziTakipDurumu.current_episode,
+        current_season: season,
+        current_episode: episode,
         isFavorite: $scope.diziTakipDurumu.isFavorite,
         isWatched: $scope.diziTakipDurumu.isWatched,
         isWatchlist: !$scope.diziTakipDurumu.isWatching
@@ -2970,7 +3185,9 @@ angular
               !$scope.diziTakipDurumu.isWatching;
             if ($scope.diziTakipDurumu.isWatching) {
               $scope.diziTakipDurumu.isWatchlist = false;
-              showMessage("Dizi izleniyor listesine eklendi", "success");
+              $scope.diziTakipDurumu.current_season = season;
+              $scope.diziTakipDurumu.current_episode = episode;
+              showMessage("Dizi izleniyor listesine eklendi (S" + season + "E" + episode + ")", "success");
             } else {
               showMessage("Dizi izleniyor listesinden çıkarıldı", "success");
             }
@@ -3173,7 +3390,7 @@ angular
 
     // Dizi yüklendikten sonra takip durumunu kontrol et
     $scope.$watch("dizi", function (newVal) {
-      if (newVal && $scope.kullanici) {
+      if (newVal) {
         $scope.diziTakipDurumuKontrolEt();
       }
     });
@@ -4505,7 +4722,7 @@ angular
     // Dizi listesi
     $scope.dizis = [];
     $scope.filteredDizis = [];
-    $scope.activeFilter = "all";
+    $scope.activeFilter = "favorite"; // Sayfa yüklendiğinde Favoriler seçili olsun
     $scope.searchText = "";
 
     // Modal durumları
@@ -4573,7 +4790,7 @@ angular
           $scope.filteredDizis = $scope.dizis.filter((dizi) => dizi.isFavorite);
           break;
         default:
-          $scope.filteredDizis = $scope.dizis;
+          $scope.filteredDizis = $scope.dizis.filter((dizi) => dizi.isFavorite); // Default olarak favoriler gösterilsin
       }
     };
 

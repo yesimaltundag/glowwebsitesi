@@ -36,6 +36,24 @@ function getDiziImdbRating($pdo, $diziTitle) {
     }
 }
 
+// Dizi sezon/bölüm bilgilerini diziler tablosundan al
+function getDiziSeasonEpisodeData($pdo, $diziTitle) {
+    try {
+        $stmt = $pdo->prepare("SELECT toplam_sezon_sayisi, toplam_bolum_sayisi FROM diziler WHERE dizi_adi = ? LIMIT 1");
+        $stmt->execute([$diziTitle]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($result) {
+            return [
+                'season_count' => intval($result['toplam_sezon_sayisi']) ?: 1,
+                'episode_count' => intval($result['toplam_bolum_sayisi']) ?: 1
+            ];
+        }
+        return ['season_count' => 1, 'episode_count' => 1];
+    } catch(PDOException $e) {
+        return ['season_count' => 1, 'episode_count' => 1];
+    }
+}
+
 // Dizi tablosunu oluştur (eğer yoksa)
 try {
     // Tabloyu sadece yoksa oluştur
@@ -98,7 +116,7 @@ switch($method) {
             $user_id = intval($_GET['user_id']);
             
             try {
-                $stmt = $pdo->prepare("SELECT dt.*, d.id as dizi_id FROM dizi_takip dt LEFT JOIN diziler d ON dt.title COLLATE utf8mb4_0900_ai_ci = d.dizi_adi COLLATE utf8mb4_0900_ai_ci WHERE dt.user_id = ? ORDER BY dt.created_at DESC");
+                $stmt = $pdo->prepare("SELECT dt.*, d.id as dizi_id, d.toplam_sezon_sayisi, d.toplam_bolum_sayisi FROM dizi_takip dt LEFT JOIN diziler d ON dt.title COLLATE utf8mb4_0900_ai_ci = d.dizi_adi COLLATE utf8mb4_0900_ai_ci WHERE dt.user_id = ? ORDER BY dt.created_at DESC");
                 $stmt->execute([$user_id]);
                 $dizis = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 
@@ -110,8 +128,11 @@ switch($method) {
                     $dizi['isWatching'] = (bool)$dizi['is_watching'];
                     $dizi['rating'] = floatval($dizi['rating']);
                     $dizi['year'] = intval($dizi['year']);
-                    $dizi['season_count'] = intval($dizi['season_count']);
-                    $dizi['episode_count'] = intval($dizi['episode_count']);
+                    
+                    // Diziler tablosundan gelen güncel sezon/bölüm sayılarını kullan
+                    $dizi['season_count'] = $dizi['toplam_sezon_sayisi'] ? intval($dizi['toplam_sezon_sayisi']) : intval($dizi['season_count']);
+                    $dizi['episode_count'] = $dizi['toplam_bolum_sayisi'] ? intval($dizi['toplam_bolum_sayisi']) : intval($dizi['episode_count']);
+                    
                     $dizi['current_season'] = intval($dizi['current_season']);
                     $dizi['current_episode'] = intval($dizi['current_episode']);
                     // Dizi detay sayfası için dizi_id'yi kullan
@@ -129,7 +150,7 @@ switch($method) {
             $dizi_title = $_GET['check_dizi'];
             
             try {
-                $stmt = $pdo->prepare("SELECT * FROM dizi_takip WHERE user_id = ? AND title = ?");
+                $stmt = $pdo->prepare("SELECT dt.*, d.toplam_sezon_sayisi, d.toplam_bolum_sayisi FROM dizi_takip dt LEFT JOIN diziler d ON dt.title COLLATE utf8mb4_0900_ai_ci = d.dizi_adi COLLATE utf8mb4_0900_ai_ci WHERE dt.user_id = ? AND dt.title = ?");
                 $stmt->execute([$user_id, $dizi_title]);
                 $dizi = $stmt->fetch(PDO::FETCH_ASSOC);
                 
@@ -140,8 +161,11 @@ switch($method) {
                     $dizi['isWatching'] = (bool)$dizi['is_watching'];
                     $dizi['rating'] = floatval($dizi['rating']);
                     $dizi['year'] = intval($dizi['year']);
-                    $dizi['season_count'] = intval($dizi['season_count']);
-                    $dizi['episode_count'] = intval($dizi['episode_count']);
+                    
+                    // Diziler tablosundan gelen güncel sezon/bölüm sayılarını kullan
+                    $dizi['season_count'] = $dizi['toplam_sezon_sayisi'] ? intval($dizi['toplam_sezon_sayisi']) : intval($dizi['season_count']);
+                    $dizi['episode_count'] = $dizi['toplam_bolum_sayisi'] ? intval($dizi['toplam_bolum_sayisi']) : intval($dizi['episode_count']);
+                    
                     $dizi['current_season'] = intval($dizi['current_season']);
                     $dizi['current_episode'] = intval($dizi['current_episode']);
                     echo json_encode($dizi);
@@ -174,8 +198,9 @@ switch($method) {
         }
         
         try {
-            // IMDb puanını diziler tablosundan al
+            // IMDb puanını ve sezon/bölüm bilgilerini diziler tablosundan al
             $imdbRating = getDiziImdbRating($pdo, $input['title']);
+            $seasonEpisodeData = getDiziSeasonEpisodeData($pdo, $input['title']);
             
             // Önce diziyi kontrol et
             $stmt = $pdo->prepare("SELECT id FROM dizi_takip WHERE user_id = ? AND title = ?");
@@ -183,7 +208,7 @@ switch($method) {
             $existingDizi = $stmt->fetch(PDO::FETCH_ASSOC);
             
             if ($existingDizi) {
-                // Mevcut diziyi güncelle - IMDb puanını güncelle
+                // Mevcut diziyi güncelle - IMDb puanını ve sezon/bölüm bilgilerini güncelle
                 $stmt = $pdo->prepare("UPDATE dizi_takip SET year = ?, genre = ?, poster = ?, rating = ?, review = ?, season_count = ?, episode_count = ?, current_season = ?, current_episode = ?, is_watched = ?, is_favorite = ?, is_watchlist = ?, is_watching = ? WHERE id = ?");
                 
                 $result = $stmt->execute([
@@ -192,8 +217,8 @@ switch($method) {
                     isset($input['poster']) ? $input['poster'] : null,
                     $imdbRating, // IMDb puanını otomatik olarak set et
                     isset($input['review']) ? $input['review'] : null,
-                    isset($input['season_count']) ? intval($input['season_count']) : 1,
-                    isset($input['episode_count']) ? intval($input['episode_count']) : 1,
+                    isset($input['season_count']) ? intval($input['season_count']) : $seasonEpisodeData['season_count'],
+                    isset($input['episode_count']) ? intval($input['episode_count']) : $seasonEpisodeData['episode_count'],
                     isset($input['current_season']) ? intval($input['current_season']) : 1,
                     isset($input['current_episode']) ? intval($input['current_episode']) : 1,
                     isset($input['isWatched']) ? (bool)$input['isWatched'] : false,
@@ -204,12 +229,12 @@ switch($method) {
                 ]);
                 
                 if ($result) {
-                    echo json_encode(['success' => true, 'message' => 'Dizi başarıyla güncellendi (IMDb: ' . $imdbRating . ')', 'id' => $existingDizi['id']]);
+                    echo json_encode(['success' => true, 'message' => 'Dizi başarıyla güncellendi (IMDb: ' . $imdbRating . ', ' . $seasonEpisodeData['season_count'] . ' sezon, ' . $seasonEpisodeData['episode_count'] . ' bölüm)', 'id' => $existingDizi['id']]);
                 } else {
                     echo json_encode(['success' => false, 'message' => 'Dizi güncellenirken hata oluştu']);
                 }
             } else {
-                // Yeni dizi ekle - IMDb puanı ile
+                // Yeni dizi ekle - IMDb puanı ve sezon/bölüm bilgileri ile
                 $stmt = $pdo->prepare("INSERT INTO dizi_takip (user_id, title, year, genre, poster, rating, review, season_count, episode_count, current_season, current_episode, is_watched, is_favorite, is_watchlist, is_watching) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
                 
                 $result = $stmt->execute([
@@ -220,8 +245,8 @@ switch($method) {
                     isset($input['poster']) ? $input['poster'] : null,
                     $imdbRating, // IMDb puanını otomatik olarak set et
                     isset($input['review']) ? $input['review'] : null,
-                    isset($input['season_count']) ? intval($input['season_count']) : 1,
-                    isset($input['episode_count']) ? intval($input['episode_count']) : 1,
+                    isset($input['season_count']) ? intval($input['season_count']) : $seasonEpisodeData['season_count'],
+                    isset($input['episode_count']) ? intval($input['episode_count']) : $seasonEpisodeData['episode_count'],
                     isset($input['current_season']) ? intval($input['current_season']) : 1,
                     isset($input['current_episode']) ? intval($input['current_episode']) : 1,
                     isset($input['isWatched']) ? (bool)$input['isWatched'] : false,
@@ -231,7 +256,7 @@ switch($method) {
                 ]);
                 
                 if ($result) {
-                    echo json_encode(['success' => true, 'message' => 'Dizi başarıyla eklendi (IMDb: ' . $imdbRating . ')', 'id' => $pdo->lastInsertId()]);
+                    echo json_encode(['success' => true, 'message' => 'Dizi başarıyla eklendi (IMDb: ' . $imdbRating . ', ' . $seasonEpisodeData['season_count'] . ' sezon, ' . $seasonEpisodeData['episode_count'] . ' bölüm)', 'id' => $pdo->lastInsertId()]);
                 } else {
                     echo json_encode(['success' => false, 'message' => 'Dizi eklenirken hata oluştu']);
                 }
@@ -251,8 +276,9 @@ switch($method) {
         }
         
         try {
-            // IMDb puanını diziler tablosundan al
+            // IMDb puanını ve sezon/bölüm bilgilerini diziler tablosundan al
             $imdbRating = getDiziImdbRating($pdo, $input['title']);
+            $seasonEpisodeData = getDiziSeasonEpisodeData($pdo, $input['title']);
             
             // Önce diziyi bul
             $stmt = $pdo->prepare("SELECT id FROM dizi_takip WHERE user_id = ? AND title = ?");
@@ -260,7 +286,7 @@ switch($method) {
             $existingDizi = $stmt->fetch(PDO::FETCH_ASSOC);
             
             if ($existingDizi) {
-                // Mevcut diziyi güncelle - IMDb puanını güncelle
+                // Mevcut diziyi güncelle - IMDb puanını ve sezon/bölüm bilgilerini güncelle
                 $stmt = $pdo->prepare("UPDATE dizi_takip SET year = ?, genre = ?, poster = ?, rating = ?, review = ?, season_count = ?, episode_count = ?, current_season = ?, current_episode = ?, is_watched = ?, is_favorite = ?, is_watchlist = ?, is_watching = ? WHERE id = ?");
                 
                 $result = $stmt->execute([
@@ -269,8 +295,8 @@ switch($method) {
                     isset($input['poster']) ? $input['poster'] : null,
                     $imdbRating, // IMDb puanını otomatik olarak set et
                     isset($input['review']) ? $input['review'] : null,
-                    isset($input['season_count']) ? intval($input['season_count']) : 1,
-                    isset($input['episode_count']) ? intval($input['episode_count']) : 1,
+                    isset($input['season_count']) ? intval($input['season_count']) : $seasonEpisodeData['season_count'],
+                    isset($input['episode_count']) ? intval($input['episode_count']) : $seasonEpisodeData['episode_count'],
                     isset($input['current_season']) ? intval($input['current_season']) : 1,
                     isset($input['current_episode']) ? intval($input['current_episode']) : 1,
                     isset($input['isWatched']) ? (bool)$input['isWatched'] : false,
@@ -281,7 +307,7 @@ switch($method) {
                 ]);
                 
                 if ($result) {
-                    echo json_encode(['success' => true, 'message' => 'Dizi başarıyla güncellendi (IMDb: ' . $imdbRating . ')']);
+                    echo json_encode(['success' => true, 'message' => 'Dizi başarıyla güncellendi (IMDb: ' . $imdbRating . ', ' . $seasonEpisodeData['season_count'] . ' sezon, ' . $seasonEpisodeData['episode_count'] . ' bölüm)']);
                 } else {
                     echo json_encode(['success' => false, 'message' => 'Dizi güncellenirken hata oluştu']);
                 }

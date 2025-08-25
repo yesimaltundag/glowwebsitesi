@@ -77,7 +77,7 @@ switch($method) {
             $user_id = intval($_GET['user_id']);
             
             try {
-                $stmt = $pdo->prepare("SELECT ft.*, f.id as film_id FROM film_takip ft LEFT JOIN filmler f ON ft.title = f.film_adi WHERE ft.user_id = ? ORDER BY ft.created_at DESC");
+                $stmt = $pdo->prepare("SELECT ft.*, f.id as film_id, f.imdb_puani FROM film_takip ft LEFT JOIN filmler f ON ft.title = f.film_adi WHERE ft.user_id = ? ORDER BY ft.created_at DESC");
                 $stmt->execute([$user_id]);
                 $films = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 
@@ -90,6 +90,8 @@ switch($method) {
                     $film['year'] = intval($film['year']);
                     // Film detay sayfası için film_id'yi kullan
                     $film['film_id'] = intval($film['film_id']);
+                    // IMDB puanını ekle
+                    $film['imdbRating'] = floatval($film['imdb_puani']);
                 }
                 
                 echo json_encode($films);

@@ -27,6 +27,99 @@
         text-align: center;
         text-shadow: 0 2px 4px rgba(124, 92, 74, 0.1);
       }
+      
+      /* Arama Kutucuğu Stilleri */
+      .search-container {
+        margin-bottom: 40px !important;
+        text-align: center !important;
+      }
+      .search-box {
+        position: relative !important ;
+        max-width: 500px !important;
+        margin: 0 auto !important;
+      }
+      .search-input {
+        width: 100% !important;
+        padding: 15px 20px !important;
+        font-size: 16px !important;
+        border: 2px solid rgba(124, 92, 74, 0.2) !important;
+        border-radius: 25px !important;
+        background: rgba(255, 255, 255, 0.9) !important;
+        color: #7c5c4a !important;
+        transition: all 0.3s ease !important;
+        outline: none !important;
+      }
+      .search-input:focus {
+        border-color: #b48a78 !important;
+        box-shadow: 0 0 20px rgba(180, 138, 120, 0.3) !important;
+        background: rgba(255, 255, 255, 1) !important;
+      }
+      .search-input::placeholder {
+        color: #b48a78 !important;
+        opacity: 0.7 !important;
+      }
+
+      
+      /* Arama Sonuçları Stilleri */  
+      .search-results {
+        margin-top: 30px !important;
+        max-height: 400px !important;
+        overflow-y: auto !important;
+        background: rgba(255, 255, 255, 0.95) !important;
+        border-radius: 15px !important;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1) !important;
+        border: 1px solid rgba(124, 92, 74, 0.1) !important;
+      }
+      .search-result-item {
+        display: flex !important  ;
+        align-items: center !important;
+        padding: 15px 20px !important;
+        border-bottom: 1px solid rgba(124, 92, 74, 0.1) !important;
+        cursor: pointer !important;
+        transition: all 0.3s ease !important;
+      }
+      .search-result-item:last-child {
+        border-bottom: none !important;
+      }
+      .search-result-item:hover {
+        background: rgba(180, 138, 120, 0.1) !important;
+        transform: translateX(5px) !important;
+      }
+      .search-result-poster {
+        width: 50px !important;
+        height: 75px !important;
+        object-fit: cover !important;
+        border-radius: 8px !important;
+        margin-right: 15px !important;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2) !important;
+      }
+      .search-result-info {
+        flex: 1 !important;
+      }
+      .search-result-title {
+        color: #7c5c4a !important;
+        font-size: 16px !important;
+        font-weight: 600 !important;
+        margin-bottom: 5px !important;
+      }
+      .search-result-details {
+        color: #b48a78 !important;
+        font-size: 14px !important;
+        margin-bottom: 3px !important;
+      }
+      .search-result-category {
+        color: #b48a78 !important;
+        font-size: 12px !important;
+        font-style: italic !important;
+      }
+      .no-results {
+        text-align: center !important;
+        padding: 30px !important;
+        color: #b48a78 !important;
+        font-size: 16px !important;
+        font-style: italic !important;
+      }
+      
       .film-grid {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
@@ -131,6 +224,11 @@
         .film-card {
           padding: 20px;
         }
+        .search-input {
+          padding: 12px 15px;
+          font-size: 14px;
+        }
+
       }
     </style>
   </head>
@@ -146,6 +244,53 @@
           ←
         </button>
         <div class="film-title">Film Türleri</div>
+        
+        <!-- Arama Kutucuğu -->
+        <div class="search-container">
+          <div class="search-box">
+            <input 
+              type="text" 
+              class="search-input" 
+              placeholder="Film adı ile arama yapın..."
+              ng-model="searchQuery"
+              ng-change="onSearchInput()"
+              ng-keyup="$event.keyCode === 13 && searchFilms()"
+            >
+          </div>
+          
+          <!-- Arama Sonuçları -->
+          <div class="search-results" ng-show="searchResults.length > 0">
+            <div 
+              class="search-result-item" 
+              ng-repeat="film in searchResults" 
+              ng-click="goToFilmDetail(film.id)"
+            >
+              <img 
+                ng-src="{{film.poster_url || 'assets/images/show.jpg'}}" 
+                alt="{{film.film_adi}}"
+                class="search-result-poster"
+                onerror="this.src='assets/images/show.jpg'"
+              >
+              <div class="search-result-info">
+                <div class="search-result-title">{{film.film_adi}}</div>
+                <div class="search-result-details">{{film.yonetmen}} • {{film.yil}}</div>
+                <div class="search-result-details">IMDB: {{film.imdb_puani}}</div>
+                <div class="search-result-category">{{film.kategori}}</div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Sonuç Bulunamadı -->
+          <div class="no-results" ng-show="searchQuery && searchResults.length === 0 && !searching">
+            "{{searchQuery}}" için sonuç bulunamadı.
+          </div>
+          
+          <!-- Arama Yapılıyor -->
+          <div class="no-results" ng-show="searching">
+            🔍 Arama yapılıyor...
+          </div>
+        </div>
+        
         <div class="film-grid">
           <div class="film-card" ng-click="filmTuruSec('Aksiyon')">
             <div class="film-baslik">Aksiyon</div>
@@ -241,7 +386,51 @@
     <script>
       angular
         .module("GirisApp")
-        .controller("FilmKategorilerController", function ($scope) {
+        .controller("FilmKategorilerController", function ($scope, $http) {
+          $scope.searchQuery = '';
+          $scope.searchResults = [];
+          $scope.searching = false;
+          
+          // Real-time arama fonksiyonu
+          $scope.onSearchInput = function() {
+            if ($scope.searchQuery.trim().length >= 2) {
+              $scope.searchFilms();
+            } else if ($scope.searchQuery.trim().length === 0) {
+              $scope.searchResults = [];
+            }
+          };
+          
+          // Film arama fonksiyonu
+          $scope.searchFilms = function() {
+            if (!$scope.searchQuery.trim()) {
+              $scope.searchResults = [];
+              return;
+            }
+            
+            $scope.searching = true;
+            $scope.searchResults = [];
+            
+            $http.get('filmler_api.php?film=' + encodeURIComponent($scope.searchQuery.trim()))
+              .then(function(response) {
+                if (response.data.success && response.data.filmler) {
+                  $scope.searchResults = response.data.filmler;
+                } else {
+                  $scope.searchResults = [];
+                }
+                $scope.searching = false;
+              })
+              .catch(function(error) {
+                console.error('Film arama hatası:', error);
+                $scope.searchResults = [];
+                $scope.searching = false;
+              });
+          };
+          
+          // Film detay sayfasına git
+          $scope.goToFilmDetail = function(filmId) {
+            window.location.href = 'film-detay.html?id=' + filmId;
+          };
+          
           $scope.filmTuruSec = function (tur) {
             if (tur === "Aksiyon") {
               window.location.href = "aksiyon-filmler.html";

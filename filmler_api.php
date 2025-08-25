@@ -40,9 +40,9 @@ switch($method) {
             $kategori = $_GET['kategori'] ?? null;
             
             if ($filmAd) {
-                // Belirli bir film ara
-                $stmt = $pdo->prepare("SELECT id, film_adi, yonetmen, poster_url, imdb_puani, yil, tur as kategori, ozet as tanitim FROM filmler WHERE film_adi = ?");
-                $stmt->execute([$filmAd]);
+                // Belirli bir film ara (kısmi eşleşme)
+                $stmt = $pdo->prepare("SELECT id, film_adi, yonetmen, poster_url, imdb_puani, yil, tur as kategori, ozet as tanitim FROM filmler WHERE film_adi LIKE ? ORDER BY film_adi LIMIT 10");
+                $stmt->execute(['%' . $filmAd . '%']);
                 $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 
                 echo json_encode([

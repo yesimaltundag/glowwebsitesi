@@ -138,6 +138,103 @@
           max-width: 100%;
         }
       }
+      
+      /* Arama Sistemi Stilleri */
+      .search-container {
+        margin-bottom: 30px;
+      }
+      .search-box {
+        position: relative;
+        margin-bottom: 20px;
+      }
+      .search-input {
+        width: 100%;
+        padding: 15px 20px;
+        font-size: 16px;
+        border: 2px solid rgba(124, 92, 74, 0.2);
+        border-radius: 25px;
+        background: rgba(255, 255, 255, 0.9);
+        color: #7c5c4a;
+        transition: all 0.3s ease;
+        outline: none;
+      }
+      .search-input:focus {
+        border-color: #b48a78;
+        box-shadow: 0 0 20px rgba(180, 138, 120, 0.3);
+        background: rgba(255, 255, 255, 1);
+      }
+      .search-input::placeholder {
+        color: #b48a78;
+        opacity: 0.7;
+      }
+      
+      /* Arama Sonuçları Stilleri */
+      .search-results {
+        margin-top: 20px;
+        max-height: 400px;
+        overflow-y: auto;
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 15px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        border: 1px solid rgba(124, 92, 74, 0.1);
+      }
+      .search-result-item {
+        display: flex;
+        align-items: center;
+        padding: 15px 20px;
+        border-bottom: 1px solid rgba(124, 92, 74, 0.1);
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+      .search-result-item:last-child {
+        border-bottom: none;
+      }
+      .search-result-item:hover {
+        background: rgba(180, 138, 120, 0.1);
+        transform: translateX(5px);
+      }
+      .search-result-poster {
+        width: 50px;
+        height: 75px;
+        object-fit: cover;
+        border-radius: 8px;
+        margin-right: 15px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+      }
+      .search-result-info {
+        flex: 1;
+      }
+      .search-result-title {
+        color: #7c5c4a;
+        font-size: 16px;
+        font-weight: 600;
+        margin-bottom: 5px;
+      }
+      .search-result-details {
+        color: #b48a78;
+        font-size: 14px;
+        margin-bottom: 3px;
+      }
+      .search-result-category {
+        color: #b48a78;
+        font-size: 12px;
+        font-style: italic;
+      }
+      .no-results {
+        text-align: center;
+        padding: 30px;
+        color: #b48a78;
+        font-size: 16px;
+        font-style: italic;
+      }
+      
+      /* Responsive Arama */
+      @media (max-width: 768px) {
+        .search-input {
+          padding: 12px 15px;
+          font-size: 14px;
+        }
+      }
     </style>
   </head>
   <body ng-controller="DiziKategorilerController">
@@ -152,6 +249,53 @@
           ←
         </button>
         <div class="kategori-title">Dizi Türleri</div>
+        
+        <!-- Arama Kutucuğu -->
+        <div class="search-container">
+          <div class="search-box">
+            <input 
+              type="text" 
+              class="search-input" 
+              placeholder="Dizi adı ile arama yapın..."
+              ng-model="searchQuery"
+              ng-change="onSearchInput()"
+              ng-keyup="$event.keyCode === 13 && searchDizis()"
+            >
+          </div>
+          
+          <!-- Arama Sonuçları -->
+          <div class="search-results" ng-show="searchResults.length > 0">
+            <div 
+              class="search-result-item" 
+              ng-repeat="dizi in searchResults" 
+              ng-click="goToDiziDetail(dizi.id)"
+            >
+              <img 
+                ng-src="{{dizi.poster_url || 'assets/images/show.jpg'}}" 
+                alt="{{dizi.dizi_adi}}"
+                class="search-result-poster"
+                onerror="this.src='assets/images/show.jpg'"
+              >
+              <div class="search-result-info">
+                <div class="search-result-title">{{dizi.dizi_adi}}</div>
+                <div class="search-result-details">{{dizi.yonetmen}} • {{dizi.yil}}</div>
+                <div class="search-result-details">IMDB: {{dizi.imdb_puani}}</div>
+                <div class="search-result-category">{{dizi.kategori}}</div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Sonuç Bulunamadı -->
+          <div class="no-results" ng-show="searchQuery && searchResults.length === 0 && !searching">
+            "{{searchQuery}}" için sonuç bulunamadı.
+          </div>
+          
+          <!-- Arama Yapılıyor -->
+          <div class="no-results" ng-show="searching">
+            🔍 Arama yapılıyor...
+          </div>
+        </div>
+        
         <div class="kategori-grid">
           <div class="kategori-card" ng-click="kategoriSec('dram')">
             <span class="kategori-icon">🎭</span>
@@ -275,21 +419,6 @@
     <button id="scrollTopBtn" title="Yukarı Çık" ng-click="scrollToTop()">
       ↑
     </button>
-    <script>
-      angular
-        .module("GirisApp")
-        .controller("DiziKategorilerController", function ($scope) {
-          $scope.kullanici = JSON.parse(
-            localStorage.getItem("girisYapan") || "null"
-          );
-          $scope.kategoriSec = function (kategori) {
-            var kategoriUrl = kategori.replace("_", "-");
-            window.location.href = kategoriUrl + "-diziler.html";
-          };
-          $scope.scrollToTop = function () {
-            window.scrollTo({ top: 0, behavior: "smooth" });
-          };
-        });
-    </script>
+
   </body>
 </html>

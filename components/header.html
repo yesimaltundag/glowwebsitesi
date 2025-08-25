@@ -179,6 +179,14 @@
       </ul>
     </nav>
 
+    <div class="theme-selector">
+      <select ng-model="selectedTheme" ng-change="changeTheme()" class="theme-dropdown" title="Tema Seçin">
+        <option value="default">🌅 Varsayılan</option>
+        <option value="light">☀️ Açık Tema</option>
+        <option value="dark">🌙 Koyu Tema</option>
+      </select>
+    </div>
+
     <div class="auth-section">
       <a ng-if="!kullanici" href="/index.html" class="auth-btn login-btn">
         Giriş / Kaydol

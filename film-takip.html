@@ -217,6 +217,8 @@
         margin-right: 4px;
       }
 
+
+
       .film-genre {
         color: #7f8c8d;
         font-size: 0.9rem;
@@ -377,11 +379,11 @@
             <div class="film-info">
               <h3 class="film-title">{{film.title}}</h3>
               <p class="film-year">{{film.year}}</p>
-              <div class="film-rating" ng-if="film.rating && film.rating > 0">
+              <div class="film-rating" ng-if="film.imdbRating && film.imdbRating > 0">
                 <div class="imdb-rating">
                   <span class="rating-label">IMDb:</span>
                   <span class="rating-icon">⭐</span>
-                  <span class="rating-value">{{film.rating}}</span>
+                  <span class="rating-value">{{film.imdbRating | number:1}}</span>
                 </div>
               </div>
               <p class="film-genre">{{film.genre}}</p>

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Anamakine: 127.0.0.1:3306
--- Üretim Zamanı: 25 Ağu 2025, 07:29:16
+-- Üretim Zamanı: 25 Ağu 2025, 08:14:52
 -- Sunucu sürümü: 9.1.0
 -- PHP Sürümü: 8.3.14
 
@@ -64,37 +64,6 @@ INSERT INTO `animeler` (`id`, `anime_adi`, `yonetmen`, `yil`, `tur`, `puan`, `ac
 (10, 'Hunter x Hunter', 'Hiroshi Kōjina', 2011, 'Aksiyon, Macera, Fantastik', 9.0, 'Gon Freecss, babası gibi Hunter olmak için sınavlara girer. Arkadaşlarıyla birlikte tehlikeli maceralar yaşar.', '148 Bölüm', '24 dk', 'Madhouse', 'Tamamlandı', 7000000, '2025-07-31 06:42:38', 'https://m.media-amazon.com/images/I/71aoeOhdNnL._AC_SL1000_.jpg', 'https://www.youtube.com/embed/d6kBeJjTGnY'),
 (11, 'Tokyo Ghoul', 'Shuhei Morita', 2014, 'Aksiyon, Dram, Korku', 7.8, 'Kaneki Ken, bir ghoul tarafından saldırıya uğrar ve yarı ghoul olur. İnsan ve ghoul dünyası arasında sıkışır.', '12 Bölüm', '24 dk', 'Studio Pierrot', 'Tamamlandı', 6500000, '2025-07-31 06:42:38', 'https://images.justwatch.com/poster/102012613/s718/tokyo-ghoul.jpg', 'https://www.youtube.com/embed/vGuQeQsoRgU'),
 (12, 'Steins Gate', 'Hiroshi Hamasaki', 2011, 'Bilim Kurgu, Gerilim, Dram', 8.8, 'Rintaro Okabe, zaman makinesi icat eder ve geçmişi değiştirmeye çalışır. Ancak her değişiklik beklenmedik sonuçlar doğurur.', '24 Bölüm', '24 dk', 'White Fox', 'Tamamlandı', 6000000, '2025-07-31 06:42:38', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT87i1y_-CTEA4IM6wh38c7DqvSZn3IW6UXsg&s', 'https://www.youtube.com/embed/uMYhjVwp0Fk');
-
--- --------------------------------------------------------
-
---
--- Tablo için tablo yapısı `basari_rozetleri`
---
-
-DROP TABLE IF EXISTS `basari_rozetleri`;
-CREATE TABLE IF NOT EXISTS `basari_rozetleri` (
-  `id` int NOT NULL AUTO_INCREMENT COMMENT 'Benzersiz rozet kimliği',
-  `kullanici_id` int NOT NULL COMMENT 'Kullanıcı kimliği',
-  `rozet_adi` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Rozet adı',
-  `rozet_aciklama` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT 'Rozet açıklaması',
-  `rozet_ikonu` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Rozet ikonu URL',
-  `kazanma_tarihi` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Rozet kazanma tarihi',
-  `rozet_tipi` enum('izleme','puanlama','liste','ozel') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT 'izleme' COMMENT 'Rozet tipi',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `unique_user_badge` (`kullanici_id`,`rozet_adi`),
-  KEY `idx_kullanici_id` (`kullanici_id`),
-  KEY `idx_rozet_tipi` (`rozet_tipi`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Başarı rozetleri tablosu';
-
---
--- Tablo döküm verisi `basari_rozetleri`
---
-
-INSERT INTO `basari_rozetleri` (`id`, `kullanici_id`, `rozet_adi`, `rozet_aciklama`, `rozet_ikonu`, `kazanma_tarihi`, `rozet_tipi`) VALUES
-(1, 104, 'İlk Film', 'İlk filmini izledin!', '🎬', '2025-08-18 10:54:38', 'izleme'),
-(2, 104, 'Film Sever', '10 film izledin!', '🎭', '2025-08-18 10:54:38', 'izleme'),
-(3, 104, 'Kritik Göz', '5 film puanladın!', '⭐', '2025-08-18 10:54:38', 'puanlama'),
-(4, 104, 'Liste Yaratıcısı', 'İlk listeni oluşturdun!', '📝', '2025-08-18 10:54:38', 'liste');
 
 -- --------------------------------------------------------
 
@@ -695,39 +664,6 @@ INSERT INTO `filmler` (`id`, `film_adi`, `yil`, `sure`, `imdb_puani`, `poster_ur
 -- --------------------------------------------------------
 
 --
--- Tablo için tablo yapısı `film_listeleri`
---
-
-DROP TABLE IF EXISTS `film_listeleri`;
-CREATE TABLE IF NOT EXISTS `film_listeleri` (
-  `id` int NOT NULL AUTO_INCREMENT COMMENT 'Benzersiz liste kimliği',
-  `kullanici_id` int NOT NULL COMMENT 'Liste sahibi kullanıcı kimliği',
-  `liste_adi` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Liste adı',
-  `aciklama` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT 'Liste açıklaması',
-  `gizli` tinyint(1) DEFAULT '0' COMMENT 'Liste gizli mi?',
-  `film_sayisi` int DEFAULT '0' COMMENT 'Listedeki film sayısı',
-  `begeni_sayisi` int DEFAULT '0' COMMENT 'Liste beğeni sayısı',
-  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Liste oluşturma tarihi',
-  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Son güncelleme tarihi',
-  PRIMARY KEY (`id`),
-  KEY `idx_kullanici_id` (`kullanici_id`),
-  KEY `idx_gizli` (`gizli`),
-  KEY `idx_created_at` (`created_at`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Film listeleri tablosu';
-
---
--- Tablo döküm verisi `film_listeleri`
---
-
-INSERT INTO `film_listeleri` (`id`, `kullanici_id`, `liste_adi`, `aciklama`, `gizli`, `film_sayisi`, `begeni_sayisi`, `created_at`, `updated_at`) VALUES
-(1, 104, 'En Sevdiğim Filmler', 'Tüm zamanların en sevdiğim filmleri', 0, 0, 0, '2025-08-18 10:54:38', '2025-08-18 10:54:38'),
-(2, 104, 'İzleyeceklerim', 'Bu ay izlemeyi planladığım filmler', 0, 0, 0, '2025-08-18 10:54:38', '2025-08-18 10:54:38'),
-(3, 104, 'Klasikler', 'Mutlaka izlenmesi gereken klasik filmler', 0, 0, 0, '2025-08-18 10:54:38', '2025-08-18 10:54:38'),
-(4, 103, 'Aksiyon Filmleri', 'En iyi aksiyon filmleri listesi', 0, 0, 0, '2025-08-18 10:54:38', '2025-08-18 10:54:38');
-
--- --------------------------------------------------------
-
---
 -- Tablo için tablo yapısı `film_takip`
 --
 
@@ -1031,7 +967,14 @@ CREATE TABLE IF NOT EXISTS `kitap_takip` (
   `category` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Tablo döküm verisi `kitap_takip`
+--
+
+INSERT INTO `kitap_takip` (`id`, `user_id`, `title`, `author`, `year`, `genre`, `cover`, `rating`, `review`, `is_read`, `is_favorite`, `is_wishlist`, `pages`, `created_at`, `updated_at`, `is_reading`, `current_page`, `pages_read`, `total_pages`, `category`) VALUES
+(5, 104, 'Tutunamayanlar', 'Oğuz Atay', NULL, NULL, 'https://img.kitapyurdu.com/v1/getImage/fn:11462655/wh:true/wi:800', 0.0, '', 0, 1, 0, NULL, '2025-08-25 07:53:55', '2025-08-25 07:53:55', 0, 0, 0, 724, 'Türk Edebiyatı');
 
 -- --------------------------------------------------------
 

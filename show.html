@@ -19,6 +19,12 @@
         position: relative;
         width: 100%;
       }
+      
+      /* Dark mode show container */
+      body.dark-theme .show-container {
+        background: rgba(44, 44, 44, 0.92) !important;
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4) !important;
+      }
       .show-title-row {
         display: flex;
         align-items: center;
@@ -33,6 +39,11 @@
         margin-bottom: 50px;
         text-align: center;
         letter-spacing: 1px;
+      }
+      
+      /* Dark mode show başlığı */
+      body.dark-theme .show-title {
+        color: #ffffff !important;
       }
       .kategori-grid {
         display: grid;
@@ -61,6 +72,13 @@
         position: relative;
         overflow: hidden;
         border: 3px solid transparent;
+      }
+      
+      /* Dark mode kategori kartları */
+      body.dark-theme .kategori-card {
+        background-color: #2c2c2c !important;
+        color: #ffffff !important;
+        box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4) !important;
       }
 
       .kategori-card::before {
@@ -112,6 +130,17 @@
         background: linear-gradient(135deg, #b48a78, #e2d9d0);
         color: #fff;
         transform: scale(1.08);
+      }
+      
+      /* Dark mode geri butonu */
+      body.dark-theme .geri-btn {
+        background: linear-gradient(135deg, #7c5c4a, #5a4435) !important;
+        color: #ffffff !important;
+      }
+      
+      body.dark-theme .geri-btn:hover {
+        background: linear-gradient(135deg, #8a6a5a, #6a5445) !important;
+        color: #ffffff !important;
       }
     </style>
   </head>

@@ -18,6 +18,12 @@
         backdrop-filter: blur(10px);
         width: 100%;
       }
+      
+      /* Dark mode kategori container */
+      body.dark-theme .kategori-container {
+        background: rgba(44, 44, 44, 0.92) !important;
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4) !important;
+      }
       .kategori-header {
         text-align: center;
         margin-bottom: 40px;
@@ -38,6 +44,16 @@
         margin: 0 auto 40px auto;
         line-height: 1.7;
       }
+      
+      /* Dark mode başlık ve açıklama */
+      body.dark-theme .kategori-baslik {
+        color: #ffffff !important;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important;
+      }
+      
+      body.dark-theme .kategori-aciklama {
+        color: #b0b0b0 !important;
+      }
       .kitap-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
@@ -57,6 +73,12 @@
         display: flex;
         flex-direction: column;
         justify-content: space-between;
+      }
+      
+      /* Dark mode kitap kartları */
+      body.dark-theme .kitap-card {
+        background: linear-gradient(135deg, #2c2c2c 60%, #404040 100%) !important;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4) !important;
       }
       .kitap-card:hover {
         transform: translateY(-4px);
@@ -98,6 +120,16 @@
       .kitap-yazar {
         color: #b48a78;
         font-size: 1.1rem;
+      }
+      
+      /* Dark mode kitap yazıları */
+      body.dark-theme .kitap-baslik {
+        color: #ffffff !important;
+      }
+      
+      body.dark-theme .kitap-yazar {
+        color: #b0b0b0 !important;
+      }
         font-weight: 600;
         margin-bottom: 18px;
       }

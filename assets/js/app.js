@@ -1,3 +1,60 @@
+// ===== GLOBAL THEME MANAGEMENT =====
+// Tüm sayfalarda tema yönetimi için global fonksiyonlar
+window.applyGlobalTheme = function(theme) {
+  console.log("Global tema uygulanıyor:", theme);
+  
+  // Önce tüm tema sınıflarını kaldır
+  document.body.classList.remove('light-theme', 'dark-theme', 'default-theme');
+  
+  // Yeni tema sınıfını ekle
+  if (theme === 'light') {
+    document.body.classList.add('light-theme');
+  } else if (theme === 'dark') {
+    document.body.classList.add('dark-theme');
+  } else {
+    document.body.classList.add('default-theme');
+  }
+  
+  // Tema tercihini localStorage'a kaydet
+  localStorage.setItem("selectedTheme", theme);
+};
+
+// Sayfa yüklendiğinde tema uygula
+window.initializeTheme = function() {
+  var savedTheme = localStorage.getItem("selectedTheme") || "default";
+  window.applyGlobalTheme(savedTheme);
+  
+  // Header'daki tema seçiciyi güncelle
+  var themeDropdown = document.querySelector('.theme-dropdown');
+  if (themeDropdown) {
+    themeDropdown.value = savedTheme;
+  }
+};
+
+// DOM yüklendiğinde tema başlat
+document.addEventListener('DOMContentLoaded', function() {
+  window.initializeTheme();
+});
+
+// Sayfa değişikliklerinde tema uygula (SPA için)
+window.addEventListener('popstate', function() {
+  setTimeout(function() {
+    window.initializeTheme();
+  }, 100);
+});
+
+// AngularJS route değişikliklerinde tema uygula
+if (typeof angular !== 'undefined') {
+  angular.element(document).ready(function() {
+    var body = angular.element(document.body);
+    body.on('$routeChangeSuccess', function() {
+      setTimeout(function() {
+        window.initializeTheme();
+      }, 100);
+    });
+  });
+}
+
 // ===== GLOBAL FADE FUNCTIONS =====
 // Tüm sayfalarda kullanılabilir header fade fonksiyonları
 window.headerFade = function () {
@@ -244,6 +301,114 @@ angular
   .controller("HeaderController", function ($scope, $http) {
     // Kullanıcı durumu kontrolü
     $scope.kullanici = JSON.parse(localStorage.getItem("girisYapan") || "null");
+
+    // Tema yönetimi
+    $scope.selectedTheme = localStorage.getItem("selectedTheme") || "default";
+    
+    // Sayfa yüklendiğinde tema uygula
+    $scope.$on('$viewContentLoaded', function() {
+      // Global tema fonksiyonunu kullan
+      if (window.applyGlobalTheme) {
+        window.applyGlobalTheme($scope.selectedTheme);
+      }
+    });
+
+    // Tema değiştirme fonksiyonu
+    $scope.changeTheme = function() {
+      // Tema değişimi sırasında smooth animasyon
+      const themeDropdown = document.querySelector('.theme-dropdown');
+      if (themeDropdown) {
+        // Loading animasyonu başlat
+        themeDropdown.classList.add('loading');
+        themeDropdown.style.transform = 'scale(1.05)';
+        themeDropdown.style.transition = 'all 0.3s ease';
+        
+        // Kısa süre sonra loading'i kaldır ve success animasyonu ekle
+        setTimeout(() => {
+          themeDropdown.classList.remove('loading');
+          themeDropdown.classList.add('success');
+          themeDropdown.style.transform = 'scale(1)';
+          
+          // Success animasyonunu kaldır
+          setTimeout(() => {
+            themeDropdown.classList.remove('success');
+          }, 600);
+        }, 300);
+      }
+      
+      // Global tema fonksiyonunu kullan
+      if (window.applyGlobalTheme) {
+        window.applyGlobalTheme($scope.selectedTheme);
+      }
+      
+      // Tema değişimi bildirimi
+      showThemeChangeNotification($scope.selectedTheme);
+    };
+    
+    // Tema değişimi bildirimi
+    function showThemeChangeNotification(theme) {
+      // Mevcut bildirimi kaldır
+      const existingNotification = document.querySelector('.theme-notification');
+      if (existingNotification) {
+        existingNotification.remove();
+      }
+      
+      // Yeni bildirim oluştur
+      const notification = document.createElement('div');
+      notification.className = 'theme-notification';
+      notification.style.cssText = `
+        position: fixed;
+        top: 100px;
+        right: 20px;
+        background: linear-gradient(135deg, #7c5c4a, #5a4a3a);
+        color: white;
+        padding: 12px 20px;
+        border-radius: 12px;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255,255,255,0.2);
+        font-weight: 600;
+        font-size: 14px;
+        z-index: 9999;
+        transform: translateX(100%);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        opacity: 0;
+      `;
+      
+      // Tema metni
+      let themeText = '';
+      switch(theme) {
+        case 'default':
+          themeText = '🌅 Varsayılan tema uygulandı';
+          break;
+        case 'light':
+          themeText = '☀️ Açık tema uygulandı';
+          break;
+        case 'dark':
+          themeText = '🌙 Koyu tema uygulandı';
+          break;
+      }
+      
+      notification.textContent = themeText;
+      document.body.appendChild(notification);
+      
+      // Animasyon
+      setTimeout(() => {
+        notification.style.transform = 'translateX(0)';
+        notification.style.opacity = '1';
+      }, 100);
+      
+      // Otomatik kaldır
+      setTimeout(() => {
+        notification.style.transform = 'translateX(100%)';
+        notification.style.opacity = '0';
+        setTimeout(() => {
+          if (notification.parentNode) {
+            notification.remove();
+          }
+        }, 400);
+      }, 3000);
+    }
 
     // Çıkış yapma fonksiyonu
     $scope.cikisYap = function () {
@@ -931,15 +1096,84 @@ angular
   })
 
   // ===== DIZI KATEGORILER CONTROLLER =====
-  .controller("DiziKategorilerController", function ($scope) {
+  .controller("DiziKategorilerController", function ($scope, $http) {
     // Kullanıcı durumu kontrolü
     $scope.kullanici = JSON.parse(localStorage.getItem("girisYapan") || "null");
+    
+    // Arama değişkenleri
+    $scope.searchQuery = "";
+    $scope.searchResults = [];
+    $scope.searching = false;
 
     $scope.kategoriSec = function (kategori) {
       // Kategori adını URL'ye uygun hale getir
       var kategoriUrl = kategori.replace("_", "-");
       window.location.href = kategoriUrl + "-diziler.html";
     };
+
+    // Arama input değiştiğinde
+    $scope.onSearchInput = function() {
+      console.log("🔍 Arama input değişti:", $scope.searchQuery);
+      if ($scope.searchQuery.length >= 2) {
+        $scope.searchDizis();
+      } else {
+        $scope.searchResults = [];
+      }
+    };
+
+    // Dizi arama fonksiyonu
+    $scope.searchDizis = function() {
+      console.log("🔍 Dizi arama başlatılıyor:", $scope.searchQuery);
+      
+      if (!$scope.searchQuery || $scope.searchQuery.length < 2) {
+        $scope.searchResults = [];
+        return;
+      }
+
+      $scope.searching = true;
+      $scope.searchResults = [];
+
+      var searchUrl = "dizi_api.php?search=" + encodeURIComponent($scope.searchQuery);
+      console.log("🔍 API URL:", searchUrl);
+
+      $http.get(searchUrl)
+        .then(function(response) {
+          console.log("🔍 API yanıtı:", response.data);
+          if (response.data.success) {
+            $scope.searchResults = response.data.diziler || [];
+            console.log("🔍 Bulunan diziler:", $scope.searchResults);
+          } else {
+            $scope.searchResults = [];
+            console.log("🔍 API başarısız:", response.data.message);
+          }
+          $scope.searching = false;
+        })
+        .catch(function(error) {
+          console.error("❌ Dizi arama hatası:", error);
+          $scope.searchResults = [];
+          $scope.searching = false;
+        });
+    };
+
+    // Dizi detay sayfasına git
+    $scope.goToDiziDetail = function(diziId) {
+      window.location.href = "dizi-detay.html?id=" + diziId;
+    };
+
+    // Test fonksiyonu - veritabanı durumunu kontrol et
+    $scope.testDatabase = function() {
+      console.log("🧪 Veritabanı testi başlatılıyor...");
+      $http.get("dizi_api.php?test=db")
+        .then(function(response) {
+          console.log("🧪 Veritabanı test sonucu:", response.data);
+        })
+        .catch(function(error) {
+          console.error("❌ Veritabanı test hatası:", error);
+        });
+    };
+
+    // Sayfa yüklendiğinde veritabanını test et
+    $scope.testDatabase();
 
     $scope.scrollToTop = function () {
       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -4588,10 +4822,10 @@ angular
         (film) => film.isFavorite
       ).length;
 
-      const ratedFilms = $scope.films.filter((film) => film.rating > 0);
+      const ratedFilms = $scope.films.filter((film) => film.imdbRating > 0);
       if (ratedFilms.length > 0) {
         const totalRating = ratedFilms.reduce(
-          (sum, film) => sum + parseFloat(film.rating),
+          (sum, film) => sum + parseFloat(film.imdbRating),
           0
         );
         $scope.stats.ortalama = (totalRating / ratedFilms.length).toFixed(1);

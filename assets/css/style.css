@@ -1,3 +1,861 @@
+/* ===== THEME SELECTOR ===== */
+.theme-selector {
+  display: flex;
+  align-items: center;
+  margin-right: 20px;
+  position: relative;
+}
+
+.theme-dropdown {
+  position: relative;
+  padding: 12px 16px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05));
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  backdrop-filter: blur(20px);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  min-width: 160px;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  text-align: center;
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+/* Custom dropdown arrow */
+.theme-dropdown::after {
+  content: "⌄";
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 18px;
+  color: rgba(255, 255, 255, 0.8);
+  pointer-events: none;
+  transition: all 0.3s ease;
+}
+
+.theme-dropdown:hover::after {
+  transform: translateY(-50%) rotate(180deg);
+  color: rgba(255, 255, 255, 1);
+}
+
+/* Dark mode'da tema seçici stilleri */
+body.dark-theme .theme-dropdown {
+  border-color: rgba(255, 255, 255, 0.15);
+  background: linear-gradient(135deg, rgba(44, 44, 44, 0.9), rgba(26, 26, 26, 0.8));
+  color: #fff;
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+body.dark-theme .theme-dropdown:hover {
+  border-color: rgba(255, 255, 255, 0.3);
+  background: linear-gradient(135deg, rgba(60, 60, 60, 0.95), rgba(44, 44, 44, 0.9));
+  box-shadow: 
+    0 12px 40px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+body.dark-theme .theme-dropdown:focus {
+  border-color: #7c5c4a;
+  box-shadow: 
+    0 0 0 4px rgba(124, 92, 74, 0.3),
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.theme-dropdown:hover {
+  border-color: rgba(255, 255, 255, 0.4);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0.1));
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 
+    0 12px 40px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.theme-dropdown:focus {
+  outline: none;
+  border-color: #7c5c4a;
+  box-shadow: 
+    0 0 0 4px rgba(124, 92, 74, 0.3),
+    0 8px 32px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+/* Modern option stilleri */
+.theme-dropdown option {
+  background: linear-gradient(135deg, #2c2c2c, #1a1a1a);
+  color: #fff;
+  padding: 12px 16px;
+  font-weight: 500;
+  border: none;
+  margin: 2px 0;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.theme-dropdown option:hover {
+  background: linear-gradient(135deg, #7c5c4a, #5a4a3a);
+  color: #fff;
+}
+
+/* Light mode için özel stiller */
+body.light-theme .theme-dropdown {
+  border-color: rgba(124, 92, 74, 0.2);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(248, 249, 250, 0.8));
+  color: #7c5c4a;
+  box-shadow: 
+    0 8px 32px rgba(124, 92, 74, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+body.light-theme .theme-dropdown:hover {
+  border-color: rgba(124, 92, 74, 0.4);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 1), rgba(248, 249, 250, 0.9));
+  box-shadow: 
+    0 12px 40px rgba(124, 92, 74, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 1);
+}
+
+body.light-theme .theme-dropdown:focus {
+  border-color: #7c5c4a;
+  box-shadow: 
+    0 0 0 4px rgba(124, 92, 74, 0.3),
+    0 8px 32px rgba(124, 92, 74, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+body.light-theme .theme-dropdown::after {
+  color: rgba(124, 92, 74, 0.8);
+}
+
+body.light-theme .theme-dropdown:hover::after {
+  color: #7c5c4a;
+}
+
+/* Default theme için özel stiller */
+body.default-theme .theme-dropdown {
+  border-color: rgba(255, 255, 255, 0.25);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.05));
+  color: #fff;
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+
+body.default-theme .theme-dropdown:hover {
+  border-color: rgba(255, 255, 255, 0.4);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.1));
+  box-shadow: 
+    0 12px 40px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.35);
+}
+
+/* Responsive tema seçici */
+@media (max-width: 768px) {
+  .theme-selector {
+    margin-right: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .theme-dropdown {
+    min-width: 140px;
+    font-size: 13px;
+    padding: 10px 14px;
+    border-radius: 14px;
+  }
+  
+  .theme-dropdown::after {
+    right: 14px;
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .theme-selector {
+    margin-right: 5px;
+    margin-bottom: 5px;
+  }
+  
+  .theme-dropdown {
+    min-width: 120px;
+    font-size: 12px;
+    padding: 8px 12px;
+    border-radius: 12px;
+  }
+  
+  .theme-dropdown::after {
+    right: 12px;
+    font-size: 14px;
+  }
+}
+
+/* Hover animasyonları için ek efektler */
+.theme-dropdown::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), transparent);
+  border-radius: 16px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.theme-dropdown:hover::before {
+  opacity: 1;
+}
+
+/* Ripple efekti */
+.theme-dropdown::after {
+  content: "⌄";
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 18px;
+  color: rgba(255, 255, 255, 0.8);
+  pointer-events: none;
+  transition: all 0.3s ease;
+}
+
+.theme-dropdown:hover::after {
+  transform: translateY(-50%) rotate(180deg);
+  color: rgba(255, 255, 255, 1);
+}
+
+/* Ripple hover efekti */
+.theme-dropdown {
+  position: relative;
+  overflow: hidden;
+}
+
+.theme-dropdown::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.6s ease, height 0.6s ease;
+  pointer-events: none;
+}
+
+.theme-dropdown:hover::before {
+  width: 300px;
+  height: 300px;
+}
+
+/* Focus durumunda ek vurgu */
+.theme-dropdown:focus {
+  animation: themeFocusPulse 0.6s ease-out;
+}
+
+@keyframes themeFocusPulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Tema seçici için loading animasyonu */
+.theme-dropdown.loading {
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+.theme-dropdown.loading::after {
+  content: "⟳";
+  animation: themeLoading 1s linear infinite;
+}
+
+@keyframes themeLoading {
+  from {
+    transform: translateY(-50%) rotate(0deg);
+  }
+  to {
+    transform: translateY(-50%) rotate(360deg);
+  }
+}
+
+/* Tema seçici için success animasyonu */
+.theme-dropdown.success {
+  border-color: #28a745;
+  animation: themeSuccess 0.6s ease-out;
+}
+
+@keyframes themeSuccess {
+  0% {
+    transform: scale(1);
+    border-color: #28a745;
+  }
+  50% {
+    transform: scale(1.05);
+    border-color: #20c997;
+  }
+  100% {
+    transform: scale(1);
+    border-color: #28a745;
+  }
+}
+
+/* ===== THEME STYLES ===== */
+/* Light Mode */
+body.light-theme {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8f9fa;
+  --text-primary: #2c2c2c;
+  --text-secondary: #6c757d;
+  --border-color: #dee2e6;
+  --shadow-color: rgba(0, 0, 0, 0.1);
+  --header-bg: rgba(255, 255, 255, 0.95);
+  --card-bg: rgba(255, 255, 255, 0.9);
+  --input-bg: #ffffff;
+  --button-bg: #f8f9fa;
+  --button-hover: #e9ecef;
+  --dropdown-bg: #ffffff;
+  --dropdown-hover: #f8f9fa;
+  --table-bg: #ffffff;
+  --table-border: #dee2e6;
+  --modal-bg: #ffffff;
+  --tooltip-bg: #f8f9fa;
+}
+
+/* Dark Mode */
+body.dark-theme {
+  --bg-primary: #1a1a1a;
+  --bg-secondary: #2c2c2c;
+  --text-primary: #ffffff;
+  --text-secondary: #b0b0b0;
+  --border-color: #404040;
+  --shadow-color: rgba(0, 0, 0, 0.3);
+  --header-bg: rgba(26, 26, 26, 0.95);
+  --card-bg: rgba(44, 44, 44, 0.9);
+  --input-bg: #333333;
+  --button-bg: #404040;
+  --button-hover: #505050;
+  --dropdown-bg: #2c2c2c;
+  --dropdown-hover: #404040;
+  --table-bg: #333333;
+  --table-border: #404040;
+  --modal-bg: #2c2c2c;
+  --tooltip-bg: #404040;
+}
+
+/* Default Theme (Original) */
+body.default-theme {
+  --bg-primary: transparent;
+  --bg-secondary: transparent;
+  --text-primary: inherit;
+  --text-secondary: inherit;
+  --border-color: inherit;
+  --shadow-color: inherit;
+  --header-bg: inherit;
+  --card-bg: inherit;
+}
+
+/* Apply theme variables */
+body.light-theme,
+body.dark-theme {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  transition: all 0.3s ease;
+}
+
+/* Tüm elementlerde smooth tema geçişi */
+body.light-theme *,
+body.dark-theme * {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Header tema stilleri */
+body.light-theme .site-header,
+body.dark-theme .site-header {
+  background: var(--header-bg);
+}
+
+/* Ana içerik tema stilleri */
+body.light-theme .main-content,
+body.dark-theme .main-content {
+  background-color: var(--bg-secondary);
+}
+
+/* Kart ve container tema stilleri */
+body.light-theme .card,
+body.dark-theme .card,
+body.light-theme .film-takip-container,
+body.dark-theme .film-takip-container,
+body.light-theme .kitap-container,
+body.dark-theme .kitap-container,
+body.light-theme .dizi-container,
+body.dark-theme .dizi-container,
+body.light-theme .seyahat-container,
+body.dark-theme .seyahat-container,
+body.light-theme .sanat-container,
+body.dark-theme .sanat-container,
+body.light-theme .yemek-container,
+body.dark-theme .yemek-container,
+body.light-theme .spor-container,
+body.dark-theme .spor-container {
+  background: var(--card-bg);
+  border-color: var(--border-color);
+  box-shadow: 0 4px 12px var(--shadow-color);
+}
+
+/* Form ve input tema stilleri */
+body.light-theme input,
+body.dark-theme input,
+body.light-theme textarea,
+body.dark-theme textarea,
+body.light-theme select,
+body.dark-theme select {
+  background: var(--card-bg);
+  color: var(--text-primary);
+  border-color: var(--border-color);
+}
+
+/* Button tema stilleri */
+body.light-theme .btn,
+body.dark-theme .btn,
+body.light-theme button,
+body.dark-theme button {
+  background: var(--card-bg);
+  color: var(--text-primary);
+  border-color: var(--border-color);
+}
+
+/* Footer tema stilleri */
+body.light-theme footer,
+body.dark-theme footer {
+  background: var(--header-bg);
+  color: var(--text-primary);
+}
+
+/* Link tema stilleri */
+body.light-theme a,
+body.dark-theme a {
+  color: var(--text-primary);
+}
+
+body.light-theme a:hover,
+body.dark-theme a:hover {
+  color: var(--text-secondary);
+}
+
+/* Input ve form elementleri için detaylı tema stilleri */
+body.dark-theme input,
+body.dark-theme textarea,
+body.dark-theme select {
+  background-color: var(--input-bg) !important;
+  color: var(--text-primary) !important;
+  border-color: var(--border-color) !important;
+}
+
+body.dark-theme input:focus,
+body.dark-theme textarea:focus,
+body.dark-theme select:focus {
+  border-color: #7c5c4a !important;
+  box-shadow: 0 0 0 3px rgba(124, 92, 74, 0.3) !important;
+}
+
+/* Button'lar için detaylı tema stilleri */
+body.dark-theme .btn,
+body.dark-theme button {
+  background-color: var(--button-bg) !important;
+  color: var(--text-primary) !important;
+  border-color: var(--border-color) !important;
+}
+
+body.dark-theme .btn:hover,
+body.dark-theme button:hover {
+  background-color: var(--button-hover) !important;
+}
+
+/* Dropdown menüler için tema stilleri */
+body.dark-theme .dropdown-menu,
+body.dark-theme .user-dropdown-menu {
+  background-color: var(--dropdown-bg) !important;
+  border-color: var(--border-color) !important;
+}
+
+body.dark-theme .dropdown-item:hover,
+body.dark-theme .submenu-item:hover {
+  background-color: var(--dropdown-hover) !important;
+}
+
+/* Tablo tema stilleri */
+body.dark-theme table,
+body.dark-theme .table {
+  background-color: var(--table-bg) !important;
+  color: var(--text-primary) !important;
+}
+
+body.dark-theme th,
+body.dark-theme td {
+  border-color: var(--table-border) !important;
+}
+
+/* Modal ve popup tema stilleri */
+body.dark-theme .modal,
+body.dark-theme .modal-content {
+  background-color: var(--modal-bg) !important;
+  color: var(--text-primary) !important;
+  border-color: var(--border-color) !important;
+}
+
+/* Tooltip tema stilleri */
+body.dark-theme .tooltip,
+body.dark-theme .tooltip-inner {
+  background-color: var(--tooltip-bg) !important;
+  color: var(--text-primary) !important;
+}
+
+/* Navigation tema stilleri */
+body.dark-theme .nav-link {
+  color: var(--text-primary) !important;
+}
+
+body.dark-theme .nav-link:hover {
+  color: var(--text-secondary) !important;
+}
+
+/* Card ve container detayları */
+body.dark-theme .card-header,
+body.dark-theme .card-footer {
+  background-color: var(--button-bg) !important;
+  border-color: var(--border-color) !important;
+}
+
+/* Alert ve notification tema stilleri */
+body.dark-theme .alert {
+  background-color: var(--card-bg) !important;
+  border-color: var(--border-color) !important;
+  color: var(--text-primary) !important;
+}
+
+/* Badge tema stilleri */
+body.dark-theme .badge {
+  background-color: var(--button-bg) !important;
+  color: var(--text-primary) !important;
+}
+
+/* Progress bar tema stilleri */
+body.dark-theme .progress {
+  background-color: var(--button-bg) !important;
+}
+
+body.dark-theme .progress-bar {
+  background-color: #7c5c4a !important;
+}
+
+/* Light mode için detaylı tema stilleri */
+body.light-theme input,
+body.light-theme textarea,
+body.light-theme select {
+  background-color: var(--input-bg) !important;
+  color: var(--text-primary) !important;
+  border-color: var(--border-color) !important;
+}
+
+body.light-theme input:focus,
+body.light-theme textarea:focus,
+body.light-theme select:focus {
+  border-color: #7c5c4a !important;
+  box-shadow: 0 0 0 3px rgba(124, 92, 74, 0.3) !important;
+}
+
+body.light-theme .btn,
+body.light-theme button {
+  background-color: var(--button-bg) !important;
+  color: var(--text-primary) !important;
+  border-color: var(--border-color) !important;
+}
+
+body.light-theme .btn:hover,
+body.light-theme button:hover {
+  background-color: var(--button-hover) !important;
+}
+
+body.light-theme .dropdown-menu,
+body.light-theme .user-dropdown-menu {
+  background-color: var(--dropdown-bg) !important;
+  border-color: var(--border-color) !important;
+}
+
+body.light-theme .dropdown-item:hover,
+body.light-theme .submenu-item:hover {
+  background-color: var(--dropdown-hover) !important;
+}
+
+/* GLOW projesi özel elementleri için tema desteği */
+body.dark-theme .page-title,
+body.dark-theme .page-subtitle {
+  color: var(--text-primary) !important;
+}
+
+body.dark-theme .stats-section .stat-card {
+  background-color: var(--card-bg) !important;
+  border-color: var(--border-color) !important;
+  color: var(--text-primary) !important;
+}
+
+body.dark-theme .film-item,
+body.dark-theme .dizi-item,
+body.dark-theme .kitap-item {
+  background-color: var(--card-bg) !important;
+  border-color: var(--border-color) !important;
+}
+
+body.dark-theme .film-item:hover,
+body.dark-theme .dizi-item:hover,
+body.dark-theme .kitap-item:hover {
+  background-color: var(--button-hover) !important;
+}
+
+body.dark-theme .search-box,
+body.dark-theme .filter-box {
+  background-color: var(--input-bg) !important;
+  border-color: var(--border-color) !important;
+  color: var(--text-primary) !important;
+}
+
+body.dark-theme .pagination .page-link {
+  background-color: var(--button-bg) !important;
+  border-color: var(--border-color) !important;
+  color: var(--text-primary) !important;
+}
+
+body.dark-theme .pagination .page-link:hover {
+  background-color: var(--button-hover) !important;
+}
+
+body.dark-theme .pagination .page-item.active .page-link {
+  background-color: #7c5c4a !important;
+  border-color: #7c5c4a !important;
+}
+
+/* Light mode için GLOW özel elementleri */
+body.light-theme .page-title,
+body.light-theme .page-subtitle {
+  color: var(--text-primary) !important;
+}
+
+/* ===== KATEGORİ MENÜLERİ İÇİN KAPSAMLI TEMA DESTEĞİ ===== */
+
+/* Dark mode kategori menü stilleri */
+body.dark-theme .dropdown-menu {
+  background: rgba(44, 44, 44, 0.95) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
+  backdrop-filter: blur(15px) !important;
+}
+
+body.dark-theme .submenu {
+  background: rgba(44, 44, 44, 0.95) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
+  backdrop-filter: blur(15px) !important;
+}
+
+body.dark-theme .dropdown-item {
+  color: #ffffff !important;
+  border-bottom-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+body.dark-theme .dropdown-item:hover {
+  background: linear-gradient(135deg, #505050, #404040) !important;
+  color: #ffffff !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
+}
+
+body.dark-theme .submenu {
+  background: rgba(44, 44, 44, 0.95) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
+}
+
+body.dark-theme .submenu-item {
+  color: #ffffff !important;
+  border-bottom-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+body.dark-theme .submenu-item:hover {
+  background: linear-gradient(135deg, #505050, #404040) !important;
+  color: #ffffff !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
+}
+
+body.dark-theme .dropdown-item-with-submenu .dropdown-item::after {
+  color: #ffffff !important;
+}
+
+/* Light mode kategori menü stilleri */
+body.light-theme .dropdown-menu {
+  background: rgba(255, 255, 255, 0.95) !important;
+  border-color: rgba(0, 0, 0, 0.1) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15) !important;
+}
+
+body.light-theme .dropdown-item {
+  color: #7c5c4a !important;
+  border-bottom-color: rgba(124, 92, 74, 0.1) !important;
+}
+
+body.light-theme .dropdown-item:hover {
+  background: linear-gradient(135deg, #f8e0e1, #e2d9d0) !important;
+  color: #4a3a2a !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+}
+
+body.light-theme .submenu {
+  background: rgba(255, 255, 255, 0.95) !important;
+  border-color: rgba(0, 0, 0, 0.1) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15) !important;
+}
+
+body.light-theme .submenu-item {
+  color: #7c5c4a !important;
+  border-bottom-color: rgba(124, 92, 74, 0.1) !important;
+}
+
+body.light-theme .submenu-item:hover {
+  background: linear-gradient(135deg, #f8e0e1, #e2d9d0) !important;
+  color: #4a3a2a !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+}
+
+body.light-theme .dropdown-item-with-submenu .dropdown-item::after {
+  color: #7c5c4a !important;
+}
+
+body.light-theme .stats-section .stat-card {
+  background-color: var(--card-bg) !important;
+  border-color: var(--border-color) !important;
+  color: var(--text-primary) !important;
+}
+
+body.light-theme .film-item,
+body.light-theme .dizi-item,
+body.light-theme .kitap-item {
+  background-color: var(--card-bg) !important;
+  border-color: var(--border-color) !important;
+}
+
+body.light-theme .film-item:hover,
+body.light-theme .dizi-item:hover,
+body.light-theme .kitap-item:hover {
+  background-color: var(--button-hover) !important;
+}
+
+body.light-theme .search-box,
+body.light-theme .filter-box {
+  background-color: var(--input-bg) !important;
+  border-color: var(--border-color) !important;
+  color: var(--text-primary) !important;
+}
+
+body.light-theme .pagination .page-link {
+  background-color: var(--button-bg) !important;
+  border-color: var(--border-color) !important;
+  color: var(--text-primary) !important;
+}
+
+body.light-theme .pagination .page-link:hover {
+  background-color: var(--button-hover) !important;
+}
+
+body.light-theme .pagination .page-item.active .page-link {
+  background-color: #7c5c4a !important;
+  border-color: #7c5c4a !important;
+}
+
+/* Responsive tema seçici */
+@media (max-width: 768px) {
+  .theme-selector {
+    margin-right: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .theme-dropdown {
+    min-width: 120px;
+    font-size: 13px;
+    padding: 6px 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .theme-selector {
+    margin-right: 5px;
+    margin-bottom: 5px;
+  }
+  
+  .theme-dropdown {
+    min-width: 100px;
+    font-size: 12px;
+    padding: 5px 8px;
+    
+  }
+}
+.theme-selector {
+  display: flex;
+  align-items: center;
+  margin-right: 20px;
+  border-radius: 10px;
+}
+
+.theme-dropdown {
+  padding: 8px 12px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+  min-width: 140px;
+  
+}
+
+.theme-dropdown:hover {
+  border-color: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.theme-dropdown:focus {
+  outline: none;
+  border-color: #7c5c4a;
+  box-shadow: 0 0 0 3px rgba(124, 92, 74, 0.3);
+}
+
+.theme-dropdown option {
+  background: #2c2c2c;
+  color: #fff;
+  padding: 8px;
+}
+
 /* ===== SPOILER YORUM ===== */
 .spoiler-toggle {
   display: block;
@@ -889,6 +1747,11 @@ body {
   border-bottom: 1px solid rgba(124, 92, 74, 0.1);
 }
 
+/* Dark mode dropdown item border */
+body.dark-theme .dropdown-item {
+  border-bottom-color: rgba(255, 255, 255, 0.1) !important;
+}
+
 .dropdown-item:last-child {
   border-bottom: none;
 }
@@ -898,6 +1761,14 @@ body {
   color: #4a3a2a;
   transform: translateX(5px);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Dark mode hover efektleri için özel stiller */
+body.dark-theme .dropdown-item:hover {
+  background: linear-gradient(135deg, #505050, #404040) !important;
+  color: #ffffff !important;
+  transform: translateX(5px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
 }
 
 /* ===== ALT KATEGORİ STİLLERİ ===== */
@@ -981,6 +1852,11 @@ body {
   border-bottom: 1px solid rgba(124, 92, 74, 0.1);
 }
 
+/* Dark mode submenu item border */
+body.dark-theme .submenu-item {
+  border-bottom-color: rgba(255, 255, 255, 0.1) !important;
+}
+
 .submenu-item:last-child {
   border-bottom: none;
 }
@@ -990,6 +1866,14 @@ body {
   color: #4a3a2a;
   transform: translateX(5px);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Dark mode submenu hover efektleri */
+body.dark-theme .submenu-item:hover {
+  background: linear-gradient(135deg, #505050, #404040) !important;
+  color: #ffffff !important;
+  transform: translateX(5px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
 }
 
 .nav-link:hover {
@@ -1035,6 +1919,11 @@ body {
   background: transparent !important;
 }
 
+/* Dark mode main content arka plan */
+body.dark-theme .main-content {
+  background: var(--bg-primary) !important;
+}
+
 /* ===== CONTAINER STYLES ===== */
 .container {
   background: rgba(255, 255, 255, 0.9);
@@ -1046,6 +1935,16 @@ body {
   width: calc(100% - 40px);
   backdrop-filter: blur(10px);
   box-sizing: border-box;
+}
+
+/* Dark mode container stilleri */
+body.dark-theme .container {
+  background: rgba(44, 44, 44, 0.9) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
+}
+
+body.dark-theme .container h2 {
+  color: #ffffff !important;
 }
 
 .container h2 {
@@ -1195,6 +2094,12 @@ img {
   backdrop-filter: blur(10px);
 }
 
+/* Dark mode card stilleri */
+body.dark-theme .card {
+  background: rgba(44, 44, 44, 0.9) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
+}
+
 .card:hover {
   transform: translateY(-8px);
   box-shadow: 0 16px 48px rgba(0, 0, 0, 0.15);
@@ -1223,6 +2128,15 @@ img {
   font-size: 16px;
 }
 
+/* Dark mode card içerik stilleri */
+body.dark-theme .card h3 {
+  color: #ffffff !important;
+}
+
+body.dark-theme .card p {
+  color: #b0b0b0 !important;
+}
+
 .card button {
   width: auto;
   padding: 12px 24px;
@@ -1237,6 +2151,12 @@ img {
   overflow: hidden;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
   margin: 20px 0;
+}
+
+/* Dark mode table container */
+body.dark-theme .table-container {
+  background: rgba(44, 44, 44, 0.9) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
 }
 
 table {
@@ -1263,6 +2183,49 @@ tr:nth-child(even) {
 
 tr:hover {
   background: rgba(226, 217, 208, 0.3);
+}
+
+/* Dark mode table row stilleri */
+body.dark-theme tr:nth-child(even) {
+  background: rgba(60, 60, 60, 0.5) !important;
+}
+
+body.dark-theme tr:hover {
+  background: rgba(80, 80, 80, 0.3) !important;
+}
+
+body.dark-theme td {
+  color: #ffffff !important;
+  border-bottom-color: #404040 !important;
+}
+
+/* ===== KATEGORİ BUTTON STİLLERİ ===== */
+.kategori-btn {
+  background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+  color: white;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 25px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 1rem;
+}
+
+.kategori-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(231, 76, 60, 0.3);
+}
+
+/* Dark mode kategori button */
+body.dark-theme .kategori-btn {
+  background: linear-gradient(135deg, #7c5c4a 0%, #5a4435 100%) !important;
+  color: #ffffff !important;
+}
+
+body.dark-theme .kategori-btn:hover {
+  background: linear-gradient(135deg, #8a6a5a 0%, #6a5445 100%) !important;
+  box-shadow: 0 10px 20px rgba(124, 92, 74, 0.3) !important;
 }
 
 /* ===== TABLE INPUT STYLES ===== */
@@ -2600,5 +3563,77 @@ tr:hover {
   .user-dropdown-menu .submenu .submenu-item {
     padding: 8px 12px;
     font-size: 0.85rem;
+  }
+}
+
+/* ===== TEMA BİLDİRİMİ ===== */
+.theme-notification {
+  position: fixed;
+  top: 100px;
+  right: 20px;
+  background: linear-gradient(135deg, #7c5c4a, #5a4a3a);
+  color: white;
+  padding: 16px 24px;
+  border-radius: 16px;
+  box-shadow: 
+    0 12px 40px rgba(0,0,0,0.3),
+    0 4px 16px rgba(124, 92, 74, 0.2);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,0.2);
+  font-weight: 600;
+  font-size: 14px;
+  z-index: 9999;
+  transform: translateX(100%);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  opacity: 0;
+  max-width: 300px;
+  word-wrap: break-word;
+}
+
+.theme-notification.show {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+/* Dark mode tema bildirimi */
+body.dark-theme .theme-notification {
+  background: linear-gradient(135deg, #404040, #2c2c2c);
+  border-color: rgba(255,255,255,0.1);
+  box-shadow: 
+    0 12px 40px rgba(0,0,0,0.5),
+    0 4px 16px rgba(255,255,255,0.1);
+}
+
+/* Light mode tema bildirimi */
+body.light-theme .theme-notification {
+  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+  color: #7c5c4a;
+  border-color: rgba(124, 92, 74, 0.2);
+  box-shadow: 
+    0 12px 40px rgba(124, 92, 74, 0.15),
+    0 4px 16px rgba(124, 92, 74, 0.1);
+}
+
+/* Responsive tema bildirimi */
+@media (max-width: 768px) {
+  .theme-notification {
+    top: 80px;
+    right: 15px;
+    left: 15px;
+    max-width: none;
+    text-align: center;
+    padding: 14px 20px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 480px) {
+  .theme-notification {
+    top: 70px;
+    right: 10px;
+    left: 10px;
+    padding: 12px 18px;
+    font-size: 12px;
+    border-radius: 14px;
   }
 }

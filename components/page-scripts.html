@@ -1,4 +1,23 @@
 <!-- Page Specific Scripts -->
 <script ng-if="pageScript">
   {{pageScript}}
+</script>
+
+<!-- Global Theme Initialization -->
+<script>
+  // Her sayfada tema başlat
+  document.addEventListener('DOMContentLoaded', function() {
+    if (window.initializeTheme) {
+      window.initializeTheme();
+    }
+  });
+  
+  // AngularJS sayfa değişikliklerinde tema uygula
+  if (typeof angular !== 'undefined') {
+    angular.element(document).ready(function() {
+      if (window.initializeTheme) {
+        window.initializeTheme();
+      }
+    });
+  }
 </script> 

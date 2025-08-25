@@ -20,6 +20,12 @@
         width: 100%;
         min-height: 100vh;
       }
+      
+      /* Dark mode yemekler container */
+      body.dark-theme .yemekler-container {
+        background: rgba(44, 44, 44, 0.92) !important;
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4) !important;
+      }
       .yemekler-title-row {
         display: flex;
         align-items: center;
@@ -33,6 +39,11 @@
         font-weight: 700;
         line-height: 1;
         letter-spacing: 1px;
+      }
+      
+      /* Dark mode yemekler başlığı */
+      body.dark-theme .yemekler-title {
+        color: #ffffff !important;
       }
       .kategori-grid {
         display: grid;
@@ -63,6 +74,13 @@
         border: 2px solid transparent;
         margin-top: 35px;
       }
+      
+      /* Dark mode kategori kartları */
+      body.dark-theme .kategori-card {
+        background: linear-gradient(135deg, #2c2c2c 60%, #404040 100%) !important;
+        color: #ffffff !important;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4) !important;
+      }
       .kategori-card:hover {
         box-shadow: 0 8px 32px rgba(180, 138, 120, 0.16);
         transform: translateY(-3px) scale(1.04);
@@ -91,6 +109,17 @@
         background: linear-gradient(135deg, #b48a78, #e2d9d0);
         color: #fff;
         transform: scale(1.08);
+      }
+      
+      /* Dark mode geri butonu */
+      body.dark-theme .geri-btn {
+        background: linear-gradient(135deg, #7c5c4a, #5a4435) !important;
+        color: #ffffff !important;
+      }
+      
+      body.dark-theme .geri-btn:hover {
+        background: linear-gradient(135deg, #8a6a5a, #6a5445) !important;
+        color: #ffffff !important;
       }
     </style>
   </head>

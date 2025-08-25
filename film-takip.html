@@ -336,18 +336,11 @@
 
           <div class="filter-buttons">
             <button
-              ng-class="{'active': activeFilter === 'all'}"
-              ng-click="setFilter('all')"
+              ng-class="{'active': activeFilter === 'favorite'}"
+              ng-click="setFilter('favorite')"
               class="filter-btn"
             >
-              Tümü
-            </button>
-            <button
-              ng-class="{'active': activeFilter === 'watched'}"
-              ng-click="setFilter('watched')"
-              class="filter-btn"
-            >
-              İzlenen
+              Favoriler
             </button>
             <button
               ng-class="{'active': activeFilter === 'watchlist'}"
@@ -357,11 +350,11 @@
               İzlenecek
             </button>
             <button
-              ng-class="{'active': activeFilter === 'favorite'}"
-              ng-click="setFilter('favorite')"
+              ng-class="{'active': activeFilter === 'watched'}"
+              ng-click="setFilter('watched')"
               class="filter-btn"
             >
-              Favoriler
+              İzlenen
             </button>
           </div>
         </div>

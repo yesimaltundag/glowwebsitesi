@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Anamakine: 127.0.0.1:3306
--- Üretim Zamanı: 22 Ağu 2025, 08:09:58
+-- Üretim Zamanı: 25 Ağu 2025, 07:29:16
 -- Sunucu sürümü: 9.1.0
 -- PHP Sürümü: 8.3.14
 
@@ -536,7 +536,7 @@ INSERT INTO `dizi_takip` (`id`, `user_id`, `title`, `year`, `genre`, `poster`, `
 (17, 118, 'The Boys', 2019, 'aksiyon', 'https://preview.redd.it/2kzjj8l0om391.jpg?width=640&crop=smart&auto=webp&s=c3b05285bc3be26a383e2c4f4ec30024221a6016', 8.7, '', 4, 32, 4, 32, 1, 0, 0, 0, '2025-08-21 11:00:32', '2025-08-21 11:00:32'),
 (18, 118, 'The Witcher', 2019, 'fantastik', 'https://m.media-amazon.com/images/M/MV5BMTQ5MDU5MTktMDZkMy00NDU1LWIxM2UtODg5OGFiNmRhNDBjXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg', 8.0, '', 3, 24, 3, 24, 1, 0, 0, 0, '2025-08-21 11:01:07', '2025-08-21 11:01:07'),
 (19, 104, 'Brooklyn Nine-Nine', 2013, 'komedi', 'https://m.media-amazon.com/images/M/MV5BNzBiODQxZTUtNjc0MC00Yzc1LThmYTMtN2YwYTU3NjgxMmI4XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg', 8.4, '', 8, 153, 8, 153, 0, 0, 0, 0, '2025-08-21 13:31:42', '2025-08-21 13:31:54'),
-(21, 104, 'Breaking Bad', 2008, 'dram', 'https://thumbor.evrimagaci.org/QESXEkks0JE4VVm7Evgv_9aI-tc=/old%2Fmi_media%2Fa3bb95fb0057fdc5eb4685f6ad39e7ee.jpeg', 9.5, '', 5, 62, 2, 10, 0, 0, 0, 1, '2025-08-22 07:58:41', '2025-08-22 08:09:04');
+(21, 104, 'Breaking Bad', 2008, 'dram', 'https://thumbor.evrimagaci.org/QESXEkks0JE4VVm7Evgv_9aI-tc=/old%2Fmi_media%2Fa3bb95fb0057fdc5eb4685f6ad39e7ee.jpeg', 9.5, '', 5, 62, 2, 10, 0, 0, 0, 0, '2025-08-22 07:58:41', '2025-08-22 08:14:31');
 
 -- --------------------------------------------------------
 
@@ -748,7 +748,7 @@ CREATE TABLE IF NOT EXISTS `film_takip` (
   `is_watchlist` tinyint(1) DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=29 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Tablo döküm verisi `film_takip`
@@ -1026,9 +1026,12 @@ CREATE TABLE IF NOT EXISTS `kitap_takip` (
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `is_reading` tinyint(1) DEFAULT '0',
   `current_page` int DEFAULT '0',
+  `pages_read` int DEFAULT '0',
+  `total_pages` int DEFAULT '0',
+  `category` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 

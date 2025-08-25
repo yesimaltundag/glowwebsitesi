@@ -4514,7 +4514,7 @@ angular
     // Film listesi
     $scope.films = [];
     $scope.filteredFilms = [];
-    $scope.activeFilter = "all";
+    $scope.activeFilter = "favorite";
     $scope.searchText = "";
 
     // Modal durumları
@@ -4572,7 +4572,7 @@ angular
           $scope.filteredFilms = $scope.films.filter((film) => film.isFavorite);
           break;
         default:
-          $scope.filteredFilms = $scope.films;
+          $scope.filteredFilms = $scope.films.filter((film) => film.isFavorite);
       }
     };
 
@@ -4939,4 +4939,317 @@ angular
 
     // Sayfa yüklendiğinde dizileri yükle
     $scope.loadDizis();
+  });
+
+// ===== KITAP TAKIP CONTROLLER =====
+angular
+  .module("GirisApp")
+  .controller("KitapTakipController", function ($scope, $http) {
+    // Kullanıcı kontrolü
+    $scope.kullanici = JSON.parse(localStorage.getItem("girisYapan") || "null");
+
+    if (!$scope.kullanici) {
+      window.location.href = "index.html";
+      return;
+    }
+
+    // Kitap listesi - güvenli başlangıç değerleri
+    $scope.books = [];
+    $scope.filteredBooks = [];
+    $scope.activeFilter = "all";
+    $scope.searchText = "";
+    $scope.loading = true;
+
+    // İlk kontrolde books array'ini garanti et
+    if (!Array.isArray($scope.books)) {
+      $scope.books = [];
+    }
+    if (!Array.isArray($scope.filteredBooks)) {
+      $scope.filteredBooks = [];
+    }
+
+    // Modal durumları
+    $scope.showAddBookModal = false;
+    $scope.showBookDetailModal = false;
+    $scope.selectedBook = null;
+
+    // Yeni kitap formu
+    $scope.newBook = {
+      title: "",
+      author: "",
+      category: "",
+      cover: "",
+      rating: 0,
+      review: "",
+      isRead: false,
+      isFavorite: false,
+      isWishlist: false,
+      pagesRead: 0,
+      totalPages: 0
+    };
+
+    // İstatistikler
+    $scope.stats = {
+      okunan: 0,
+      okunacak: 0,
+      favori: 0,
+      ortalama: 0,
+    };
+
+    // Kitapları yükle
+    $scope.loadBooks = function () {
+      $scope.loading = true;
+      console.log("📚 Kitaplar yükleniyor, User ID:", $scope.kullanici.id);
+      
+      $http
+        .get("kitap_takip_api.php?user_id=" + $scope.kullanici.id)
+        .then(function (response) {
+          console.log("📡 API Response:", response.data);
+          console.log("📋 Response Type:", typeof response.data);
+          console.log("📋 Response Keys:", Object.keys(response.data || {}));
+          console.log("📋 Response Length:", response.data ? (Array.isArray(response.data) ? response.data.length : 'Not Array') : 'Null/Undefined');
+          
+          // Response'un yapısını kontrol et
+          if (response.data && Array.isArray(response.data)) {
+            $scope.books = response.data;
+            console.log("✅ Kitaplar array olarak yüklendi:", $scope.books.length, "kitap");
+          } else if (response.data && response.data.success && Array.isArray(response.data.books)) {
+            $scope.books = response.data.books;
+            console.log("✅ Kitaplar success objesinden yüklendi:", $scope.books.length, "kitap");
+          } else if (response.data && typeof response.data === 'object') {
+            // Object olarak geldi ama array değil - detaylı incele
+            console.log("🔍 Object Response Detayı:");
+            console.log("  - Success:", response.data.success);
+            console.log("  - Message:", response.data.message);
+            console.log("  - Data:", response.data.data);
+            console.log("  - Books:", response.data.books);
+            
+            // Farklı response formatlarını dene
+            if (response.data.data && Array.isArray(response.data.data)) {
+              $scope.books = response.data.data;
+              console.log("✅ Kitaplar data objesinden yüklendi:", $scope.books.length, "kitap");
+            } else if (response.data.books && Array.isArray(response.data.books)) {
+              $scope.books = response.data.books;
+              console.log("✅ Kitaplar books objesinden yüklendi:", $scope.books.length, "kitap");
+            } else {
+              console.warn("⚠️ Beklenmeyen API response formatı:", response.data);
+              $scope.books = [];
+            }
+          } else {
+            console.warn("⚠️ Beklenmeyen API response formatı:", response.data);
+            $scope.books = [];
+          }
+          
+          // Kitap örneklerini kontrol et
+          if ($scope.books.length > 0) {
+            console.log("🔍 İlk kitap örneği:", $scope.books[0]);
+            console.log("🔍 Boolean değerler:");
+            console.log("  - isRead:", $scope.books[0].isRead, typeof $scope.books[0].isRead);
+            console.log("  - isFavorite:", $scope.books[0].isFavorite, typeof $scope.books[0].isFavorite);
+            console.log("  - isWishlist:", $scope.books[0].isWishlist, typeof $scope.books[0].isWishlist);
+          }
+          
+          $scope.updateFilteredBooks();
+          $scope.updateStats();
+          $scope.loading = false;
+        })
+        .catch(function (error) {
+          console.error("❌ Kitaplar yüklenirken hata:", error);
+          showMessage("Kitaplar yüklenirken hata oluştu", "error");
+          $scope.books = []; // Hata durumunda boş array
+          $scope.filteredBooks = [];
+          $scope.loading = false;
+        });
+    };
+
+    // Filtrelenmiş kitapları güncelle
+    $scope.updateFilteredBooks = function () {
+      console.log("🔄 Filtreleme başlıyor. Aktif filtre:", $scope.activeFilter);
+      console.log("📚 Toplam kitap sayısı:", $scope.books ? $scope.books.length : 0);
+      
+      // books array'ini kontrol et
+      if (!Array.isArray($scope.books)) {
+        console.warn("❌ books is not an array:", $scope.books);
+        $scope.books = [];
+        $scope.filteredBooks = [];
+        return;
+      }
+
+      switch ($scope.activeFilter) {
+        case "read":
+          $scope.filteredBooks = $scope.books.filter((book) => {
+            const result = book && book.isRead;
+            if (book) console.log(`📖 ${book.title}: isRead=${book.isRead} (${typeof book.isRead}) -> ${result}`);
+            return result;
+          });
+          break;
+        case "wishlist":
+          $scope.filteredBooks = $scope.books.filter((book) => {
+            const result = book && book.isWishlist;
+            if (book) console.log(`📝 ${book.title}: isWishlist=${book.isWishlist} (${typeof book.isWishlist}) -> ${result}`);
+            return result;
+          });
+          break;
+        case "favorite":
+          $scope.filteredBooks = $scope.books.filter((book) => {
+            const result = book && book.isFavorite;
+            if (book) console.log(`❤️ ${book.title}: isFavorite=${book.isFavorite} (${typeof book.isFavorite}) -> ${result}`);
+            return result;
+          });
+          break;
+        default:
+          $scope.filteredBooks = $scope.books;
+      }
+      
+      console.log("✅ Filtreleme sonucu:", $scope.filteredBooks.length, "kitap");
+      if ($scope.filteredBooks.length > 0) {
+        console.log("🔍 Filtrelenmiş ilk kitap:", $scope.filteredBooks[0].title);
+      }
+    };
+
+    // İstatistikleri güncelle
+    $scope.updateStats = function () {
+      // books array'ini kontrol et
+      if (!Array.isArray($scope.books)) {
+        $scope.stats = {
+          okunan: 0,
+          okunacak: 0,
+          favori: 0,
+          ortalama: "0.0"
+        };
+        return;
+      }
+
+      $scope.stats.okunan = $scope.books.filter((book) => book && book.isRead).length;
+      $scope.stats.okunacak = $scope.books.filter((book) => book && book.isWishlist).length;
+      $scope.stats.favori = $scope.books.filter((book) => book && book.isFavorite).length;
+
+      const ratedBooks = $scope.books.filter((book) => book && book.rating && book.rating > 0);
+      if (ratedBooks.length > 0) {
+        const totalRating = ratedBooks.reduce(
+          (sum, book) => sum + parseFloat(book.rating || 0),
+          0
+        );
+        $scope.stats.ortalama = (totalRating / ratedBooks.length).toFixed(1);
+      } else {
+        $scope.stats.ortalama = "0.0";
+      }
+    };
+
+    // Filtre değiştir
+    $scope.setFilter = function (filter) {
+      $scope.activeFilter = filter;
+      $scope.updateFilteredBooks();
+    };
+
+    // Favori durumunu değiştir
+    $scope.toggleFavorite = function (book) {
+      book.isFavorite = !book.isFavorite;
+      $scope.updateBook(book);
+    };
+
+    // Okundu durumunu değiştir
+    $scope.toggleRead = function (book) {
+      book.isRead = !book.isRead;
+      // Okundu işaretlenirse okunacaklar listesinden çıkar
+      if (book.isRead && book.isWishlist) {
+        book.isWishlist = false;
+      }
+      $scope.updateBook(book);
+    };
+
+    // Okunacak durumunu değiştir
+    $scope.toggleWishlist = function (book) {
+      book.isWishlist = !book.isWishlist;
+      // Okunacak işaretlenirse okundu durumunu kaldır
+      if (book.isWishlist && book.isRead) {
+        book.isRead = false;
+      }
+      $scope.updateBook(book);
+    };
+
+    // Kitap güncelle
+    $scope.updateBook = function (book) {
+      $http
+        .put("kitap_takip_api.php", {
+          user_id: $scope.kullanici.id,
+          title: book.title,
+          author: book.author,
+          category: book.category,
+          cover: book.cover,
+          rating: book.rating,
+          review: book.review,
+          isRead: book.isRead,
+          isFavorite: book.isFavorite,
+          isWishlist: book.isWishlist,
+          pagesRead: book.pagesRead,
+          totalPages: book.totalPages
+        })
+        .then(function (response) {
+          if (response.data.success) {
+            $scope.updateFilteredBooks();
+            $scope.updateStats();
+            showMessage("Kitap başarıyla güncellendi", "success");
+          } else {
+            showMessage(response.data.message || "Güncelleme başarısız", "error");
+          }
+        })
+        .catch(function (error) {
+          console.error("Kitap güncellenirken hata:", error);
+          showMessage("Kitap güncellenirken hata oluştu", "error");
+        });
+    };
+
+    // Kitap detayını aç
+    $scope.openBookDetail = function (book) {
+      // Kitap detay sayfasına yönlendir
+      if (book.kitap_id) {
+        // Kitaplar tablosunda karşılık gelen kitap varsa detay sayfasına git
+        window.location.href = "kitap-detay.html?id=" + book.kitap_id;
+      } else {
+        // Eğer kitap_id yoksa kitap adına göre arama yap
+        var cleanTitle = book.title
+          .toLowerCase()
+          .replace(/[^a-zA-Z0-9çğıöşüÇĞIİÖŞÜ]/g, "-")
+          .replace(/-+/g, "-")
+          .replace(/^-|-$/g, "");
+        window.location.href = "kitap/" + encodeURIComponent(cleanTitle);
+      }
+    };
+
+    // Mesaj gösterme fonksiyonu
+    function showMessage(message, type) {
+      const messageDiv = document.createElement("div");
+      messageDiv.className = `message ${type}`;
+      messageDiv.textContent = message;
+      messageDiv.style.cssText = `
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 15px 25px;
+      border-radius: 8px;
+      color: white;
+      font-weight: 600;
+      z-index: 10001;
+      animation: slideIn 0.3s ease;
+    `;
+
+      if (type === "success") {
+        messageDiv.style.background = "#51cf66";
+      } else if (type === "error") {
+        messageDiv.style.background = "#ff6b6b";
+      } else if (type === "warning") {
+        messageDiv.style.background = "#ffd43b";
+        messageDiv.style.color = "#333";
+      }
+
+      document.body.appendChild(messageDiv);
+
+      setTimeout(() => {
+        messageDiv.remove();
+      }, 3000);
+    }
+
+    // Sayfa yüklendiğinde kitapları yükle
+    $scope.loadBooks();
   });

@@ -133,6 +133,125 @@
         white-space: pre-line;
       }
 
+      /* Kitap Takip Butonları */
+      .kitap-takip-buttons {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        display: flex;
+        gap: 10px;
+        z-index: 10;
+      }
+
+      .takip-btn {
+        display: flex !important;
+        align-items: center !important;
+        gap: 8px !important;
+        padding: 10px 16px !important;
+        border: none !important;
+        border-radius: 25px !important;
+        font-size: 0.9rem !important;
+        font-weight: 600 !important;
+        cursor: pointer !important;
+        transition: all 0.3s ease !important;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1) !important;
+        backdrop-filter: blur(10px) !important;
+      }
+
+      .favori-btn {
+        background: linear-gradient(135deg, #f8e0e1, #e2d9d0) !important;
+        color: #7c5c4a !important;
+        border: 2px solid rgba(124, 92, 74, 0.2) !important;
+      }
+
+      .favori-btn:hover {
+        background: linear-gradient(135deg, #e2d9d0, #d1c6b1) !important;
+        transform: translateY(-2px) !important;
+        box-shadow: 0 6px 20px rgba(124, 92, 74, 0.2) !important;
+      }
+
+      .favori-btn.active {
+        background: linear-gradient(135deg, #7c5c4a, #b48a78) !important;
+        color: white !important;
+        box-shadow: 0 6px 20px rgba(124, 92, 74, 0.3) !important;
+        transform: scale(1.05) !important;
+        border: 2px solid #fff !important;
+        position: relative;
+      }
+
+      .okunan-btn {
+        background: linear-gradient(135deg, #f8e0e1, #e2d9d0) !important;
+        color: #7c5c4a !important;
+        border: 2px solid rgba(124, 92, 74, 0.2) !important;
+      }
+
+      .okunan-btn:hover {
+        background: linear-gradient(135deg, #e2d9d0, #d1c6b1) !important;
+        transform: translateY(-2px) !important;
+        box-shadow: 0 6px 20px rgba(124, 92, 74, 0.2) !important;
+      }
+
+      .okunan-btn.active {
+        background: linear-gradient(135deg, #7c5c4a, #b48a78) !important;
+        color: white !important;
+        box-shadow: 0 6px 20px rgba(124, 92, 74, 0.3) !important;
+        transform: scale(1.05) !important;
+        border: 2px solid #fff !important;
+        position: relative;
+      }
+
+      .okunacak-btn {
+        background: linear-gradient(135deg, #f8e0e1, #e2d9d0) !important;
+        color: #7c5c4a !important;
+        border: 2px solid rgba(124, 92, 74, 0.2) !important;
+      }
+
+      .okunacak-btn:hover {
+        background: linear-gradient(135deg, #e2d9d0, #d1c6b1) !important;
+        transform: translateY(-2px) !important;
+        box-shadow: 0 6px 20px rgba(124, 92, 74, 0.2) !important;
+      }
+
+      .okunacak-btn.active {
+        background: linear-gradient(135deg, #7c5c4a, #b48a78) !important;
+        color: white !important;
+        box-shadow: 0 6px 20px rgba(124, 92, 74, 0.3) !important;
+        transform: scale(1.05) !important;
+        border: 2px solid #fff !important;
+        position: relative;
+      }
+
+      /* Aktif buton göstergesi */
+      .takip-btn.active::after {
+        content: "✓" !important;
+        position: absolute !important;
+        top: -8px !important;
+        right: -8px !important;
+        background: #fff !important;
+        color: #333 !important;
+        border-radius: 50% !important;
+        width: 24px !important;
+        height: 24px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        font-size: 14px !important;
+        font-weight: bold !important;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3) !important;
+        z-index: 10 !important;
+      }
+
+      .takip-btn svg {
+        width: 16px !important;
+        height: 16px !important;
+      }
+
+      .takip-btn:disabled {
+        opacity: 0.6 !important;
+        cursor: not-allowed !important;
+        transform: none !important;
+      }
+
       @media (max-width: 768px) {
         .kitap-container {
           margin: 0;
@@ -181,6 +300,19 @@
           top: 70px;
           left: 20px;
         }
+
+        .kitap-takip-buttons {
+          position: static;
+          margin-bottom: 20px;
+          justify-content: center;
+          margin-left: 60px;
+          margin-right: 10px;
+        }
+
+        .takip-btn {
+          padding: 8px 12px !important;
+          font-size: 0.8rem !important;
+        }
       }
     </style>
   </head>
@@ -191,6 +323,53 @@
         <button class="geri-btn" ng-click="geriDon()" title="Geri Dön">
           ←
         </button>
+
+        <!-- Kitap Takip Butonları -->
+        <div
+          class="kitap-takip-buttons"
+          ng-if="kullanici && kitap"
+        >
+          <button
+            class="takip-btn favori-btn"
+            ng-class="{'active': kitapTakipDurumu.isFavorite}"
+            ng-click="toggleFavorite()"
+            ng-disabled="takipLoading"
+            title="Favorilere Ekle/Çıkar"
+          >
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
+              />
+            </svg>
+            {{kitapTakipDurumu.isFavorite ? 'Favorilerde' : 'Favorilere Ekle'}}
+          </button>
+
+          <button
+            class="takip-btn okunan-btn"
+            ng-class="{'active': kitapTakipDurumu.isRead}"
+            ng-click="toggleRead()"
+            ng-disabled="takipLoading"
+            title="Okundu Olarak İşaretle"
+          >
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+            </svg>
+            {{kitapTakipDurumu.isRead ? 'Okundu' : 'Okundu Olarak İşaretle'}}
+          </button>
+
+          <button
+            class="takip-btn okunacak-btn"
+            ng-class="{'active': kitapTakipDurumu.isWishlist}"
+            ng-click="toggleWishlist()"
+            ng-disabled="takipLoading"
+            title="Okunacaklar Listesine Ekle"
+          >
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+            </svg>
+            {{kitapTakipDurumu.isWishlist ? 'Okunacaklarda' : 'Okunacaklara Ekle'}}
+          </button>
+        </div>
 
         <div class="kitap-header">
           <img class="kitap-foto" ng-src="{{kitap.foto}}" alt="{{kitap.ad}}" />
@@ -285,6 +464,14 @@
             return;
           }
 
+          // Kitap takip durumu
+          $scope.kitapTakipDurumu = {
+            isFavorite: false,
+            isRead: false,
+            isWishlist: false,
+          };
+          $scope.takipLoading = false;
+
           // URL'den kitap adını al (temiz URL için)
           function getKitapAdFromURL() {
             // Önce query parameter'dan dene (eski format için)
@@ -375,6 +562,9 @@
                 };
 
                 console.log("Scope Kitap:", $scope.kitap); // Debug için
+                
+                // Kitap yüklendikten sonra takip durumunu kontrol et
+                $scope.checkKitapTakipDurumu();
               } else {
                 // Veritabanında bulunamazsa varsayılan bilgiler
                 $scope.kitap = {
@@ -388,6 +578,9 @@
                   isbn: "Bilinmiyor",
                   tanitim: `Bu kitap hakkında henüz detaylı bilgi bulunmamaktadır. Kitap adı: "${kitapAd}"`,
                 };
+                
+                // Kitap yüklendikten sonra takip durumunu kontrol et
+                $scope.checkKitapTakipDurumu();
               }
             })
             .catch(function (error) {
@@ -404,7 +597,259 @@
                 isbn: "Bilinmiyor",
                 tanitim: `Bu kitap hakkında henüz detaylı bilgi bulunmamaktadır. Kitap adı: "${kitapAd}"`,
               };
+              
+              // Kitap yüklendikten sonra takip durumunu kontrol et
+              $scope.checkKitapTakipDurumu();
             });
+
+          // Kitap takip durumunu kontrol et
+          $scope.checkKitapTakipDurumu = function () {
+            if (!$scope.kullanici || !$scope.kitap) return;
+
+            var apiUrl = "/kitap_takip_api.php?user_id=" + encodeURIComponent($scope.kullanici.id);
+            console.log("API URL for check:", apiUrl);
+            console.log("Aradığımız kitap adı:", $scope.kitap.ad);
+
+            $http
+              .get(apiUrl)
+              .then(function (response) {
+                console.log("Takip durumu response:", response.data);
+                
+                if (response.data && Array.isArray(response.data)) {
+                  console.log("Response'daki tüm kitaplar:", response.data.map(k => k.title));
+                  
+                  var kitapTakip = response.data.find(function (k) {
+                    // Hem tam eşleşme hem de case-insensitive eşleşme dene
+                    return k.title === $scope.kitap.ad || 
+                           k.title.toLowerCase() === $scope.kitap.ad.toLowerCase();
+                  });
+                  
+                  console.log("Bulunan kitap:", kitapTakip);
+                  
+                  if (kitapTakip) {
+                    $scope.kitapTakipDurumu = {
+                      isFavorite: !!(kitapTakip.isFavorite || kitapTakip.is_favorite),
+                      isRead: !!(kitapTakip.isRead || kitapTakip.is_read),
+                      isWishlist: !!(kitapTakip.isWishlist || kitapTakip.is_wishlist),
+                    };
+                    console.log("Güncellenen takip durumu:", $scope.kitapTakipDurumu);
+                  } else {
+                    console.log("Kitap takip listesinde bulunamadı, varsayılan değerler kullanılıyor");
+                    $scope.kitapTakipDurumu = {
+                      isFavorite: false,
+                      isRead: false,
+                      isWishlist: false,
+                    };
+                  }
+                } else {
+                  console.log("API'den beklenen array formatında veri gelmedi:", response.data);
+                  $scope.kitapTakipDurumu = {
+                    isFavorite: false,
+                    isRead: false,
+                    isWishlist: false,
+                  };
+                }
+              })
+              .catch(function (error) {
+                console.error("Takip durumu kontrol hatası:", error);
+                // Hata durumunda varsayılan değerler kalsın
+                $scope.kitapTakipDurumu = {
+                  isFavorite: false,
+                  isRead: false,
+                  isWishlist: false,
+                };
+              });
+          };
+
+          // Favoriye ekleme/çıkarma
+          $scope.toggleFavorite = function () {
+            if (!$scope.kullanici || $scope.takipLoading || !$scope.kitap) return;
+
+            $scope.takipLoading = true;
+            var kitapData = {
+              user_id: $scope.kullanici.id,
+              title: $scope.kitap.ad,
+              author: $scope.kitap.yazar,
+              category: $scope.kitap.kategori,
+              cover: $scope.kitap.foto,
+              rating: 0,
+              review: "",
+              isRead: $scope.kitapTakipDurumu.isRead,
+              isFavorite: !$scope.kitapTakipDurumu.isFavorite,
+              isWishlist: $scope.kitapTakipDurumu.isWishlist,
+              pagesRead: 0,
+              totalPages: parseInt($scope.kitap.sayfa) || 0,
+            };
+
+            console.log("Favori kitap data:", kitapData);
+
+            // Her zaman POST kullan - API kendi içinde UPDATE/INSERT karar verir
+            $http.post("/kitap_takip_api.php", kitapData)
+              .then(function (response) {
+                console.log("Favori response:", response.data);
+                if (response.data && response.data.success) {
+                  // API'den gelen action'a göre işlem yap
+                  if (response.data.action === 'deleted') {
+                    // Kitap silindi - tüm durumları false yap
+                    $scope.kitapTakipDurumu.isFavorite = false;
+                    $scope.kitapTakipDurumu.isRead = false;
+                    $scope.kitapTakipDurumu.isWishlist = false;
+                    showMessage("Kitap takip listesinden tamamen çıkarıldı", "success");
+                  } else {
+                    // Normal güncelleme
+                    $scope.kitapTakipDurumu.isFavorite = !$scope.kitapTakipDurumu.isFavorite;
+                    var mesaj = $scope.kitapTakipDurumu.isFavorite
+                      ? "Kitap favorilere eklendi"
+                      : "Kitap favorilerden çıkarıldı";
+                    showMessage(mesaj, "success");
+                  }
+                } else {
+                  showMessage(response.data.message || "İşlem başarısız", "error");
+                }
+              })
+              .catch(function (error) {
+                console.error("Favori işlemi hatası:", error);
+                showMessage("API bağlantı hatası: " + (error.statusText || "Bilinmeyen hata"), "error");
+              })
+              .finally(function () {
+                $scope.takipLoading = false;
+              });
+          };
+
+          // Okundu işaretleme
+          $scope.toggleRead = function () {
+            if (!$scope.kullanici || $scope.takipLoading || !$scope.kitap) return;
+
+            $scope.takipLoading = true;
+            var kitapData = {
+              user_id: $scope.kullanici.id,
+              title: $scope.kitap.ad,
+              author: $scope.kitap.yazar,
+              category: $scope.kitap.kategori,
+              cover: $scope.kitap.foto,
+              rating: 0,
+              review: "",
+              isRead: !$scope.kitapTakipDurumu.isRead,
+              isFavorite: $scope.kitapTakipDurumu.isFavorite,
+              isWishlist: $scope.kitapTakipDurumu.isWishlist,
+              pagesRead: !$scope.kitapTakipDurumu.isRead ? parseInt($scope.kitap.sayfa) || 0 : 0,
+              totalPages: parseInt($scope.kitap.sayfa) || 0,
+            };
+
+            console.log("Okundu kitap data:", kitapData);
+
+            $http.post("/kitap_takip_api.php", kitapData)
+              .then(function (response) {
+                console.log("Okundu response:", response.data);
+                if (response.data && response.data.success) {
+                  // API'den gelen action'a göre işlem yap
+                  if (response.data.action === 'deleted') {
+                    // Kitap silindi - tüm durumları false yap
+                    $scope.kitapTakipDurumu.isFavorite = false;
+                    $scope.kitapTakipDurumu.isRead = false;
+                    $scope.kitapTakipDurumu.isWishlist = false;
+                    showMessage("Kitap takip listesinden tamamen çıkarıldı", "success");
+                  } else {
+                    // Normal güncelleme
+                    $scope.kitapTakipDurumu.isRead = !$scope.kitapTakipDurumu.isRead;
+                    var mesaj = $scope.kitapTakipDurumu.isRead
+                      ? "Kitap okundu olarak işaretlendi"
+                      : "Kitap okunmadı olarak işaretlendi";
+                    showMessage(mesaj, "success");
+                  }
+                } else {
+                  showMessage(response.data.message || "İşlem başarısız", "error");
+                }
+              })
+              .catch(function (error) {
+                console.error("Okundu işlemi hatası:", error);
+                showMessage("API bağlantı hatası: " + (error.statusText || "Bilinmeyen hata"), "error");
+              })
+              .finally(function () {
+                $scope.takipLoading = false;
+              });
+          };
+
+          // Okunacaklar listesine ekleme/çıkarma
+          $scope.toggleWishlist = function () {
+            if (!$scope.kullanici || $scope.takipLoading || !$scope.kitap) return;
+
+            $scope.takipLoading = true;
+            var kitapData = {
+              user_id: $scope.kullanici.id,
+              title: $scope.kitap.ad,
+              author: $scope.kitap.yazar,
+              category: $scope.kitap.kategori,
+              cover: $scope.kitap.foto,
+              rating: 0,
+              review: "",
+              isRead: $scope.kitapTakipDurumu.isRead,
+              isFavorite: $scope.kitapTakipDurumu.isFavorite,
+              isWishlist: !$scope.kitapTakipDurumu.isWishlist,
+              pagesRead: 0,
+              totalPages: parseInt($scope.kitap.sayfa) || 0,
+            };
+
+            console.log("Okunacaklar kitap data:", kitapData);
+
+            $http.post("/kitap_takip_api.php", kitapData)
+              .then(function (response) {
+                console.log("Okunacaklar response:", response.data);
+                if (response.data && response.data.success) {
+                  // API'den gelen action'a göre işlem yap
+                  if (response.data.action === 'deleted') {
+                    // Kitap silindi - tüm durumları false yap
+                    $scope.kitapTakipDurumu.isFavorite = false;
+                    $scope.kitapTakipDurumu.isRead = false;
+                    $scope.kitapTakipDurumu.isWishlist = false;
+                    showMessage("Kitap takip listesinden tamamen çıkarıldı", "success");
+                  } else {
+                    // Normal güncelleme
+                    $scope.kitapTakipDurumu.isWishlist = !$scope.kitapTakipDurumu.isWishlist;
+                    var mesaj = $scope.kitapTakipDurumu.isWishlist
+                      ? "Kitap okunacaklar listesine eklendi"
+                      : "Kitap okunacaklar listesinden çıkarıldı";
+                    showMessage(mesaj, "success");
+                  }
+                } else {
+                  showMessage(response.data.message || "İşlem başarısız", "error");
+                }
+              })
+              .catch(function (error) {
+                console.error("Okunacaklar işlemi hatası:", error);
+                showMessage("API bağlantı hatası: " + (error.statusText || "Bilinmeyen hata"), "error");
+              })
+              .finally(function () {
+                $scope.takipLoading = false;
+              });
+          };
+
+          // Mesaj gösterme fonksiyonu
+          function showMessage(message, type) {
+            const messageDiv = document.createElement("div");
+            messageDiv.className = "message " + type;
+            messageDiv.textContent = message;
+            messageDiv.style.cssText = `
+              position: fixed;
+              top: 80px;
+              right: 20px;
+              z-index: 10000;
+              padding: 12px 20px;
+              border-radius: 8px;
+              font-weight: 600;
+              box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+              transition: all 0.3s ease;
+              ${type === "success" ? "background: #d4edda; color: #155724; border: 1px solid #c3e6cb;" : ""}
+              ${type === "error" ? "background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb;" : ""}
+            `;
+            document.body.appendChild(messageDiv);
+            
+            setTimeout(() => {
+              messageDiv.style.opacity = "0";
+              messageDiv.style.transform = "translateX(100%)";
+              setTimeout(() => messageDiv.remove(), 300);
+            }, 3000);
+          }
 
           $scope.geriDon = function () {
             window.history.back();

@@ -12,17 +12,18 @@
         max-width: 100%;
         margin: 40px auto;
         padding: 32px 40px;
-        background: rgba(255, 255, 255, 0.92);
+        background: var(--card-bg, rgba(255, 255, 255, 0.92));
         border-radius: 18px;
-        box-shadow: 0 8px 32px rgba(124, 92, 74, 0.1);
+        box-shadow: 0 8px 32px var(--shadow-color, rgba(124, 92, 74, 0.1));
         backdrop-filter: blur(10px);
         position: relative;
         width: 100%;
+        border: 1px solid var(--border-color, rgba(124, 92, 74, 0.1));
       }
 
       .geri-btn {
-        background: linear-gradient(135deg, #e2d9d0, #b48a78);
-        color: #7c5c4a;
+        background: linear-gradient(135deg, var(--button-bg, #e2d9d0), var(--text-secondary, #b48a78));
+        color: var(--text-primary, #7c5c4a);
         border: none;
         border-radius: 50%;
         width: 45px;
@@ -39,12 +40,14 @@
         top: 20px;
         left: 20px;
         margin: 0;
+        box-shadow: 0 4px 12px var(--shadow-color, rgba(0, 0, 0, 0.1));
       }
 
       .geri-btn:hover {
-        background: linear-gradient(135deg, #b48a78, #e2d9d0);
-        color: #fff;
+        background: linear-gradient(135deg, var(--text-secondary, #b48a78), var(--button-bg, #e2d9d0));
+        color: var(--bg-primary, #fff);
         transform: scale(1.1);
+        box-shadow: 0 6px 16px var(--shadow-color, rgba(0, 0, 0, 0.2));
       }
 
       .resim-detay-header {
@@ -54,23 +57,23 @@
       }
 
       .resim-detay-baslik {
-        color: #7c5c4a;
+        color: var(--text-primary, #7c5c4a);
         font-size: 2.5rem;
         font-weight: 700;
         letter-spacing: 2px;
         margin-bottom: 16px;
-        text-shadow: 0 2px 4px rgba(124, 92, 74, 0.1);
+        text-shadow: 0 2px 4px var(--shadow-color, rgba(124, 92, 74, 0.1));
       }
 
       .resim-detay-sanatci {
-        color: #b48a78;
+        color: var(--text-secondary, #b48a78);
         font-size: 1.3rem;
         font-weight: 600;
         margin-bottom: 8px;
       }
 
       .resim-detay-tarih {
-        color: #999;
+        color: var(--text-secondary, #999);
         font-size: 1.1rem;
         margin-bottom: 30px;
       }
@@ -86,8 +89,9 @@
         position: relative;
         border-radius: 16px;
         overflow: hidden;
-        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 12px 32px var(--shadow-color, rgba(0, 0, 0, 0.2));
         transition: transform 0.3s ease;
+        border: 1px solid var(--border-color, rgba(0, 0, 0, 0.1));
       }
 
       .resim-detay-img-container:hover {
@@ -106,101 +110,165 @@
       }
 
       .resim-detay-bilgi h3 {
-        color: #7c5c4a;
+        color: var(--text-primary, #7c5c4a);
         font-size: 1.5rem;
         font-weight: 700;
-        margin-bottom: 20px;
-        border-bottom: 3px solid #e2d9d0;
-        padding-bottom: 10px;
+        margin-bottom: 16px;
+        border-bottom: 2px solid var(--border-color, rgba(180, 138, 120, 0.3));
+        padding-bottom: 8px;
       }
 
       .resim-detay-tarihce {
-        color: #666;
-        font-size: 1.1rem;
-        line-height: 1.8;
+        color: var(--text-secondary, #666);
+        font-size: 1rem;
+        line-height: 1.7;
+        margin-bottom: 24px;
         text-align: justify;
-        margin-bottom: 30px;
       }
 
       .resim-detay-ozellikler {
-        background: linear-gradient(135deg, #f8e0e1 0%, #e2d9d0 100%);
-        border-radius: 12px;
-        padding: 20px;
-        margin-top: 20px;
+        margin-bottom: 24px;
       }
 
       .resim-detay-ozellikler h4 {
-        color: #7c5c4a;
+        color: var(--text-primary, #7c5c4a);
         font-size: 1.2rem;
         font-weight: 600;
-        margin-bottom: 15px;
+        margin-bottom: 12px;
       }
 
-      .ozellik-item {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 10px;
-        padding: 8px 0;
-        border-bottom: 1px solid rgba(124, 92, 74, 0.1);
-      }
-
-      .ozellik-label {
-        color: #7c5c4a;
-        font-weight: 600;
-        font-size: 0.95rem;
-      }
-
-      .ozellik-value {
-        color: #b48a78;
+      .resim-detay-ozellik {
+        background: var(--bg-secondary, rgba(248, 248, 248, 0.8));
+        color: var(--text-secondary, #b48a78);
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-size: 0.9rem;
         font-weight: 500;
-        font-size: 0.95rem;
+        margin: 4px 8px 4px 0;
+        display: inline-block;
+        border: 1px solid var(--border-color, rgba(180, 138, 120, 0.2));
       }
 
       .resim-detay-etiketler {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-        margin-top: 20px;
+        margin-top: 24px;
       }
 
-      .etiket {
-        background: linear-gradient(135deg, #b48a78, #e2d9d0);
-        color: white;
-        padding: 6px 12px;
+      .resim-detay-etiket {
+        background: linear-gradient(135deg, var(--button-bg, #e2d9d0), var(--text-secondary, #b48a78));
+        color: var(--text-primary, #7c5c4a);
+        padding: 6px 14px;
         border-radius: 20px;
         font-size: 0.85rem;
-        font-weight: 500;
-        box-shadow: 0 2px 8px rgba(180, 138, 120, 0.3);
+        font-weight: 600;
+        margin: 4px 8px 4px 0;
+        display: inline-block;
+        border: 1px solid var(--border-color, rgba(180, 138, 120, 0.2));
       }
 
       .resim-detay-actions {
-        display: flex;
-        gap: 15px;
-        margin-top: 30px;
-        justify-content: center;
+        margin-top: 32px;
+        text-align: center;
       }
 
-      .action-btn {
-        background: linear-gradient(135deg, #b48a78, #e2d9d0);
-        color: white;
+      .resim-detay-btn {
+        background: linear-gradient(135deg, var(--button-bg, #e2d9d0), var(--text-secondary, #b48a78));
+        color: var(--text-primary, #7c5c4a);
         border: none;
         border-radius: 25px;
         padding: 12px 24px;
         font-size: 1rem;
         font-weight: 600;
         cursor: pointer;
+        margin: 0 8px;
         transition: all 0.3s ease;
-        box-shadow: 0 4px 12px rgba(180, 138, 120, 0.3);
+        box-shadow: 0 4px 12px var(--shadow-color, rgba(0, 0, 0, 0.1));
       }
 
-      .action-btn:hover {
+      .resim-detay-btn:hover {
+        background: linear-gradient(135deg, var(--text-secondary, #b48a78), var(--button-bg, #e2d9d0));
+        color: var(--bg-primary, #fff);
         transform: translateY(-2px);
-        box-shadow: 0 6px 16px rgba(180, 138, 120, 0.4);
+        box-shadow: 0 6px 16px var(--shadow-color, rgba(0, 0, 0, 0.2));
       }
 
-      .action-btn.secondary {
+      /* Dark mode özel stilleri */
+      body.dark-theme .resim-detay-container {
+        background: rgba(44, 44, 44, 0.95);
+        border-color: rgba(64, 64, 64, 0.3);
+      }
+
+      body.dark-theme .resim-detay-ozellik {
+        background: rgba(64, 64, 64, 0.8);
+        color: #b0b0b0;
+        border-color: rgba(96, 96, 96, 0.4);
+      }
+
+      body.dark-theme .resim-detay-etiket {
+        background: linear-gradient(135deg, #404040, #606060);
+        color: #ffffff;
+        border-color: rgba(96, 96, 96, 0.4);
+      }
+
+      body.dark-theme .resim-detay-btn {
+        background: linear-gradient(135deg, #404040, #606060);
+        color: #ffffff;
+        border: 1px solid rgba(96, 96, 96, 0.3);
+      }
+
+      body.dark-theme .resim-detay-btn:hover {
+        background: linear-gradient(135deg, #606060, #808080);
+        border-color: rgba(128, 128, 128, 0.5);
+      }
+
+      body.dark-theme .geri-btn {
+        background: linear-gradient(135deg, #404040, #606060);
+        color: #ffffff;
+        border: 1px solid rgba(96, 96, 96, 0.3);
+      }
+
+      body.dark-theme .geri-btn:hover {
+        background: linear-gradient(135deg, #606060, #808080);
+        border-color: rgba(128, 128, 128, 0.5);
+      }
+
+      /* Light mode özel stilleri */
+      body.light-theme .resim-detay-container {
+        background: rgba(255, 255, 255, 0.95);
+        border-color: rgba(222, 226, 230, 0.3);
+      }
+
+      body.light-theme .resim-detay-ozellik {
+        background: rgba(248, 248, 248, 0.8);
+        color: #b48a78;
+        border-color: rgba(180, 138, 120, 0.2);
+      }
+
+      body.light-theme .resim-detay-etiket {
         background: linear-gradient(135deg, #e2d9d0, #b48a78);
         color: #7c5c4a;
+        border-color: rgba(180, 138, 120, 0.2);
+      }
+
+      body.light-theme .resim-detay-btn {
+        background: linear-gradient(135deg, #e2d9d0, #b48a78);
+        color: #7c5c4a;
+        border-color: rgba(180, 138, 120, 0.2);
+      }
+
+      body.light-theme .resim-detay-btn:hover {
+        background: linear-gradient(135deg, #b48a78, #e2d9d0);
+        color: #fff;
+      }
+
+      body.light-theme .geri-btn {
+        background: linear-gradient(135deg, #e2d9d0, #b48a78);
+        color: #7c5c4a;
+        border-color: rgba(180, 138, 120, 0.2);
+      }
+
+      body.light-theme .geri-btn:hover {
+        background: linear-gradient(135deg, #b48a78, #e2d9d0);
+        color: #fff;
       }
 
       @media (max-width: 768px) {
@@ -208,34 +276,26 @@
           padding: 20px;
           margin: 20px;
         }
-
         .resim-detay-baslik {
           font-size: 2rem;
         }
-
         .resim-detay-content {
           grid-template-columns: 1fr;
-          gap: 30px;
+          gap: 24px;
         }
-
         .resim-detay-img {
           height: 300px;
         }
-
         .geri-btn {
           width: 45px;
           height: 45px;
           font-size: 18px;
         }
-
-        .resim-detay-actions {
-          flex-direction: column;
-          align-items: center;
-        }
-
-        .action-btn {
-          width: 100%;
-          max-width: 200px;
+      }
+      @media (max-width: 600px) {
+        .resim-detay-container {
+          padding: 20px;
+          max-width: 100%;
         }
       }
     </style>

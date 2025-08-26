@@ -87,6 +87,8 @@
                 <a href="/heykeller.html" class="submenu-item">🗿 Heykeller</a>
                 <a href="/mimari.html" class="submenu-item">🏛️ Mimari</a>
                 <a href="/fotograf.html" class="submenu-item">📸 Fotoğraf</a>
+                <a href="/dans.html" class="submenu-item">💃 Dans</a>
+                <a href="/muzik-turleri.html" class="submenu-item">🎵 Müzik</a>
               </div>
             </div>
 
@@ -180,11 +182,26 @@
     </nav>
 
     <div class="theme-selector">
-      <select ng-model="selectedTheme" ng-change="changeTheme()" class="theme-dropdown" title="Tema Seçin">
-        <option value="default">🌅 Varsayılan</option>
-        <option value="light">☀️ Açık Tema</option>
-        <option value="dark">🌙 Koyu Tema</option>
-      </select>
+      <div class="theme-dropdown" ng-click="toggleThemeMenu()" title="Tema Seçin">
+        <span class="theme-text">
+          <span ng-if="selectedTheme === 'default'">🌅 Varsayılan</span>
+          <span ng-if="selectedTheme === 'light'">☀️ Açık Tema</span>
+          <span ng-if="selectedTheme === 'dark'">🌙 Koyu Tema</span>
+        </span>
+        <span class="theme-arrow">⌄</span>
+      </div>
+      
+      <div class="theme-dropdown-menu" ng-class="{'show': themeMenuOpen}">
+        <div class="theme-option" ng-click="changeTheme('default')" ng-class="{'active': selectedTheme === 'default'}" data-theme="default">
+          🌅 Varsayılan
+        </div>
+        <div class="theme-option" ng-click="changeTheme('light')" ng-class="{'active': selectedTheme === 'light'}" data-theme="light">
+          ☀️ Açık Tema
+        </div>
+        <div class="theme-option" ng-click="changeTheme('dark')" ng-class="{'active': selectedTheme === 'dark'}" data-theme="dark">
+          🌙 Koyu Tema
+        </div>
+      </div>
     </div>
 
     <div class="auth-section">

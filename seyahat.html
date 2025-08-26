@@ -12,6 +12,12 @@
         background: linear-gradient(135deg, #f8e0e1 0%, #e2d9d0 100%);
         min-height: 100vh;
       }
+      
+      /* Dark theme body background */
+      body.dark-theme {
+        background: linear-gradient(135deg, #2c2c2c 0%, #1a1a1a 100%) !important;
+      }
+      
       .seyahat-container {
         max-width: 100%;
         margin: 60px auto;
@@ -23,6 +29,13 @@
         width: 100%;
         position: relative;
       }
+      
+      /* Dark theme container */
+      body.dark-theme .seyahat-container {
+        background: rgba(44, 44, 44, 0.82) !important;
+        box-shadow: 0 16px 48px rgba(0, 0, 0, 0.4) !important;
+      }
+      
       .seyahat-title {
         color: #7c5c4a;
         font-size: 3.5rem;
@@ -33,6 +46,13 @@
         text-align: center;
         text-shadow: 0 4px 24px rgba(124, 92, 74, 0.08);
       }
+      
+      /* Dark theme title */
+      body.dark-theme .seyahat-title {
+        color: #e0e0e0 !important;
+        text-shadow: 0 4px 24px rgba(0, 0, 0, 0.3) !important;
+      }
+      
       .kategori-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -57,11 +77,27 @@
         justify-content: center;
         text-align: center;
       }
+      
+      /* Dark theme cards */
+      body.dark-theme .kategori-card {
+        background: rgba(44, 44, 44, 0.9) !important;
+        border-color: rgba(255, 255, 255, 0.1) !important;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3) !important;
+      }
+      
       .kategori-card:hover {
         transform: translateY(-4px);
         box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
         border-color: rgba(124, 92, 74, 0.3);
       }
+      
+      /* Dark theme card hover */
+      body.dark-theme .kategori-card:hover {
+        background: rgba(60, 60, 60, 0.95) !important;
+        border-color: rgba(255, 255, 255, 0.2) !important;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4) !important;
+      }
+      
       .kategori-card .kategori-ikon {
         font-size: 3rem;
         margin-bottom: 16px;
@@ -74,17 +110,35 @@
         margin-bottom: 8px;
         line-height: 1.3;
       }
+      
+      /* Dark theme card title */
+      body.dark-theme .kategori-card-title {
+        color: #e0e0e0 !important;
+      }
+      
       .kategori-card-desc {
         font-size: 0.95rem;
         color: #b48a78;
         font-weight: 500;
         line-height: 1.5;
       }
+      
+      /* Dark theme card description */
+      body.dark-theme .kategori-card-desc {
+        color: #b0b0b0 !important;
+      }
+      
       .kategori-card span {
         font-size: 1.25rem;
         font-weight: 600;
         letter-spacing: 0.5px;
       }
+      
+      /* Dark theme card span */
+      body.dark-theme .kategori-card span {
+        color: #d0d0d0 !important;
+      }
+      
       .geri-btn {
         background: linear-gradient(135deg, #e2d9d0, #b48a78);
         color: #7c5c4a;
@@ -105,9 +159,24 @@
         transition: all 0.3s ease;
         box-shadow: 0 4px 12px rgba(124, 92, 74, 0.2);
       }
+      
+      /* Dark theme geri button */
+      body.dark-theme .geri-btn {
+        background: linear-gradient(135deg, #404040, #2c2c2c) !important;
+        color: #e0e0e0 !important;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4) !important;
+      }
+      
       .geri-btn:hover {
         background: linear-gradient(135deg, #b48a78, #e2d9d0);
         color: #fff;
+        transform: scale(1.1);
+      }
+      
+      /* Dark theme geri button hover */
+      body.dark-theme .geri-btn:hover {
+        background: linear-gradient(135deg, #606060, #404040) !important;
+        color: #fff !important;
         transform: scale(1.1);
       }
       .seyahat-grid {
@@ -127,6 +196,12 @@
         align-items: flex-start;
         min-height: 220px;
         position: relative;
+      }
+      
+      /* Dark theme seyahat card */
+      body.dark-theme .seyahat-card {
+        background: linear-gradient(135deg, #404040 60%, #2c2c2c 100%) !important;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4) !important;
       }
       .seyahat-header {
         display: flex;
@@ -150,11 +225,22 @@
         margin-bottom: 12px;
         line-height: 1.3;
       }
+      
+      /* Dark theme seyahat bilgi */
+      body.dark-theme .seyahat-bilgi {
+        color: #e0e0e0 !important;
+      }
+      
       .seyahat-aciklama {
         color: #b48a78;
         font-size: 1.1rem;
         font-weight: 600;
         margin-bottom: 18px;
+      }
+      
+      /* Dark theme seyahat açıklama */
+      body.dark-theme .seyahat-aciklama {
+        color: #b0b0b0 !important;
       }
       .seyahat-footer {
         display: flex;
@@ -175,9 +261,22 @@
         transition: all 0.3s;
         letter-spacing: 0.5px;
       }
+      
+      /* Dark theme detay button */
+      body.dark-theme .detay-btn {
+        background: linear-gradient(135deg, #404040, #2c2c2c) !important;
+        color: #e0e0e0 !important;
+      }
+      
       .detay-btn:hover {
         background: linear-gradient(135deg, #e2d9d0, #b48a78);
         color: #7c5c4a;
+      }
+      
+      /* Dark theme detay button hover */
+      body.dark-theme .detay-btn:hover {
+        background: linear-gradient(135deg, #606060, #404040) !important;
+        color: #fff !important;
       }
       .alt-kategori-grid {
         display: grid;

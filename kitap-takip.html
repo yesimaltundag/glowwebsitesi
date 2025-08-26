@@ -291,6 +291,15 @@
         transform: scale(1.05);
       }
 
+      /* Active states for buttons */
+      .action-btn.active {
+        opacity: 1;
+      }
+
+      .action-btn:not(.active) {
+        opacity: 0.6;
+      }
+
       .empty-state {
         text-align: center;
         padding: 60px 20px;
@@ -524,27 +533,24 @@
               <div class="kitap-actions">
                 <button
                   class="action-btn"
-                  ng-class="kitap.isFavorite ? 'btn-favorite' : 'btn-favorite'"
+                  ng-class="kitap.isFavorite ? 'btn-favorite active' : 'btn-favorite'"
                   ng-click="toggleFavorite(kitap)"
-                  style="opacity: {{kitap.isFavorite ? 1 : 0.6}}"
                 >
                   <span>{{kitap.isFavorite ? '❤️' : '🤍'}}</span>
                   Favori
                 </button>
                 <button
                   class="action-btn"
-                  ng-class="kitap.isRead ? 'btn-read' : 'btn-read'"
+                  ng-class="kitap.isRead ? 'btn-read active' : 'btn-read'"
                   ng-click="toggleRead(kitap)"
-                  style="opacity: {{kitap.isRead ? 1 : 0.6}}"
                 >
                   <span>{{kitap.isRead ? '✓' : '○'}}</span>
                   Okudum
                 </button>
                 <button
                   class="action-btn"
-                  ng-class="kitap.isWishlist ? 'btn-wishlist' : 'btn-wishlist'"
+                  ng-class="kitap.isWishlist ? 'btn-wishlist active' : 'btn-wishlist'"
                   ng-click="toggleWishlist(kitap)"
-                  style="opacity: {{kitap.isWishlist ? 1 : 0.6}}"
                 >
                   <span>{{kitap.isWishlist ? '📖' : '📝'}}</span>
                   Okunacak

@@ -13,6 +13,11 @@
         background: linear-gradient(135deg, #f5e7e0 0%, #e9d6d1 100%);
         min-height: 100vh;
       }
+      
+      /* Dark theme body */
+      body.dark-theme {
+        background: linear-gradient(135deg, #2c2c2c 0%, #1a1a1a 100%) !important;
+      }
       .main-content {
         min-height: 100vh;
         display: flex;
@@ -29,6 +34,12 @@
         width: 100%;
         position: relative;
       }
+      
+      /* Dark theme kategori wrapper */
+      body.dark-theme .kategori-wrapper {
+        background: rgba(44, 44, 44, 0.85) !important;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3) !important;
+      }
       .kategori-title {
         text-align: center;
         font-size: 2.5rem;
@@ -36,6 +47,11 @@
         color: #7c5c4a;
         margin-bottom: 36px;
         letter-spacing: 1px;
+      }
+      
+      /* Dark theme kategori title */
+      body.dark-theme .kategori-title {
+        color: #e0e0e0 !important;
       }
       .kategori-grid {
         display: grid;
@@ -54,9 +70,20 @@
         cursor: pointer;
         position: relative;
       }
+      
+      /* Dark theme kategori card */
+      body.dark-theme .kategori-card {
+        background: linear-gradient(135deg, #404040 60%, #2c2c2c 100%) !important;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3) !important;
+      }
       .kategori-card:hover {
         box-shadow: 0 8px 32px rgba(180, 138, 120, 0.16);
         transform: translateY(-3px) scale(1.02);
+      }
+      
+      /* Dark theme kategori card hover */
+      body.dark-theme .kategori-card:hover {
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
       }
       .kategori-icon {
         font-size: 2.2rem;
@@ -68,11 +95,21 @@
         color: #b48a78;
         margin-bottom: 8px;
       }
+      
+      /* Dark theme kategori baslik */
+      body.dark-theme .kategori-baslik {
+        color: #b0b0b0 !important;
+      }
       .kategori-aciklama {
         color: #7c5c4a;
         font-size: 1rem;
         margin-bottom: 18px;
         min-height: 48px;
+      }
+      
+      /* Dark theme kategori aciklama */
+      body.dark-theme .kategori-aciklama {
+        color: #e0e0e0 !important;
       }
       .kategori-btn {
         background: linear-gradient(135deg, #e2d9d0, #b48a78);
@@ -86,10 +123,23 @@
         transition: all 0.3s;
         align-self: flex-end;
       }
+      
+      /* Dark theme kategori button */
+      body.dark-theme .kategori-btn {
+        background: linear-gradient(135deg, #404040, #2c2c2c) !important;
+        color: #e0e0e0 !important;
+      }
+      
       .kategori-btn:hover {
         background: linear-gradient(135deg, #b48a78, #e2d9d0);
         color: #fff;
         transform: scale(1.05);
+      }
+      
+      /* Dark theme kategori button hover */
+      body.dark-theme .kategori-btn:hover {
+        background: linear-gradient(135deg, #606060, #404040) !important;
+        color: #fff !important;
       }
       .geri-btn {
         background: linear-gradient(135deg, #e2d9d0, #b48a78);
@@ -114,6 +164,18 @@
         background: linear-gradient(135deg, #b48a78, #e2d9d0);
         color: #fff;
         transform: scale(1.08);
+      }
+      
+      /* Dark theme geri button */
+      body.dark-theme .geri-btn {
+        background: linear-gradient(135deg, #404040, #2c2c2c) !important;
+        color: #e0e0e0 !important;
+      }
+      
+      /* Dark theme geri button hover */
+      body.dark-theme .geri-btn:hover {
+        background: linear-gradient(135deg, #606060, #404040) !important;
+        color: #fff !important;
       }
       @media (max-width: 900px) {
         .kategori-grid {
@@ -158,14 +220,35 @@
         transition: all 0.3s ease;
         outline: none;
       }
+      
+      /* Dark theme search input */
+      body.dark-theme .search-input {
+        background: rgba(44, 44, 44, 0.9) !important;
+        color: #e0e0e0 !important;
+        border-color: rgba(255, 255, 255, 0.2) !important;
+      }
       .search-input:focus {
         border-color: #b48a78;
         box-shadow: 0 0 20px rgba(180, 138, 120, 0.3);
         background: rgba(255, 255, 255, 1);
       }
+      
+      /* Dark theme search input focus */
+      body.dark-theme .search-input:focus {
+        border-color: #b48a78 !important;
+        box-shadow: 0 0 20px rgba(180, 138, 120, 0.3) !important;
+        background: rgba(60, 60, 60, 1) !important;
+      }
+      
       .search-input::placeholder {
         color: #b48a78;
         opacity: 0.7;
+      }
+      
+      /* Dark theme search input placeholder */
+      body.dark-theme .search-input::placeholder {
+        color: #b0b0b0 !important;
+        opacity: 0.7 !important;
       }
       
       /* Arama Sonuçları Stilleri */
@@ -178,6 +261,13 @@
         box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
         border: 1px solid rgba(124, 92, 74, 0.1);
       }
+      
+      /* Dark theme search results */
+      body.dark-theme .search-results {
+        background: rgba(44, 44, 44, 0.95) !important;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3) !important;
+        border-color: rgba(255, 255, 255, 0.1) !important;
+      }
       .search-result-item {
         display: flex;
         align-items: center;
@@ -185,6 +275,11 @@
         border-bottom: 1px solid rgba(124, 92, 74, 0.1);
         cursor: pointer;
         transition: all 0.3s ease;
+      }
+      
+      /* Dark theme search result item */
+      body.dark-theme .search-result-item {
+        border-bottom-color: rgba(255, 255, 255, 0.1) !important;
       }
       .search-result-item:last-child {
         border-bottom: none;

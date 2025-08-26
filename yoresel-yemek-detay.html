@@ -26,11 +26,26 @@
         box-sizing: border-box;
       }
 
+      /* Dark mode yemek detay container */
+      body.dark-theme .yemek-detay-container {
+        background: linear-gradient(
+          135deg,
+          rgba(44, 44, 44, 0.95),
+          rgba(60, 60, 60, 0.1)
+        ) !important;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
+      }
+
       .yemek-header {
         text-align: center;
         margin-bottom: 40px;
         padding-bottom: 30px;
         border-bottom: 2px solid rgba(180, 138, 120, 0.2);
+      }
+
+      /* Dark mode yemek header border */
+      body.dark-theme .yemek-header {
+        border-bottom: 2px solid rgba(212, 165, 116, 0.3) !important;
       }
 
       .yemek-baslik {
@@ -40,6 +55,12 @@
         letter-spacing: 2px;
         margin-bottom: 16px;
         text-shadow: 0 2px 4px rgba(124, 92, 74, 0.1);
+      }
+
+      /* Dark mode yemek başlığı */
+      body.dark-theme .yemek-baslik {
+        color: #ffffff !important;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important;
       }
 
       .yemek-bolge {
@@ -53,9 +74,9 @@
         gap: 8px;
       }
 
-      .yemek-bolge::before {
-        content: "📍";
-        font-size: 1.2rem;
+      /* Dark mode yemek bölge */
+      body.dark-theme .yemek-bolge {
+        color: #d4a574 !important;
       }
 
       .yemek-detaylar {
@@ -78,6 +99,12 @@
         gap: 6px;
       }
 
+      /* Dark mode yemek detay badge */
+      body.dark-theme .yemek-detay-badge {
+        background: linear-gradient(135deg, #5a4435, #7c5c4a) !important;
+        color: #ffffff !important;
+      }
+
       .yemek-resim-container {
         text-align: center;
         margin-bottom: 40px;
@@ -97,6 +124,11 @@
         margin: 0 auto;
       }
 
+      /* Dark mode yemek resim */
+      body.dark-theme .yemek-resim {
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5) !important;
+      }
+
       .yemek-resim:hover {
         transform: scale(1.02);
       }
@@ -104,14 +136,15 @@
       .yemek-aciklama {
         color: #666;
         font-size: 1.1rem;
-        line-height: 1.7;
-        text-align: center;
-        max-width: 800px;
-        margin: 0 auto 40px;
-        padding: 20px;
-        background: rgba(255, 255, 255, 0.7);
-        border-radius: 12px;
-        border-left: 4px solid #b48a78;
+        line-height: 1.8;
+        margin-bottom: 40px;
+        text-align: justify;
+        padding: 0 20px;
+      }
+
+      /* Dark mode yemek açıklaması */
+      body.dark-theme .yemek-aciklama {
+        color: #cccccc !important;
       }
 
       .yemek-icerik-grid {
@@ -128,20 +161,42 @@
         box-shadow: 0 4px 16px rgba(180, 138, 120, 0.1);
       }
 
-      .yemek-bolum-baslik {
-        color: #7c5c4a;
-        font-size: 1.5rem;
-        font-weight: 700;
-        margin-bottom: 20px;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        border-bottom: 2px solid #e2d9d0;
-        padding-bottom: 10px;
+      /* Dark mode yemek bolum */
+      body.dark-theme .yemek-bolum {
+        background: rgba(44, 44, 44, 0.8) !important;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3) !important;
       }
 
-      .yemek-bolum-baslik::before {
-        font-size: 1.3rem;
+      .yemek-bolum-baslik {
+        color: #7c5c4a;
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 20px;
+        text-align: center;
+        position: relative;
+        padding-bottom: 15px;
+      }
+
+      /* Dark mode yemek bölüm başlığı */
+      body.dark-theme .yemek-bolum-baslik {
+        color: #ffffff !important;
+      }
+
+      .yemek-bolum-baslik::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80px;
+        height: 3px;
+        background: linear-gradient(135deg, #e2d9d0, #b48a78);
+        border-radius: 2px;
+      }
+
+      /* Dark mode yemek bölüm başlığı alt çizgi */
+      body.dark-theme .yemek-bolum-baslik::after {
+        background: linear-gradient(135deg, #7c5c4a, #d4a574) !important;
       }
 
       .malzemeler-baslik::before {
@@ -169,11 +224,21 @@
         gap: 10px;
       }
 
+      /* Dark mode yemek malzeme liste */
+      body.dark-theme .malzemeler-liste li {
+        color: #cccccc !important;
+      }
+
       .malzemeler-liste li::before {
         content: "•";
         color: #b48a78;
         font-weight: bold;
         font-size: 1.2rem;
+      }
+
+      /* Dark mode yemek malzeme liste bullet */
+      body.dark-theme .malzemeler-liste li::before {
+        color: #d4a574 !important;
       }
 
       .hazirlanis-adimlar {
@@ -230,6 +295,13 @@
         box-shadow: 0 4px 16px rgba(180, 138, 120, 0.2);
       }
 
+      /* Dark mode yemek bilgi kutusu */
+      body.dark-theme .bilgi-kart {
+        background: rgba(44, 44, 44, 0.9) !important;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3) !important;
+        border: 2px solid rgba(212, 165, 116, 0.3) !important;
+      }
+
       .bilgi-kart-baslik {
         font-size: 0.9rem;
         font-weight: 600;
@@ -237,9 +309,19 @@
         opacity: 0.8;
       }
 
+      /* Dark mode yemek bilgi label */
+      body.dark-theme .bilgi-kart-baslik {
+        color: #d4a574 !important;
+      }
+
       .bilgi-kart-deger {
         font-size: 1.2rem;
         font-weight: 700;
+      }
+
+      /* Dark mode yemek bilgi değer */
+      body.dark-theme .bilgi-kart-deger {
+        color: #ffffff !important;
       }
 
       .geri-btn {
@@ -264,10 +346,22 @@
         z-index: 1000;
       }
 
+      /* Dark mode geri butonu */
+      body.dark-theme .geri-btn {
+        background: linear-gradient(135deg, #7c5c4a, #5a4435) !important;
+        color: #ffffff !important;
+      }
+
       .geri-btn:hover {
         background: linear-gradient(135deg, #b48a78, #e2d9d0);
         color: #fff;
         transform: scale(1.1);
+      }
+
+      /* Dark mode geri butonu hover */
+      body.dark-theme .geri-btn:hover {
+        background: linear-gradient(135deg, #8a6a5a, #6a5445) !important;
+        color: #ffffff !important;
       }
 
       /* Loading göstergesi */

@@ -21,6 +21,12 @@
         box-sizing: border-box;
       }
 
+      /* Dark mode sağlıklı besinler container */
+      body.dark-theme .saglikli-besinler-container {
+        background: rgba(44, 44, 44, 0.92) !important;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
+      }
+
       .saglikli-besinler-header {
         text-align: center;
         margin-bottom: 40px;
@@ -35,6 +41,12 @@
         text-shadow: 0 2px 4px rgba(124, 92, 74, 0.1);
       }
 
+      /* Dark mode sağlıklı besinler başlığı */
+      body.dark-theme .saglikli-besinler-baslik {
+        color: #ffffff !important;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important;
+      }
+
       .saglikli-besinler-aciklama {
         color: #b48a78;
         font-size: 1.1rem;
@@ -42,6 +54,11 @@
         max-width: 600px;
         margin: 0 auto;
         line-height: 1.6;
+      }
+
+      /* Dark mode sağlıklı besinler açıklaması */
+      body.dark-theme .saglikli-besinler-aciklama {
+        color: #d4a574 !important;
       }
 
       .saglikli-besinler-grid {
@@ -61,9 +78,20 @@
         position: relative;
       }
 
+      /* Dark mode sağlıklı besinler kartları */
+      body.dark-theme .saglikli-besinler-card {
+        background: #2c2c2c !important;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4) !important;
+      }
+
       .saglikli-besinler-card:hover {
         transform: translateY(-8px);
         box-shadow: 0 16px 40px rgba(180, 138, 120, 0.25);
+      }
+
+      /* Dark mode hover efekti */
+      body.dark-theme .saglikli-besinler-card:hover {
+        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6) !important;
       }
 
       .saglikli-besinler-card-img {
@@ -75,6 +103,11 @@
         align-items: center;
         justify-content: center;
         background: #f8f8f8;
+      }
+
+      /* Dark mode sağlıklı besinler kartı resim arka planı */
+      body.dark-theme .saglikli-besinler-card-img {
+        background: #404040 !important;
       }
 
       .saglikli-besinler-card-img img {
@@ -129,11 +162,21 @@
         line-height: 1.3;
       }
 
+      /* Dark mode sağlıklı besinler kartı başlığı */
+      body.dark-theme .saglikli-besinler-card-baslik {
+        color: #ffffff !important;
+      }
+
       .saglikli-besinler-card-kategori {
         color: #b48a78;
         font-size: 1.1rem;
         font-weight: 600;
         margin-bottom: 12px;
+      }
+
+      /* Dark mode sağlıklı besinler kartı kategori */
+      body.dark-theme .saglikli-besinler-card-kategori {
+        color: #d4a574 !important;
       }
 
       .saglikli-besinler-card-detaylar {
@@ -153,6 +196,12 @@
         border-radius: 12px;
       }
 
+      /* Dark mode sağlıklı besinler kartı süre */
+      body.dark-theme .saglikli-besinler-card-sure {
+        color: #cccccc !important;
+        background: #404040 !important;
+      }
+
       .saglikli-besinler-card-zorluk {
         color: #666;
         font-size: 0.9rem;
@@ -161,12 +210,24 @@
         border-radius: 12px;
       }
 
+      /* Dark mode sağlıklı besinler kartı zorluk */
+      body.dark-theme .saglikli-besinler-card-zorluk {
+        color: #cccccc !important;
+        background: #404040 !important;
+      }
+
       .saglikli-besinler-card-porsiyon {
         color: #666;
         font-size: 0.9rem;
         background: #f5f5f5;
         padding: 4px 8px;
         border-radius: 12px;
+      }
+
+      /* Dark mode sağlıklı besinler kartı porsiyon */
+      body.dark-theme .saglikli-besinler-card-porsiyon {
+        color: #cccccc !important;
+        background: #404040 !important;
       }
 
       .saglikli-besinler-card-aciklama {
@@ -178,6 +239,11 @@
         -webkit-box-orient: vertical;
         overflow: hidden;
         margin-bottom: 15px;
+      }
+
+      /* Dark mode sağlıklı besinler kartı açıklaması */
+      body.dark-theme .saglikli-besinler-card-aciklama {
+        color: #cccccc !important;
       }
 
       .saglikli-besinler-card-besin-degerleri {
@@ -206,6 +272,12 @@
         font-weight: 600;
       }
 
+      /* Dark mode sağlıklı besinler kartı kalori */
+      body.dark-theme .saglikli-besinler-card-kalori {
+        background: linear-gradient(135deg, #5a4435, #7c5c4a) !important;
+        color: #ffffff !important;
+      }
+
       .geri-btn {
         background: linear-gradient(135deg, #e2d9d0, #b48a78);
         color: #7c5c4a;
@@ -228,10 +300,22 @@
         z-index: 1000;
       }
 
+      /* Dark mode geri butonu */
+      body.dark-theme .geri-btn {
+        background: linear-gradient(135deg, #7c5c4a, #5a4435) !important;
+        color: #ffffff !important;
+      }
+
       .geri-btn:hover {
         background: linear-gradient(135deg, #b48a78, #e2d9d0);
         color: #fff;
         transform: scale(1.1);
+      }
+
+      /* Dark mode geri butonu hover */
+      body.dark-theme .geri-btn:hover {
+        background: linear-gradient(135deg, #8a6a5a, #6a5445) !important;
+        color: #ffffff !important;
       }
 
       /* Loading göstergesi */
@@ -250,6 +334,12 @@
         margin: 0 auto 20px;
       }
 
+      /* Dark mode loading spinner */
+      body.dark-theme .loading-spinner {
+        border: 4px solid #404040 !important;
+        border-top: 4px solid #d4a574 !important;
+      }
+
       @keyframes spin {
         0% {
           transform: rotate(0deg);
@@ -263,6 +353,11 @@
         color: #b48a78;
         font-size: 1.1rem;
         font-weight: 500;
+      }
+
+      /* Dark mode loading metni */
+      body.dark-theme .loading-container p {
+        color: #d4a574 !important;
       }
 
       /* Responsive tasarım */

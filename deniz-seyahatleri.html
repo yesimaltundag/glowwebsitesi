@@ -19,6 +19,12 @@
         box-shadow: 0 8px 32px rgba(0, 191, 255, 0.1);
         backdrop-filter: blur(10px);
       }
+      
+      /* Dark theme container */
+      body.dark-theme .deniz-container {
+        background: rgba(44, 44, 44, 0.92) !important;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3) !important;
+      }
 
       .page-header {
         text-align: center;
@@ -31,11 +37,21 @@
         font-weight: 700;
         margin-bottom: 10px;
       }
+      
+      /* Dark theme page title */
+      body.dark-theme .page-title {
+        color: #e0e0e0 !important;
+      }
 
       .page-subtitle {
         color: #b48a78;
         font-size: 1.1rem;
         font-weight: 500;
+      }
+      
+      /* Dark theme page subtitle */
+      body.dark-theme .page-subtitle {
+        color: #b0b0b0 !important;
       }
 
       .geri-btn {
@@ -56,11 +72,23 @@
         top: 20px;
         left: 20px;
       }
+      
+      /* Dark theme geri button */
+      body.dark-theme .geri-btn {
+        background: linear-gradient(135deg, #404040, #2c2c2c) !important;
+        color: #e0e0e0 !important;
+      }
 
       .geri-btn:hover {
         background: linear-gradient(135deg, #b48a78, #e2d9d0);
         color: #fff;
         transform: scale(1.1);
+      }
+      
+      /* Dark theme geri button hover */
+      body.dark-theme .geri-btn:hover {
+        background: linear-gradient(135deg, #606060, #404040) !important;
+        color: #fff !important;
       }
 
       .sehirler-grid {
@@ -85,10 +113,20 @@
         display: flex;
         align-items: flex-end;
       }
+      
+      /* Dark theme şehir card */
+      body.dark-theme .sehir-card {
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3) !important;
+      }
 
       .sehir-card:hover {
         transform: translateY(-5px);
         box-shadow: 0 12px 30px rgba(0, 191, 255, 0.2);
+      }
+      
+      /* Dark theme şehir card hover */
+      body.dark-theme .sehir-card:hover {
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4) !important;
       }
 
       .sehir-overlay {
@@ -107,6 +145,17 @@
         align-items: flex-start;
         z-index: 2;
         transition: background 0.3s, backdrop-filter 0.3s;
+      }
+      
+      /* Dark theme şehir overlay */
+      body.dark-theme .sehir-overlay {
+        background: linear-gradient(
+          to top,
+          rgba(44, 44, 44, 0.8) 0%,
+          rgba(44, 44, 44, 0.6) 50%,
+          rgba(44, 44, 44, 0.3) 100%
+        ) !important;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3) !important;
       }
       @media (max-width: 768px) {
         .sehir-overlay {
@@ -167,6 +216,11 @@
         font-weight: 500;
         backdrop-filter: blur(5px);
       }
+      
+      /* Dark theme özellik tag */
+      body.dark-theme .ozellik-tag {
+        background: rgba(255, 255, 255, 0.15) !important;
+      }
 
       .detay-btn {
         background: linear-gradient(135deg, #00bfff, #87ceeb) !important;
@@ -182,10 +236,22 @@
         margin: 0 auto !important;
         display: block !important;
       }
+      
+      /* Dark theme detay button */
+      body.dark-theme .detay-btn {
+        background: linear-gradient(135deg, #404040, #2c2c2c) !important;
+        color: #e0e0e0 !important;
+      }
 
       .detay-btn:hover {
         background: linear-gradient(135deg, #87ceeb, #00bfff) !important;
         transform: scale(1.02) !important;
+      }
+      
+      /* Dark theme detay button hover */
+      body.dark-theme .detay-btn:hover {
+        background: linear-gradient(135deg, #606060, #404040) !important;
+        color: #fff !important;
       }
 
       .sehir-icon {
@@ -198,12 +264,22 @@
         font-size: 1.2rem;
         color: #7c5c4a;
       }
+      
+      /* Dark theme loading */
+      body.dark-theme .loading {
+        color: #e0e0e0 !important;
+      }
 
       .error {
         text-align: center;
         padding: 40px;
         color: #e74c3c;
         font-size: 1.1rem;
+      }
+      
+      /* Dark theme error */
+      body.dark-theme .error {
+        color: #ff6b6b !important;
       }
 
       @media (max-width: 768px) {

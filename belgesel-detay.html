@@ -19,6 +19,12 @@
         position: relative;
         width: 100%;
       }
+      
+      /* Dark theme container */
+      body.dark-theme .detay-container {
+        background: rgba(44, 44, 44, 0.92) !important;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3) !important;
+      }
 
       .detay-header {
         display: grid;
@@ -54,12 +60,22 @@
         margin: 0;
         line-height: 1.2;
       }
+      
+      /* Dark theme detay baslik */
+      body.dark-theme .detay-baslik {
+        color: #e0e0e0 !important;
+      }
 
       .detay-yonetmen {
         color: #b48a78;
         font-size: 1.2rem;
         font-weight: 600;
         margin: 0;
+      }
+      
+      /* Dark theme detay yonetmen */
+      body.dark-theme .detay-yonetmen {
+        color: #b0b0b0 !important;
       }
 
       .detay-puan {
@@ -96,6 +112,11 @@
         margin: 24px 0;
         text-align: justify;
       }
+      
+      /* Dark theme detay aciklama */
+      body.dark-theme .detay-aciklama {
+        color: #e0e0e0 !important;
+      }
 
       .detay-icerik {
         display: grid;
@@ -110,6 +131,12 @@
         padding: 24px;
         box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
       }
+      
+      /* Dark theme detay bolum */
+      body.dark-theme .detay-bolum {
+        background: rgba(44, 44, 44, 0.8) !important;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3) !important;
+      }
 
       .bolum-baslik {
         color: #7c5c4a;
@@ -117,6 +144,11 @@
         font-weight: 700;
         margin-bottom: 20px;
         text-align: center;
+      }
+      
+      /* Dark theme bolum baslik */
+      body.dark-theme .bolum-baslik {
+        color: #e0e0e0 !important;
       }
 
       .geri-btn {
@@ -143,6 +175,18 @@
         color: #fff;
         transform: scale(1.1);
       }
+      
+      /* Dark theme geri button */
+      body.dark-theme .geri-btn {
+        background: linear-gradient(135deg, #404040, #2c2c2c) !important;
+        color: #e0e0e0 !important;
+      }
+      
+      /* Dark theme geri button hover */
+      body.dark-theme .geri-btn:hover {
+        background: linear-gradient(135deg, #606060, #404040) !important;
+        color: #fff !important;
+      }
 
       .loading {
         text-align: center;
@@ -150,12 +194,66 @@
         font-size: 1.1rem;
         padding: 40px;
       }
+      
+      /* Dark theme loading */
+      body.dark-theme .loading {
+        color: #e0e0e0 !important;
+      }
 
       .error {
         text-align: center;
         color: #f44336;
         font-size: 1.1rem;
         padding: 40px;
+      }
+      
+      /* Dark theme error */
+      body.dark-theme .error {
+        color: #ff6b6b !important;
+      }
+      
+      /* Spoiler Toggle Button */
+      .spoiler-toggle {
+        background: linear-gradient(135deg, #6c757d, #495057);
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin: 10px 0;
+        display: inline-block;
+      }
+      
+      .spoiler-toggle:hover {
+        background: linear-gradient(135deg, #495057, #343a40);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      }
+      
+      .spoiler-toggle.active {
+        background: linear-gradient(135deg, #dc3545, #c82333);
+        box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+      }
+      
+      /* Dark theme spoiler toggle */
+      body.dark-theme .spoiler-toggle {
+        background: linear-gradient(135deg, #404040, #2c2c2c) !important;
+        color: #e0e0e0 !important;
+      }
+      
+      body.dark-theme .spoiler-toggle:hover {
+        background: linear-gradient(135deg, #1a1a1a, #000000) !important;
+        color: #fff !important;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4) !important;
+      }
+      
+      body.dark-theme .spoiler-toggle.active {
+        background: linear-gradient(135deg, #dc3545, #c82333) !important;
+        color: white !important;
+        box-shadow: 0 4px 12px rgba(220, 53, 69, 0.4) !important;
       }
 
       /* Responsive */

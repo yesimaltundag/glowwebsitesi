@@ -26,11 +26,26 @@
         box-sizing: border-box;
       }
 
+      /* Dark mode yemek detay container */
+      body.dark-theme .dunya-mutfagi-detay-container {
+        background: linear-gradient(
+          135deg,
+          rgba(44, 44, 44, 0.95),
+          rgba(60, 60, 60, 0.1)
+        ) !important;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
+      }
+
       .dunya-mutfagi-header {
         text-align: center;
         margin-bottom: 40px;
         padding-bottom: 30px;
         border-bottom: 2px solid rgba(255, 69, 0, 0.2);
+      }
+
+      /* Dark mode yemek header border */
+      body.dark-theme .dunya-mutfagi-header {
+        border-bottom: 2px solid rgba(212, 165, 116, 0.3) !important;
       }
 
       .dunya-mutfagi-baslik {
@@ -42,6 +57,12 @@
         text-shadow: 0 2px 4px rgba(210, 105, 30, 0.1);
       }
 
+      /* Dark mode yemek başlığı */
+      body.dark-theme .dunya-mutfagi-baslik {
+        color: #ffffff !important;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important;
+      }
+
       .dunya-mutfagi-ulke {
         color: #ff8c00;
         font-size: 1.3rem;
@@ -51,6 +72,11 @@
         align-items: center;
         justify-content: center;
         gap: 8px;
+      }
+
+      /* Dark mode yemek ülke */
+      body.dark-theme .dunya-mutfagi-ulke {
+        color: #d4a574 !important;
       }
 
       .dunya-mutfagi-ulke::before {
@@ -78,6 +104,12 @@
         gap: 6px;
       }
 
+      /* Dark mode yemek detay badge */
+      body.dark-theme .dunya-mutfagi-detay-badge {
+        background: linear-gradient(135deg, #5a4435, #7c5c4a) !important;
+        color: #ffffff !important;
+      }
+
       .dunya-mutfagi-resim-container {
         text-align: center;
         margin-bottom: 40px;
@@ -97,6 +129,11 @@
         margin: 0 auto;
       }
 
+      /* Dark mode yemek resim */
+      body.dark-theme .dunya-mutfagi-resim {
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5) !important;
+      }
+
       .dunya-mutfagi-resim:hover {
         transform: scale(1.02);
       }
@@ -114,6 +151,11 @@
         border-left: 4px solid #ff8c00;
       }
 
+      /* Dark mode yemek açıklaması */
+      body.dark-theme .dunya-mutfagi-aciklama {
+        color: #cccccc !important;
+      }
+
       .dunya-mutfagi-icerik-grid {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -128,6 +170,12 @@
         box-shadow: 0 4px 16px rgba(255, 69, 0, 0.1);
       }
 
+      /* Dark mode yemek bolum */
+      body.dark-theme .dunya-mutfagi-bolum {
+        background: rgba(44, 44, 44, 0.8) !important;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3) !important;
+      }
+
       .dunya-mutfagi-bolum-baslik {
         color: #d2691e;
         font-size: 1.5rem;
@@ -138,6 +186,11 @@
         gap: 10px;
         border-bottom: 2px solid #ffe4b5;
         padding-bottom: 10px;
+      }
+
+      /* Dark mode yemek bölüm başlığı */
+      body.dark-theme .dunya-mutfagi-bolum-baslik {
+        color: #ffffff !important;
       }
 
       .dunya-mutfagi-bolum-baslik::before {
@@ -169,11 +222,21 @@
         gap: 10px;
       }
 
+      /* Dark mode yemek malzeme liste */
+      body.dark-theme .malzemeler-liste li {
+        color: #cccccc !important;
+      }
+
       .malzemeler-liste li::before {
         content: "•";
         color: #ff8c00;
         font-weight: bold;
         font-size: 1.2rem;
+      }
+
+      /* Dark mode yemek malzeme liste bullet */
+      body.dark-theme .malzemeler-liste li::before {
+        color: #d4a574 !important;
       }
 
       .hazirlanis-adimlar {
@@ -193,6 +256,11 @@
         gap: 12px;
       }
 
+      /* Dark mode yemek hazırlanış liste */
+      body.dark-theme .hazirlanis-adimlar li {
+        color: #cccccc !important;
+      }
+
       .hazirlanis-adimlar li::before {
         content: counter(step-counter);
         counter-increment: step-counter;
@@ -208,6 +276,12 @@
         font-weight: bold;
         flex-shrink: 0;
         margin-top: 2px;
+      }
+
+      /* Dark mode yemek hazırlanış liste sayı */
+      body.dark-theme .hazirlanis-adimlar li::before {
+        background: linear-gradient(135deg, #5a4435, #7c5c4a) !important;
+        color: #ffffff !important;
       }
 
       .hazirlanis-adimlar {
@@ -264,10 +338,22 @@
         z-index: 1000;
       }
 
+      /* Dark mode geri butonu */
+      body.dark-theme .geri-btn {
+        background: linear-gradient(135deg, #7c5c4a, #5a4435) !important;
+        color: #ffffff !important;
+      }
+
       .geri-btn:hover {
         background: linear-gradient(135deg, #ff8c00, #ffe4b5);
         color: #fff;
         transform: scale(1.1);
+      }
+
+      /* Dark mode geri butonu hover */
+      body.dark-theme .geri-btn:hover {
+        background: linear-gradient(135deg, #8a6a5a, #6a5445) !important;
+        color: #ffffff !important;
       }
 
       /* Loading göstergesi */

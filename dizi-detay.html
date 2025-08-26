@@ -14,6 +14,11 @@
         min-height: 100vh;
         font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
       }
+      
+      /* Dark theme body */
+      body.dark-theme {
+        background: linear-gradient(135deg, #2c2c2c 0%, #1a1a1a 100%) !important;
+      }
 
       .detay-container {
         max-width: 100%;
@@ -24,6 +29,12 @@
         box-shadow: 0 8px 32px rgba(124, 92, 74, 0.1);
         backdrop-filter: blur(10px);
         position: relative;
+      }
+      
+      /* Dark theme container */
+      body.dark-theme .detay-container {
+        background: rgba(44, 44, 44, 0.92) !important;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3) !important;
       }
 
       .geri-btn {
@@ -50,6 +61,18 @@
         color: #fff;
         transform: scale(1.1);
       }
+      
+      /* Dark theme geri button */
+      body.dark-theme .geri-btn {
+        background: linear-gradient(135deg, #404040, #2c2c2c) !important;
+        color: #e0e0e0 !important;
+      }
+      
+      /* Dark theme geri button hover */
+      body.dark-theme .geri-btn:hover {
+        background: linear-gradient(135deg, #606060, #404040) !important;
+        color: #fff !important;
+      }
 
       .loading {
         text-align: center;
@@ -57,12 +80,22 @@
         font-size: 1.2rem;
         color: #7f8c8d;
       }
+      
+      /* Dark theme loading */
+      body.dark-theme .loading {
+        color: #e0e0e0 !important;
+      }
 
       .error {
         text-align: center;
         padding: 50px;
         color: #e74c3c;
         font-size: 1.2rem;
+      }
+      
+      /* Dark theme error */
+      body.dark-theme .error {
+        color: #ff6b6b !important;
       }
 
       .dizi-header {
@@ -75,6 +108,12 @@
         border-radius: 20px;
         padding: 30px;
         margin-left: 60px; /* Geri butonu için boşluk */
+      }
+      
+      /* Dark theme dizi header */
+      body.dark-theme .dizi-header {
+        background: rgba(44, 44, 44, 0.1) !important;
+        border-color: rgba(255, 255, 255, 0.1) !important;
       }
 
       .dizi-poster {
@@ -113,6 +152,12 @@
         margin-bottom: 15px;
         text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
       }
+      
+      /* Dark theme dizi title */
+      body.dark-theme .dizi-title {
+        color: #ff6b6b !important;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3) !important;
+      }
 
       .dizi-meta {
         display: flex;
@@ -143,6 +188,11 @@
         color: #7f8c8d;
         line-height: 1.6;
         font-size: 1.1rem;
+      }
+      
+      /* Dark theme dizi description */
+      body.dark-theme .dizi-description {
+        color: #e0e0e0 !important;
       }
 
       /* Dizi Takip Butonları */
@@ -252,6 +302,73 @@
         transform: scale(1.05) !important;
         border: 2px solid #fff !important;
         position: relative;
+      }
+      
+      /* Dark theme takip buttons */
+      body.dark-theme .takip-btn {
+        background: linear-gradient(135deg, #404040, #2c2c2c) !important;
+        color: #e0e0e0 !important;
+        border-color: rgba(255, 255, 255, 0.2) !important;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3) !important;
+      }
+      
+      body.dark-theme .takip-btn:hover {
+        background: linear-gradient(135deg, #606060, #404040) !important;
+        color: #fff !important;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4) !important;
+      }
+      
+      body.dark-theme .favori-btn.active,
+      body.dark-theme .izleniyor-btn.active,
+      body.dark-theme .tamamlandi-btn.active,
+      body.dark-theme .izlenecek-btn.active {
+        background: linear-gradient(135deg, #7c5c4a, #b48a78) !important;
+        color: white !important;
+        box-shadow: 0 6px 20px rgba(124, 92, 74, 0.3) !important;
+      }
+      
+      /* Spoiler Toggle Button */
+      .spoiler-toggle {
+        background: linear-gradient(135deg, #6c757d, #495057);
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin: 10px 0;
+        display: inline-block;
+      }
+      
+      .spoiler-toggle:hover {
+        background: linear-gradient(135deg, #495057, #343a40);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      }
+      
+      .spoiler-toggle.active {
+        background: linear-gradient(135deg, #dc3545, #c82333);
+        box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+      }
+      
+      /* Dark theme spoiler toggle */
+      body.dark-theme .spoiler-toggle {
+        background: linear-gradient(135deg, #404040, #2c2c2c) !important;
+        color: #e0e0e0 !important;
+      }
+      
+      body.dark-theme .spoiler-toggle:hover {
+        background: linear-gradient(135deg, #1a1a1a, #000000) !important;
+        color: #fff !important;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4) !important;
+      }
+      
+      body.dark-theme .spoiler-toggle.active {
+        background: linear-gradient(135deg, #dc3545, #c82333) !important;
+        color: white !important;
+        box-shadow: 0 4px 12px rgba(220, 53, 69, 0.4) !important;
       }
 
       /* Aktif buton göstergesi */

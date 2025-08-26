@@ -17,6 +17,16 @@
         );
         box-shadow: 0 8px 32px rgba(255, 182, 193, 0.2);
       }
+      
+      /* Dark theme kategori container'ları */
+      body.dark-theme .detay-container.avrupa {
+        background: linear-gradient(
+          135deg,
+          rgba(44, 44, 44, 0.95),
+          rgba(255, 182, 193, 0.2)
+        ) !important;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
+      }
 
       .detay-container.asya {
         background: linear-gradient(
@@ -25,6 +35,15 @@
           rgba(255, 215, 0, 0.1)
         );
         box-shadow: 0 8px 32px rgba(255, 215, 0, 0.2);
+      }
+      
+      body.dark-theme .detay-container.asya {
+        background: linear-gradient(
+          135deg,
+          rgba(44, 44, 44, 0.95),
+          rgba(255, 215, 0, 0.2)
+        ) !important;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
       }
 
       .detay-container.amerika {
@@ -35,6 +54,15 @@
         );
         box-shadow: 0 8px 32px rgba(255, 69, 0, 0.2);
       }
+      
+      body.dark-theme .detay-container.amerika {
+        background: linear-gradient(
+          135deg,
+          rgba(44, 44, 44, 0.95),
+          rgba(255, 69, 0, 0.2)
+        ) !important;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
+      }
 
       .detay-container.afrika {
         background: linear-gradient(
@@ -43,6 +71,15 @@
           rgba(139, 69, 19, 0.1)
         );
         box-shadow: 0 8px 32px rgba(139, 69, 19, 0.2);
+      }
+      
+      body.dark-theme .detay-container.afrika {
+        background: linear-gradient(
+          135deg,
+          rgba(44, 44, 44, 0.95),
+          rgba(139, 69, 19, 0.2)
+        ) !important;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
       }
 
       .detay-container.turkiye {
@@ -53,6 +90,15 @@
         );
         box-shadow: 0 8px 32px rgba(255, 0, 0, 0.2);
       }
+      
+      body.dark-theme .detay-container.turkiye {
+        background: linear-gradient(
+          135deg,
+          rgba(44, 44, 44, 0.95),
+          rgba(255, 0, 0, 0.2)
+        ) !important;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
+      }
 
       .detay-container.deniz {
         background: linear-gradient(
@@ -61,6 +107,15 @@
           rgba(135, 206, 235, 0.1)
         );
         box-shadow: 0 8px 32px rgba(135, 206, 235, 0.2);
+      }
+      
+      body.dark-theme .detay-container.deniz {
+        background: linear-gradient(
+          135deg,
+          rgba(44, 44, 44, 0.95),
+          rgba(135, 206, 235, 0.2)
+        ) !important;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
       }
 
       .detay-container.kamp {
@@ -71,6 +126,15 @@
         );
         box-shadow: 0 8px 32px rgba(34, 139, 34, 0.2);
       }
+      
+      body.dark-theme .detay-container.kamp {
+        background: linear-gradient(
+          135deg,
+          rgba(44, 44, 44, 0.95),
+          rgba(34, 139, 34, 0.2)
+        ) !important;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
+      }
 
       .detay-container.sehir {
         background: linear-gradient(
@@ -79,6 +143,15 @@
           rgba(147, 112, 219, 0.1)
         );
         box-shadow: 0 8px 32px rgba(147, 112, 219, 0.2);
+      }
+      
+      body.dark-theme .detay-container.sehir {
+        background: linear-gradient(
+          135deg,
+          rgba(44, 44, 44, 0.95),
+          rgba(147, 112, 219, 0.2)
+        ) !important;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
       }
 
       .detay-container {
@@ -89,12 +162,23 @@
         border-radius: 18px;
         backdrop-filter: blur(10px);
       }
+      
+      /* Dark theme container */
+      body.dark-theme .detay-container {
+        background: rgba(44, 44, 44, 0.95) !important;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
+      }
 
       .sehir-header {
         text-align: center;
         margin-bottom: 40px;
         padding-bottom: 30px;
         border-bottom: 2px solid rgba(180, 138, 120, 0.2);
+      }
+      
+      /* Dark theme şehir header */
+      body.dark-theme .sehir-header {
+        border-bottom-color: rgba(255, 255, 255, 0.2) !important;
       }
 
       .sehir-baslik {
@@ -107,6 +191,11 @@
         justify-content: center;
         gap: 15px;
       }
+      
+      /* Dark theme şehir başlık */
+      body.dark-theme .sehir-baslik {
+        color: #e0e0e0 !important;
+      }
 
       .sehir-icon {
         font-size: 2.5rem;
@@ -118,6 +207,11 @@
         font-weight: 500;
         margin-bottom: 15px;
       }
+      
+      /* Dark theme şehir ülke */
+      body.dark-theme .sehir-ulke {
+        color: #b0b0b0 !important;
+      }
 
       .sehir-aciklama {
         color: #7c5c4a;
@@ -125,6 +219,11 @@
         line-height: 1.7;
         max-width: 800px;
         margin: 0 auto;
+      }
+      
+      /* Dark theme şehir açıklama */
+      body.dark-theme .sehir-aciklama {
+        color: #e0e0e0 !important;
       }
 
       .geri-btn {
@@ -145,11 +244,23 @@
         top: 20px;
         left: 20px;
       }
+      
+      /* Dark theme geri button */
+      body.dark-theme .geri-btn {
+        background: linear-gradient(135deg, #404040, #2c2c2c) !important;
+        color: #e0e0e0 !important;
+      }
 
       .geri-btn:hover {
         background: linear-gradient(135deg, #b48a78, #e2d9d0);
         color: #fff;
         transform: scale(1.1);
+      }
+      
+      /* Dark theme geri button hover */
+      body.dark-theme .geri-btn:hover {
+        background: linear-gradient(135deg, #606060, #404040) !important;
+        color: #fff !important;
       }
 
       .bolumler-grid {
@@ -164,40 +275,81 @@
         background: linear-gradient(135deg, #f8e0e1 0%, #ffb6c1 100%);
         box-shadow: 0 6px 20px rgba(255, 182, 193, 0.2);
       }
+      
+      /* Dark theme bölüm kartları */
+      body.dark-theme .bolum-card.avrupa {
+        background: linear-gradient(135deg, #404040 0%, #2c2c2c 100%) !important;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4) !important;
+      }
 
       .bolum-card.asya {
         background: linear-gradient(135deg, #fff8dc 0%, #ffd700 100%);
         box-shadow: 0 6px 20px rgba(255, 215, 0, 0.2);
+      }
+      
+      body.dark-theme .bolum-card.asya {
+        background: linear-gradient(135deg, #404040 0%, #2c2c2c 100%) !important;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4) !important;
       }
 
       .bolum-card.amerika {
         background: linear-gradient(135deg, #ffe4e1 0%, #ff4500 100%);
         box-shadow: 0 6px 20px rgba(255, 69, 0, 0.2);
       }
+      
+      body.dark-theme .bolum-card.amerika {
+        background: linear-gradient(135deg, #404040 0%, #2c2c2c 100%) !important;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4) !important;
+      }
 
       .bolum-card.afrika {
         background: linear-gradient(135deg, #f5f5dc 0%, #8b4513 100%);
         box-shadow: 0 6px 20px rgba(139, 69, 19, 0.2);
+      }
+      
+      body.dark-theme .bolum-card.afrika {
+        background: linear-gradient(135deg, #404040 0%, #2c2c2c 100%) !important;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4) !important;
       }
 
       .bolum-card.turkiye {
         background: linear-gradient(135deg, #ffe4e1 0%, #ff0000 100%);
         box-shadow: 0 6px 20px rgba(255, 0, 0, 0.2);
       }
+      
+      body.dark-theme .bolum-card.turkiye {
+        background: linear-gradient(135deg, #404040 0%, #2c2c2c 100%) !important;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4) !important;
+      }
 
       .bolum-card.deniz {
         background: linear-gradient(135deg, #e0f6ff 0%, #87ceeb 100%);
         box-shadow: 0 6px 20px rgba(135, 206, 235, 0.2);
+      }
+      
+      body.dark-theme .bolum-card.deniz {
+        background: linear-gradient(135deg, #404040 0%, #2c2c2c 100%) !important;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4) !important;
       }
 
       .bolum-card.kamp {
         background: linear-gradient(135deg, #f0fff0 0%, #228b22 100%);
         box-shadow: 0 6px 20px rgba(34, 139, 34, 0.2);
       }
+      
+      body.dark-theme .bolum-card.kamp {
+        background: linear-gradient(135deg, #404040 0%, #2c2c2c 100%) !important;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4) !important;
+      }
 
       .bolum-card.sehir {
         background: linear-gradient(135deg, #f8f0ff 0%, #9370db 100%);
         box-shadow: 0 6px 20px rgba(147, 112, 219, 0.2);
+      }
+      
+      body.dark-theme .bolum-card.sehir {
+        background: linear-gradient(135deg, #404040 0%, #2c2c2c 100%) !important;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4) !important;
       }
 
       .bolum-card {
@@ -222,6 +374,12 @@
         padding-bottom: 10px;
         border-bottom: 2px solid rgba(180, 138, 120, 0.3);
       }
+      
+      /* Dark theme bölüm başlık */
+      body.dark-theme .bolum-baslik {
+        color: #e0e0e0 !important;
+        border-bottom-color: rgba(255, 255, 255, 0.3) !important;
+      }
 
       .bolum-icon {
         font-size: 1.3rem;
@@ -233,6 +391,11 @@
         line-height: 1.7;
         margin-bottom: 20px;
       }
+      
+      /* Dark theme bölüm içerik */
+      body.dark-theme .bolum-icerik {
+        color: #e0e0e0 !important;
+      }
 
       .liste-item {
         background: rgba(255, 255, 255, 0.7);
@@ -242,10 +405,21 @@
         border-left: 4px solid #b48a78;
         transition: all 0.3s;
       }
+      
+      /* Dark theme liste item */
+      body.dark-theme .liste-item {
+        background: rgba(255, 255, 255, 0.1) !important;
+        border-left-color: #7c5c4a !important;
+      }
 
       .liste-item:hover {
         background: rgba(255, 255, 255, 0.9);
         transform: translateX(5px);
+      }
+      
+      /* Dark theme liste item hover */
+      body.dark-theme .liste-item:hover {
+        background: rgba(255, 255, 255, 0.2) !important;
       }
 
       .tarih-bolum {
@@ -257,6 +431,11 @@
         line-height: 1.8;
         text-align: justify;
       }
+      
+      /* Dark theme tarih içerik */
+      body.dark-theme .tarih-icerik {
+        color: #e0e0e0 !important;
+      }
 
       /* Şehir Fotoğraf Slider CSS */
       .slider-outer-container {
@@ -265,10 +444,21 @@
         border-radius: 16px;
         margin-bottom: 30px;
       }
+      
+      /* Dark theme slider container */
+      body.dark-theme .slider-outer-container {
+        background: rgba(44, 44, 44, 0.3) !important;
+      }
 
       .slider-outer-container .bolum-baslik {
         margin-bottom: 20px;
         text-align: center;
+      }
+      
+      /* Dark theme slider bölüm başlık */
+      body.dark-theme .slider-outer-container .bolum-baslik {
+        color: #e0e0e0 !important;
+        border-bottom-color: rgba(255, 255, 255, 0.3) !important;
       }
 
       .sehir-slider-container {
@@ -278,6 +468,11 @@
         border-radius: 16px;
         overflow: hidden;
         box-shadow: 0 6px 20px rgba(180, 138, 120, 0.2);
+      }
+      
+      /* Dark theme slider container */
+      body.dark-theme .sehir-slider-container {
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4) !important;
       }
 
       .sehir-slider {
@@ -334,10 +529,22 @@
         z-index: 10;
         text-shadow: 2px 2px 15px rgba(0, 0, 0, 0.9);
       }
+      
+      /* Dark theme slider nav */
+      body.dark-theme .slider-nav {
+        color: rgba(255, 255, 255, 0.8) !important;
+        text-shadow: 2px 2px 15px rgba(0, 0, 0, 0.7) !important;
+      }
 
       .slider-nav:hover {
         color: rgba(255, 255, 255, 1);
         text-shadow: 3px 3px 20px rgba(0, 0, 0, 1);
+      }
+      
+      /* Dark theme slider nav hover */
+      body.dark-theme .slider-nav:hover {
+        color: rgba(255, 255, 255, 1) !important;
+        text-shadow: 3px 3px 20px rgba(0, 0, 0, 0.8) !important;
       }
 
       .slider-nav.prev {
@@ -366,10 +573,20 @@
         cursor: pointer;
         transition: all 0.3s;
       }
+      
+      /* Dark theme slider dot */
+      body.dark-theme .slider-dot {
+        background: rgba(255, 255, 255, 0.4) !important;
+      }
 
       .slider-dot.active {
         background: rgba(255, 255, 255, 1);
         transform: scale(1.2);
+      }
+      
+      /* Dark theme slider dot active */
+      body.dark-theme .slider-dot.active {
+        background: rgba(255, 255, 255, 0.9) !important;
       }
 
       @media (max-width: 768px) {

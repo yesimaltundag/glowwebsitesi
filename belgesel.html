@@ -19,6 +19,12 @@
         position: relative;
         width: 100%;
       }
+      
+      /* Dark theme container */
+      body.dark-theme .belgesel-container {
+        background: rgba(44, 44, 44, 0.92) !important;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3) !important;
+      }
 
       .belgesel-title {
         color: #7c5c4a;
@@ -27,6 +33,11 @@
         text-align: center;
         margin-bottom: 32px;
         letter-spacing: 1px;
+      }
+      
+      /* Dark theme title */
+      body.dark-theme .belgesel-title {
+        color: #e0e0e0 !important;
       }
 
       .belgeseller-grid {
@@ -43,10 +54,21 @@
         overflow: hidden;
         transition: transform 0.3s, box-shadow 0.3s;
       }
+      
+      /* Dark theme belgesel card */
+      body.dark-theme .belgesel-card {
+        background: rgba(44, 44, 44, 0.9) !important;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3) !important;
+      }
 
       .belgesel-card:hover {
         transform: translateY(-5px);
         box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+      }
+      
+      /* Dark theme belgesel card hover */
+      body.dark-theme .belgesel-card:hover {
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
       }
 
       .belgesel-content {
@@ -59,6 +81,11 @@
         font-weight: 700;
         margin-bottom: 8px;
       }
+      
+      /* Dark theme belgesel baslik */
+      body.dark-theme .belgesel-baslik {
+        color: #e0e0e0 !important;
+      }
 
       .belgesel-yonetmen {
         color: #b48a78;
@@ -66,11 +93,21 @@
         font-weight: 600;
         margin-bottom: 12px;
       }
+      
+      /* Dark theme belgesel yonetmen */
+      body.dark-theme .belgesel-yonetmen {
+        color: #b0b0b0 !important;
+      }
 
       .belgesel-detay {
         color: #666;
         font-size: 0.9rem;
         margin-bottom: 8px;
+      }
+      
+      /* Dark theme belgesel detay */
+      body.dark-theme .belgesel-detay {
+        color: #b0b0b0 !important;
       }
 
       .belgesel-puan {
@@ -89,6 +126,11 @@
         font-size: 0.9rem;
         line-height: 1.5;
         margin-bottom: 16px;
+      }
+      
+      /* Dark theme belgesel aciklama */
+      body.dark-theme .belgesel-aciklama {
+        color: #e0e0e0 !important;
       }
 
       .geri-btn {
@@ -115,6 +157,18 @@
         color: #fff;
         transform: scale(1.1);
       }
+      
+      /* Dark theme geri button */
+      body.dark-theme .geri-btn {
+        background: linear-gradient(135deg, #404040, #2c2c2c) !important;
+        color: #e0e0e0 !important;
+      }
+      
+      /* Dark theme geri button hover */
+      body.dark-theme .geri-btn:hover {
+        background: linear-gradient(135deg, #606060, #404040) !important;
+        color: #fff !important;
+      }
 
       .loading {
         text-align: center;
@@ -122,12 +176,22 @@
         font-size: 1.1rem;
         padding: 40px;
       }
+      
+      /* Dark theme loading */
+      body.dark-theme .loading {
+        color: #e0e0e0 !important;
+      }
 
       .error {
         text-align: center;
         color: #f44336;
         font-size: 1.1rem;
         padding: 40px;
+      }
+      
+      /* Dark theme error */
+      body.dark-theme .error {
+        color: #ff6b6b !important;
       }
       @media (max-width: 600px) {
         .belgesel-container {

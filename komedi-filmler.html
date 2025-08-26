@@ -15,6 +15,73 @@
       <div class="filmler-container">
         <div class="filmler-title">😄 Komedi Filmleri</div>
         <button class="geri-btn" onclick="window.history.back()">←</button>
+        
+        <style>
+          /* Dark theme styles for komedi-filmler.html */
+          body.dark-theme .filmler-container {
+            background: rgba(44, 44, 44, 0.92) !important;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3) !important;
+          }
+          
+          body.dark-theme .filmler-title {
+            color: #e0e0e0 !important;
+          }
+          
+          body.dark-theme .film-card {
+            background: rgba(44, 44, 44, 0.9) !important;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3) !important;
+            border-color: rgba(255, 255, 255, 0.1) !important;
+          }
+          
+          body.dark-theme .film-card:hover {
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4) !important;
+            border-color: rgba(255, 255, 255, 0.2) !important;
+          }
+          
+          body.dark-theme .film-baslik {
+            color: #e0e0e0 !important;
+          }
+          
+          body.dark-theme .film-yil {
+            color: #b0b0b0 !important;
+          }
+          
+          body.dark-theme .film-imdb {
+            color: #b0b0b0 !important;
+          }
+          
+          body.dark-theme .film-ozet {
+            color: #e0e0e0 !important;
+          }
+          
+          body.dark-theme .film-btn {
+            background: linear-gradient(135deg, #404040, #2c2c2c) !important;
+            color: #e0e0e0 !important;
+          }
+          
+          body.dark-theme .film-btn:hover {
+            background: linear-gradient(135deg, #606060, #404040) !important;
+            color: #fff !important;
+          }
+          
+          body.dark-theme .geri-btn {
+            background: linear-gradient(135deg, #404040, #2c2c2c) !important;
+            color: #e0e0e0 !important;
+          }
+          
+          body.dark-theme .geri-btn:hover {
+            background: linear-gradient(135deg, #606060, #404040) !important;
+            color: #fff !important;
+          }
+          
+          body.dark-theme .loading {
+            color: #e0e0e0 !important;
+          }
+          
+          body.dark-theme .error {
+            color: #ff6b6b !important;
+          }
+        </style>
 
         <!-- Loading durumu -->
         <div ng-if="loading" class="loading">

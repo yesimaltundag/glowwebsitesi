@@ -7,314 +7,7 @@
     <link rel="stylesheet" href="/assets/css/style.css" />
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
     <script src="/assets/js/app.js"></script>
-    <style>
-      .kitap-container {
-        max-width: 100%;
-        margin: 0;
-        padding: 20px;
-        background: rgba(255, 255, 255, 0.92);
-        border-radius: 0;
-        box-shadow: none;
-        backdrop-filter: blur(10px);
-        position: relative;
-        width: 100%;
-        min-height: 100vh;
-      }
-      .geri-btn {
-        background: linear-gradient(135deg, #e2d9d0, #b48a78);
-        color: #7c5c4a;
-        border: none;
-        border-radius: 50%;
-        width: 45px;
-        height: 45px;
-        padding: 0;
-        font-size: 18px;
-        font-weight: 600;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: all 0.3s;
-        position: fixed;
-        top: 80px;
-        left: 30px;
-        margin: 0;
-        z-index: 9999;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-      }
-      .geri-btn:hover {
-        background: linear-gradient(135deg, #b48a78, #e2d9d0);
-        color: #fff;
-        transform: scale(1.1);
-      }
-      .kitap-header {
-        display: flex;
-        align-items: flex-start;
-        gap: 40px;
-        margin-bottom: 24px;
-        margin-left: 80px;
-        margin-right: 20px;
-      }
-      .kitap-foto {
-        width: 300px;
-        height: 420px;
-        object-fit: cover;
-        border-radius: 12px;
-        box-shadow: 0 4px 20px rgba(124, 92, 74, 0.15);
-        background: #eee;
-        transition: transform 0.3s;
-        flex-shrink: 0;
-      }
-      .kitap-foto:hover {
-        transform: scale(1.05);
-      }
-      .kitap-bilgi {
-        flex: 1;
-        padding-top: 8px;
-      }
-      .kitap-baslik {
-        color: #7c5c4a;
-        font-size: 2.2rem;
-        font-weight: 700;
-        margin-bottom: 8px;
-        letter-spacing: 1px;
-      }
-      .kitap-yazar {
-        color: #b48a78;
-        font-size: 1.3rem;
-        font-weight: 500;
-        margin-bottom: 24px;
-      }
-      .kitap-detaylar {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 12px;
-        margin-top: 20px;
-      }
-      .detay-item {
-        background: linear-gradient(135deg, #f8e0e1 60%, #e2d9d0 100%);
-        border-radius: 12px;
-        padding: 16px;
-        box-shadow: 0 2px 8px rgba(180, 138, 120, 0.08);
-      }
-      .detay-label {
-        color: #b48a78;
-        font-size: 0.9rem;
-        font-weight: 600;
-        margin-bottom: 4px;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-      }
-      .detay-deger {
-        color: #7c5c4a;
-        font-size: 1.5rem;
-        font-weight: 500;
-      }
-      .kitap-tanitim {
-        background: linear-gradient(135deg, #f8e0e1 60%, #e2d9d0 100%);
-        border-radius: 16px;
-        padding: 24px;
-        box-shadow: 0 4px 16px rgba(180, 138, 120, 0.08);
-        margin-left: 80px;
-        margin-right: 20px;
-      }
-      .tanitim-baslik {
-        color: #7c5c4a;
-        font-size: 1.5rem;
-        font-weight: 700;
-        text-align: center;
-        margin-bottom: 24px;
-        letter-spacing: 1px;
-      }
-      .tanitim-metin {
-        color: #7c5c4a;
-        font-size: 1.6rem;
-        line-height: 1.7;
-        white-space: pre-line;
-      }
 
-      /* Kitap Takip Butonları */
-      .kitap-takip-buttons {
-        position: absolute;
-        top: 20px;
-        right: 20px;
-        display: flex;
-        gap: 10px;
-        z-index: 10;
-      }
-
-      .takip-btn {
-        display: flex !important;
-        align-items: center !important;
-        gap: 8px !important;
-        padding: 10px 16px !important;
-        border: none !important;
-        border-radius: 25px !important;
-        font-size: 0.9rem !important;
-        font-weight: 600 !important;
-        cursor: pointer !important;
-        transition: all 0.3s ease !important;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1) !important;
-        backdrop-filter: blur(10px) !important;
-      }
-
-      .favori-btn {
-        background: linear-gradient(135deg, #f8e0e1, #e2d9d0) !important;
-        color: #7c5c4a !important;
-        border: 2px solid rgba(124, 92, 74, 0.2) !important;
-      }
-
-      .favori-btn:hover {
-        background: linear-gradient(135deg, #e2d9d0, #d1c6b1) !important;
-        transform: translateY(-2px) !important;
-        box-shadow: 0 6px 20px rgba(124, 92, 74, 0.2) !important;
-      }
-
-      .favori-btn.active {
-        background: linear-gradient(135deg, #7c5c4a, #b48a78) !important;
-        color: white !important;
-        box-shadow: 0 6px 20px rgba(124, 92, 74, 0.3) !important;
-        transform: scale(1.05) !important;
-        border: 2px solid #fff !important;
-        position: relative;
-      }
-
-      .okunan-btn {
-        background: linear-gradient(135deg, #f8e0e1, #e2d9d0) !important;
-        color: #7c5c4a !important;
-        border: 2px solid rgba(124, 92, 74, 0.2) !important;
-      }
-
-      .okunan-btn:hover {
-        background: linear-gradient(135deg, #e2d9d0, #d1c6b1) !important;
-        transform: translateY(-2px) !important;
-        box-shadow: 0 6px 20px rgba(124, 92, 74, 0.2) !important;
-      }
-
-      .okunan-btn.active {
-        background: linear-gradient(135deg, #7c5c4a, #b48a78) !important;
-        color: white !important;
-        box-shadow: 0 6px 20px rgba(124, 92, 74, 0.3) !important;
-        transform: scale(1.05) !important;
-        border: 2px solid #fff !important;
-        position: relative;
-      }
-
-      .okunacak-btn {
-        background: linear-gradient(135deg, #f8e0e1, #e2d9d0) !important;
-        color: #7c5c4a !important;
-        border: 2px solid rgba(124, 92, 74, 0.2) !important;
-      }
-
-      .okunacak-btn:hover {
-        background: linear-gradient(135deg, #e2d9d0, #d1c6b1) !important;
-        transform: translateY(-2px) !important;
-        box-shadow: 0 6px 20px rgba(124, 92, 74, 0.2) !important;
-      }
-
-      .okunacak-btn.active {
-        background: linear-gradient(135deg, #7c5c4a, #b48a78) !important;
-        color: white !important;
-        box-shadow: 0 6px 20px rgba(124, 92, 74, 0.3) !important;
-        transform: scale(1.05) !important;
-        border: 2px solid #fff !important;
-        position: relative;
-      }
-
-      /* Aktif buton göstergesi */
-      .takip-btn.active::after {
-        content: "✓" !important;
-        position: absolute !important;
-        top: -8px !important;
-        right: -8px !important;
-        background: #fff !important;
-        color: #333 !important;
-        border-radius: 50% !important;
-        width: 24px !important;
-        height: 24px !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        font-size: 14px !important;
-        font-weight: bold !important;
-        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3) !important;
-        z-index: 10 !important;
-      }
-
-      .takip-btn svg {
-        width: 16px !important;
-        height: 16px !important;
-      }
-
-      .takip-btn:disabled {
-        opacity: 0.6 !important;
-        cursor: not-allowed !important;
-        transform: none !important;
-      }
-
-      @media (max-width: 768px) {
-        .kitap-container {
-          margin: 0;
-          padding: 20px;
-        }
-        .kitap-header {
-          flex-direction: row;
-          align-items: flex-start;
-          text-align: left;
-          gap: 15px;
-          margin-left: 60px;
-          margin-right: 10px;
-        }
-        .kitap-foto {
-          width: 160px;
-          height: 220px;
-        }
-        .kitap-baslik {
-          font-size: 1.4rem;
-          margin-bottom: 6px;
-        }
-        .kitap-yazar {
-          font-size: 0.95rem;
-          margin-bottom: 16px;
-        }
-        .kitap-detaylar {
-          grid-template-columns: 1fr;
-          gap: 8px;
-          margin-top: 15px;
-        }
-        .kitap-tanitim {
-          padding: 20px;
-          margin-left: 60px;
-          margin-right: 10px;
-        }
-        .tanitim-baslik {
-          font-size: 1.3rem;
-        }
-        .tanitim-metin {
-          font-size: 1rem;
-        }
-        .geri-btn {
-          width: 40px;
-          height: 40px;
-          font-size: 16px;
-          top: 70px;
-          left: 20px;
-        }
-
-        .kitap-takip-buttons {
-          position: static;
-          margin-bottom: 20px;
-          justify-content: center;
-          margin-left: 60px;
-          margin-right: 10px;
-        }
-
-        .takip-btn {
-          padding: 8px 12px !important;
-          font-size: 0.8rem !important;
-        }
-      }
-    </style>
   </head>
   <body ng-controller="HeaderController">
     <ng-include src="'/components/header.html'"></ng-include>
@@ -859,6 +552,173 @@
             window.scrollTo({ top: 0, behavior: "smooth" });
           };
         });
+      
+      // Tema değiştirme butonunun çalışması için gerekli kod
+      angular.element(document).ready(function() {
+        // Tema değiştirme butonlarını dinle
+        setTimeout(function() {
+          var themeDropdown = document.querySelector('.theme-dropdown');
+          var themeOptions = document.querySelectorAll('.theme-option');
+          
+          // Mevcut tema durumunu al ve butonu güncelle
+          function updateThemeButton() {
+            var currentTheme = localStorage.getItem('selectedTheme') || 'default';
+            var themeText = themeDropdown.querySelector('.theme-text');
+            
+            if (themeText) {
+              var themeContent = '';
+              switch(currentTheme) {
+                case 'default':
+                  themeContent = '🌅 Varsayılan';
+                  break;
+                case 'light':
+                  themeContent = '☀️ Açık Tema';
+                  break;
+                case 'dark':
+                  themeContent = '🌙 Koyu Tema';
+                  break;
+              }
+              themeText.innerHTML = themeContent;
+            }
+            
+            // Active class'ları güncelle
+            themeOptions.forEach(function(option) {
+              option.classList.remove('active');
+              if (option.getAttribute('data-theme') === currentTheme) {
+                option.classList.add('active');
+              }
+            });
+          }
+          
+          if (themeDropdown) {
+            // İlk yüklemede tema butonunu güncelle
+            updateThemeButton();
+            
+            // Tema dropdown click event
+            themeDropdown.addEventListener('click', function(e) {
+              e.preventDefault();
+              e.stopPropagation();
+              
+              var themeMenu = document.querySelector('.theme-dropdown-menu');
+              if (themeMenu) {
+                themeMenu.classList.toggle('show');
+              }
+            });
+          }
+          
+          // Tema seçeneklerini dinle
+          themeOptions.forEach(function(option) {
+            option.addEventListener('click', function(e) {
+              e.preventDefault();
+              e.stopPropagation();
+              
+              var theme = this.getAttribute('data-theme') || this.textContent.trim();
+              if (theme.includes('Varsayılan')) theme = 'default';
+              else if (theme.includes('Açık')) theme = 'light';
+              else if (theme.includes('Koyu')) theme = 'dark';
+              
+              // Global tema fonksiyonunu çağır
+              if (window.applyGlobalTheme) {
+                window.applyGlobalTheme(theme);
+              }
+              
+              // Tema butonunu güncelle
+              updateThemeButton();
+              
+              // Tema menüsünü kapat
+              var themeMenu = document.querySelector('.theme-dropdown-menu');
+              if (themeMenu) {
+                themeMenu.classList.remove('show');
+              }
+              
+              // Tema değişimi bildirimi
+              showThemeChangeNotification(theme);
+            });
+          });
+          
+          // Sayfa dışına tıklandığında tema menüsünü kapat
+          document.addEventListener('click', function(e) {
+            if (!e.target.closest('.theme-selector')) {
+              var themeMenu = document.querySelector('.theme-dropdown-menu');
+              if (themeMenu) {
+                themeMenu.classList.remove('show');
+              }
+            }
+          });
+          
+          // Sayfa yüklendiğinde ve tema değiştiğinde butonu güncelle
+          window.addEventListener('storage', function(e) {
+            if (e.key === 'selectedTheme') {
+              updateThemeButton();
+            }
+          });
+        }, 500);
+      });
+      
+      // Tema değişimi bildirimi fonksiyonu
+      function showThemeChangeNotification(theme) {
+        // Mevcut bildirimi kaldır
+        const existingNotification = document.querySelector('.theme-notification');
+        if (existingNotification) {
+          existingNotification.remove();
+        }
+        
+        // Yeni bildirim oluştur
+        const notification = document.createElement('div');
+        notification.className = 'theme-notification';
+        notification.style.cssText = `
+          position: fixed;
+          top: 100px;
+          right: 20px;
+          background: linear-gradient(135deg, #7c5c4a, #5a4a3a);
+          color: white;
+          padding: 12px 20px;
+          border-radius: 12px;
+          box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+          backdrop-filter: blur(20px);
+          border: 1px solid rgba(255,255,255,0.2);
+          font-weight: 600;
+          font-size: 14px;
+          z-index: 9999;
+          transform: translateX(100%);
+          transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+          opacity: 0;
+        `;
+        
+        // Tema metni
+        let themeText = '';
+        switch(theme) {
+          case 'default':
+            themeText = '🌅 Varsayılan tema uygulandı';
+            break;
+          case 'light':
+            themeText = '☀️ Açık tema uygulandı';
+            break;
+          case 'dark':
+            themeText = '🌙 Koyu tema uygulandı';
+            break;
+        }
+        
+        notification.textContent = themeText;
+        document.body.appendChild(notification);
+        
+        // Animasyon
+        setTimeout(() => {
+          notification.style.transform = 'translateX(0)';
+          notification.style.opacity = '1';
+        }, 100);
+        
+        // Otomatik kaldır
+        setTimeout(() => {
+          notification.style.transform = 'translateX(100%)';
+          notification.style.opacity = '0';
+          setTimeout(() => {
+            if (notification.parentNode) {
+              notification.remove();
+            }
+          }, 400);
+        }, 3000);
+      }
     </script>
   </body>
 </html>

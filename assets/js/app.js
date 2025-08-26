@@ -313,8 +313,18 @@ angular
       }
     });
 
+    // Tema menüsünü aç/kapat
+    $scope.themeMenuOpen = false;
+    
+    $scope.toggleThemeMenu = function() {
+      $scope.themeMenuOpen = !$scope.themeMenuOpen;
+    };
+    
     // Tema değiştirme fonksiyonu
-    $scope.changeTheme = function() {
+    $scope.changeTheme = function(theme) {
+      $scope.selectedTheme = theme;
+      $scope.themeMenuOpen = false;
+      
       // Tema değişimi sırasında smooth animasyon
       const themeDropdown = document.querySelector('.theme-dropdown');
       if (themeDropdown) {
@@ -344,6 +354,15 @@ angular
       // Tema değişimi bildirimi
       showThemeChangeNotification($scope.selectedTheme);
     };
+    
+    // Tema menüsünün dışına tıklandığında kapanması
+    document.addEventListener('click', function(event) {
+      const themeSelector = document.querySelector('.theme-selector');
+      if (themeSelector && !themeSelector.contains(event.target)) {
+        $scope.themeMenuOpen = false;
+        $scope.$apply();
+      }
+    });
     
     // Tema değişimi bildirimi
     function showThemeChangeNotification(theme) {

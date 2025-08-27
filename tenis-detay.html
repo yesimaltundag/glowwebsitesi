@@ -19,6 +19,12 @@
         position: relative;
       }
 
+      /* Dark mode tenis container */
+      body.dark-theme .tenis-container {
+        background: rgba(44, 44, 44, 0.92) !important;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
+      }
+
       .tenis-header {
         text-align: center;
         margin-bottom: 40px;
@@ -33,10 +39,20 @@
         letter-spacing: 1px;
       }
 
+      /* Dark mode tenis başlığı */
+      body.dark-theme .tenis-title {
+        color: #ffffff !important;
+      }
+
       .tenis-subtitle {
         color: #b48a78;
         font-size: 1.1rem;
         font-weight: 500;
+      }
+
+      /* Dark mode tenis alt başlığı */
+      body.dark-theme .tenis-subtitle {
+        color: #d4a574 !important;
       }
 
       .geri-btn {
@@ -60,10 +76,22 @@
         margin: 0;
       }
 
+      /* Dark mode geri butonu */
+      body.dark-theme .geri-btn {
+        background: linear-gradient(135deg, #7c5c4a, #5a4435) !important;
+        color: #ffffff !important;
+      }
+
       .geri-btn:hover {
         background: linear-gradient(135deg, #b48a78, #e2d9d0);
         color: #fff;
         transform: scale(1.08);
+      }
+
+      /* Dark mode geri butonu hover */
+      body.dark-theme .geri-btn:hover {
+        background: linear-gradient(135deg, #8a6a5a, #6a5445) !important;
+        color: #ffffff !important;
       }
 
       .kategori-tabs {
@@ -87,15 +115,32 @@
         letter-spacing: 0.5px !important;
       }
 
+      /* Dark mode tab butonları */
+      body.dark-theme .tab-btn {
+        background: linear-gradient(135deg, #404040, #2c2c2c) !important;
+        color: #ffffff !important;
+      }
+
       .tab-btn.active {
         background: linear-gradient(135deg, #b48a78, #7c5c4a) !important;
         color: #fff !important;
         transform: scale(1.05) !important;
       }
 
+      /* Dark mode aktif tab butonu */
+      body.dark-theme .tab-btn.active {
+        background: linear-gradient(135deg, #7c5c4a, #5a4435) !important;
+        color: #ffffff !important;
+      }
+
       .tab-btn:hover {
         transform: translateY(-2px) !important;
         box-shadow: 0 4px 16px rgba(180, 138, 120, 0.2) !important;
+      }
+
+      /* Dark mode tab butonu hover */
+      body.dark-theme .tab-btn:hover {
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4) !important;
       }
 
       .content-section {
@@ -127,6 +172,11 @@
         letter-spacing: 0.5px;
       }
 
+      /* Dark mode bölüm başlığı */
+      body.dark-theme .section-title {
+        color: #ffffff !important;
+      }
+
       .content-card {
         background: linear-gradient(135deg, #f8f9fa, #e9ecef);
         border-radius: 16px;
@@ -134,6 +184,13 @@
         margin-bottom: 24px;
         box-shadow: 0 4px 16px rgba(180, 138, 120, 0.08);
         border-left: 4px solid #b48a78;
+      }
+
+      /* Dark mode içerik kartı */
+      body.dark-theme .content-card {
+        background: linear-gradient(135deg, #303030, #202020) !important;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4) !important;
+        border-left: 4px solid #7c5c4a !important;
       }
 
       .content-card h3 {
@@ -144,6 +201,11 @@
         letter-spacing: 0.5px;
       }
 
+      /* Dark mode içerik kart başlığı */
+      body.dark-theme .content-card h3 {
+        color: #ffffff !important;
+      }
+
       .content-card p {
         color: #6c757d;
         line-height: 1.7;
@@ -151,10 +213,20 @@
         font-size: 1rem;
       }
 
+      /* Dark mode içerik kart paragrafı */
+      body.dark-theme .content-card p {
+        color: #b0b0b0 !important;
+      }
+
       .content-card ul {
         color: #6c757d;
         line-height: 1.7;
         padding-left: 20px;
+      }
+
+      /* Dark mode içerik kart listesi */
+      body.dark-theme .content-card ul {
+        color: #d0d0d0 !important;
       }
 
       .content-card li {
@@ -169,6 +241,12 @@
         border-left: 4px solid #b48a78;
       }
 
+      /* Dark mode vurgulu kutu */
+      body.dark-theme .highlight-box {
+        background: linear-gradient(135deg, #404040, #2c2c2c) !important;
+        border-left: 4px solid #7c5c4a !important;
+      }
+
       .highlight-box h4 {
         color: #7c5c4a;
         font-size: 1.1rem;
@@ -176,10 +254,20 @@
         margin-bottom: 12px;
       }
 
+      /* Dark mode vurgulu kutu başlığı */
+      body.dark-theme .highlight-box h4 {
+        color: #ffffff !important;
+      }
+
       .highlight-box p {
         color: #6c757d;
         margin: 0;
         font-size: 0.95rem;
+      }
+
+      /* Dark mode vurgulu kutu paragrafı */
+      body.dark-theme .highlight-box p {
+        color: #b0b0b0 !important;
       }
 
       .grid-2 {
@@ -203,6 +291,12 @@
         border-left: 4px solid #b48a78;
       }
 
+      /* Dark mode kural kartı */
+      body.dark-theme .rule-card {
+        background: linear-gradient(135deg, #303030, #202020) !important;
+        border-left: 4px solid #7c5c4a !important;
+      }
+
       .rule-card h4 {
         color: #7c5c4a;
         font-size: 1.1rem;
@@ -210,10 +304,20 @@
         margin-bottom: 12px;
       }
 
+      /* Dark mode kural kart başlığı */
+      body.dark-theme .rule-card h4 {
+        color: #ffffff !important;
+      }
+
       .rule-card p {
         color: #6c757d;
         font-size: 0.9rem;
         line-height: 1.6;
+      }
+
+      /* Dark mode kural kart paragrafı */
+      body.dark-theme .rule-card p {
+        color: #b0b0b0 !important;
       }
 
       .technique-card {
@@ -223,6 +327,12 @@
         text-align: center;
         border: 2px solid #e2d9d0;
         transition: all 0.3s;
+      }
+
+      /* Dark mode teknik kart */
+      body.dark-theme .technique-card {
+        background: linear-gradient(135deg, #303030, #202020) !important;
+        border: 2px solid #7c5c4a !important;
       }
 
       .technique-card:hover {
@@ -237,10 +347,20 @@
         margin-bottom: 12px;
       }
 
+      /* Dark mode teknik kart başlığı */
+      body.dark-theme .technique-card h4 {
+        color: #ffffff !important;
+      }
+
       .technique-card p {
         color: #6c757d;
         font-size: 0.9rem;
         line-height: 1.5;
+      }
+
+      /* Dark mode teknik kart paragrafı */
+      body.dark-theme .technique-card p {
+        color: #b0b0b0 !important;
       }
 
       .court-card {
@@ -249,6 +369,11 @@
         padding: 20px;
         text-align: center;
         transition: all 0.3s;
+      }
+
+      /* Dark mode kort kartı */
+      body.dark-theme .court-card {
+        background: linear-gradient(135deg, #303030, #202020) !important;
       }
 
       .court-card:hover {
@@ -263,10 +388,20 @@
         margin-bottom: 8px;
       }
 
+      /* Dark mode kort kart başlığı */
+      body.dark-theme .court-card h4 {
+        color: #ffffff !important;
+      }
+
       .court-card p {
         color: #6c757d;
         font-size: 0.9rem;
         margin: 0;
+      }
+
+      /* Dark mode kort kart paragrafı */
+      body.dark-theme .court-card p {
+        color: #b0b0b0 !important;
       }
 
       .player-slider-container {
@@ -292,6 +427,12 @@
         transition: all 0.3s;
       }
 
+      /* Dark mode oyuncu kartı */
+      body.dark-theme .player-card {
+        background: linear-gradient(135deg, #303030, #202020) !important;
+        border: 2px solid #7c5c4a !important;
+      }
+
       .player-card:hover {
         transform: translateY(-5px);
         box-shadow: 0 8px 25px rgba(180, 138, 120, 0.2);
@@ -314,11 +455,21 @@
         margin-bottom: 8px;
       }
 
+      /* Dark mode oyuncu kart başlığı */
+      body.dark-theme .player-card h4 {
+        color: #ffffff !important;
+      }
+
       .player-card p {
         color: #6c757d;
         font-size: 0.9rem;
         line-height: 1.5;
         margin: 0;
+      }
+
+      /* Dark mode oyuncu kart paragrafı */
+      body.dark-theme .player-card p {
+        color: #b0b0b0 !important;
       }
 
       .player-image {
@@ -348,9 +499,21 @@
         justify-content: center;
       }
 
+      /* Dark mode slider butonları */
+      body.dark-theme .slider-btn {
+        background: linear-gradient(135deg, #7c5c4a, #5a4435) !important;
+        color: #ffffff !important;
+      }
+
       .slider-btn:hover {
         transform: scale(1.1);
         box-shadow: 0 4px 12px rgba(180, 138, 120, 0.3);
+      }
+
+      /* Dark mode slider butonu hover */
+      body.dark-theme .slider-btn:hover {
+        background: linear-gradient(135deg, #8a6a5a, #6a5445) !important;
+        color: #ffffff !important;
       }
 
       .slider-dots {
@@ -369,9 +532,19 @@
         transition: all 0.3s;
       }
 
+      /* Dark mode slider noktaları */
+      body.dark-theme .dot {
+        background: #404040 !important;
+      }
+
       .dot.active {
         background: #b48a78;
         transform: scale(1.2);
+      }
+
+      /* Dark mode aktif slider noktası */
+      body.dark-theme .dot.active {
+        background: #7c5c4a !important;
       }
 
       .fitness-card {
@@ -382,6 +555,12 @@
         border-left: 4px solid #28a745;
       }
 
+      /* Dark mode fitness kartı */
+      body.dark-theme .fitness-card {
+        background: linear-gradient(135deg, #303030, #202020) !important;
+        border-left: 4px solid #7c5c4a !important;
+      }
+
       .fitness-card h4 {
         color: #7c5c4a;
         font-size: 1.1rem;
@@ -389,11 +568,21 @@
         margin-bottom: 12px;
       }
 
+      /* Dark mode fitness kart başlığı */
+      body.dark-theme .fitness-card h4 {
+        color: #ffffff !important;
+      }
+
       .fitness-card p {
         color: #6c757d;
         font-size: 0.9rem;
         line-height: 1.6;
         margin: 0;
+      }
+
+      /* Dark mode fitness kart paragrafı */
+      body.dark-theme .fitness-card p {
+        color: #b0b0b0 !important;
       }
 
       @media (max-width: 768px) {

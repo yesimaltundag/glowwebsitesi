@@ -32,11 +32,23 @@
         position: relative;
       }
 
+      /* Dark mode admin header */
+      body.dark-theme .admin-header {
+        background: rgba(60, 60, 60, 0.9) !important;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
+        border: 1px solid rgba(212, 165, 116, 0.2) !important;
+      }
+
       .admin-header h1 {
         color: #7c5c4a;
         font-size: 32px;
         margin-bottom: 10px;
         font-weight: 600;
+      }
+
+      /* Dark mode admin header title */
+      body.dark-theme .admin-header h1 {
+        color: #ffffff !important;
       }
 
       .back-btn {
@@ -63,12 +75,26 @@
         font-size: 14px;
         background: rgba(255, 255, 255, 0.9);
         transition: border-color 0.3s ease;
+        color: #333;
+      }
+
+      /* Dark mode filter select */
+      body.dark-theme .filter-select {
+        background: rgba(44, 44, 44, 0.9) !important;
+        color: #ffffff !important;
+        border-color: rgba(212, 165, 116, 0.3) !important;
       }
 
       .filter-select:focus {
         outline: none;
         border-color: #b48a78;
         box-shadow: 0 0 0 3px rgba(180, 138, 120, 0.1);
+      }
+
+      /* Dark mode filter select focus */
+      body.dark-theme .filter-select:focus {
+        border-color: #d4a574 !important;
+        box-shadow: 0 0 0 3px rgba(212, 165, 116, 0.3) !important;
       }
 
       .search-box {
@@ -80,12 +106,31 @@
         font-size: 14px;
         transition: border-color 0.3s ease;
         background: rgba(255, 255, 255, 0.9);
+        color: #333;
+      }
+
+      /* Dark mode search box */
+      body.dark-theme .search-box {
+        background: rgba(44, 44, 44, 0.9) !important;
+        color: #ffffff !important;
+        border-color: rgba(212, 165, 116, 0.3) !important;
       }
 
       .search-box:focus {
         outline: none;
         border-color: #b48a78;
         box-shadow: 0 0 0 3px rgba(180, 138, 120, 0.1);
+      }
+
+      /* Dark mode search box focus */
+      body.dark-theme .search-box:focus {
+        border-color: #d4a574 !important;
+        box-shadow: 0 0 0 3px rgba(212, 165, 116, 0.3) !important;
+      }
+
+      /* Dark mode search box placeholder */
+      body.dark-theme .search-box::placeholder {
+        color: #888888 !important;
       }
 
       .table-container {
@@ -95,6 +140,13 @@
         box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
         margin: 20px 0;
         backdrop-filter: blur(10px);
+      }
+
+      /* Dark mode table container */
+      body.dark-theme .table-container {
+        background: rgba(60, 60, 60, 0.9) !important;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
+        border: 1px solid rgba(212, 165, 116, 0.2) !important;
       }
 
       .table-container table {
@@ -108,6 +160,14 @@
         text-align: left;
         border-bottom: 1px solid #e0e0e0;
         font-size: 14px;
+        color: #333;
+      }
+
+      /* Dark mode table th and td */
+      body.dark-theme .table-container th,
+      body.dark-theme .table-container td {
+        color: #ffffff !important;
+        border-bottom-color: rgba(212, 165, 116, 0.3) !important;
       }
 
       .table-container th {
@@ -118,12 +178,28 @@
         top: 0;
       }
 
+      /* Dark mode table th */
+      body.dark-theme .table-container th {
+        background: #8a6a5a !important;
+        color: #ffffff !important;
+      }
+
       .table-container tr:nth-child(even) {
         background: rgba(248, 240, 241, 0.5);
       }
 
+      /* Dark mode table tr even */
+      body.dark-theme .table-container tr:nth-child(even) {
+        background: rgba(44, 44, 44, 0.5) !important;
+      }
+
       .table-container tr:hover {
         background: rgba(226, 217, 208, 0.3);
+      }
+
+      /* Dark mode table tr hover */
+      body.dark-theme .table-container tr:hover {
+        background: rgba(60, 60, 60, 0.7) !important;
       }
 
       .yorum-text {
@@ -179,9 +255,21 @@
         box-shadow: 0 2px 8px rgba(244, 67, 54, 0.2);
       }
 
+      /* Dark mode delete button */
+      body.dark-theme .delete-btn {
+        background: linear-gradient(135deg, #c0392b, #a93226) !important;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4) !important;
+      }
+
       .delete-btn:hover {
         background: linear-gradient(135deg, #f44336, #ffebee);
         transform: scale(1.02);
+      }
+
+      /* Dark mode delete button hover */
+      body.dark-theme .delete-btn:hover {
+        background: linear-gradient(135deg, #a93226, #8b2a1f) !important;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6) !important;
       }
 
       .pagination {
@@ -197,6 +285,13 @@
         backdrop-filter: blur(10px);
       }
 
+      /* Dark mode pagination */
+      body.dark-theme .pagination {
+        background: rgba(60, 60, 60, 0.9) !important;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
+        border: 1px solid rgba(212, 165, 116, 0.2) !important;
+      }
+
       .pagination button {
         padding: 10px 20px;
         border: none;
@@ -208,9 +303,22 @@
         transition: all 0.3s ease;
       }
 
+      /* Dark mode pagination button */
+      body.dark-theme .pagination button {
+        background: linear-gradient(135deg, #8a6a5a, #6a5445, #7c5c4a, #5a4435) !important;
+        color: #ffffff !important;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4) !important;
+      }
+
       .pagination button:hover:not(:disabled) {
         background: linear-gradient(135deg, #f8e0e1, #d1c6b1, #e2d9d0, #c0b2b0);
         transform: translateY(-2px);
+      }
+
+      /* Dark mode pagination button hover */
+      body.dark-theme .pagination button:hover:not(:disabled) {
+        background: linear-gradient(135deg, #6a5445, #5a4435, #8a6a5a, #7c5c4a) !important;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6) !important;
       }
 
       .pagination button:disabled {
@@ -222,6 +330,11 @@
         color: #7c5c4a;
         font-weight: 600;
         font-size: 16px;
+      }
+
+      /* Dark mode pagination span */
+      body.dark-theme .pagination span {
+        color: #ffffff !important;
       }
 
       .stats-container {
@@ -240,6 +353,13 @@
         text-align: center;
       }
 
+      /* Dark mode stat card */
+      body.dark-theme .stat-card {
+        background: rgba(60, 60, 60, 0.9) !important;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
+        border: 1px solid rgba(212, 165, 116, 0.2) !important;
+      }
+
       .stat-number {
         font-size: 32px;
         font-weight: bold;
@@ -247,9 +367,19 @@
         margin-bottom: 5px;
       }
 
+      /* Dark mode stat number */
+      body.dark-theme .stat-number {
+        color: #ffffff !important;
+      }
+
       .stat-label {
         color: #666;
         font-size: 14px;
+      }
+
+      /* Dark mode stat label */
+      body.dark-theme .stat-label {
+        color: #d4a574 !important;
       }
 
       .access-denied {
@@ -264,11 +394,24 @@
         backdrop-filter: blur(10px);
       }
 
+      /* Dark mode access denied */
+      body.dark-theme .access-denied {
+        background: rgba(60, 60, 60, 0.9) !important;
+        color: #ffffff !important;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
+        border: 1px solid rgba(212, 165, 116, 0.2) !important;
+      }
+
       .access-denied a {
         color: #b48a78;
         text-decoration: none;
         font-weight: bold;
         margin: 0 10px;
+      }
+
+      /* Dark mode access denied link */
+      body.dark-theme .access-denied a {
+        color: #d4a574 !important;
       }
 
       .access-denied a:hover {
@@ -282,6 +425,11 @@
         font-size: 18px;
       }
 
+      /* Dark mode loading */
+      body.dark-theme .loading {
+        color: #ffffff !important;
+      }
+
       .no-comments {
         text-align: center;
         padding: 40px;
@@ -290,6 +438,13 @@
         background: rgba(255, 255, 255, 0.9);
         border-radius: 16px;
         margin: 20px 0;
+      }
+
+      /* Dark mode no comments */
+      body.dark-theme .no-comments {
+        background: rgba(60, 60, 60, 0.9) !important;
+        color: #d4a574 !important;
+        border: 1px solid rgba(212, 165, 116, 0.2) !important;
       }
 
       /* Yıldız sistemi stilleri */
@@ -320,10 +475,23 @@
         margin: 0;
       }
 
+      /* Dark mode geri button */
+      body.dark-theme .geri-btn {
+        background: linear-gradient(135deg, #8a6a5a, #6a5445) !important;
+        color: #ffffff !important;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4) !important;
+      }
+
       .geri-btn:hover {
         background: linear-gradient(135deg, #b48a78, #e2d9d0);
         color: #fff;
         transform: scale(1.08);
+      }
+
+      /* Dark mode geri button hover */
+      body.dark-theme .geri-btn:hover {
+        background: linear-gradient(135deg, #6a5445, #5a4435) !important;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6) !important;
       }
 
       .yildiz {
@@ -373,6 +541,7 @@
       .yildiz.beyaz::before {
         filter: drop-shadow(0 0 3px rgba(0, 0, 0, 0.3));
       }
+
       .icerik-link {
         color: #7c5c4a;
         text-decoration: none;
@@ -384,12 +553,24 @@
         display: inline-block;
       }
 
+      /* Dark mode icerik link */
+      body.dark-theme .icerik-link {
+        color: #d4a574 !important;
+      }
+
       .icerik-link:hover {
         color: #b48a78;
         background: rgba(180, 138, 120, 0.1);
         text-decoration: underline;
         transform: translateY(-1px);
       }
+
+      /* Dark mode icerik link hover */
+      body.dark-theme .icerik-link:hover {
+        color: #ffffff !important;
+        background: rgba(212, 165, 116, 0.2) !important;
+      }
+
       @media (max-width: 600px) {
         .admin-container {
           padding: 20px;

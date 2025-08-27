@@ -34,6 +34,11 @@ window.initializeTheme = function() {
 // DOM yüklendiğinde tema başlat
 document.addEventListener('DOMContentLoaded', function() {
   window.initializeTheme();
+  
+  // Theme Flash Fix: Loading class'ını kaldır (transition'ları aktif et)
+  setTimeout(function() {
+    document.documentElement.classList.remove('loading-theme');
+  }, 100);
 });
 
 // Sayfa değişikliklerinde tema uygula (SPA için)
@@ -5209,7 +5214,7 @@ angular
     // Kitap listesi - güvenli başlangıç değerleri
     $scope.books = [];
     $scope.filteredBooks = [];
-    $scope.activeFilter = "all";
+    $scope.activeFilter = "favorite";
     $scope.searchText = "";
     $scope.loading = true;
 
@@ -5329,6 +5334,13 @@ angular
       }
 
       switch ($scope.activeFilter) {
+        case "favorite":
+          $scope.filteredBooks = $scope.books.filter((book) => {
+            const result = book && book.isFavorite;
+            if (book) console.log(`❤️ ${book.title}: isFavorite=${book.isFavorite} (${typeof book.isFavorite}) -> ${result}`);
+            return result;
+          });
+          break;
         case "read":
           $scope.filteredBooks = $scope.books.filter((book) => {
             const result = book && book.isRead;
@@ -5343,15 +5355,8 @@ angular
             return result;
           });
           break;
-        case "favorite":
-          $scope.filteredBooks = $scope.books.filter((book) => {
-            const result = book && book.isFavorite;
-            if (book) console.log(`❤️ ${book.title}: isFavorite=${book.isFavorite} (${typeof book.isFavorite}) -> ${result}`);
-            return result;
-          });
-          break;
         default:
-          $scope.filteredBooks = $scope.books;
+          $scope.filteredBooks = $scope.books.filter((book) => book && book.isFavorite);
       }
       
       console.log("✅ Filtreleme sonucu:", $scope.filteredBooks.length, "kitap");

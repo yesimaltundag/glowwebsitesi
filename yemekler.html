@@ -4,6 +4,24 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Yemekler - GLOW</title>
+    
+    <!-- Theme Flash Fix: Sayfa yüklenmeden önce tema uygula -->
+    <script>
+      (function() {
+        // LocalStorage'tan tema oku ve hemen uygula
+        var savedTheme = localStorage.getItem("selectedTheme") || "default";
+        document.documentElement.className = 'loading-theme';
+        
+        if (savedTheme === 'dark') {
+          document.documentElement.className += ' dark-theme';
+        } else if (savedTheme === 'light') {
+          document.documentElement.className += ' light-theme';
+        } else {
+          document.documentElement.className += ' default-theme';
+        }
+      })();
+    </script>
+    
     <link rel="stylesheet" href="assets/css/style.css" />
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
     <script src="assets/js/app.js"></script>
@@ -19,13 +37,17 @@
         position: relative;
         width: 100%;
         min-height: 100vh;
+        transition: all 0.3s ease;
+        border: 1px solid rgba(124, 92, 74, 0.1);
       }
       
       /* Dark mode yemekler container */
       body.dark-theme .yemekler-container {
         background: rgba(44, 44, 44, 0.92) !important;
         box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4) !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
       }
+      
       .yemekler-title-row {
         display: flex;
         align-items: center;
@@ -33,18 +55,23 @@
         gap: 8px;
         margin-bottom: 32px;
       }
+      
       .yemekler-title {
         color: #7c5c4a;
         font-size: 2.2rem;
         font-weight: 700;
         line-height: 1;
         letter-spacing: 1px;
+        transition: color 0.3s ease;
+        text-shadow: 0 2px 4px rgba(124, 92, 74, 0.1);
       }
       
       /* Dark mode yemekler başlığı */
       body.dark-theme .yemekler-title {
         color: #ffffff !important;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important;
       }
+      
       .kategori-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -52,6 +79,7 @@
         margin-top: 32px;
         margin-bottom: 20px;
       }
+      
       .kategori-card {
         background: linear-gradient(135deg, #f8e0e1 60%, #e2d9d0 100%);
         border-radius: 16px;
@@ -80,18 +108,22 @@
         background: linear-gradient(135deg, #2c2c2c 60%, #404040 100%) !important;
         color: #ffffff !important;
         box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4) !important;
+        border-color: rgba(255, 255, 255, 0.1) !important;
       }
 
       .kategori-card:hover {
         box-shadow: 0 8px 32px rgba(180, 138, 120, 0.16);
         transform: translateY(-3px) scale(1.04);
+        border-color: rgba(124, 92, 74, 0.3);
       }
 
       /* Dark mode kategori kartları hover */
       body.dark-theme .kategori-card:hover {
         box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6) !important;
         transform: translateY(-3px) scale(1.04);
+        border-color: rgba(212, 165, 116, 0.3) !important;
       }
+      
       .geri-btn {
         background: linear-gradient(135deg, #e2d9d0, #b48a78);
         color: #7c5c4a;
@@ -111,57 +143,135 @@
         top: 20px;
         left: 20px;
         margin: 0;
+        box-shadow: 0 4px 16px rgba(124, 92, 74, 0.2);
+        border: 1px solid rgba(124, 92, 74, 0.1);
       }
+      
       .geri-btn:hover {
         background: linear-gradient(135deg, #b48a78, #e2d9d0);
         color: #fff;
         transform: scale(1.08);
+        box-shadow: 0 6px 20px rgba(124, 92, 74, 0.3);
+        border-color: rgba(124, 92, 74, 0.3);
       }
       
       /* Dark mode geri butonu */
       body.dark-theme .geri-btn {
         background: linear-gradient(135deg, #7c5c4a, #5a4435) !important;
         color: #ffffff !important;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4) !important;
+        border-color: rgba(255, 255, 255, 0.1) !important;
       }
       
       body.dark-theme .geri-btn:hover {
         background: linear-gradient(135deg, #8a6a5a, #6a5445) !important;
         color: #ffffff !important;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6) !important;
+        border-color: rgba(212, 165, 116, 0.3) !important;
+      }
+
+      /* Responsive tasarım iyileştirmeleri */
+      @media (max-width: 1024px) {
+        .yemekler-container {
+          padding: 40px 40px;
+        }
+        
+        .kategori-grid {
+          grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+          gap: 20px;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .yemekler-container {
+          margin: 40px 20px;
+          padding: 30px 20px;
+          border-radius: 20px;
+        }
+        
+        body.dark-theme .yemekler-container {
+          background: rgba(44, 44, 44, 0.95) !important;
+          border-color: rgba(255, 255, 255, 0.15) !important;
+        }
+        
+        .yemekler-title {
+          font-size: 1.8rem;
+        }
+        
+        .kategori-grid {
+          grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+          gap: 16px;
+        }
+        
+        .kategori-card {
+          padding: 35px 20px;
+          min-height: 160px;
+          font-size: 1.1rem;
+        }
+        
+        .geri-btn {
+          width: 40px;
+          height: 40px;
+          font-size: 16px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .yemekler-container {
+          margin: 20px 10px;
+          padding: 20px 16px;
+          border-radius: 16px;
+        }
+        
+        .yemekler-title {
+          font-size: 1.5rem;
+        }
+        
+        .kategori-grid {
+          grid-template-columns: 1fr;
+          gap: 16px;
+        }
+        
+        .kategori-card {
+          padding: 30px 16px;
+          min-height: 140px;
+          font-size: 1rem;
+        }
       }
     </style>
   </head>
   <body>
     <ng-include src="'components/header.html'"></ng-include>
     <main class="main-content">
-      <div class="yemekler-container" ng-controller="YemeklerController">
+      <div class="yemekler-container glass-effect shadow-effect border-effect smooth-transition performance-optimized" ng-controller="YemeklerController">
         <button
           class="geri-btn"
-          onclick="window.history.back()"
-          title="Geri Dön"
+          onclick="window.location.href='anasayfa.html'"
+          title="Anasayfaya Dön"
         >
           ←
         </button>
         <div class="yemekler-title-row">
           <div class="yemekler-title">Yemekler</div>
         </div>
-        <div class="kategori-grid">
-          <div class="kategori-card" ng-click="kategoriSec('Yöresel Yemekler')">
+        <div class="kategori-grid fade-in">
+          <div class="kategori-card hover-effect smooth-transition" ng-click="kategoriSec('Yöresel Yemekler')">
             Yöresel Yemekler
           </div>
-          <div class="kategori-card" ng-click="kategoriSec('Dünya Mutfağı')">
+          <div class="kategori-card hover-effect smooth-transition" ng-click="kategoriSec('Dünya Mutfağı')">
             Dünya Mutfağı
           </div>
           <div
-            class="kategori-card"
+            class="kategori-card hover-effect smooth-transition"
             ng-click="kategoriSec('Tatlılar ve Hamur İşleri')"
           >
             Tatlılar ve Hamur İşleri
           </div>
-          <div class="kategori-card" ng-click="kategoriSec('Pratik Tarifler')">
+          <div class="kategori-card hover-effect smooth-transition" ng-click="kategoriSec('Pratik Tarifler')">
             Pratik Tarifler
           </div>
           <div
-            class="kategori-card"
+            class="kategori-card hover-effect smooth-transition"
             ng-click="kategoriSec('Sağlıklı Besinler')"
           >
             Sağlıklı Besinler
@@ -183,20 +293,15 @@
 
           $scope.kategoriSec = function (kategori) {
             if (kategori === "Yöresel Yemekler") {
-              window.location.href =
-                "http://app.test2.local/yoresel-yemekler.html";
+              window.location.href = "yoresel-yemekler.html";
             } else if (kategori === "Dünya Mutfağı") {
-              window.location.href =
-                "http://app.test2.local/dunya-mutfagi.html";
+              window.location.href = "dunya-mutfagi.html";
             } else if (kategori === "Tatlılar ve Hamur İşleri") {
-              window.location.href =
-                "http://app.test2.local/tatlilar-hamur.html";
+              window.location.href = "tatlilar-hamur.html";
             } else if (kategori === "Pratik Tarifler") {
-              window.location.href =
-                "http://app.test2.local/pratik-tarifler.html";
+              window.location.href = "pratik-tarifler.html";
             } else if (kategori === "Sağlıklı Besinler") {
-              window.location.href =
-                "http://app.test2.local/saglikli-besinler.html";
+              window.location.href = "saglikli-besinler.html";
             } else {
               alert(
                 kategori + " kategorisi seçildi! Bu özellik yakında eklenecek."

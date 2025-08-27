@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Anamakine: 127.0.0.1:3306
--- Üretim Zamanı: 25 Ağu 2025, 08:14:52
+-- Üretim Zamanı: 27 Ağu 2025, 10:12:57
 -- Sunucu sürümü: 9.1.0
 -- PHP Sürümü: 8.3.14
 
@@ -187,7 +187,7 @@ INSERT INTO `diziler` (`id`, `dizi_adi`, `aciklama`, `yonetmen`, `oyuncular`, `d
 (3, 'Narcos', 'Kolombiyalı uyuşturucu baronu Pablo Escobar\'ın hayatını anlatan dizi.', NULL, NULL, NULL, NULL, 'dram', 2015, 3, 30, 8.8, 'https://m.media-amazon.com/images/I/91jkF8kLQqL.jpg', 'https://www.youtube.com/embed/xl8zdCY-abw', 'tamamlandi', NULL, 3, 30, 45, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-30 07:08:14', '2025-08-20 22:26:21'),
 (4, 'Ozark', 'Para aklama işine bulaşan bir ailenin hayatta kalma mücadelesini anlatan dizi.', NULL, NULL, NULL, NULL, 'dram', 2017, 4, 44, 8.5, 'https://m.media-amazon.com/images/M/MV5BZDk1ZTdjOWItNTJmYS00MGIzLThmY2ItZWNiOGY5MzJlNTA5XkEyXkFqcGc@._V1_.jpg', 'https://www.youtube.com/embed/5hAXVqrljbs', 'tamamlandi', NULL, 4, 44, 45, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-30 07:08:14', '2025-08-20 22:26:21'),
 (5, 'The Queen\'s Gambit', 'Satranç dahisi Beth Harmon\'ın hayatını anlatan dizi.', NULL, NULL, NULL, NULL, 'dram', 2020, 1, 7, 8.6, 'https://m.media-amazon.com/images/M/MV5BMmRlNjQxNWQtMjk1OS00N2QxLTk0YWQtMzRhYjY5YTFhNjMxXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg', 'https://www.youtube.com/embed/oZn3qSgmLqI', 'tamamlandi', NULL, 1, 7, 45, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-30 07:08:14', '2025-08-20 22:26:21'),
-(6, 'Friends', 'Altı arkadaşın New York\'ta yaşadığı eğlenceli ve duygusal maceralar.', 'David Crane, Marta Kauffman', 'Jennifer Aniston, Courteney Cox, Lisa Kudrow, Matt LeBlanc, Matthew Perry, David Schwimmer', 'İngilizce', 'ABD', 'komedi', 1994, 10, 236, 8.9, 'https://diziyleogren.com/img/BFriends.c05b593a.jpg', 'https://www.youtube.com/embed/IEEbUzffzrk', 'tamamlandi', 'NBC', 10, 236, 22, 'Los Angeles, California, ABD', 'Michael Skloff, Allee Willis', 'David Crane, Marta Kauffman, Kevin S. Bright', 'David Crane, Marta Kauffman', '1994-09-22', '2004-05-06', NULL, 'komedi, arkadaşlık, romantik, New York, 90lar', '2025-07-30 07:08:14', '2025-08-20 22:26:21'),
+(6, 'Friends', 'Altı arkadaşın New York\'ta yaşadığı eğlenceli ve duygusal maceralar.', 'David Crane, Marta Kauffman', 'Jennifer Aniston, Courteney Cox, Lisa Kudrow, Matt LeBlanc, Matthew Perry, David Schwimmer', 'İngilizce', 'ABD', 'komedi', 1994, 10, 236, 8.9, 'https://diziyleogren.com/img/BFriends.c05b593a.jpg', 'https://www.youtube.com/embed/s2TyVQGoCYo?list=RDs2TyVQGoCYo', 'tamamlandi', 'NBC', 10, 236, 22, 'Los Angeles, California, ABD', 'Michael Skloff, Allee Willis', 'David Crane, Marta Kauffman, Kevin S. Bright', 'David Crane, Marta Kauffman', '1994-09-22', '2004-05-06', NULL, 'komedi, arkadaşlık, romantik, New York, 90lar', '2025-07-30 07:08:14', '2025-08-25 12:30:54'),
 (7, 'The Office', 'Bir ofis ortamında geçen mokümanter tarzı komedi dizisi.', NULL, NULL, NULL, NULL, 'komedi', 2005, 9, 201, 8.9, 'https://m.media-amazon.com/images/M/MV5BZjQwYzBlYzUtZjhhOS00ZDQ0LWE0NzAtYTk4MjgzZTNkZWEzXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg', 'https://www.youtube.com/embed/LHOtME2DL4g', 'tamamlandi', NULL, 9, 201, 45, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-30 07:08:14', '2025-08-20 22:26:21'),
 (8, 'Brooklyn Nine-Nine', 'Brooklyn\'deki bir polis karakolunda geçen komedi dizisi.', NULL, NULL, NULL, NULL, 'komedi', 2013, 8, 153, 8.4, 'https://m.media-amazon.com/images/M/MV5BNzBiODQxZTUtNjc0MC00Yzc1LThmYTMtN2YwYTU3NjgxMmI4XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg', 'https://www.youtube.com/embed/sEOuJ4z5aTc', 'tamamlandi', NULL, 8, 153, 45, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-07-30 07:08:14', '2025-08-20 22:26:21'),
 (9, 'Parks and Recreation', 'Küçük bir kasabanın park ve rekreasyon departmanında geçen komedi dizisi. Leslie Knope\'un belediye başkanı olma hayali ve arkadaşlarıyla yaşadığı eğlenceli maceralar.', 'Greg Daniels, Michael Schur', 'Amy Poehler, Nick Offerman, Aziz Ansari, Aubrey Plaza, Chris Pratt, Adam Scott, Rob Lowe, Rashida Jones', 'İngilizce', 'ABD', 'komedi', 2009, 7, 125, 8.6, 'https://m.media-amazon.com/images/M/MV5BNDlhMzAwNTAtNTk2NS00MTdkLWE3ZWYtMDU0MTFiYmU2ZTc0XkEyXkFqcGc@._V1_.jpg', 'https://www.youtube.com/embed/5IZWeAwdJ-s', 'tamamlandi', 'NBC', 7, 125, 22, 'Pasadena, California, ABD', 'Gaby Moreno, Vincent Jones', 'Greg Daniels, Michael Schur, Howard Klein', 'Greg Daniels, Michael Schur', '2009-04-09', '2015-02-24', NULL, 'komedi, belediye, arkadaşlık, iyimserlik, hükümet', '2025-07-30 07:08:14', '2025-08-20 22:26:21'),
@@ -684,7 +684,7 @@ CREATE TABLE IF NOT EXISTS `film_takip` (
   `is_watchlist` tinyint(1) DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=29 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=30 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Tablo döküm verisi `film_takip`
@@ -697,10 +697,9 @@ INSERT INTO `film_takip` (`id`, `user_id`, `title`, `year`, `genre`, `poster`, `
 (6, 114, 'The Matrix', 1999, 'Aksiyon, Bilim Kurgu', 'https://m.media-amazon.com/images/M/MV5BNzQzOTk3OTAtNDQ0Zi00ZTVkLWI0MTEtMDllZjNkYzNjNTc4L2ltYWdlXkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_SX300.jpg', 0, '', 0, 0, '2025-08-18 13:51:35', '2025-08-18 13:51:35', 0),
 (7, 114, 'Die Hard', 1988, 'Aksiyon, Gerilim', 'https://media.posterlounge.com/img/products/710000/705263/705263_poster.jpg', 0, '', 0, 0, '2025-08-18 13:51:41', '2025-08-18 13:51:41', 0),
 (8, 114, 'Mad Max: Fury Road', 2015, 'Aksiyon, Macera', 'https://m.media-amazon.com/images/M/MV5BN2EwM2I5OWMtMGQyMi00Zjg1LWJkNTctZTdjYTA4OGUwZjMyXkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_SX300.jpg', 0, '', 0, 0, '2025-08-18 13:51:51', '2025-08-18 13:51:51', 0),
-(12, 118, 'The Dark Knight', 2008, 'Aksiyon, Dram', 'https://m.media-amazon.com/images/M/MV5BMTMxNTMwODM0NF5BMl5BanBnXkFtZTcwODAyMTk2Mw@@._V1_SX300.jpg', 9, '', 1, 0, '2025-08-21 11:02:04', '2025-08-21 11:02:04', 0),
+(12, 118, 'The Dark Knight', 2008, 'Aksiyon, Dram', 'https://m.media-amazon.com/images/M/MV5BMTMxNTMwODM0NF5BMl5BanBnXkFtZTcwODAyMTk2Mw@@._V1_SX300.jpg', 9, '', 1, 0, '2025-08-21 11:02:04', '2025-08-26 12:19:48', 0),
 (13, 118, 'The Matrix', 1999, 'Aksiyon, Bilim Kurgu', 'https://m.media-amazon.com/images/M/MV5BNzQzOTk3OTAtNDQ0Zi00ZTVkLWI0MTEtMDllZjNkYzNjNTc4L2ltYWdlXkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_SX300.jpg', 9, '', 1, 0, '2025-08-21 11:02:07', '2025-08-21 11:02:07', 0),
 (14, 118, 'The Godfather', 1972, 'Dram, Suç', 'https://m.media-amazon.com/images/M/MV5BM2MyNjYxNmUtYTAwNi00MTYxLWJmNWYtYzZlODY3ZTk3OTFlXkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_SX300.jpg', 9, '', 1, 0, '2025-08-21 11:02:25', '2025-08-21 11:02:25', 0),
-(15, 118, '12 Angry Men', 1957, 'Dram, Suç', 'https://m.media-amazon.com/images/M/MV5BMWU4N2FjNzYtNTVkNC00NzQ0LTg0MjAtYTJlMjFhNGUxZDFmXkEyXkFqcGdeQXVyNjc1NTYyMjg@._V1_SX300.jpg', 9, '', 1, 0, '2025-08-21 11:02:29', '2025-08-21 11:02:29', 0),
 (16, 118, 'Forrest Gump', 1994, 'Dram, Romantik', 'https://m.media-amazon.com/images/M/MV5BNWIwODRlZTUtY2U3ZS00Yzg1LWJhNzYtMmZiYmEyNmU1NjMzXkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_SX300.jpg', 9, '', 1, 0, '2025-08-21 11:02:36', '2025-08-21 11:02:36', 0),
 (17, 118, 'The Green Mile', 1999, 'Dram, Suç', 'https://images.plex.tv/photo?size=large-1920&scale=1&url=https%3A%2F%2Fmetadata-static.plex.tv%2Fd%2Fgracenote%2Fd725648c20cb167cc7a5487c4948b984.jpg', 9, '', 1, 0, '2025-08-21 11:02:39', '2025-08-21 11:02:39', 0),
 (18, 118, 'Eternal Sunshine of the Spotless Mind', 2004, 'Romantik, Bilim Kurgu', 'https://m.media-amazon.com/images/M/MV5BYzE2MzI2NTUtMmFlNS00ZTY5LTkxOTgtODVmZDc4ODhkMWM0XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg', 8, '', 1, 0, '2025-08-21 11:02:52', '2025-08-21 11:02:52', 0),
@@ -711,7 +710,8 @@ INSERT INTO `film_takip` (`id`, `user_id`, `title`, `year`, `genre`, `poster`, `
 (23, 118, 'The Lord of the Rings: The Return of the King', 2003, 'Fantastik, Macera', 'https://m.media-amazon.com/images/M/MV5BNzA5ZDNlZWMtM2NhNS00NDJjLTk4NDItYTRmY2EwMWZlMTY3XkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_SX300.jpg', 9, '', 1, 0, '2025-08-21 11:03:44', '2025-08-21 11:03:44', 0),
 (24, 118, 'Toy Story 3', 2010, 'Animasyon, Macera', 'https://m.media-amazon.com/images/M/MV5BMTgxOTY4Mjc0MF5BMl5BanBnXkFtZTcwNTA4MDQyMw@@._V1_SX300.jpg', 8, '', 1, 0, '2025-08-21 11:03:59', '2025-08-21 11:03:59', 0),
 (25, 118, 'Up', 2009, 'Animasyon, Macera', 'https://upload.wikimedia.org/wikipedia/en/0/05/Up_%282009_film%29.jpg', 8, '', 1, 0, '2025-08-21 11:04:02', '2025-08-21 11:04:02', 0),
-(26, 118, 'Pulp Fiction', 1994, 'Suç, Dram', 'https://m.media-amazon.com/images/M/MV5BNGNhMDIzZTUtNTBlZi00MTRlLWFjM2ItYzViMjE3YzI5MjljXkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_SX300.jpg', 9, '', 1, 0, '2025-08-21 11:04:18', '2025-08-21 11:04:18', 0);
+(26, 118, 'Pulp Fiction', 1994, 'Suç, Dram', 'https://m.media-amazon.com/images/M/MV5BNGNhMDIzZTUtNTBlZi00MTRlLWFjM2ItYzViMjE3YzI5MjljXkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_SX300.jpg', 9, '', 1, 0, '2025-08-21 11:04:18', '2025-08-21 11:04:18', 0),
+(29, 118, '12 Angry Men', 1957, 'Dram, Suç', 'https://m.media-amazon.com/images/M/MV5BMWU4N2FjNzYtNTVkNC00NzQ0LTg0MjAtYTJlMjFhNGUxZDFmXkEyXkFqcGdeQXVyNjc1NTYyMjg@._V1_SX300.jpg', 9, '', 1, 1, '2025-08-26 13:09:05', '2025-08-26 13:09:05', 0);
 
 -- --------------------------------------------------------
 
@@ -906,7 +906,7 @@ INSERT INTO `kitaplar` (`id`, `kitap_adi`, `yazar`, `basim_yili`, `kategori`, `s
 (24, 'Deep Work', 'Cal Newport', 2016, 'Kişisel Gelişim', 304, 'New York, ABD', 2147483647, 'Dikkat dağınıklığı çağında odaklanma sanatını anlatan bu kitap, derin çalışma tekniklerini öğretir.', 'https://target.scene7.com/is/image/Target/GUEST_de8c9d7e-9578-449a-92b1-cf4b18ecc2d0'),
 (25, 'Mindset', 'Carol S. Dweck', 2006, 'Kişisel Gelişim', 288, 'New York, ABD', 2147483647, 'Sabit ve gelişim odaklı zihniyet türlerini inceleyen bu kitap, başarı ve öğrenme süreçlerini anlatır.', 'https://m.media-amazon.com/images/I/61y1U-lPl5L.jpg'),
 (31, 'The Innovators', 'Walter Isaacson', 2014, 'Teknoloji', 560, 'New York, ABD', 2147483647, 'Dijital devrimin öncülerinin hikayelerini anlatan bu kitap, bilgisayar ve internet çağının nasıl başladığını anlatır.', 'https://m.media-amazon.com/images/I/71LOesgcrUL.jpg'),
-(36, 'The Story of Art', 'E.H. Gombrich', 1950, 'Sanat', 688, 'Londra, İngiltere', 2147483647, 'Sanat tarihinin en kapsamlı eserlerinden biri. İlk çağlardan günümüze kadar sanatın gelişimini anlatır.', 'https://www.phaidon.com/images/9780714832470/main-mobile-x1-jpg/9780714832470.jpg'),
+(36, 'The Story of Art', 'E.H. Gombrich', 1950, 'Sanat', 688, 'Londra, İngiltere', 2147483647, 'Sanat tarihinin en kapsamlı eserlerinden biri. İlk çağlardan günümüze kadar sanatın gelişimini anlatır.', 'https://pictures.abebooks.com/isbn/9780714815237-uk.jpg'),
 (37, 'Ways of Seeing', 'John Berger', 1972, 'Sanat', 176, 'Londra, İngiltere', 2147483647, 'Görsel sanatları nasıl yorumlayacağımızı öğreten bu kitap, sanat eleştirisi alanında çığır açan bir eser.', 'https://m.media-amazon.com/images/I/61rbO4IAa4L._UF350,350_QL50_.jpg'),
 (38, 'The Art Book', 'Phaidon Editors', 1994, 'Sanat', 512, 'Londra, İngiltere', 2147483647, '500 büyük sanatçının eserlerini tanıtan bu kitap, sanat tarihinin en önemli yapıtlarını gözler önüne serer.', 'https://productimages.hepsiburada.net/s/312/375-375/110000305424864.jpg'),
 (39, 'Art and Visual Perception', 'Rudolf Arnheim', 1954, 'Sanat', 508, 'California, ABD', 2147483647, 'Görsel algı ve sanat arasındaki ilişkiyi inceleyen bu kitap, psikoloji ve sanatın kesişim noktalarını araştırır.', 'https://m.media-amazon.com/images/I/710lDxIVPcL._UF1000,1000_QL80_.jpg'),
@@ -967,14 +967,18 @@ CREATE TABLE IF NOT EXISTS `kitap_takip` (
   `category` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Tablo döküm verisi `kitap_takip`
 --
 
 INSERT INTO `kitap_takip` (`id`, `user_id`, `title`, `author`, `year`, `genre`, `cover`, `rating`, `review`, `is_read`, `is_favorite`, `is_wishlist`, `pages`, `created_at`, `updated_at`, `is_reading`, `current_page`, `pages_read`, `total_pages`, `category`) VALUES
-(5, 104, 'Tutunamayanlar', 'Oğuz Atay', NULL, NULL, 'https://img.kitapyurdu.com/v1/getImage/fn:11462655/wh:true/wi:800', 0.0, '', 0, 1, 0, NULL, '2025-08-25 07:53:55', '2025-08-25 07:53:55', 0, 0, 0, 724, 'Türk Edebiyatı');
+(5, 104, 'Tutunamayanlar', 'Oğuz Atay', NULL, NULL, 'https://img.kitapyurdu.com/v1/getImage/fn:11462655/wh:true/wi:800', 0.0, '', 0, 1, 0, NULL, '2025-08-25 07:53:55', '2025-08-25 07:53:55', 0, 0, 0, 724, 'Türk Edebiyatı'),
+(6, 118, 'Tutunamayanlar', 'Oğuz Atay', NULL, NULL, 'https://img.kitapyurdu.com/v1/getImage/fn:11462655/wh:true/wi:800', 0.0, '', 1, 1, 0, NULL, '2025-08-26 11:38:19', '2025-08-27 07:24:00', 0, 0, 724, 724, 'Türk Edebiyatı'),
+(7, 118, 'Outliers', 'Malcolm Gladwell', NULL, NULL, 'https://i.dr.com.tr/cache/600x600-0/originals/0000000303463-1.jpg', 0.0, '', 0, 1, 0, NULL, '2025-08-26 13:28:47', '2025-08-26 13:28:47', 0, 0, 0, 309, 'Kültür & Toplum'),
+(8, 118, 'Kürk Mantolu Madonna', 'Sabahattin Ali', NULL, NULL, 'https://img.kitapyurdu.com/v1/getImage/fn:1207631/wh:true/wi:800', 0.0, '', 1, 0, 0, NULL, '2025-08-27 07:24:05', '2025-08-27 07:24:05', 0, 0, 160, 160, 'Türk Edebiyatı'),
+(9, 118, 'Çalıkuşu', 'Reşat Nuri Güntekin', NULL, NULL, 'https://cdn.cimri.io/image/1200x1200/calikusu-resat-nuri-guntekin_126525385.jpg', 0.0, '', 1, 0, 0, NULL, '2025-08-27 07:24:10', '2025-08-27 07:24:10', 0, 0, 448, 448, 'Türk Edebiyatı');
 
 -- --------------------------------------------------------
 

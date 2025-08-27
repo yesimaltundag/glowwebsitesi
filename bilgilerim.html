@@ -23,6 +23,11 @@
         overflow: hidden;
       }
 
+      /* Dark mode main content */
+      body.dark-theme .main-content {
+        background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%) !important;
+      }
+
       .main-content::before {
         content: "";
         position: absolute;
@@ -33,6 +38,12 @@
         background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="1" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
         opacity: 0.3;
         pointer-events: none;
+      }
+
+      /* Dark mode main content before */
+      body.dark-theme .main-content::before {
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="1" fill="rgba(212,165,116,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>') !important;
+        opacity: 0.2 !important;
       }
 
       /* Modern Form Container */
@@ -48,6 +59,14 @@
         position: relative;
         width: 100%;
         animation: slideInUp 0.6s ease-out;
+      }
+
+      /* Dark mode bilgilerim container */
+      body.dark-theme .bilgilerim-container {
+        background: rgba(60, 60, 60, 0.9) !important;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4),
+          0 0 0 1px rgba(212, 165, 116, 0.2) !important;
+        border: 1px solid rgba(212, 165, 116, 0.2) !important;
       }
 
       @keyframes slideInUp {
@@ -80,6 +99,11 @@
         border-radius: 2px;
       }
 
+      /* Dark mode bilgilerim header after */
+      body.dark-theme .bilgilerim-header::after {
+        background: linear-gradient(90deg, #d4a574, #b48a78) !important;
+      }
+
       .bilgilerim-header h1 {
         color: #2c3e50;
         font-size: 32px;
@@ -89,10 +113,21 @@
         letter-spacing: -0.5px;
       }
 
+      /* Dark mode bilgilerim header title */
+      body.dark-theme .bilgilerim-header h1 {
+        color: #ffffff !important;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important;
+      }
+
       .bilgilerim-header p {
         color: #34495e;
         font-size: 16px;
         margin: 0;
+      }
+
+      /* Dark mode bilgilerim header subtitle */
+      body.dark-theme .bilgilerim-header p {
+        color: #d4a574 !important;
       }
 
       /* Modern Form Groups */
@@ -112,6 +147,11 @@
         opacity: 0.9;
       }
 
+      /* Dark mode form group label */
+      body.dark-theme .form-group label {
+        color: #d4a574 !important;
+      }
+
       .form-input {
         width: 100%;
         padding: 16px 20px;
@@ -126,6 +166,13 @@
         transition: all 0.3s ease;
       }
 
+      /* Dark mode form input */
+      body.dark-theme .form-input {
+        background: rgba(44, 44, 44, 0.9) !important;
+        color: #ffffff !important;
+        border-color: rgba(212, 165, 116, 0.3) !important;
+      }
+
       .form-input:focus {
         outline: none;
         border-color: #667eea;
@@ -133,9 +180,22 @@
         background: rgba(255, 255, 255, 0.95);
       }
 
+      /* Dark mode form input focus */
+      body.dark-theme .form-input:focus {
+        border-color: #d4a574 !important;
+        box-shadow: 0 0 0 3px rgba(212, 165, 116, 0.3) !important;
+        background: rgba(60, 60, 60, 0.95) !important;
+      }
+
       .form-input::placeholder {
         color: #95a5a6;
         opacity: 0.7;
+      }
+
+      /* Dark mode form input placeholder */
+      body.dark-theme .form-input::placeholder {
+        color: #888888 !important;
+        opacity: 0.8 !important;
       }
 
       /* Password Strength Indicator */
@@ -145,6 +205,11 @@
         border-radius: 2px;
         background: #ecf0f1;
         overflow: hidden;
+      }
+
+      /* Dark mode password strength */
+      body.dark-theme .password-strength {
+        background: #444444 !important;
       }
 
       .password-strength-bar {
@@ -174,23 +239,32 @@
       .form-actions {
         margin-top: 40px;
         display: flex;
-        gap: 16px;
+        flex-direction: row;
+        gap: 12px;
         justify-content: center;
-        flex-wrap: wrap;
+        align-items: center;
+        flex-wrap: nowrap;
       }
 
       .btn {
-        padding: 16px 32px;
+        padding: 12px 20px;
         border: none;
-        border-radius: 12px;
-        font-size: 16px;
+        border-radius: 10px;
+        font-size: 12px;
         font-weight: 600;
         cursor: pointer;
         transition: all 0.3s ease;
         text-transform: uppercase;
-        letter-spacing: 0.5px;
+        letter-spacing: 0.3px;
         position: relative;
         overflow: hidden;
+        min-width: 120px;
+        max-width: 150px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex: 0 1 auto;
       }
 
       .btn-primary {
@@ -199,10 +273,22 @@
         box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
       }
 
+      /* Dark mode btn primary */
+      body.dark-theme .btn-primary {
+        background: linear-gradient(135deg, #8a6a5a, #6a5445) !important;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4) !important;
+      }
+
       .btn-primary:hover {
         transform: translateY(-3px);
         box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
         background: linear-gradient(135deg, #5a6fd8, #6a4190);
+      }
+
+      /* Dark mode btn primary hover */
+      body.dark-theme .btn-primary:hover {
+        background: linear-gradient(135deg, #6a5445, #5a4435) !important;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6) !important;
       }
 
       .btn-secondary {
@@ -211,10 +297,22 @@
         box-shadow: 0 4px 15px rgba(149, 165, 166, 0.3);
       }
 
+      /* Dark mode btn secondary */
+      body.dark-theme .btn-secondary {
+        background: linear-gradient(135deg, #6c7b7d, #5a6a6c) !important;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4) !important;
+      }
+
       .btn-secondary:hover {
         transform: translateY(-3px);
         box-shadow: 0 8px 25px rgba(149, 165, 166, 0.4);
         background: linear-gradient(135deg, #859395, #6c7b7d);
+      }
+
+      /* Dark mode btn secondary hover */
+      body.dark-theme .btn-secondary:hover {
+        background: linear-gradient(135deg, #5a6a6c, #4a5a5c) !important;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6) !important;
       }
 
       .btn:active {
@@ -236,10 +334,24 @@
         border: 1px solid rgba(46, 204, 113, 0.2);
       }
 
+      /* Dark mode message success */
+      body.dark-theme .message-success {
+        background: rgba(46, 204, 113, 0.2) !important;
+        color: #2ecc71 !important;
+        border-color: rgba(46, 204, 113, 0.4) !important;
+      }
+
       .message-error {
         background: rgba(231, 76, 60, 0.1);
         color: #e74c3c;
         border: 1px solid rgba(231, 76, 60, 0.2);
+      }
+
+      /* Dark mode message error */
+      body.dark-theme .message-error {
+        background: rgba(231, 76, 60, 0.2) !important;
+        color: #ff6b6b !important;
+        border-color: rgba(231, 76, 60, 0.4) !important;
       }
 
       /* Responsive Design */
@@ -259,13 +371,19 @@
         }
 
         .form-actions {
-          flex-direction: column;
-          gap: 12px;
+          flex-direction: row;
+          gap: 8px;
+          justify-content: center;
+          flex-wrap: nowrap;
         }
 
         .btn {
-          padding: 14px 24px;
-          width: 100%;
+          padding: 10px 16px;
+          width: auto;
+          min-width: 100px;
+          max-width: 130px;
+          height: 45px;
+          font-size: 11px;
         }
       }
 

@@ -4,6 +4,24 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Dizi Kategorileri - GLOW</title>
+    
+    <!-- Theme Flash Fix: Sayfa yüklenmeden önce tema uygula -->
+    <script>
+      (function() {
+        // LocalStorage'tan tema oku ve hemen uygula
+        var savedTheme = localStorage.getItem("selectedTheme") || "default";
+        document.documentElement.className = 'loading-theme';
+        
+        if (savedTheme === 'dark') {
+          document.documentElement.className += ' dark-theme';
+        } else if (savedTheme === 'light') {
+          document.documentElement.className += ' light-theme';
+        } else {
+          document.documentElement.className += ' default-theme';
+        }
+      })();
+    </script>
+    
     <link rel="stylesheet" href="assets/css/style.css" />
     <link rel="stylesheet" href="assets/css/dizi-styles.css" />
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>

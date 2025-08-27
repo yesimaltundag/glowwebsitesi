@@ -29,6 +29,11 @@
         min-height: 100vh;
       }
 
+      /* Dark mode contact container */
+      body.dark-theme .contact-container {
+        background: rgba(44, 44, 44, 0.9) !important;
+      }
+
       .contact-title {
         margin-bottom: 30px;
         font-size: 2rem;
@@ -37,6 +42,12 @@
         letter-spacing: 1px;
         text-shadow: 0 2px 12px rgba(124, 92, 74, 0.1);
         text-transform: uppercase;
+      }
+
+      /* Dark mode contact title */
+      body.dark-theme .contact-title {
+        color: #ffffff !important;
+        text-shadow: 0 2px 12px rgba(0, 0, 0, 0.3) !important;
       }
 
       .contact-grid {
@@ -67,9 +78,19 @@
         align-items: center;
       }
 
+      /* Dark mode contact item */
+      body.dark-theme .contact-item {
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4) !important;
+      }
+
       .contact-item:hover {
         transform: translateY(-8px);
         box-shadow: 0 16px 48px rgba(0, 0, 0, 0.15);
+      }
+
+      /* Dark mode contact item hover */
+      body.dark-theme .contact-item:hover {
+        box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6) !important;
       }
 
       .contact-item h3 {
@@ -79,6 +100,11 @@
         font-weight: 600;
       }
 
+      /* Dark mode contact item title */
+      body.dark-theme .contact-item h3 {
+        color: #ffffff !important;
+      }
+
       .contact-item p {
         margin: 0;
         color: #666;
@@ -86,11 +112,21 @@
         line-height: 1.4;
       }
 
+      /* Dark mode contact item paragraph */
+      body.dark-theme .contact-item p {
+        color: #cccccc !important;
+      }
+
       .contact-item i {
         font-size: 20px;
         color: #b48a78;
         margin-bottom: 10px;
         display: block;
+      }
+
+      /* Dark mode contact item icon */
+      body.dark-theme .contact-item i {
+        color: #d4a574 !important;
       }
 
       .login-message {
@@ -105,11 +141,23 @@
         backdrop-filter: blur(10px);
       }
 
+      /* Dark mode login message */
+      body.dark-theme .login-message {
+        background: rgba(44, 44, 44, 0.9) !important;
+        color: #ffffff !important;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
+      }
+
       .login-message a {
         color: #b48a78;
         text-decoration: none;
         font-weight: bold;
         margin: 0 10px;
+      }
+
+      /* Dark mode login message link */
+      body.dark-theme .login-message a {
+        color: #d4a574 !important;
       }
 
       .login-message a:hover {
@@ -126,12 +174,23 @@
         backdrop-filter: blur(10px);
       }
 
+      /* Dark mode contact form container */
+      body.dark-theme .contact-form-container {
+        background: rgba(44, 44, 44, 0.9) !important;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
+      }
+
       .form-title {
         color: #7c5c4a;
         font-size: 28px;
         font-weight: 600;
         text-align: center;
         margin-bottom: 30px;
+      }
+
+      /* Dark mode form title */
+      body.dark-theme .form-title {
+        color: #ffffff !important;
       }
 
       .contact-form {
@@ -159,6 +218,11 @@
         font-size: 16px;
       }
 
+      /* Dark mode form label */
+      body.dark-theme .form-group label {
+        color: #ffffff !important;
+      }
+
       .form-group input,
       .form-group textarea {
         width: 100%;
@@ -172,11 +236,26 @@
         box-sizing: border-box;
       }
 
+      /* Dark mode form input and textarea */
+      body.dark-theme .form-group input,
+      body.dark-theme .form-group textarea {
+        background: rgba(60, 60, 60, 0.9) !important;
+        color: #ffffff !important;
+        border-color: #404040 !important;
+      }
+
       .form-group input:focus,
       .form-group textarea:focus {
         outline: none;
         border-color: #b48a78;
         box-shadow: 0 0 0 3px rgba(180, 138, 120, 0.1);
+      }
+
+      /* Dark mode form input and textarea focus */
+      body.dark-theme .form-group input:focus,
+      body.dark-theme .form-group textarea:focus {
+        border-color: #d4a574 !important;
+        box-shadow: 0 0 0 3px rgba(212, 165, 116, 0.3) !important;
       }
 
       .form-group input:invalid:not(:placeholder-shown),
@@ -215,6 +294,13 @@
         border: 1px solid rgba(220, 53, 69, 0.3);
       }
 
+      /* Dark mode error message */
+      body.dark-theme .error-message {
+        background: rgba(44, 44, 44, 0.95) !important;
+        color: #ff6b6b !important;
+        border-color: rgba(255, 107, 107, 0.3) !important;
+      }
+
       .error-message::before {
         content: "⚠️";
         margin-right: 5px;
@@ -248,16 +334,35 @@
         position: relative;
       }
 
+      /* Dark mode toast */
+      body.dark-theme .toast {
+        background: linear-gradient(135deg, #2c2c2c, #404040) !important;
+        border-color: #28a745 !important;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6) !important;
+      }
+
       .toast.error {
         background: linear-gradient(135deg, #f8d7da, #f5c6cb);
         border-color: #dc3545;
         box-shadow: 0 8px 32px rgba(220, 53, 69, 0.3);
       }
 
+      /* Dark mode error toast */
+      body.dark-theme .toast.error {
+        background: linear-gradient(135deg, #2c2c2c, #404040) !important;
+        border-color: #dc3545 !important;
+      }
+
       .toast.success {
         background: linear-gradient(135deg, #d4edda, #c3e6cb);
         border-color: #28a745;
         box-shadow: 0 8px 32px rgba(40, 167, 69, 0.3);
+      }
+
+      /* Dark mode success toast */
+      body.dark-theme .toast.success {
+        background: linear-gradient(135deg, #2c2c2c, #404040) !important;
+        border-color: #28a745 !important;
       }
 
       .toast-icon {
@@ -273,8 +378,18 @@
         font-weight: 500;
       }
 
+      /* Dark mode toast content */
+      body.dark-theme .toast-content {
+        color: #ffffff !important;
+      }
+
       .toast.error .toast-content {
         color: #721c24;
+      }
+
+      /* Dark mode error toast content */
+      body.dark-theme .toast.error .toast-content {
+        color: #ff6b6b !important;
       }
 
       .toast-close {
@@ -294,8 +409,18 @@
         flex-shrink: 0;
       }
 
+      /* Dark mode toast close button */
+      body.dark-theme .toast-close {
+        color: #ffffff !important;
+      }
+
       .toast.error .toast-close {
         color: #721c24;
+      }
+
+      /* Dark mode error toast close button */
+      body.dark-theme .toast.error .toast-close {
+        color: #ff6b6b !important;
       }
 
       .toast-close:hover {
@@ -303,8 +428,18 @@
         transform: scale(1.1);
       }
 
+      /* Dark mode toast close button hover */
+      body.dark-theme .toast-close:hover {
+        background: rgba(255, 255, 255, 0.1) !important;
+      }
+
       .toast.error .toast-close:hover {
         background: rgba(114, 28, 36, 0.1);
+      }
+
+      /* Dark mode error toast close button hover */
+      body.dark-theme .toast.error .toast-close:hover {
+        background: rgba(255, 107, 107, 0.1) !important;
       }
 
       @keyframes slideInRight {
@@ -346,6 +481,11 @@
         margin-top: 5px;
       }
 
+      /* Dark mode character count */
+      body.dark-theme .character-count {
+        color: #cccccc !important;
+      }
+
       .submit-btn {
         width: 100%;
         padding: 15px 30px;
@@ -360,10 +500,22 @@
         margin-top: 20px;
       }
 
+      /* Dark mode submit button */
+      body.dark-theme .submit-btn {
+        background: linear-gradient(135deg, #7c5c4a, #5a4435, #8a6a5a, #6a5445) !important;
+        color: #ffffff !important;
+      }
+
       .submit-btn:hover:not(:disabled) {
         background: linear-gradient(135deg, #f8e0e1, #d1c6b1, #e2d9d0, #c0b2b0);
         transform: translateY(-2px);
         box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+      }
+
+      /* Dark mode submit button hover */
+      body.dark-theme .submit-btn:hover:not(:disabled) {
+        background: linear-gradient(135deg, #8a6a5a, #6a5445, #9a7a6a, #7a6455) !important;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4) !important;
       }
 
       .submit-btn:disabled {
@@ -380,14 +532,30 @@
         border-left: 4px solid #b48a78;
       }
 
+      /* Dark mode user info */
+      body.dark-theme .user-info {
+        background: rgba(212, 165, 116, 0.1) !important;
+        border-left-color: #d4a574 !important;
+      }
+
       .user-info p {
         margin: 5px 0;
         color: #7c5c4a;
         font-size: 16px;
       }
 
+      /* Dark mode user info paragraph */
+      body.dark-theme .user-info p {
+        color: #ffffff !important;
+      }
+
       .user-info strong {
         color: #b48a78;
+      }
+
+      /* Dark mode user info strong */
+      body.dark-theme .user-info strong {
+        color: #d4a574 !important;
       }
 
       .form-info {
@@ -399,14 +567,30 @@
         text-align: center;
       }
 
+      /* Dark mode form info */
+      body.dark-theme .form-info {
+        background: rgba(212, 165, 116, 0.1) !important;
+        border-left-color: #d4a574 !important;
+      }
+
       .form-info p {
         margin: 0;
         color: #7c5c4a;
         font-size: 16px;
       }
 
+      /* Dark mode form info paragraph */
+      body.dark-theme .form-info p {
+        color: #ffffff !important;
+      }
+
       .form-info strong {
         color: #b48a78;
+      }
+
+      /* Dark mode form info strong */
+      body.dark-theme .form-info strong {
+        color: #d4a574 !important;
       }
 
       .email-warning {
@@ -418,14 +602,30 @@
         text-align: center;
       }
 
+      /* Dark mode email warning */
+      body.dark-theme .email-warning {
+        background: rgba(255, 193, 7, 0.15) !important;
+        border-left-color: #ffc107 !important;
+      }
+
       .email-warning p {
         margin: 5px 0;
         color: #856404;
         font-size: 16px;
       }
 
+      /* Dark mode email warning paragraph */
+      body.dark-theme .email-warning p {
+        color: #ffd700 !important;
+      }
+
       .email-warning strong {
         color: #ffc107;
+      }
+
+      /* Dark mode email warning strong */
+      body.dark-theme .email-warning strong {
+        color: #ffd700 !important;
       }
 
       .email-warning a {
@@ -434,8 +634,19 @@
         font-weight: bold;
       }
 
+      /* Dark mode email warning link */
+      body.dark-theme .email-warning a {
+        color: #d4a574 !important;
+      }
+
       .email-warning a:hover {
         text-decoration: underline;
+      }
+
+      /* Placeholder dark mode */
+      body.dark-theme .form-group input::placeholder,
+      body.dark-theme .form-group textarea::placeholder {
+        color: #888888 !important;
       }
 
       @media (max-width: 768px) {

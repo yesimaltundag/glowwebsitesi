@@ -30,11 +30,33 @@
         backdrop-filter: blur(10px);
       }
 
+      /* Dark mode admin header */
+      body.dark-theme .admin-header {
+        background: rgba(44, 44, 44, 0.9) !important;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
+      }
+
       .admin-header h1 {
         color: #7c5c4a;
         font-size: 32px;
         margin-bottom: 10px;
         font-weight: 600;
+      }
+
+      /* Dark mode admin header title */
+      body.dark-theme .admin-header h1 {
+        color: #ffffff !important;
+      }
+
+      .admin-header p {
+        color: #666;
+        font-size: 16px;
+        margin: 0;
+      }
+
+      /* Dark mode admin header paragraph */
+      body.dark-theme .admin-header p {
+        color: #cccccc !important;
       }
 
       .search-box {
@@ -49,10 +71,28 @@
         background: rgba(255, 255, 255, 0.9);
       }
 
+      /* Dark mode search box */
+      body.dark-theme .search-box {
+        background: rgba(60, 60, 60, 0.9) !important;
+        color: #ffffff !important;
+        border-color: #404040 !important;
+      }
+
       .search-box:focus {
         outline: none;
         border-color: #b48a78;
         box-shadow: 0 0 0 3px rgba(180, 138, 120, 0.1);
+      }
+
+      /* Dark mode search box focus */
+      body.dark-theme .search-box:focus {
+        border-color: #d4a574 !important;
+        box-shadow: 0 0 0 3px rgba(212, 165, 116, 0.3) !important;
+      }
+
+      /* Dark mode search box placeholder */
+      body.dark-theme .search-box::placeholder {
+        color: #888888 !important;
       }
 
       .table-container {
@@ -62,6 +102,12 @@
         box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
         margin: 20px 0;
         backdrop-filter: blur(10px);
+      }
+
+      /* Dark mode table container */
+      body.dark-theme .table-container {
+        background: rgba(44, 44, 44, 0.9) !important;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
       }
 
       .table-container table {
@@ -78,6 +124,12 @@
         transition: all 0.3s ease;
       }
 
+      /* Dark mode table borders */
+      body.dark-theme .table-container th,
+      body.dark-theme .table-container td {
+        border-bottom-color: #404040 !important;
+      }
+
       .table-container td.with-confirm {
         padding-bottom: 120px;
       }
@@ -88,12 +140,27 @@
         font-weight: 600;
       }
 
+      /* Dark mode table header */
+      body.dark-theme .table-container th {
+        background: #5a4435 !important;
+      }
+
       .table-container tr:nth-child(even) {
         background: rgba(248, 240, 241, 0.5);
       }
 
+      /* Dark mode table even rows */
+      body.dark-theme .table-container tr:nth-child(even) {
+        background: rgba(60, 60, 60, 0.5) !important;
+      }
+
       .table-container tr:hover {
         background: rgba(226, 217, 208, 0.3);
+      }
+
+      /* Dark mode table hover */
+      body.dark-theme .table-container tr:hover {
+        background: rgba(80, 80, 80, 0.3) !important;
       }
 
       /* Admin satırlarını vurgula */
@@ -102,13 +169,28 @@
         border-left: 4px solid #28a745;
       }
 
+      /* Dark mode admin row */
+      body.dark-theme .table-container tr.admin-row {
+        background: linear-gradient(135deg, rgba(40, 167, 69, 0.2), rgba(32, 201, 151, 0.2)) !important;
+      }
+
       .table-container tr.admin-row:hover {
         background: linear-gradient(135deg, rgba(40, 167, 69, 0.2), rgba(32, 201, 151, 0.2)) !important;
+      }
+
+      /* Dark mode admin row hover */
+      body.dark-theme .table-container tr.admin-row:hover {
+        background: linear-gradient(135deg, rgba(40, 167, 69, 0.3), rgba(32, 201, 151, 0.3)) !important;
       }
 
       .table-container tr.admin-row td {
         font-weight: 600;
         color: #155724;
+      }
+
+      /* Dark mode admin row text */
+      body.dark-theme .table-container tr.admin-row td {
+        color: #4ade80 !important;
       }
 
       .table-container tr.admin-row th {
@@ -171,11 +253,23 @@
         transform-origin: top left !important;
       }
 
+      /* Dark mode confirm delete */
+      body.dark-theme .confirm-delete {
+        background: rgba(44, 44, 44, 0.95) !important;
+        border-color: #f44336 !important;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4) !important;
+      }
+
       .confirm-delete p {
         margin: 0 0 10px 0 !important;
         color: #333 !important;
         font-size: 14px !important;
         font-weight: 500 !important;
+      }
+
+      /* Dark mode confirm delete text */
+      body.dark-theme .confirm-delete p {
+        color: #ffffff !important;
       }
 
       .confirm-buttons {
@@ -209,9 +303,20 @@
         color: #333 !important;
       }
 
+      /* Dark mode confirm no button */
+      body.dark-theme .confirm-no {
+        background: linear-gradient(135deg, #404040, #505050) !important;
+        color: #ffffff !important;
+      }
+
       .confirm-no:hover {
         background: linear-gradient(135deg, #bdbdbd, #e0e0e0) !important;
         transform: scale(1.05) !important;
+      }
+
+      /* Dark mode confirm no button hover */
+      body.dark-theme .confirm-no:hover {
+        background: linear-gradient(135deg, #505050, #606060) !important;
       }
 
       @keyframes slideDown {
@@ -234,10 +339,28 @@
         background: rgba(255, 255, 255, 0.9);
       }
 
+      /* Dark mode table input */
+      body.dark-theme .table-input {
+        background: rgba(60, 60, 60, 0.9) !important;
+        color: #ffffff !important;
+        border-color: #404040 !important;
+      }
+
       .table-input:focus {
         outline: none;
         border-color: #b48a78;
         box-shadow: 0 0 0 2px rgba(180, 138, 120, 0.1);
+      }
+
+      /* Dark mode table input focus */
+      body.dark-theme .table-input:focus {
+        border-color: #d4a574 !important;
+        box-shadow: 0 0 0 2px rgba(212, 165, 116, 0.3) !important;
+      }
+
+      /* Dark mode table input placeholder */
+      body.dark-theme .table-input::placeholder {
+        color: #888888 !important;
       }
 
       .form-select {
@@ -249,6 +372,13 @@
         background: rgba(255, 255, 255, 0.9);
       }
 
+      /* Dark mode form select */
+      body.dark-theme .form-select {
+        background: rgba(60, 60, 60, 0.9) !important;
+        color: #ffffff !important;
+        border-color: #404040 !important;
+      }
+
       /* Admin select vurgusu */
       .form-select.admin-select {
         background: linear-gradient(135deg, rgba(40, 167, 69, 0.1), rgba(32, 201, 151, 0.1));
@@ -257,9 +387,21 @@
         font-weight: 600;
       }
 
+      /* Dark mode admin select */
+      body.dark-theme .form-select.admin-select {
+        background: linear-gradient(135deg, rgba(40, 167, 69, 0.2), rgba(32, 201, 151, 0.2)) !important;
+        color: #4ade80 !important;
+      }
+
       .form-select.admin-select:focus {
         border-color: #28a745;
         box-shadow: 0 0 0 2px rgba(40, 167, 69, 0.2);
+      }
+
+      /* Dark mode admin select focus */
+      body.dark-theme .form-select.admin-select:focus {
+        border-color: #28a745 !important;
+        box-shadow: 0 0 0 2px rgba(40, 167, 69, 0.3) !important;
       }
 
       /* Admin ID vurgusu */
@@ -270,6 +412,12 @@
         text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
       }
 
+      /* Dark mode admin ID */
+      body.dark-theme .admin-id {
+        color: #4ade80 !important;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+      }
+
       /* Admin input vurgusu */
       .table-input.admin-input {
         background: linear-gradient(135deg, rgba(40, 167, 69, 0.05), rgba(32, 201, 151, 0.05));
@@ -278,9 +426,21 @@
         font-weight: 600;
       }
 
+      /* Dark mode admin input */
+      body.dark-theme .table-input.admin-input {
+        background: linear-gradient(135deg, rgba(40, 167, 69, 0.15), rgba(32, 201, 151, 0.15)) !important;
+        color: #4ade80 !important;
+      }
+
       .table-input.admin-input:focus {
         border-color: #28a745;
         box-shadow: 0 0 0 2px rgba(40, 167, 69, 0.2);
+      }
+
+      /* Dark mode admin input focus */
+      body.dark-theme .table-input.admin-input:focus {
+        border-color: #28a745 !important;
+        box-shadow: 0 0 0 2px rgba(40, 167, 69, 0.3) !important;
       }
 
       .pagination {
@@ -289,6 +449,17 @@
         align-items: center;
         gap: 20px;
         margin-top: 30px;
+        background: rgba(255, 255, 255, 0.9);
+        padding: 20px;
+        border-radius: 16px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(10px);
+      }
+
+      /* Dark mode pagination container */
+      body.dark-theme .pagination {
+        background: rgba(44, 44, 44, 0.9) !important;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4) !important;
       }
 
       .pagination button {
@@ -301,15 +472,32 @@
         transition: all 0.3s ease;
       }
 
+      /* Dark mode pagination button */
+      body.dark-theme .pagination button {
+        background: linear-gradient(135deg, #7c5c4a, #5a4435) !important;
+        color: #ffffff !important;
+      }
+
       .pagination button:hover:not(:disabled) {
-        background: linear-gradient(135deg, #b48a78, #e2d9d0);
-        color: white;
-        transform: translateY(-2px);
+        background: linear-gradient(135deg, #b48a78, #e2d9d0) !important;
+        color: white !important;
+        transform: translateY(-2px) !important;
+      }
+
+      /* Dark mode pagination button hover */
+      body.dark-theme .pagination button:hover:not(:disabled) {
+        background: linear-gradient(135deg, #8a6a5a, #6a5445) !important;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4) !important;
       }
 
       .pagination button:disabled {
         opacity: 0.5;
         cursor: not-allowed;
+      }
+
+      /* Dark mode pagination span */
+      body.dark-theme .pagination span {
+        color: #ffffff !important;
       }
 
       .admin-btn {
@@ -328,6 +516,91 @@
       .admin-btn:hover {
         transform: translateY(-2px);
         box-shadow: 0 6px 20px rgba(40, 167, 69, 0.3);
+      }
+
+      /* Dark mode admin button hover */
+      body.dark-theme .admin-btn:hover {
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6) !important;
+      }
+
+      /* Dark mode modal styles */
+      body.dark-theme .modal-overlay {
+        background: rgba(0, 0, 0, 0.8) !important;
+      }
+
+      body.dark-theme .modal-content {
+        background: rgba(44, 44, 44, 0.95) !important;
+        border-color: #404040 !important;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6) !important;
+      }
+
+      body.dark-theme .modal-header {
+        border-bottom-color: #404040 !important;
+      }
+
+      body.dark-theme .modal-title {
+        color: #ffffff !important;
+      }
+
+      body.dark-theme .close-modal {
+        color: #ffffff !important;
+        background: rgba(255, 255, 255, 0.1) !important;
+      }
+
+      body.dark-theme .close-modal:hover {
+        background: rgba(255, 255, 255, 0.2) !important;
+      }
+
+      body.dark-theme .modal-textarea {
+        background: rgba(60, 60, 60, 0.9) !important;
+        color: #ffffff !important;
+        border-color: #404040 !important;
+      }
+
+      body.dark-theme .modal-textarea:focus {
+        border-color: #d4a574 !important;
+        box-shadow: 0 0 0 2px rgba(212, 165, 116, 0.3) !important;
+      }
+
+      body.dark-theme .modal-textarea::placeholder {
+        color: #888888 !important;
+      }
+
+      body.dark-theme .modal-actions {
+        border-top-color: #404040 !important;
+      }
+
+      body.dark-theme .modal-btn {
+        color: #ffffff !important;
+      }
+
+      body.dark-theme .cancel-btn {
+        background: rgba(255, 255, 255, 0.1) !important;
+        border-color: #404040 !important;
+      }
+
+      body.dark-theme .cancel-btn:hover {
+        background: rgba(255, 255, 255, 0.2) !important;
+      }
+
+      body.dark-theme .save-btn {
+        background: linear-gradient(135deg, #28a745, #20c997) !important;
+      }
+
+      body.dark-theme .save-btn:hover {
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4) !important;
+      }
+
+      /* Dark mode scroll to top button */
+      body.dark-theme #scrollTopBtn {
+        background: linear-gradient(135deg, #7c5c4a, #5a4435) !important;
+        color: #ffffff !important;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4) !important;
+      }
+
+      body.dark-theme #scrollTopBtn:hover {
+        background: linear-gradient(135deg, #8a6a5a, #6a5445) !important;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6) !important;
       }
 
       @media (max-width: 768px) {
